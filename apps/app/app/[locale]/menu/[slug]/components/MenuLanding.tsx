@@ -92,12 +92,12 @@ export default function MenuLanding({
     }));
 
     return (
-        <div className="min-h-screen bg-gray-50 relative overflow-hidden">
+        <div className="min-h-screen bg-gray-50 relative">
             {/* Elementos decorativos de fondo como en web-base */}
             <DecorativeElements
                 themeColors={themeColors}
                 variant="background"
-                className="fixed inset-0 z-0"
+                className="fixed inset-0 z-0 pointer-events-none"
             />
 
             {/* Partículas de nieve animadas */}
@@ -115,6 +115,19 @@ export default function MenuLanding({
                     dictionary={dictionary}
                 />
 
+                {/* Filters */}
+                <MenuFilters
+                    searchTerm={searchTerm}
+                    setSearchTerm={setSearchTerm}
+                    selectedCategory={selectedCategory}
+                    setSelectedCategory={setSelectedCategory}
+                    showSpecialOnly={showSpecialOnly}
+                    setShowSpecialOnly={setShowSpecialOnly}
+                    categories={categories}
+                    hasSpecial={!!todaySpecial}
+                    dictionary={dictionary}
+                />
+
                 {/* Today's Special */}
                 {todaySpecial && (
                     <TodaySpecial
@@ -126,24 +139,7 @@ export default function MenuLanding({
                     />
                 )}
 
-                {/* Filters */}
-                <div className="relative">
-                    <DecorativeElements
-                        themeColors={themeColors}
-                        variant="minimal"
-                    />
-                    <MenuFilters
-                        searchTerm={searchTerm}
-                        setSearchTerm={setSearchTerm}
-                        selectedCategory={selectedCategory}
-                        setSelectedCategory={setSelectedCategory}
-                        showSpecialOnly={showSpecialOnly}
-                        setShowSpecialOnly={setShowSpecialOnly}
-                        categories={categories}
-                        hasSpecial={!!todaySpecial}
-                        dictionary={dictionary}
-                    />
-                </div>
+
 
                 {/* Menu Categories */}
                 <main className="max-w-6xl mx-auto px-4 py-8 relative">

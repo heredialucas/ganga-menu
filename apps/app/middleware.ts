@@ -45,6 +45,7 @@ const PUBLIC_ROUTES = [
   '/sign-up',
   '/api/webhooks',
   '/access-denied',
+  '/menu', // Public menu pages for sharing
 ];
 
 // Authentication cookie name

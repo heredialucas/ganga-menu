@@ -84,7 +84,7 @@ export async function upsertRestaurantConfig(data: RestaurantConfigFormData, cre
             });
 
             if (existingSlug) {
-                throw new Error('Ya existe un restaurante con este slug. Por favor elige otro.');
+                throw new Error('Ya existe un restaurante con este enlace personalizado. Por favor elige otro nombre para tu enlace.');
             }
         }
 
@@ -130,7 +130,8 @@ export async function upsertRestaurantConfig(data: RestaurantConfigFormData, cre
         return config;
     } catch (error) {
         console.error('Error al guardar configuración del restaurante:', error);
-        throw new Error('No se pudo guardar la configuración del restaurante');
+        // Re-lanzar el error original para mantener el mensaje específico
+        throw error;
     }
 }
 

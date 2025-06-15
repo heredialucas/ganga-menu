@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { RestaurantConfigData, RestaurantConfigFormData, upsertRestaurantConfig } from '@repo/data-services/src/services/restaurantConfigService';
 import { getCurrentUserId } from '@repo/data-services/src/services/authService';
 import { uploadR2Image } from '@repo/data-services/src/services/uploadR2Image';
@@ -27,17 +27,22 @@ export default function RestaurantConfigSection({
         phone: restaurantConfig?.phone || '',
         email: restaurantConfig?.email || '',
         hours: restaurantConfig?.hours || undefined,
-        slug: restaurantConfig?.slug || 'mi-restaurante',
+        slug: restaurantConfig?.slug || '',
         themeColor: restaurantConfig?.themeColor || 'green',
     });
 
     const [loading, setLoading] = useState(false);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [uploadingLogo, setUploadingLogo] = useState(false);
+    const [feedback, setFeedback] = useState<{
+        type: 'success' | 'error' | null;
+        message: string;
+    }>({ type: null, message: '' });
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
+        setFeedback({ type: null, message: '' });
 
         try {
             let finalFormData = { ...formData };
@@ -69,10 +74,25 @@ export default function RestaurantConfigSection({
             }
 
             await upsertRestaurantConfig(finalFormData, createdById);
-            // TODO: Mostrar mensaje de éxito
+
+            setFeedback({
+                type: 'success',
+                message: '✅ Configuración guardada exitosamente'
+            });
+
+            // Limpiar el archivo seleccionado después de guardar
+            setSelectedFile(null);
+
         } catch (error) {
             console.error('Error saving restaurant config:', error);
-            // TODO: Mostrar mensaje de error
+
+            // Mostrar el error específico que viene del servicio
+            const errorMessage = error instanceof Error ? error.message : 'Error desconocido al guardar la configuración';
+
+            setFeedback({
+                type: 'error',
+                message: `❌ ${errorMessage}`
+            });
         } finally {
             setLoading(false);
             setUploadingLogo(false);
@@ -110,11 +130,13 @@ export default function RestaurantConfigSection({
         }));
     }, []);
 
+
+
     return (
         <div className="space-y-4 sm:space-y-6">
             {/* Widget de compartir menú */}
             <MenuShareWidget
-                slug={formData.slug || 'mi-restaurante'}
+                slug={formData.slug || ''}
                 locale={locale}
                 restaurantName={formData.name}
                 compact={false}
@@ -145,7 +167,7 @@ export default function RestaurantConfigSection({
 
                         <div>
                             <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
-                                Slug de la URL *
+                                Enlace personalizado de tu menú *
                             </label>
                             <input
                                 type="text"
@@ -154,10 +176,13 @@ export default function RestaurantConfigSection({
                                 onChange={handleChange}
                                 required
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                                placeholder="mi-restaurante"
+                                placeholder="nombre-de-tu-restaurante"
                             />
                             <p className="text-xs text-gray-500 mt-1">
-                                Solo letras, números y guiones. Ej: mi-restaurante
+                                Este será tu enlace único para compartir: ganga-menu.com/menu/<strong>tu-enlace</strong>
+                            </p>
+                            <p className="text-xs text-gray-500">
+                                Solo letras, números y guiones. Ej: pizzeria-bella, cafe-central
                             </p>
                         </div>
                     </div>
@@ -273,6 +298,16 @@ export default function RestaurantConfigSection({
                             onChange={handleHoursChange}
                         />
                     </div>
+
+                    {/* Messages de feedback */}
+                    {feedback.type && (
+                        <div className={`p-3 rounded-md text-sm ${feedback.type === 'success'
+                            ? 'bg-green-50 text-green-800 border border-green-200'
+                            : 'bg-red-50 text-red-800 border border-red-200'
+                            }`}>
+                            {feedback.message}
+                        </div>
+                    )}
 
                     <div className="flex justify-end pt-2 pb-20 sm:pb-8">
                         <button

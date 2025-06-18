@@ -73,6 +73,39 @@
             "update": "Actualizar",
             "saving": "Guardando..."
           }
+        },
+        "restaurant": {
+          "title": "Diseño del Restaurante",
+          "subtitle": "Diseña la distribución de tu restaurante y coloca las mesas",
+          "toolbar": {
+            "addTable": "Agregar Mesa",
+            "addBar": "Agregar Barra",
+            "addDecoration": "Agregar Decoración",
+            "save": "Guardar Diseño",
+            "clear": "Limpiar Todo",
+            "undo": "Deshacer",
+            "redo": "Rehacer"
+          },
+          "tables": {
+            "round": "Mesa Redonda",
+            "square": "Mesa Cuadrada",
+            "rectangle": "Mesa Rectangular"
+          },
+          "properties": {
+            "title": "Propiedades",
+            "name": "Nombre",
+            "capacity": "Capacidad",
+            "shape": "Forma",
+            "width": "Ancho",
+            "height": "Alto",
+            "color": "Color"
+          },
+          "messages": {
+            "designSaved": "Diseño guardado exitosamente",
+            "errorSaving": "Error al guardar el diseño",
+            "selectElement": "Selecciona un elemento para editar sus propiedades",
+            "noElements": "No hay elementos en el diseño. ¡Comienza agregando una mesa!"
+          }
         }
       }
     },
@@ -420,6 +453,56 @@
         "send_button": "Enviar mensaje",
         "success_message": "¡Tu mensaje ha sido enviado con éxito!",
         "error_message": "Error al enviar el mensaje. Por favor, inténtalo de nuevo más tarde."
+      }
+    },
+    "waiter": {
+      "title": "Sistema de Órdenes",
+      "auth": {
+        "title": "Acceso de Mozos",
+        "code": "Código de Acceso",
+        "enter": "Ingresar",
+        "invalidCode": "Código incorrecto",
+        "placeholder": "Ingresa el código"
+      },
+      "order": {
+        "title": "Tomar Orden",
+        "orderInfo": "Información de la Orden",
+        "table": "Mesa",
+        "waiterName": "Nombre del Mozo",
+        "addDish": "Agregar Plato",
+        "quantity": "Cantidad",
+        "notes": "Notas",
+        "total": "Total",
+        "submit": "Enviar Orden",
+        "success": "Orden enviada exitosamente",
+        "error": "Error al enviar la orden",
+        "empty": "Agrega platos a la orden",
+        "selectTable": "Selecciona una mesa",
+        "dishAdded": "Plato agregado a la orden",
+        "remove": "Quitar",
+        "orderNotes": "Notas de la orden",
+        "categories": "Categorías",
+        "all": "Todos",
+        "search": "Buscar platos...",
+        "price": "Precio",
+        "cart": "Carrito",
+        "items": "artículos",
+        "orderSent": "¡Orden enviada a la cocina!",
+        "submittedOrders": "Historial de Órdenes",
+        "addToOrder": "Agregar a Orden",
+        "statusPending": "Pendiente",
+        "statusInProgress": "En preparación",
+        "statusReady": "Listo",
+        "statusDelivered": "Entregado",
+        "statusCancelled": "Cancelado",
+        "filterAll": "Todas",
+        "filterPending": "Pendientes",
+        "filterReady": "Listos",
+        "filterDelivered": "Entregados",
+        "noOrdersFound": "No se encontraron órdenes",
+        "addDishes": "Agregar platos",
+        "markDelivered": "Marcar Entregado",
+        "updating": "Actualizando..."
       }
     }
   }

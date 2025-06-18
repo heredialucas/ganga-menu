@@ -73,6 +73,39 @@
             "update": "Update",
             "saving": "Saving..."
           }
+        },
+        "restaurant": {
+          "title": "Restaurant Design",
+          "subtitle": "Design your restaurant layout and place tables",
+          "toolbar": {
+            "addTable": "Add Table",
+            "addBar": "Add Bar",
+            "addDecoration": "Add Decoration",
+            "save": "Save Design",
+            "clear": "Clear All",
+            "undo": "Undo",
+            "redo": "Redo"
+          },
+          "tables": {
+            "round": "Round Table",
+            "square": "Square Table",
+            "rectangle": "Rectangle Table"
+          },
+          "properties": {
+            "title": "Properties",
+            "name": "Name",
+            "capacity": "Capacity",
+            "shape": "Shape",
+            "width": "Width",
+            "height": "Height",
+            "color": "Color"
+          },
+          "messages": {
+            "designSaved": "Design saved successfully",
+            "errorSaving": "Error saving design",
+            "selectElement": "Select an element to edit its properties",
+            "noElements": "No elements in the design. Start by adding a table!"
+          }
         }
       }
     },
@@ -420,6 +453,56 @@
         "send_button": "Send message",
         "success_message": "Your message has been sent successfully!",
         "error_message": "Failed to send message. Please try again later."
+      }
+    },
+    "waiter": {
+      "title": "Ordering System",
+      "auth": {
+        "title": "Waiter Access",
+        "code": "Access Code",
+        "enter": "Enter",
+        "invalidCode": "Invalid code",
+        "placeholder": "Enter the code"
+      },
+      "order": {
+        "title": "Take Order",
+        "orderInfo": "Order Information",
+        "table": "Table",
+        "waiterName": "Waiter Name",
+        "addDish": "Add Dish",
+        "quantity": "Quantity",
+        "notes": "Notes",
+        "total": "Total",
+        "submit": "Submit Order",
+        "success": "Order submitted successfully",
+        "error": "Error submitting order",
+        "empty": "Add dishes to the order",
+        "selectTable": "Select a table",
+        "dishAdded": "Dish added to order",
+        "remove": "Remove",
+        "orderNotes": "Order notes",
+        "categories": "Categories",
+        "all": "All",
+        "search": "Search dishes...",
+        "price": "Price",
+        "cart": "Cart",
+        "items": "items",
+        "orderSent": "Order sent to kitchen!",
+        "submittedOrders": "Order History",
+        "addToOrder": "Add to Order",
+        "statusPending": "Pending",
+        "statusInProgress": "In Progress",
+        "statusReady": "Ready",
+        "statusDelivered": "Delivered",
+        "statusCancelled": "Cancelled",
+        "filterAll": "All",
+        "filterPending": "Pending",
+        "filterReady": "Ready",
+        "filterDelivered": "Delivered",
+        "noOrdersFound": "No orders found",
+        "addDishes": "Add dishes",
+        "markDelivered": "Mark Delivered",
+        "updating": "Updating..."
       }
     }
   }

@@ -6,10 +6,12 @@ import { CategoryData } from '@repo/data-services/src/services/categoryService';
 import { DishData } from '@repo/data-services/src/services/dishService';
 import { DailySpecialData } from '@repo/data-services/src/services/dailySpecialService';
 import { RestaurantConfigData } from '@repo/data-services/src/services/restaurantConfigService';
+import { RestaurantDesignData } from '@repo/data-services/src/services/restaurantDesignService';
 import CategoriesSection from './categories/CategoriesSection';
 import DishesSection from './dishes/DishesSection';
 import DailySpecialsSection from './daily-specials/DailySpecialsSection';
 import RestaurantConfigSection from './restaurant-config/RestaurantConfigSection';
+import RestaurantDesignWrapper from './restaurant/RestaurantDesignWrapper';
 import MenuShareWidget from '../../../../../../components/MenuShareWidget';
 
 interface MenuDashboardProps {
@@ -17,6 +19,7 @@ interface MenuDashboardProps {
     dishes: DishData[];
     dailySpecials: DailySpecialData[];
     restaurantConfig: RestaurantConfigData | null;
+    restaurantDesign: RestaurantDesignData | null;
     dictionary: Dictionary;
     locale: string;
 }
@@ -26,13 +29,16 @@ export default function MenuDashboard({
     dishes,
     dailySpecials,
     restaurantConfig,
+    restaurantDesign,
     dictionary,
     locale
 }: MenuDashboardProps) {
     const searchParams = useSearchParams();
     const router = useRouter();
 
-    const activeTab = searchParams.get('tab') as 'config' | 'categories' | 'dishes' | 'dailySpecials' || 'config';
+    const activeTab = searchParams.get('tab') as 'config' | 'categories' | 'dishes' | 'dailySpecials' | 'restaurant' || 'config';
+
+
 
     // Obtener slug y nombre del restaurante
     const restaurantSlug = restaurantConfig?.slug || 'mi-restaurante';
@@ -87,6 +93,14 @@ export default function MenuDashboard({
                     dailySpecials={dailySpecials}
                     dishes={dishes}
                     dictionary={dictionary.app.admin.menu.dailySpecials}
+                />
+            )}
+
+            {activeTab === 'restaurant' && (
+                <RestaurantDesignWrapper
+                    dictionary={dictionary.app.admin.menu.restaurant}
+                    restaurantConfig={restaurantConfig}
+                    restaurantDesign={restaurantDesign}
                 />
             )}
         </div>

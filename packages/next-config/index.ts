@@ -60,6 +60,12 @@ export const config: NextConfig = {
 
     config.ignoreWarnings = [{ module: otelRegex }];
 
+    // Fix for Konva.js canvas module issue in Next.js
+    config.externals = config.externals || [];
+    config.externals.push({
+      canvas: 'canvas',
+    });
+
     return config;
   },
 

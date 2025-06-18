@@ -7,7 +7,8 @@ import {
     Settings,
     FolderOpen,
     UtensilsCrossed,
-    Star
+    Star,
+    Layout
 } from 'lucide-react';
 import Link from 'next/link';
 import {
@@ -61,6 +62,12 @@ export function AdminSidebar({ dictionary }: AdminSidebarProps) {
             mobileTitle: 'Especiales',
             icon: Star,
             href: '/admin/dashboard?tab=dailySpecials',
+        },
+        {
+            title: 'Restaurante',
+            mobileTitle: 'Restaurante',
+            icon: Layout,
+            href: '/admin/dashboard?tab=restaurant',
         },
     ];
 

@@ -36,6 +36,7 @@ model User {
   createdCategories Category[]         @relation("CategoryCreatedBy")
   dailySpecials     DailySpecial[]     @relation("DailySpecialCreatedBy")
   restaurantConfigs RestaurantConfig[] @relation("RestaurantConfigCreatedBy")
+  restaurantDesigns RestaurantDesign[] @relation("RestaurantDesignCreatedBy")
 }
 
 model Category {
@@ -77,6 +78,9 @@ model Dish {
   // Platos del día
   dailySpecials DailySpecial[]
 
+  // Items de órdenes
+  orderItems OrderItem[]
+
   @@index([categoryId])
   @@index([status])
 }
@@ -109,13 +113,81 @@ model RestaurantConfig {
   logoUrl     String?
   slug        String   @unique @default("mi-restaurante") // slug único para la URL
   themeColor  String   @default("green") // green, red, blue, yellow, brown
+  waiterCode  String   @default("1234") // código para que los mozos accedan
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   // Relaciones
-  createdBy   User   @relation("RestaurantConfigCreatedBy", fields: [createdById], references: [id])
-  createdById String
+  createdBy        User              @relation("RestaurantConfigCreatedBy", fields: [createdById], references: [id])
+  createdById      String
+  restaurantDesign RestaurantDesign?
+  orders           Order[]
 
   @@index([slug])
+}
+
+model RestaurantDesign {
+  id           String   @id @default(uuid())
+  name         String   @default("Mi Diseño")
+  elements     Json     @default("[]") // Array de RestaurantElement como JSON
+  canvasWidth  Int      @default(800)
+  canvasHeight Int      @default(600)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relación con RestaurantConfig (uno a uno)
+  restaurantConfig   RestaurantConfig @relation(fields: [restaurantConfigId], references: [id], onDelete: Cascade)
+  restaurantConfigId String           @unique
+
+  // Relación con User
+  createdBy   User   @relation("RestaurantDesignCreatedBy", fields: [createdById], references: [id])
+  createdById String
+
+  @@index([createdById])
+  @@index([restaurantConfigId])
+}
+
+enum OrderStatus {
+  PENDING // Pendiente
+  IN_PROGRESS // En preparación
+  READY // Listo
+  DELIVERED // Entregado
+  CANCELLED // Cancelado
+}
+
+model Order {
+  id          String      @id @default(uuid())
+  tableNumber String // Número de mesa
+  status      OrderStatus @default(PENDING)
+  total       Float       @default(0)
+  notes       String? // Notas especiales del pedido
+  waiterName  String? // Nombre del mozo que tomó la orden
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  // Relaciones
+  restaurantConfig   RestaurantConfig @relation(fields: [restaurantConfigId], references: [id], onDelete: Cascade)
+  restaurantConfigId String
+  items              OrderItem[]
+
+  @@index([restaurantConfigId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id       String  @id @default(uuid())
+  quantity Int     @default(1)
+  price    Float // Precio al momento de la orden
+  notes    String? // Notas específicas del item
+
+  // Relaciones
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId String
+  dish    Dish   @relation(fields: [dishId], references: [id])
+  dishId  String
+
+  @@index([orderId])
+  @@index([dishId])
 }

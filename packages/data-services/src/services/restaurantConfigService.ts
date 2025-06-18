@@ -15,6 +15,7 @@ export interface RestaurantConfigData {
     logoUrl?: string | null;
     slug: string;
     themeColor: string;
+    waiterCode: string;
     isActive: boolean;
     createdById: string;
     createdAt: Date;
@@ -31,6 +32,7 @@ export interface RestaurantConfigFormData {
     logoUrl?: string;
     slug?: string;
     themeColor?: string;
+    waiterCode?: string;
 }
 
 /**
@@ -104,6 +106,7 @@ export async function upsertRestaurantConfig(data: RestaurantConfigFormData, cre
                     logoUrl: data.logoUrl,
                     slug: slugToUse,
                     themeColor: data.themeColor || existingConfig.themeColor,
+                    waiterCode: data.waiterCode || existingConfig.waiterCode,
                 }
             });
         } else {
@@ -119,6 +122,7 @@ export async function upsertRestaurantConfig(data: RestaurantConfigFormData, cre
                     logoUrl: data.logoUrl,
                     slug: slugToUse,
                     themeColor: data.themeColor || 'green',
+                    waiterCode: data.waiterCode || '1234',
                     createdById,
                 }
             });

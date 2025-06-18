@@ -29,6 +29,7 @@ export default function RestaurantConfigSection({
         hours: restaurantConfig?.hours || undefined,
         slug: restaurantConfig?.slug || '',
         themeColor: restaurantConfig?.themeColor || 'green',
+        waiterCode: restaurantConfig?.waiterCode || '1234',
     });
 
     const [loading, setLoading] = useState(false);
@@ -265,6 +266,35 @@ export default function RestaurantConfigSection({
                                 <option value="yellow">Amarillo</option>
                                 <option value="brown">Marrón</option>
                             </select>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                        <div>
+                            <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                                Código de Mozos
+                            </label>
+                            <input
+                                type="text"
+                                name="waiterCode"
+                                value={formData.waiterCode}
+                                onChange={handleChange}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                                placeholder="1234"
+                                required
+                            />
+                            <p className="text-xs text-gray-500 mt-1">
+                                Los mozos usarán este código para acceder al sistema de órdenes
+                            </p>
+                        </div>
+
+                        <div className="flex items-center justify-center">
+                            <div className="text-center text-sm text-gray-600">
+                                <p className="mb-2">🔗 <strong>Enlace para Mozos:</strong></p>
+                                <div className="bg-gray-50 p-2 rounded-md font-mono text-xs break-all">
+                                    ganga-menu.com/waiter/<strong>{formData.slug || 'tu-enlace'}</strong>
+                                </div>
+                            </div>
                         </div>
                     </div>
 

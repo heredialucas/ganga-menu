@@ -7,6 +7,7 @@ export { default as DishCard } from './DishCard';
 export { default as EmptyState } from './EmptyState';
 export { default as MenuFooter } from './MenuFooter';
 export { default as DecorativeElements } from './DecorativeElements';
+export { default as ImageModal } from './ImageModal';
 export { SnowParticles } from './SnowParticles';
 export { SnowParticlesWrapper } from './SnowParticlesWrapper';
 

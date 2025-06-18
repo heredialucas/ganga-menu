@@ -100,16 +100,16 @@ export default function MenuHeader({ restaurantConfig, themeColors, dictionary }
 
             {/* Contenido principal */}
             <div className="max-w-6xl mx-auto px-4 py-8 relative z-10 w-full">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between text-center md:text-left">
-                    <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
+                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between text-center lg:text-left gap-6">
+                    <div className="flex flex-col lg:flex-row items-center space-y-4 lg:space-y-0 lg:space-x-8 flex-1">
                         {restaurantConfig.logoUrl && (
-                            <div className="w-20 h-20 relative group animate-float">
+                            <div className="w-24 h-24 lg:w-32 lg:h-32 relative group animate-float shrink-0">
                                 <Image
                                     src={restaurantConfig.logoUrl}
                                     alt={`${restaurantConfig.name} logo`}
                                     fill
                                     className="object-contain rounded-xl transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 filter drop-shadow-2xl"
-                                    sizes="80px"
+                                    sizes="(max-width: 1024px) 96px, 128px"
                                 />
                                 {/* Efecto de brillo en hover */}
                                 <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-shimmer"></div>
@@ -117,41 +117,41 @@ export default function MenuHeader({ restaurantConfig, themeColors, dictionary }
                                 <div className="absolute inset-0 rounded-xl ring-2 ring-white/20 group-hover:ring-white/40 transition-all duration-500"></div>
                             </div>
                         )}
-                        <div className="space-y-2">
-                            <h1 className={`text-4xl md:text-5xl font-bold ${gradients.text} drop-shadow-2xl hover:scale-105 transition-all duration-500 animate-fadeInUp`}>
+                        <div className="space-y-2 flex-1 lg:max-w-2xl">
+                            <h1 className={`text-4xl md:text-5xl lg:text-6xl font-bold ${gradients.text} drop-shadow-2xl hover:scale-105 transition-all duration-500 animate-fadeInUp`}>
                                 {restaurantConfig.name}
                             </h1>
                             {restaurantConfig.description && (
-                                <p className="text-lg md:text-xl text-white/90 drop-shadow-lg font-medium animate-slideInLeft">
+                                <p className="hidden lg:block text-lg md:text-xl lg:text-2xl text-white/90 drop-shadow-lg font-medium animate-slideInLeft max-w-full lg:max-w-2xl break-words">
                                     {restaurantConfig.description}
                                 </p>
                             )}
                         </div>
                     </div>
-                    <div className="mt-6 md:mt-0 md:text-right space-y-4 animate-slideInRight">
+                    <div className="lg:text-right space-y-4 animate-slideInRight shrink-0 lg:min-w-[300px]">
                         <div className="space-y-2">
                             {restaurantConfig.address && (
-                                <p className="text-sm md:text-base text-white/90 drop-shadow-lg hover:text-white hover:scale-105 transition-all duration-300 flex items-center justify-center md:justify-end gap-2">
+                                <p className="text-sm md:text-base text-white/90 drop-shadow-lg hover:text-white hover:scale-105 transition-all duration-300 flex items-center justify-center lg:justify-end gap-2">
                                     <span className="text-lg">📍</span>
-                                    <span className="font-medium">{restaurantConfig.address}</span>
+                                    <span className="font-medium break-words">{restaurantConfig.address}</span>
                                 </p>
                             )}
                             {restaurantConfig.email && (
-                                <p className="text-sm md:text-base text-white/90 drop-shadow-lg hover:text-white hover:scale-105 transition-all duration-300 flex items-center justify-center md:justify-end gap-2">
+                                <p className="text-sm md:text-base text-white/90 drop-shadow-lg hover:text-white hover:scale-105 transition-all duration-300 flex items-center justify-center lg:justify-end gap-2">
                                     <span className="text-lg">✉️</span>
-                                    <span className="font-medium">{restaurantConfig.email}</span>
+                                    <span className="font-medium break-words">{restaurantConfig.email}</span>
                                 </p>
                             )}
                         </div>
 
                         {/* Botón de WhatsApp con efectos mejorados */}
                         {whatsappLink && (
-                            <div className="flex justify-center md:justify-end">
+                            <div className="flex justify-center lg:justify-end">
                                 <a
                                     href={whatsappLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white rounded-xl transition-all duration-500 text-sm md:text-base font-bold shadow-2xl hover:shadow-green-500/25 hover:scale-110 relative overflow-hidden group animate-glow"
+                                    className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white rounded-xl transition-all duration-500 text-sm md:text-base font-bold shadow-2xl hover:shadow-green-500/25 hover:scale-110 relative overflow-hidden group animate-glow whitespace-nowrap"
                                 >
                                     {/* Efecto de brillo en el botón */}
                                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>

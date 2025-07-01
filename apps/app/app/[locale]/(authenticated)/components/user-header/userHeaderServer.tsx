@@ -10,8 +10,5 @@ type User = {
 
 export async function UserHeaderServer() {
     const user = await getCurrentUser();
-    console.log('\n\n 1')
-    console.log(user)
-    console.log('\n\n')
     return <UserHeaderClient user={user as User} />;
 }

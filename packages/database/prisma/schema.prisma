@@ -13,6 +13,7 @@ datasource db {
 
 enum UserRole {
   admin
+  premium
   user
 }
 
@@ -22,14 +23,15 @@ enum DishStatus {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  name      String
-  lastName  String
-  role      UserRole @default(user)
-  password  String // Este será hasheado en el servicio
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id               String   @id @default(uuid())
+  email            String   @unique
+  name             String
+  lastName         String
+  role             UserRole @default(user)
+  password         String // Este será hasheado en el servicio
+  stripeCustomerId String?  @unique // ID del cliente en Stripe
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
   // Relaciones
   createdDishes     Dish[]             @relation("CreatedBy")

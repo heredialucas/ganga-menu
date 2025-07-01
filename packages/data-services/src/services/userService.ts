@@ -215,4 +215,42 @@ export async function verifyUserCredentials(email: string, password: string) {
         console.error('Error al verificar credenciales:', error);
         throw new Error('No se pudieron verificar las credenciales');
     }
+}
+
+export async function updateUserRole(userId: string, role: UserRole) {
+    try {
+        const updatedUser = await database.user.update({
+            where: { id: userId },
+            data: { role },
+        });
+        return updatedUser;
+    } catch (error) {
+        console.error(`Error updating user role for ${userId}:`, error);
+        throw new Error('Could not update user role.');
+    }
+}
+
+export async function updateUserStripeCustomerId(userId: string, stripeCustomerId: string) {
+    try {
+        const updatedUser = await database.user.update({
+            where: { id: userId },
+            data: { stripeCustomerId },
+        });
+        return updatedUser;
+    } catch (error) {
+        console.error(`Error updating stripeCustomerId for ${userId}:`, error);
+        throw new Error('Could not update Stripe Customer ID.');
+    }
+}
+
+export async function findUserByStripeCustomerId(stripeCustomerId: string) {
+    try {
+        const user = await database.user.findUnique({
+            where: { stripeCustomerId },
+        });
+        return user;
+    } catch (error) {
+        console.error(`Error finding user by stripeCustomerId ${stripeCustomerId}:`, error);
+        throw new Error('Could not find user by Stripe Customer ID.');
+    }
 } 

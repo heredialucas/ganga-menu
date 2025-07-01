@@ -24,11 +24,11 @@ interface UserHeaderClientProps {
 }
 
 export function UserHeaderClient({ logo, title = 'Ganga-Menú', extraItems, dictionary, user }: UserHeaderClientProps) {
-    const stripeProLink = process.env.NODE_ENV === 'development'
+    const stripeProLink = (process.env.NODE_ENV === 'development'
         ? env.NEXT_PUBLIC_STRIPE_PRO_LINK_TEST
-        : env.NEXT_PUBLIC_STRIPE_PRO_LINK_LIVE;
+        : env.NEXT_PUBLIC_STRIPE_PRO_LINK_LIVE) + `?client_reference_id=${user?.id}`;
 
-    const showUpgradeButton = user?.role === 'admin';
+    const showUpgradeButton = user?.role !== 'premium';
 
     return (
         <header className="fixed top-0 left-0 right-0 bg-white dark:bg-zinc-900 border-b border-gray-200 dark:border-zinc-800 z-10 h-16">

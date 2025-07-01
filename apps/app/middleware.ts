@@ -100,6 +100,13 @@ const getUserRole = (role?: string): Role => {
 };
 
 export function middleware(req: NextRequest) {
+  const { pathname } = req.nextUrl;
+
+  // Si es un webhook de la API, no procesar nada más
+  if (pathname.startsWith('/api/webhooks')) {
+    return;
+  }
+
   // Primero aplicar middleware de internacionalización
   const i18nResponse = internationalizationMiddleware({
     headers: req.headers,
@@ -108,8 +115,6 @@ export function middleware(req: NextRequest) {
   if (i18nResponse) {
     return i18nResponse;
   }
-
-  const { pathname } = req.nextUrl;
 
   // Extraer el locale de la URL
   const locale = pathname.match(/^\/([a-z]{2})(?:\/|$)/)?.[1] || 'es';

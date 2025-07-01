@@ -103,11 +103,11 @@ export const Header = ({ dictionary, locale }: HeaderProps) => {
           <ModeToggle />
 
           {/* Single CTA Button */}
-          <Button className="bg-[#0d4b3d] hover:bg-[#0d4b3d]/90 text-white font-nunito font-bold px-4 py-1 h-9" asChild>
-            <Link href={`${env.NEXT_PUBLIC_APP_URL}/${locale}/sign-in`}>
+          <Link href={`${env.NEXT_PUBLIC_APP_URL}/${locale}/sign-in`}>
+            <Button className="bg-[#0d4b3d] hover:bg-[#0d4b3d]/90 text-white font-nunito font-bold px-4 py-1 h-9">
               {(dictionary.web.header as any)?.tryFree || 'Comenzar Gratis'}
-            </Link>
-          </Button>
+            </Button>
+          </Link>
 
           {/* Mobile menu button */}
           <Button variant="ghost" onClick={() => setOpen(!isOpen)} className="lg:hidden ml-2 px-2">

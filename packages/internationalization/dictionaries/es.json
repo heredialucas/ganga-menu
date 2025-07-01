@@ -413,9 +413,11 @@
       "monthly": "mes",
       "popular": "MÁS POPULAR",
       "tryIt": "Comenzar Gratis",
+      "buyNow": "Contratar Ahora",
       "contactUs": "Contáctanos",
       "free": "Gratis",
       "forever": "para siempre",
+      "contactForPrice": "Consultar",
       "plans": [
         {
           "name": "Gratis",
@@ -423,7 +425,7 @@
           "price": "0",
           "features": [
             "Menú digital ilimitado",
-            "Hasta 3 mozos simultáneos", 
+            "Hasta 3 mozos simultáneos",
             "Panel de cocina básico",
             "Hasta 10 mesas",
             "Soporte por email"
@@ -432,11 +434,11 @@
         {
           "name": "Profesional",
           "description": "Para restaurantes que buscan optimizar completamente su operación con análisis y funciones avanzadas",
-          "price": "29",
+          "price": "15",
           "features": [
             "Todo lo del plan Gratis",
             "Mozos ilimitados",
-            "Mesas ilimitadas", 
+            "Mesas ilimitadas",
             "Analytics avanzado",
             "Personalización completa",
             "Soporte prioritario 24/7"
@@ -444,8 +446,8 @@
         },
         {
           "name": "Empresarial",
-          "description": "Solución completa para cadenas y restaurantes grandes con múltiples ubicaciones",
-          "price": "99",
+          "description": "Soluciones a medida para diseños únicos, cadenas de restaurantes o necesidades específicas. Contáctanos para una cotización.",
+          "price": "contact",
           "features": [
             "Todo lo del plan Profesional",
             "Múltiples ubicaciones",

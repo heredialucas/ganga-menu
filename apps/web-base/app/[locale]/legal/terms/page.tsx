@@ -34,7 +34,7 @@ const Terms = async ({ params }: TermsProps) => {
 
                     <div className="prose prose-lg max-w-none">
                         <p className="text-gray-600 mb-8 text-center">
-                            <strong>Última actualización:</strong> {new Date().toLocaleDateString('es-ES')}
+                            <strong>Última actualización:</strong> 24 de octubre de 2024
                         </p>
 
                         <div className="space-y-8">

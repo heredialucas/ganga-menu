@@ -28,6 +28,10 @@ const Pricing = async ({ params }: PricingProps) => {
   const { locale } = await params;
   const dictionary = await getDictionary(locale);
 
+  const stripeProLink = process.env.NODE_ENV === 'development'
+    ? env.NEXT_PUBLIC_STRIPE_PRO_LINK_TEST
+    : env.NEXT_PUBLIC_STRIPE_PRO_LINK_LIVE;
+
   return (
     <div className="w-full py-20 lg:py-40 bg-gradient-to-br from-gray-50 to-gray-100">
       <div className="container mx-auto">
@@ -125,11 +129,9 @@ const Pricing = async ({ params }: PricingProps) => {
 
               <div className="p-8 pt-0">
                 <Button className="w-full gap-4 bg-gradient-to-r from-[#0d4b3d] to-[#7dd3c8] hover:from-[#0d4b3d]/90 hover:to-[#7dd3c8]/90 text-white var(--font-nunito) font-black" asChild>
-                  {env.NEXT_PUBLIC_APP_URL && (
-                    <Link href={`${env.NEXT_PUBLIC_APP_URL}/${locale}/sign-in`}>
-                      {dictionary.web.pricing.tryIt} <MoveRight className="h-4 w-4" />
-                    </Link>
-                  )}
+                  <Link href={stripeProLink} target="_blank" rel="noopener noreferrer">
+                    {(dictionary.web.pricing as any)?.buyNow || "Contratar Ahora"} <MoveRight className="h-4 w-4" />
+                  </Link>
                 </Button>
               </div>
             </div>
@@ -149,10 +151,18 @@ const Pricing = async ({ params }: PricingProps) => {
                 </p>
 
                 <div className="mb-8 flex items-baseline gap-2">
-                  <span className="text-5xl font-black var(--font-nunito) bg-gradient-to-r from-purple-600 to-purple-400 inline-block text-transparent bg-clip-text">
-                    ${dictionary.web.pricing.plans[2].price}
-                  </span>
-                  <span className="text-muted-foreground text-sm var(--font-nunito)">/ {dictionary.web.pricing.monthly}</span>
+                  {(dictionary.web.pricing.plans[2] as any).price === 'contact' ? (
+                    <span className="text-3xl font-black var(--font-nunito) bg-gradient-to-r from-purple-600 to-purple-400 inline-block text-transparent bg-clip-text">
+                      {(dictionary.web.pricing as any)?.contactForPrice || "Consultar"}
+                    </span>
+                  ) : (
+                    <>
+                      <span className="text-5xl font-black var(--font-nunito) bg-gradient-to-r from-purple-600 to-purple-400 inline-block text-transparent bg-clip-text">
+                        ${dictionary.web.pricing.plans[2].price}
+                      </span>
+                      <span className="text-muted-foreground text-sm var(--font-nunito)">/ {dictionary.web.pricing.monthly}</span>
+                    </>
+                  )}
                 </div>
 
                 <div className="space-y-4">

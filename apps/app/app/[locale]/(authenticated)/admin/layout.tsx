@@ -1,9 +1,7 @@
 import type { ReactNode } from 'react';
 import { getDictionary } from '@repo/internationalization';
 import { AdminSidebar } from '../components/sidebar-components/admin-sidebar';
-import { UserHeaderClient } from '../components/user-header/userHeaderClient';
-import Image from 'next/image';
-import logo from '@/app/public/logo.png';
+import { UserHeaderServer } from '../components/user-header/userHeaderServer';
 
 type AdminLayoutProps = {
     readonly children: ReactNode;
@@ -18,11 +16,7 @@ export default async function AdminLayout({ children, params }: AdminLayoutProps
 
     return (
         <div className="flex w-full min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white">
-            <UserHeaderClient
-                logo={<Image src={logo} alt="Ganga-Menu" width={32} height={32} />}
-                title="Ganga-Menú"
-                dictionary={dictionary}
-            />
+            <UserHeaderServer />
 
             <div className="pt-16 flex w-full h-full">
                 <AdminSidebar dictionary={dictionary} />

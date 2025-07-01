@@ -167,6 +167,9 @@
         "title": "Herramientas internas para Ganga-Menú",
         "description": "Herramientas internas para Ganga-Menú que te ayudarán a gestionar tus menús digitales."
       }
+    },
+    "header": {
+      "upgradeToPro": "Pasar a Profesional"
     }
   },
   "web": {

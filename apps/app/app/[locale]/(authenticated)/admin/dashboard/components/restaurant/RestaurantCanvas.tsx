@@ -55,7 +55,10 @@ export default function RestaurantCanvas({
     }, []);
 
     const handleStageClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
-        if (e.target === e.target.getStage()) {
+        // Deseleccionar solo si se hace click en el stage o en el grid
+        const clickedOnBackground = e.target === e.target.getStage() ||
+            e.target.attrs.name === 'grid-line';
+        if (clickedOnBackground) {
             onSelectElement(null);
         }
     };
@@ -69,29 +72,35 @@ export default function RestaurantCanvas({
                 onClick={handleStageClick}
             >
                 <Layer>
-                    {/* Grid background */}
-                    {Array.from({ length: Math.ceil(stageSize.width / 50) }).map((_, i) =>
-                        Array.from({ length: Math.ceil(stageSize.height / 50) }).map((_, j) => (
+                    {/* Grid background - usando Group para evitar interferencia con eventos */}
+                    <Group name="grid-background" listening={false}>
+                        {/* Líneas verticales */}
+                        {Array.from({ length: Math.ceil(stageSize.width / 50) + 1 }).map((_, i) => (
                             <Rect
-                                key={`grid-${i}-${j}`}
+                                key={`grid-v-${i}`}
                                 x={i * 50}
-                                y={j * 50}
+                                y={0}
                                 width={1}
                                 height={stageSize.height}
                                 fill="#e5e5e5"
+                                name="grid-line"
+                                listening={false}
                             />
-                        ))
-                    )}
-                    {Array.from({ length: Math.ceil(stageSize.height / 50) }).map((_, i) => (
-                        <Rect
-                            key={`grid-h-${i}`}
-                            x={0}
-                            y={i * 50}
-                            width={stageSize.width}
-                            height={1}
-                            fill="#e5e5e5"
-                        />
-                    ))}
+                        ))}
+                        {/* Líneas horizontales */}
+                        {Array.from({ length: Math.ceil(stageSize.height / 50) + 1 }).map((_, i) => (
+                            <Rect
+                                key={`grid-h-${i}`}
+                                x={0}
+                                y={i * 50}
+                                width={stageSize.width}
+                                height={1}
+                                fill="#e5e5e5"
+                                name="grid-line"
+                                listening={false}
+                            />
+                        ))}
+                    </Group>
 
                     {/* Elements */}
                     {elements.map((element) => (
@@ -124,8 +133,17 @@ function RestaurantElementComponent({ element, isSelected, onSelect, onUpdate }:
         if (isSelected && transformerRef.current && groupRef.current) {
             transformerRef.current.nodes([groupRef.current]);
             transformerRef.current.getLayer()?.batchDraw();
+        } else if (!isSelected && transformerRef.current) {
+            // Limpiar el transformer cuando se deselecciona
+            transformerRef.current.nodes([]);
+            transformerRef.current.getLayer()?.batchDraw();
         }
     }, [isSelected]);
+
+    const handleClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
+        e.cancelBubble = true; // Prevenir propagación al stage
+        onSelect();
+    };
 
     const handleDragEnd = () => {
         if (groupRef.current) {
@@ -146,8 +164,8 @@ function RestaurantElementComponent({ element, isSelected, onSelect, onUpdate }:
             onUpdate({
                 x: node.x(),
                 y: node.y(),
-                width: Math.max(5, element.width * scaleX),
-                height: Math.max(5, element.height * scaleY),
+                width: Math.max(30, element.width * scaleX),
+                height: Math.max(30, element.height * scaleY),
             });
 
             // Reset scale after applying to width/height
@@ -163,10 +181,11 @@ function RestaurantElementComponent({ element, isSelected, onSelect, onUpdate }:
                 x={element.x}
                 y={element.y}
                 draggable
-                onClick={onSelect}
-                onTap={onSelect}
+                onClick={handleClick}
+                onTap={handleClick}
                 onDragEnd={handleDragEnd}
                 onTransformEnd={handleTransformEnd}
+                name={`element-${element.id}`}
             >
                 {element.shape === 'circle' ? (
                     <Circle
@@ -216,11 +235,25 @@ function RestaurantElementComponent({ element, isSelected, onSelect, onUpdate }:
                 <Transformer
                     ref={transformerRef}
                     boundBoxFunc={(oldBox, newBox) => {
+                        // Mínimo tamaño para evitar elementos demasiado pequeños
                         if (newBox.width < 30 || newBox.height < 30) {
                             return oldBox;
                         }
                         return newBox;
                     }}
+                    enabledAnchors={[
+                        'top-left',
+                        'top-right',
+                        'bottom-left',
+                        'bottom-right',
+                    ]}
+                    rotateEnabled={false}
+                    borderStroke="#0066cc"
+                    borderStrokeWidth={2}
+                    anchorFill="#0066cc"
+                    anchorStroke="#003d7a"
+                    anchorSize={8}
+                    anchorCornerRadius={2}
                 />
             )}
         </>

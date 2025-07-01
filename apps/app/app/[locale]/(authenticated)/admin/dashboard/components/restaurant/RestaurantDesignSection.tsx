@@ -44,21 +44,36 @@ export default function RestaurantDesignSection({
         : elements.length > 0;
 
     const addElement = (type: 'table' | 'bar' | 'decoration', shape: 'circle' | 'rectangle' | 'square') => {
+        // Posicionar nuevos elementos en una grilla para evitar superposición
+        const gridSize = 50;
+        const startX = 50;
+        const startY = 50;
+        const elementsPerRow = Math.floor((stageSize.width - 100) / (gridSize * 2));
+
+        const elementIndex = elements.length;
+        const row = Math.floor(elementIndex / elementsPerRow);
+        const col = elementIndex % elementsPerRow;
+
+        const x = startX + (col * gridSize * 2);
+        const y = startY + (row * gridSize * 2);
+
         const newElement: RestaurantElement = {
             id: `${type}_${Date.now()}`,
             type,
             shape,
-            x: 100,
-            y: 100,
-            // Cajas más pequeñas como solicitado
-            width: shape === 'circle' ? 60 : 80,
-            height: shape === 'circle' ? 60 : shape === 'square' ? 80 : 50,
+            x: x,
+            y: y,
+            // Tamaños apropiados para mejor manipulación
+            width: shape === 'circle' ? 60 : shape === 'rectangle' ? 100 : 80,
+            height: shape === 'circle' ? 60 : shape === 'rectangle' ? 60 : 80,
             fill: type === 'table' ? '#8B4513' : type === 'bar' ? '#654321' : '#A0A0A0',
             name: `${type === 'table' ? 'Mesa' : type === 'bar' ? 'Barra' : 'Decoración'} ${elements.length + 1}`,
             capacity: type === 'table' ? 4 : undefined
         };
 
         setElements(prev => [...prev, newElement]);
+        // Seleccionar automáticamente el nuevo elemento para facilitar la edición
+        setSelectedId(newElement.id);
     };
 
     const updateElement = (id: string, updates: Partial<RestaurantElement>) => {

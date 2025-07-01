@@ -41,10 +41,10 @@ export const Header = ({ dictionary, locale }: HeaderProps) => {
       title: dictionary.web.header.features || 'Features',
       href: `/${locale}#features`,
     },
-    // {
-    //   title: dictionary.web.header.pricing || 'Pricing',
-    //   href: `/${locale}/pricing`,
-    // },
+    {
+      title: dictionary.web.header.pricing || 'Pricing',
+      href: `/${locale}/pricing`,
+    },
     {
       title: dictionary.web.header.about || 'About',
       href: `/${locale}#faq`,
@@ -99,13 +99,14 @@ export const Header = ({ dictionary, locale }: HeaderProps) => {
         </div>
 
         {/* Right side buttons */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <ModeToggle />
-          <Button className="bg-[#0d4b3d] hover:bg-[#0d4b3d]/90 text-white font-nunito font-bold px-3 py-1 h-9" asChild>
-            <Link href={`${env.NEXT_PUBLIC_APP_URL}/${locale}/sign-in`}>
-              {dictionary.web.header.getStarted || 'Get Started'}
-            </Link>
 
+          {/* Single CTA Button */}
+          <Button className="bg-[#0d4b3d] hover:bg-[#0d4b3d]/90 text-white font-nunito font-bold px-4 py-1 h-9" asChild>
+            <Link href={`${env.NEXT_PUBLIC_APP_URL}/${locale}/sign-in`}>
+              {(dictionary.web.header as any)?.tryFree || 'Comenzar Gratis'}
+            </Link>
           </Button>
 
           {/* Mobile menu button */}
@@ -131,28 +132,18 @@ export const Header = ({ dictionary, locale }: HeaderProps) => {
                 </div>
               </div>
             ))}
-            <div className="px-4">
+            <div className="px-4 space-y-4">
               <ModeToggle />
+
+              {/* Mobile CTA Button */}
               {env.NEXT_PUBLIC_APP_URL && (
                 <Link
                   href={`${env.NEXT_PUBLIC_APP_URL}/${locale}/sign-in`}
-                  className="flex items-center justify-between font-nunito font-bold text-[#0d4b3d]"
+                  className="flex items-center justify-between font-nunito font-bold bg-[#0d4b3d] text-white rounded-lg px-4 py-2"
                   onClick={() => setOpen(false)}
                 >
-                  <span className="text-lg">{dictionary.web.header.getStarted || 'Get Started'}</span>
-                  <MoveRight className="h-4 w-4 stroke-1 text-[#0d4b3d]" />
-                </Link>
-              )}
-            </div>
-            <div className="px-4">
-              {env.NEXT_PUBLIC_APP_URL && (
-                <Link
-                  href={`${env.NEXT_PUBLIC_APP_URL}/${locale}/sign-in`}
-                  className="flex items-center justify-between font-nunito font-bold text-[#0d4b3d]"
-                  onClick={() => setOpen(false)}
-                >
-                  <span className="text-lg">{dictionary.web.header.logIn || 'Log In'}</span>
-                  <MoveRight className="h-4 w-4 stroke-1 text-[#0d4b3d]" />
+                  <span className="text-lg">{(dictionary.web.header as any)?.tryFree || 'Comenzar Gratis'}</span>
+                  <MoveRight className="h-4 w-4 stroke-1 text-white" />
                 </Link>
               )}
             </div>

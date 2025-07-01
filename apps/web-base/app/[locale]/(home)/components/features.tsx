@@ -1,7 +1,7 @@
 'use client';
 
 import type { Dictionary } from '@repo/internationalization';
-import { MenuIcon, Smartphone, BarChart3, Clock, DollarSign, Users } from 'lucide-react';
+import { MenuIcon, Smartphone, BarChart3, Clock, Users, ChefHat } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { staggerContainer, fadeIn } from '../lib/animations';
 
@@ -13,11 +13,11 @@ export const Features = ({ dictionary }: FeaturesProps) => {
   const features = dictionary.web.home.features.items.map((item, index) => ({
     icon: [
       <MenuIcon className="w-6 h-6 text-[#0d4b3d] dark:text-white" />,
-      <Smartphone className="w-6 h-6 text-[#0d4b3d] dark:text-white" />,
       <Clock className="w-6 h-6 text-[#0d4b3d] dark:text-white" />,
-      <BarChart3 className="w-6 h-6 text-[#0d4b3d] dark:text-white" />,
+      <ChefHat className="w-6 h-6 text-[#0d4b3d] dark:text-white" />,
       <Users className="w-6 h-6 text-[#0d4b3d] dark:text-white" />,
-      <DollarSign className="w-6 h-6 text-[#0d4b3d] dark:text-white" />
+      <BarChart3 className="w-6 h-6 text-[#0d4b3d] dark:text-white" />,
+      <Smartphone className="w-6 h-6 text-[#0d4b3d] dark:text-white" />
     ][index],
     title: item.title,
     description: item.description
@@ -44,16 +44,16 @@ export const Features = ({ dictionary }: FeaturesProps) => {
         {/* Header */}
         <motion.div variants={fadeIn} className="text-center mb-16 relative">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4 var(--font-nunito)">
-            {dictionary.web.home.features.title || "Why Choose Ganga-Menú"}
+            {dictionary.web.home.features.title || "Solución Completa para tu Restaurante"}
           </h2>
           <div className="w-20 h-1 bg-gradient-to-r from-[#0d4b3d]/70 to-[#0d4b3d] rounded-full mx-auto mb-6"></div>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto var(--font-nunito)">
-            {dictionary.web.home.features.description || "Transform your restaurant's digital presence with our powerful menu management platform designed specifically for food businesses"}
+            {dictionary.web.home.features.description || "Una plataforma integral que conecta menús digitales, gestión de pedidos, mozos y cocina en un solo sistema eficiente"}
           </p>
         </motion.div>
 
         {/* Features grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature, index) => (
             <motion.div
               key={index}
@@ -62,7 +62,7 @@ export const Features = ({ dictionary }: FeaturesProps) => {
                 animate: { opacity: 1, y: 0 },
               }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-[#0d4b3d]/20 dark:border-[#0d4b3d]/30 hover:border-[#0d4b3d]/40 dark:hover:border-[#0d4b3d]/50 transition-all hover:shadow-xl transform hover:scale-105 shadow-lg"
+              className="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-[#0d4b3d]/20 dark:border-[#0d4b3d]/30 hover:border-[#0d4b3d]/40 dark:hover:border-[#0d4b3d]/50 transition-all hover:shadow-xl transform hover:scale-105 shadow-lg group"
               whileHover={{
                 scale: 1.08,
                 transition: { duration: 0.3 }

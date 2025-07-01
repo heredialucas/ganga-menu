@@ -16,20 +16,20 @@ type StatsProps = {
 export const Stats = ({ dictionary }: StatsProps) => {
   const steps = [
     {
-      title: dictionary.web.home.stats.process?.[0]?.title || "Descarga la App",
-      description: dictionary.web.home.stats.process?.[0]?.description || "Registra tu restaurante y configura la información básica en minutos."
+      title: dictionary.web.home.stats.process?.[0]?.title || "Configura tu Restaurante",
+      description: dictionary.web.home.stats.process?.[0]?.description || "Registra tu establecimiento, crea el menú digital y configura las mesas y zonas de tu restaurante."
     },
     {
-      title: dictionary.web.home.stats.process?.[1]?.title || "Encuentra packs",
-      description: dictionary.web.home.stats.process?.[1]?.description || "Explora los packs sorpresa disponibles cerca de ti y elige los que más te apetezcan."
+      title: dictionary.web.home.stats.process?.[1]?.title || "Capacita a tu Personal",
+      description: dictionary.web.home.stats.process?.[1]?.description || "Los mozos acceden con códigos únicos para tomar pedidos desde móviles o tabletas de forma intuitiva."
     },
     {
-      title: dictionary.web.home.stats.process?.[2]?.title || "Reserva y paga",
-      description: dictionary.web.home.stats.process?.[2]?.description || "Haz tu reserva con un solo clic y paga directamente desde la app de forma segura."
+      title: dictionary.web.home.stats.process?.[2]?.title || "Cocina en Tiempo Real",
+      description: dictionary.web.home.stats.process?.[2]?.description || "La cocina recibe pedidos instantáneamente y actualiza el estado: en preparación, listo para servir."
     },
     {
-      title: dictionary.web.home.stats.process?.[3]?.title || "Recoge y disfruta",
-      description: dictionary.web.home.stats.process?.[3]?.description || "Pasa por el establecimiento a la hora indicada, muestra tu reserva y disfruta de tu deliciosa comida salvada."
+      title: dictionary.web.home.stats.process?.[3]?.title || "Servicio Optimizado",
+      description: dictionary.web.home.stats.process?.[3]?.description || "Mejora la eficiencia, reduce tiempos de espera y brinda una experiencia excepcional a tus clientes."
     }
   ];
 
@@ -40,7 +40,7 @@ export const Stats = ({ dictionary }: StatsProps) => {
       viewport={{ once: true }}
       variants={staggerContainer}
       className="container mx-auto px-4 py-16 relative"
-      id="app"
+      id="proceso"
     >
       {/* Decorative elements */}
       <div className="absolute right-0 bottom-0 w-64 h-64 bg-[#0d4b3d]/10 dark:bg-[#0d4b3d]/5 rounded-full blur-3xl"></div>
@@ -52,11 +52,11 @@ export const Stats = ({ dictionary }: StatsProps) => {
         className="text-center mb-16"
       >
         <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4 var(--font-nunito)">
-          {dictionary.web.home.stats.title || "Cómo funciona Ganga-Menú"}
+          {dictionary.web.home.stats.title || "Cómo funciona la plataforma integrada"}
         </h2>
         <div className="w-20 h-1 bg-gradient-to-r from-[#0d4b3d]/70 to-[#0d4b3d] rounded-full mx-auto mb-6"></div>
         <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto var(--font-nunito)">
-          {dictionary.web.home.stats.description || "Es muy sencillo empezar a salvar comida con nuestra app. Sigue estos cuatro pasos y únete al movimiento contra el desperdicio alimentario"}
+          {dictionary.web.home.stats.description || "Implementa la solución completa en tu restaurante y transforma la experiencia gastronómica"}
         </p>
       </motion.div>
 
@@ -79,7 +79,7 @@ export const Stats = ({ dictionary }: StatsProps) => {
                 </span>
               </div>
               {index < steps.length - 1 && (
-                <div className="hidden md:block absolute top-1/2 left-full w-full h-px bg-[#0d4b3d]/20 dark:bg-[#0d4b3d]/30 -translate-y-1/2"></div>
+                <div className="hidden lg:block absolute top-1/2 left-full w-full h-px bg-[#0d4b3d]/20 dark:bg-[#0d4b3d]/30 -translate-y-1/2"></div>
               )}
             </div>
             <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-3 var(--font-nunito)">
@@ -108,7 +108,7 @@ export const Stats = ({ dictionary }: StatsProps) => {
         >
           <Image
             src={logoWithBg}
-            alt="Ganga-Menú App"
+            alt="Ganga-Menú Platform"
             width={600}
             height={400}
             className="rounded-lg shadow-xl"

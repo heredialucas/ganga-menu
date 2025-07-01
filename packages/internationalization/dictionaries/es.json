@@ -207,12 +207,13 @@
     },
     "header": {
       "home": "Inicio",
-      "features": "Características",
+      "features": "Plataforma",
       "pricing": "Precios", 
       "about": "Acerca de",
       "contact": "Contacto",
       "logIn": "Iniciar Sesión",
-      "getStarted": "Comenzar",
+      "getStarted": "¡Prueba Gratis Ahora!",
+      "tryFree": "Comenzar Gratis",
       "navigation": "Navegación"
     },
     "home": {
@@ -221,10 +222,19 @@
         "description": "La plataforma que ayuda a restaurantes a crear y gestionar sus menús digitales de forma fácil y profesional."
       },
       "hero": {
-        "title": "Transforma la Presencia Digital de tu Restaurante",
-        "subtitle": "Crea menús digitales impresionantes, muestra especiales del día y brinda a tus clientes una experiencia gastronómica inolvidable. Ganga-Menú ayuda a restaurantes locales a modernizar la presentación de sus menús y potenciar su negocio.",
-        "getStarted": "Comenzar",
-        "viewPricing": "Ver Precios"
+        "title": "Gestión Completa para tu Restaurante",
+        "subtitle": "Desde menús digitales interactivos hasta gestión completa de pedidos. Los mozos toman órdenes fácilmente y la cocina controla cada preparación en tiempo real. Todo en una plataforma integrada.",
+        "getStarted": "Comenzar Ahora",
+        "learnMore": "Conocer Más",
+        "viewPricing": "Ver Precios",
+        "gallery": {
+          "menu": "Menús Digitales",
+          "menuDesc": "Crea menús hermosos y profesionales",
+          "waiters": "Sistema para Mozos",
+          "waitersDesc": "Gestiona pedidos eficientemente",
+          "kitchen": "Panel de Cocina",
+          "kitchenDesc": "Controla el estado de cada pedido"
+        }
       },
       "cases": {
         "title": "Impacto Positivo en el Medioambiente",
@@ -237,114 +247,138 @@
         }
       },
       "features": {
-        "title": "Por Qué Elegir Ganga-Menú",
-        "description": "Transforma la presencia digital de tu restaurante con nuestra poderosa plataforma de gestión de menús diseñada específicamente para negocios gastronómicos",
+        "title": "Solución Completa para tu Restaurante",
+        "description": "Una plataforma integral que conecta menús digitales, gestión de pedidos, mozos y cocina en un solo sistema eficiente",
         "items": [
           {
-            "title": "Creación de Menús Digitales",
-            "description": "Crea menús digitales hermosos e interactivos que muestren tus platos con imágenes de alta calidad y descripciones detalladas."
+            "title": "Menús Digitales Interactivos",
+            "description": "Crea menús digitales hermosos e interactivos con imágenes de alta calidad, descripciones detalladas y actualizaciones en tiempo real."
           },
           {
-            "title": "Diseño Mobile-First",
-            "description": "Tus menús se ven perfectos en cualquier dispositivo. Los clientes pueden navegar y explorar fácilmente tu oferta desde sus teléfonos."
+            "title": "Gestión Inteligente de Pedidos",
+            "description": "Los mozos toman pedidos directamente desde tabletas o móviles. Todo se sincroniza automáticamente con la cocina para un flujo perfecto."
           },
           {
-            "title": "Gestión de Especiales del Día",
-            "description": "Actualiza fácilmente especiales diarios, artículos de temporada y ofertas por tiempo limitado para mantener tu menú fresco y emocionante."
+            "title": "Panel de Cocina en Tiempo Real",
+            "description": "La cocina recibe pedidos instantáneamente y puede actualizar el estado de preparación: pendiente, en progreso, listo para servir."
           },
           {
-            "title": "Análisis e Insights",
-            "description": "Rastrea qué platos son más vistos y populares, ayudándote a tomar decisiones basadas en datos sobre tu menú."
+            "title": "Sistema para Mozos",
+            "description": "Interfaz intuitiva para que los mozos gestionen mesas, tomen pedidos, agreguen notas especiales y mantengan el control total del servicio."
           },
           {
-            "title": "Experiencia de Cliente Mejorada",
-            "description": "Proporciona a los clientes una forma atractiva de explorar tu menú, completa con información de alérgenos y opciones dietéticas."
+            "title": "Administración Centralizada",
+            "description": "Panel de administración completo para gestionar menús, categorías, precios, mesas, personal y analizar el rendimiento del restaurante."
           },
           {
-            "title": "Aumenta los Ingresos",
-            "description": "La presentación profesional y el fácil acceso a tu menú pueden ayudar a aumentar los pedidos y el engagement del cliente."
+            "title": "Experiencia Cliente Optimizada",
+            "description": "Los clientes pueden ver menús actualizados, conocer tiempos de espera y disfrutar de una experiencia gastronómica moderna y eficiente."
           }
         ]
       },
       "stats": {
-        "title": "CÓMO FUNCIONA GANGA-MENÚ",
-        "description": "Sigue estos sencillos pasos para crear tu menú digital y comenzar a compartirlo con tus clientes",
+        "title": "CÓMO FUNCIONA LA PLATAFORMA INTEGRADA",
+        "description": "Implementa la solución completa en tu restaurante y transforma la experiencia gastronómica",
         "process": [
           {
-            "title": "Crea tu cuenta",
-            "description": "Regístrate en la plataforma y configura la información básica de tu restaurante."
+            "title": "Configura tu Restaurante",
+            "description": "Registra tu establecimiento, crea el menú digital y configura las mesas y zonas de tu restaurante."
           },
           {
-            "title": "Configura tus platos",
-            "description": "Agrega tus platos, categorías, precios y especiales del día de forma fácil e intuitiva."
+            "title": "Capacita a tu Personal",
+            "description": "Los mozos acceden con códigos únicos para tomar pedidos desde móviles o tabletas de forma intuitiva."
           },
           {
-            "title": "Comparte tu menú",
-            "description": "Obtén el enlace único de tu menú digital y compártelo con tus clientes."
+            "title": "Cocina en Tiempo Real",
+            "description": "La cocina recibe pedidos instantáneamente y actualiza el estado: en preparación, listo para servir."
           },
           {
-            "title": "¡Atrae más clientes!",
-            "description": "Disfruta de un menú profesional que mejora la experiencia de tus clientes y aumenta tus ventas."
+            "title": "Servicio Optimizado",
+            "description": "Mejora la eficiencia, reduce tiempos de espera y brinda una experiencia excepcional a tus clientes."
           }
         ]
       },
       "testimonials": {
         "title": "Lo que Dicen Nuestros Restaurantes",
-        "description": "Experiencias de restaurantes que utilizan Ganga-Menú para modernizar sus menús",
+        "description": "Experiencias reales de restaurantes que transformaron su operación con nuestra plataforma integrada",
         "items": [
           {
-            "title": "Nuestros clientes ahora navegan nuestro menú con facilidad",
-            "description": "Desde que implementamos Ganga-Menú, nuestros clientes pueden ver todos nuestros platos con fotos hermosas y descripciones detalladas. Ha mejorado muchísimo la experiencia en nuestro restaurante y hemos notado un aumento en los pedidos.",
+            "title": "Revolucionó nuestra operación completa",
+            "description": "Desde los menús digitales hasta la gestión de pedidos en cocina, todo funciona de manera sincronizada. Los mozos toman órdenes más rápido, la cocina tiene mejor control y nuestros clientes están más satisfechos. Aumentamos la eficiencia en un 40%.",
             "author": {
               "name": "María Rodríguez",
-              "image": "https://github.com/haydenbleasel.png"
+              "location": "Restaurante La Tradición, Madrid"
             }
           },
           {
-            "title": "Actualizar especiales del día nunca fue tan fácil",
-            "description": "Con Ganga-Menú podemos cambiar nuestros especiales del día en segundos y nuestros clientes lo ven inmediatamente. La plataforma es súper intuitiva y el soporte técnico es excelente. Totalmente recomendado para cualquier restaurante.",
+            "title": "Los mozos y la cocina trabajan en perfecta armonía",
+            "description": "Lo que más nos impresiona es cómo los pedidos llegan instantáneamente a cocina y podemos actualizar el estado en tiempo real. Los mozos saben exactamente cuándo está listo cada plato. Reducimos los tiempos de espera significativamente.",
             "author": {
-              "name": "Juan Dávila",
-              "image": "https://github.com/haydenbleasel.png"
+              "name": "Carlos Mendoza",
+              "location": "Bistró Central, Barcelona"
+            }
+          },
+          {
+            "title": "Una inversión que se paga sola",
+            "description": "La plataforma integrada nos permitió optimizar el personal y servir más mesas con la misma cantidad de mozos. Los clientes ven menús actualizados y el personal está menos estresado. ROI positivo en menos de 3 meses.",
+            "author": {
+              "name": "Ana Jiménez",
+              "location": "Taverna del Puerto, Valencia"
+            }
+          },
+          {
+            "title": "Tecnología que realmente funciona",
+            "description": "Implementamos el sistema completo: menús digitales, gestión de pedidos y panel de cocina. Todo es intuitivo, el personal se adaptó rápidamente y nuestros clientes notan la diferencia en la calidad del servicio.",
+            "author": {
+              "name": "Roberto Silva",
+              "location": "Casa Silva, Sevilla"
             }
           }
         ]
       },
       "faq": {
         "title": "Preguntas Frecuentes",
-        "description": "Respuestas a las dudas más comunes sobre Ganga-Menú y cómo crear tu menú digital",
+        "description": "Respuestas a las dudas más comunes sobre nuestra plataforma integrada para restaurantes",
         "cta": "¿Aún tienes preguntas? Contáctanos",
         "needMore": "¿Necesitas más información?",
-        "contactDescription": "Si no encontraste la respuesta a tu pregunta, nuestro equipo está listo para ayudarte a digitalizar tu menú.",
+        "contactDescription": "Si no encontraste la respuesta a tu pregunta, nuestro equipo está listo para ayudarte a transformar tu restaurante.",
         "items": [
           {
-            "question": "¿Cómo funciona Ganga-Menú?",
-            "answer": "Ganga-Menú es una plataforma que permite a los restaurantes crear menús digitales interactivos. Subes fotos de tus platos, agregas descripciones y precios, y obtienes un enlace único para compartir con tus clientes. Es fácil, rápido y totalmente personalizable."
+            "question": "¿Cómo funciona la plataforma integrada?",
+            "answer": "Nuestra plataforma conecta menús digitales, gestión de pedidos y control de cocina en un solo sistema. Los clientes ven el menú, los mozos toman pedidos desde dispositivos móviles, y la cocina recibe todo instantáneamente con control de estados en tiempo real."
           },
           {
-            "question": "¿Qué tipo de restaurantes pueden usar Ganga-Menú?",
-            "answer": "Cualquier tipo de establecimiento gastronómico: restaurantes, cafeterías, bares, pizzerías, panaderías, food trucks, etc. Nuestra plataforma se adapta a cualquier tipo de menú, desde comida rápida hasta alta cocina."
+            "question": "¿Qué incluye exactamente el sistema?",
+            "answer": "Incluye: menús digitales personalizables, sistema de pedidos para mozos con gestión de mesas, panel de cocina para controlar estados de preparación, panel administrativo completo y sincronización en tiempo real entre todas las áreas."
           },
           {
-            "question": "¿Es difícil actualizar mi menú?",
-            "answer": "Para nada. Puedes actualizar precios, agregar especiales del día, cambiar descripciones o subir nuevas fotos en cuestión de segundos desde nuestro panel de administración. Los cambios se reflejan inmediatamente en tu menú digital."
+            "question": "¿Es difícil capacitar al personal?",
+            "answer": "No, el sistema está diseñado para ser intuitivo. Los mozos se adaptan rápidamente al sistema de pedidos y la cocina aprende a usar el panel de control en minutos. Ofrecemos capacitación incluida en la implementación."
           },
           {
-            "question": "¿Puedo personalizar el diseño de mi menú?",
-            "answer": "Sí, puedes personalizar colores, añadir el logo de tu restaurante, organizar las categorías como prefieras y destacar tus platos especiales. Todo se hace de forma visual e intuitiva."
+            "question": "¿Funciona en cualquier tipo de restaurante?",
+            "answer": "Sí, desde cafeterías pequeñas hasta restaurantes grandes. El sistema se adapta a cualquier tipo de establecimiento: restaurantes, bares, pizzerías, food trucks, etc. Configuramos las mesas y flujos según tus necesidades específicas."
+          },
+          {
+            "question": "¿Qué pasa si no tengo internet o se corta la conexión?",
+            "answer": "El sistema funciona con conexión a internet, pero tiene modo offline básico que permite seguir tomando pedidos. Una vez que se restablece la conexión, todo se sincroniza automáticamente."
+          },
+          {
+            "question": "¿Puedo empezar a usar el sistema inmediatamente?",
+            "answer": "¡Sí! Puedes comenzar a usar Ganga-Menú desde el momento cero. Crea tu cuenta, configura tu menú básico y empieza a recibir pedidos en minutos. Las funcionalidades avanzadas se pueden activar gradualmente según tus necesidades."
           }
         ]
       },
       "cta": {
-        "title": "¿Tienes un restaurante?",
-        "description": "Únete a miles de restaurantes que ya digitalizaron sus menús y mejoraron la experiencia de sus clientes",
+        "title": "¿Listo para Transformar tu Restaurante?",
+        "description": "Únete a restaurantes que revolucionaron su operación con nuestra plataforma integrada: menús digitales, gestión de pedidos y control de cocina",
         "calendly": {
-          "title": "Agenda una llamada",
+          "title": "Agenda una demostración",
           "subtitle": "30 minutos · Gratis",
           "benefits": [
-            "Conoce nuestro proceso",
-            "Resuelve tus dudas",
-            "Define el alcance de tu proyecto"
+            "Ve la plataforma completa en acción",
+            "Conoce cómo optimizar tu operación",
+            "Calcula tu ROI personalizado"
           ]
         }
       },
@@ -360,12 +394,12 @@
         "privacy": "Prometemos no enviar spam, solo contenido relevante sobre digitalización gastronómica"
       },
       "footer": {
-        "companyDescription": "Transforma la presencia digital de tu restaurante con menús interactivos hermosos que muestran tus platos y mejoran la experiencia del cliente.",
+        "companyDescription": "Plataforma integral que conecta menús digitales, gestión de pedidos, mozos y cocina en un sistema sincronizado para revolucionar la operación de tu restaurante.",
         "navigation": "Navegación",
         "features": "Características",
-        "menuCreation": "Creación de Menús Digitales",
-        "mobileFirst": "Diseño Mobile-First", 
-        "analytics": "Análisis e Insights",
+        "menuCreation": "Menús Digitales Interactivos",
+        "orderManagement": "Gestión de Pedidos", 
+        "kitchenControl": "Panel de Cocina",
         "contact": "Contacto",
         "getStarted": "Comenzar",
         "rights": "Todos los derechos reservados",
@@ -374,34 +408,61 @@
       }
     },
     "pricing": {
-      "title": "Planes para restaurantes",
-      "description": "Elige el plan que mejor se adapte a las necesidades de menú digital de tu restaurante",
+      "title": "¡Comienza Gratis y Escala Tu Restaurante!",
+      "description": "Empieza sin costo y desbloquea funcionalidades premium según crezcas. Todo lo esencial incluido desde el día uno.",
       "monthly": "mes",
-      "popular": "POPULAR",
-      "tryIt": "Comenzar",
+      "popular": "MÁS POPULAR",
+      "tryIt": "Comenzar Gratis",
       "contactUs": "Contáctanos",
+      "free": "Gratis",
+      "forever": "para siempre",
       "plans": [
         {
-          "name": "Inicial",
-          "description": "Perfecto para restaurantes pequeños y cafeterías que inician su viaje digital",
-          "price": "0"
+          "name": "Gratis",
+          "description": "Perfecto para empezar. Incluye todo lo esencial para digitalizar tu restaurante desde el primer día",
+          "price": "0",
+          "features": [
+            "Menú digital ilimitado",
+            "Hasta 3 mozos simultáneos", 
+            "Panel de cocina básico",
+            "Hasta 10 mesas",
+            "Soporte por email"
+          ]
         },
         {
           "name": "Profesional",
-          "description": "Ideal para restaurantes que quieren características avanzadas y análisis",
-          "price": "29"
+          "description": "Para restaurantes que buscan optimizar completamente su operación con análisis y funciones avanzadas",
+          "price": "29",
+          "features": [
+            "Todo lo del plan Gratis",
+            "Mozos ilimitados",
+            "Mesas ilimitadas", 
+            "Analytics avanzado",
+            "Personalización completa",
+            "Soporte prioritario 24/7"
+          ]
         },
         {
           "name": "Empresarial",
-          "description": "Solución completa para cadenas de restaurantes con múltiples ubicaciones",
-          "price": "99"
+          "description": "Solución completa para cadenas y restaurantes grandes con múltiples ubicaciones",
+          "price": "99",
+          "features": [
+            "Todo lo del plan Profesional",
+            "Múltiples ubicaciones",
+            "API personalizada",
+            "Integración con POS",
+            "Manager dedicado",
+            "Reportes empresariales"
+          ]
         }
       ],
       "features": {
-        "sso": "Creación de menús digitales",
-        "ai": "Gestión de especiales del día",
-        "version": "Panel de análisis",
-        "members": "Hasta {count} imágenes del menú"
+        "digitalMenus": "Menús digitales interactivos",
+        "orderManagement": "Sistema de gestión de pedidos",
+        "kitchenPanel": "Panel de control de cocina",
+        "tableManagement": "Gestión de mesas y mozos",
+        "analytics": "Panel de análisis avanzado",
+        "multiLocation": "Soporte para múltiples ubicaciones"
       }
     },
     "blog": {

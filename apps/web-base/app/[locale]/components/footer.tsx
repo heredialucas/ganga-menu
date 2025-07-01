@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { Facebook, Instagram, Linkedin, Mail, Phone, ShoppingBag, Shield, CheckCircle } from 'lucide-react';
+import { Facebook, Instagram, Linkedin, Mail, Phone, Users, ChefHat, Smartphone } from 'lucide-react';
 import logo from '@/public/logo.png';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
@@ -83,10 +83,10 @@ export const Footer = ({ dictionary }: FooterProps) => {
               </div>
             </motion.div>
 
-            <p className="leading-relaxed max-w-sm text-gray-600 dark:text-gray-300">
-              {dictionary?.web.home.footer?.companyDescription || "Transforma la presencia digital de tu restaurante con menús interactivos hermosos que muestran tus platos y mejoran la experiencia del cliente."}
+            <p className="leading-relaxed max-w-sm text-gray-600 dark:text-gray-300 mb-6">
+              {dictionary?.web.home.footer?.companyDescription || "Plataforma integral que conecta menús digitales, gestión de pedidos, mozos y cocina en un sistema sincronizado para revolucionar la operación de tu restaurante."}
             </p>
-            <div className="flex gap-4 mt-6">
+            <div className="flex gap-4">
               <a
                 href="https://www.facebook.com/"
                 target="_blank"
@@ -170,16 +170,16 @@ export const Footer = ({ dictionary }: FooterProps) => {
             </h3>
             <ul className="space-y-3">
               <li className="flex items-center gap-3 justify-center md:justify-start text-gray-600 dark:text-gray-300">
-                <ShoppingBag className="w-4 h-4 text-[#0d4b3d]" />
-                <span>{dictionary?.web.home.footer?.menuCreation || "Creación de Menús Digitales"}</span>
+                <Smartphone className="w-4 h-4 text-[#0d4b3d]" />
+                <span>{dictionary?.web.home.footer?.menuCreation || "Menús Digitales Interactivos"}</span>
               </li>
               <li className="flex items-center gap-3 justify-center md:justify-start text-gray-600 dark:text-gray-300">
-                <Shield className="w-4 h-4 text-[#0d4b3d]" />
-                <span>{dictionary?.web.home.footer?.mobileFirst || "Diseño Mobile-First"}</span>
+                <Users className="w-4 h-4 text-[#0d4b3d]" />
+                <span>{(dictionary?.web.home.footer as any)?.orderManagement || "Gestión de Pedidos"}</span>
               </li>
               <li className="flex items-center gap-3 justify-center md:justify-start text-gray-600 dark:text-gray-300">
-                <CheckCircle className="w-4 h-4 text-[#0d4b3d]" />
-                <span>{dictionary?.web.home.footer?.analytics || "Análisis e Insights"}</span>
+                <ChefHat className="w-4 h-4 text-[#0d4b3d]" />
+                <span>{(dictionary?.web.home.footer as any)?.kitchenControl || "Panel de Cocina"}</span>
               </li>
             </ul>
           </div>
@@ -189,75 +189,41 @@ export const Footer = ({ dictionary }: FooterProps) => {
             <h3 className="font-semibold mb-4 text-center md:text-left text-gray-800 dark:text-white">
               {contactLabels.contact}
             </h3>
-            <ul className="space-y-3">
-              <li className="flex items-center gap-3 justify-center md:justify-start">
+            <ul className="space-y-3 text-center md:text-left">
+              <li className="flex items-center gap-3 justify-center md:justify-start text-gray-600 dark:text-gray-300">
                 <Mail className="w-4 h-4 text-[#0d4b3d]" />
-                <a
-                  href="mailto:info@ganga-menu.com"
-                  className="text-gray-600 dark:text-gray-300 hover:text-[#0d4b3d] dark:hover:text-[#0d4b3d]/90 transition-colors"
-                >
-                  info@ganga-menu.com
-                </a>
+                <span>info@ganga-menu.com</span>
               </li>
-              <li className="flex items-center gap-3 justify-center md:justify-start">
+              <li className="flex items-center gap-3 justify-center md:justify-start text-gray-600 dark:text-gray-300">
                 <Phone className="w-4 h-4 text-[#0d4b3d]" />
-                <a
-                  href="tel:+34900123456"
-                  className="text-gray-600 dark:text-gray-300 hover:text-[#0d4b3d] dark:hover:text-[#0d4b3d]/90 transition-colors"
-                >
-                  +34 900 123 456
-                </a>
-              </li>
-              <li className="mt-4">
-                <Link
-                  href={`/${locale}/sign-in`}
-                  className="bg-[#0d4b3d] hover:bg-[#0d4b3d]/90 text-white px-4 py-2 rounded-lg transition-colors inline-block"
-                >
-                  {dictionary?.web.home.footer?.getStarted || "Comenzar"}
-                </Link>
+                <span>+34 900 123 456</span>
               </li>
             </ul>
+            <div className="mt-6">
+              <Link
+                href={`/${locale}/contact`}
+                className="inline-flex items-center gap-2 bg-[#0d4b3d] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#0d4b3d]/90 transition-all shadow-lg"
+              >
+                {dictionary?.web.home.footer?.getStarted || "Comenzar"}
+              </Link>
+            </div>
           </div>
         </div>
 
-        {/* App Stores */}
-        <div className="flex flex-col md:flex-row items-center justify-center gap-4 border-t border-[#0d4b3d]/10 py-8">
-          <a href="#" className="block">
-            <Image
-              src=""
-              alt="Download on App Store"
-              width={140}
-              height={42}
-              className="h-10 w-auto"
-            />
-          </a>
-          <a href="#" className="block">
-            <Image
-              src=""
-              alt="Get it on Google Play"
-              width={140}
-              height={42}
-              className="h-10 w-auto"
-            />
-          </a>
-        </div>
-
-        {/* Copyright and Legal */}
-        <div className="border-t border-[#0d4b3d]/10 py-8 text-center md:flex md:justify-between text-sm text-gray-500 dark:text-gray-400">
-          <div>© {new Date().getFullYear()} Ganga-Menú. {dictionary?.web.home.footer?.rights || "Todos los derechos reservados"}</div>
-          <div className="flex flex-wrap justify-center md:justify-end gap-4 mt-4 md:mt-0">
-            <Link
-              href={`/${locale}/privacy`}
-              className="hover:text-[#0d4b3d] dark:hover:text-[#0d4b3d]/90 transition-colors"
-            >
-              {dictionary?.web.home.footer?.privacy || "Política de Privacidad"}
-            </Link>
-            <Link
-              href={`/${locale}/terms`}
-              className="hover:text-[#0d4b3d] dark:hover:text-[#0d4b3d]/90 transition-colors"
-            >
-              {dictionary?.web.home.footer?.terms || "Términos y Condiciones"}
-            </Link>
+        {/* Bottom Bar */}
+        <div className="border-t border-[#0d4b3d]/10 dark:border-[#0d4b3d]/30 py-6">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-600 dark:text-gray-300">
+            <div className="text-center md:text-left">
+              © 2024 Ganga-Menú. {dictionary?.web.home.footer?.rights || "Todos los derechos reservados"}.
+            </div>
+            <div className="flex gap-6">
+              <Link href={`/${locale}/legal/privacy`} className="hover:text-[#0d4b3d] transition-colors">
+                {dictionary?.web.home.footer?.privacy || "Política de Privacidad"}
+              </Link>
+              <Link href={`/${locale}/legal/terms`} className="hover:text-[#0d4b3d] transition-colors">
+                {dictionary?.web.home.footer?.terms || "Términos y Condiciones"}
+              </Link>
+            </div>
           </div>
         </div>
       </div>

@@ -1,8 +1,15 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import { createUser, getUserById, verifyUserCredentials } from './userService';
+import { createUser, getUserById, verifyUserCredentials, findUserByEmail } from './userService';
 import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
+import { database } from '@repo/database';
+import bcrypt from 'bcryptjs';
+import type { UserPermission, Permission } from '@repo/database/generated/client';
+
+// Import permissions system
+import { ADMIN_PERMISSIONS } from '@repo/auth/server-permissions';
+
 // Cookie expiration (30 days in seconds)
 const COOKIE_EXPIRATION = 60 * 60 * 24 * 30;
 
@@ -31,27 +38,36 @@ async function setCookie(name: string, value: string, options?: Partial<Response
  */
 export async function signIn({ email, password }: { email: string; password: string }) {
     try {
-        // Verify credentials
         const authResult = await verifyUserCredentials(email, password);
 
         if (!authResult.success) {
             return { success: false, message: 'Credenciales inválidas' };
         }
 
-        // Get user details
-        const user = await getUserById(authResult.user?.id || '');
+        const user = await database.user.findUnique({
+            where: { id: authResult.user?.id || '' },
+            include: {
+                permissions: {
+                    include: {
+                        permission: true
+                    }
+                }
+            }
+        });
+
         if (!user) {
             return { success: false, message: 'Usuario no encontrado' };
         }
 
-        // Create session token (simple JSON string, no encryption)
+        const permissions = user.permissions.map(p => p.permission.name);
+
         const token = JSON.stringify({
             id: user.id,
             email: user.email,
-            role: user.role.toLowerCase(), // Asegurar que el rol está en minúsculas
+            role: user.role.toLowerCase(),
+            permissions: permissions,
         });
 
-        // Establecer cookie
         await setCookie('auth-token', token);
 
         return {
@@ -79,34 +95,38 @@ export async function signUp(data: {
     password: string;
 }) {
     try {
-        // Create new user
-        const result = await createUser({
-            name: data.name,
-            lastName: data.lastName,
-            email: data.email,
-            password: data.password,
-            role: 'admin', // Asegurar que el rol está en minúsculas
+        const allPermissions = await database.permission.findMany({ select: { id: true } });
+
+        const result = await database.user.create({
+            data: {
+                name: data.name,
+                lastName: data.lastName,
+                email: data.email,
+                password: await bcrypt.hash(data.password, 12),
+                role: 'admin',
+                permissions: {
+                    create: allPermissions.map(p => ({ permissionId: p.id }))
+                }
+            },
+            include: { permissions: { include: { permission: true } } }
         });
 
-        // Check if user creation failed
-        if (!result.success || !result.user) {
-            return {
-                success: false,
-                message: result.message || 'Error al crear usuario',
-                error: result.error || 'USER_CREATION_FAILED'
-            };
-        }
+        // Set the user as their own creator
+        const user = await database.user.update({
+            where: { id: result.id },
+            data: { createdById: result.id },
+            include: { permissions: { include: { permission: true } } }
+        });
 
-        const user = result.user;
+        const permissions = user.permissions.map(p => p.permission.name);
 
-        // Create session token (simple JSON string, no encryption)
         const token = JSON.stringify({
             id: user.id,
             email: user.email,
-            role: user.role.toLowerCase(), // Asegurar que el rol está en minúsculas
+            role: user.role.toLowerCase(),
+            permissions: permissions,
         });
 
-        // Establecer cookie
         await setCookie('auth-token', token);
 
         return {
@@ -148,7 +168,6 @@ export async function signOut() {
  */
 export async function getCurrentUser() {
     try {
-        // Obtener la cookie directamente
         const cookieStore = await cookies();
         const tokenCookie = cookieStore.get('auth-token');
 
@@ -163,24 +182,44 @@ export async function getCurrentUser() {
                 return null;
             }
 
-            const user = await getUserById(token.id);
+            const user = await database.user.findUnique({
+                where: { id: token.id },
+                include: {
+                    permissions: {
+                        include: {
+                            permission: true
+                        }
+                    }
+                }
+            });
 
             if (!user) {
                 return null;
             }
 
+            const permissions = user.permissions.map(p => p.permission.name);
+
+            // Verificar si el token en la cookie está desactualizado
+            if (JSON.stringify(permissions) !== JSON.stringify(token.permissions)) {
+                const newToken = JSON.stringify({ ...token, permissions });
+                await setCookie('auth-token', newToken);
+            }
+
             return {
                 id: user.id,
                 name: user.name,
+                lastName: user.lastName,
                 email: user.email,
                 role: user.role,
+                permissions: permissions,
             };
-        } catch (parseError) {
-            console.error('Error al analizar el token:', parseError);
+        } catch (e) {
+            console.error('Error al parsear el token, eliminando cookie corrupta', e);
+            await signOut();
             return null;
         }
     } catch (error) {
-        console.error('Error al obtener usuario actual:', error);
+        console.error('Error en getCurrentUser:', error);
         return null;
     }
 }

@@ -13,7 +13,7 @@ const SignInPage = async ({ params }: { params: Promise<{ locale: string }> }) =
   const dictionary = await getDictionary(locale);
 
   return (
-    <SignIn dictionary={dictionary} />
+    <SignIn dictionary={dictionary} locale={locale} />
   );
 };
 

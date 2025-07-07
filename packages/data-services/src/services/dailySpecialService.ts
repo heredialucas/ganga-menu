@@ -1,8 +1,11 @@
 'use server'
 
 import { revalidatePath } from 'next/cache';
-import { database } from '@repo/database';
+import { database, RecurrenceType } from '@repo/database';
 import { getCurrentUserId } from './authService';
+import { z } from 'zod';
+import { addMonths, addWeeks, setDay, isBefore, isEqual } from 'date-fns';
+import { randomUUID } from 'crypto';
 
 export interface DailySpecialData {
     id: string;
@@ -30,6 +33,15 @@ export interface DailySpecialFormData {
     dishId: string;
     isActive?: boolean;
 }
+
+const upsertDailySpecialSchema = z.object({
+    dishId: z.string(),
+    date: z.date(),
+    isRecurring: z.boolean().optional(),
+    recurrenceType: z.nativeEnum(RecurrenceType).optional(),
+    recurrenceDays: z.array(z.string()).optional(),
+    recurrenceEndDate: z.date().optional(),
+});
 
 /**
  * Crear un nuevo plato del día
@@ -190,7 +202,22 @@ export async function getDailySpecialByDate(date: Date) {
  */
 export async function updateDailySpecial(specialId: string, data: DailySpecialFormData) {
     try {
+        const userId = await getCurrentUserId();
+        if (!userId) {
+            throw new Error("Usuario no autenticado");
+        }
+
         // Ya no verificamos fechas únicas, permitimos múltiples platos por día
+        const specialToUpdate = await database.dailySpecial.findFirst({
+            where: {
+                id: specialId,
+                createdById: userId
+            }
+        });
+
+        if (!specialToUpdate) {
+            throw new Error("Promoción no encontrada o no tienes permiso para editarla.");
+        }
 
         // Actualizar plato del día en la base de datos
         const dailySpecial = await database.dailySpecial.update({
@@ -225,6 +252,22 @@ export async function updateDailySpecial(specialId: string, data: DailySpecialFo
  */
 export async function deleteDailySpecial(specialId: string) {
     try {
+        const userId = await getCurrentUserId();
+        if (!userId) {
+            throw new Error("Usuario no autenticado");
+        }
+
+        const specialToDelete = await database.dailySpecial.findFirst({
+            where: {
+                id: specialId,
+                createdById: userId
+            }
+        });
+
+        if (!specialToDelete) {
+            throw new Error("Promoción no encontrada o no tienes permiso para eliminarla.");
+        }
+
         // Eliminar plato del día de la base de datos
         await database.dailySpecial.delete({
             where: { id: specialId },
@@ -342,5 +385,110 @@ export async function duplicateDailySpecialToFutureDates(specialId: string, mont
     } catch (error) {
         console.error('Error al duplicar plato especial:', error);
         throw new Error('No se pudo duplicar el plato especial');
+    }
+}
+
+export async function upsertDailySpecial(data: {
+    dishId: string;
+    date: Date;
+    isRecurring?: boolean;
+    recurrenceType?: RecurrenceType;
+    recurrenceDays?: string[];
+    recurrenceEndDate?: Date;
+}) {
+    const validatedData = upsertDailySpecialSchema.parse(data);
+    const { dishId, date, isRecurring, recurrenceType, recurrenceDays, recurrenceEndDate } = validatedData;
+    const createdById = await getCurrentUserId();
+
+    if (!createdById) {
+        throw new Error('Usuario no autenticado');
+    }
+
+    if (!isRecurring) {
+        // Comportamiento original: crear un solo evento
+        const special = await database.dailySpecial.create({
+            data: {
+                dishId,
+                date,
+                createdById,
+            },
+        });
+        revalidatePath('/admin/dashboard/menu');
+        return { success: true, message: "Promoción creada." };
+    }
+
+    // Lógica para promociones recurrentes
+    if (!recurrenceType || !recurrenceEndDate) {
+        throw new Error("Para promociones recurrentes, el tipo y la fecha de fin son requeridos.");
+    }
+
+    const specialsToCreate = [];
+    let currentDate = new Date(date);
+    const parentId = randomUUID(); // Generar un ID para el padre
+
+    while (isBefore(currentDate, recurrenceEndDate) || isEqual(currentDate, recurrenceEndDate)) {
+        if (recurrenceType === RecurrenceType.WEEKLY) {
+            if (!recurrenceDays || recurrenceDays.length === 0) {
+                throw new Error("Para recurrencia semanal, se requieren los días de la semana.");
+            }
+            for (const day of recurrenceDays) {
+                const targetDate = setDay(currentDate, parseInt(day, 10));
+                if ((isBefore(targetDate, recurrenceEndDate) || isEqual(targetDate, recurrenceEndDate)) && isBefore(date, targetDate) || isEqual(date, targetDate)) {
+                    specialsToCreate.push({
+                        dishId,
+                        date: targetDate,
+                        createdById,
+                        recurrenceType,
+                        recurrenceDays: recurrenceDays.join(','),
+                        recurrenceEndDate,
+                        recurrenceParentId: parentId,
+                    });
+                }
+            }
+            currentDate = addWeeks(currentDate, 1);
+
+        } else if (recurrenceType === RecurrenceType.MONTHLY) {
+            specialsToCreate.push({
+                dishId,
+                date: currentDate,
+                createdById,
+                recurrenceType,
+                recurrenceEndDate,
+                recurrenceParentId: parentId,
+            });
+            currentDate = addMonths(currentDate, 1);
+        }
+    }
+
+    if (specialsToCreate.length > 0) {
+        await database.dailySpecial.createMany({
+            data: specialsToCreate,
+        });
+    }
+
+    revalidatePath('/admin/dashboard/menu');
+    return { success: true, message: `${specialsToCreate.length} promociones recurrentes creadas.` };
+}
+
+export async function deleteDailySpecials(ids: string[]) {
+    const userId = await getCurrentUserId();
+    if (!userId) throw new Error("Usuario no autenticado.");
+
+    if (ids.length === 0) {
+        return { success: true, message: "No se seleccionaron especiales para eliminar." };
+    }
+
+    try {
+        await database.dailySpecial.deleteMany({
+            where: {
+                id: { in: ids },
+                createdById: userId,
+            },
+        });
+        revalidatePath('/menu');
+        return { success: true, message: `${ids.length} promociones eliminadas.` };
+    } catch (error) {
+        console.error("Error al eliminar promociones:", error);
+        throw new Error("No se pudieron eliminar las promociones.");
     }
 } 

@@ -150,6 +150,23 @@ export async function getCategoryById(categoryId: string) {
  */
 export async function updateCategory(categoryId: string, data: CategoryFormData) {
     try {
+        const userId = await getCurrentUserId();
+        if (!userId) {
+            throw new Error("Usuario no autenticado");
+        }
+
+        // Verificar que la categoría pertenece al usuario
+        const categoryToUpdate = await database.category.findFirst({
+            where: {
+                id: categoryId,
+                createdById: userId,
+            }
+        });
+
+        if (!categoryToUpdate) {
+            throw new Error("Categoría no encontrada o no tienes permiso para editarla.");
+        }
+
         // Verificar si existe otra categoría con el mismo nombre (excluyendo la actual)
         if (data.name) {
             const existingCategory = await database.category.findFirst({
@@ -189,6 +206,23 @@ export async function updateCategory(categoryId: string, data: CategoryFormData)
  */
 export async function deleteCategory(categoryId: string) {
     try {
+        const userId = await getCurrentUserId();
+        if (!userId) {
+            throw new Error("Usuario no autenticado");
+        }
+
+        // Verificar que la categoría pertenece al usuario
+        const categoryToDelete = await database.category.findFirst({
+            where: {
+                id: categoryId,
+                createdById: userId,
+            }
+        });
+
+        if (!categoryToDelete) {
+            throw new Error("Categoría no encontrada o no tienes permiso para eliminarla.");
+        }
+
         // Verificar si la categoría tiene platos asociados
         const dishCount = await database.dish.count({
             where: { categoryId }

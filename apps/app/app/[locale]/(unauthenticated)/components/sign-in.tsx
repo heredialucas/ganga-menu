@@ -6,6 +6,7 @@ import Link from 'next/link';
 
 interface SignInProps {
     dictionary?: Dictionary;
+    locale: string;
 }
 
 type FormState = {
@@ -15,6 +16,7 @@ type FormState = {
 };
 
 async function handleSignIn(
+    locale: string,
     prevState: FormState,
     payload: FormData
 ): Promise<FormState> {
@@ -42,7 +44,7 @@ async function handleSignIn(
         const result = await signIn({ email, password });
 
         if (result.success) {
-            redirect('/'); // Dejar que el middleware determine la redirección
+            redirect(`/${locale}/account`); // Dejar que el middleware determine la redirección
         } else {
             return {
                 success: false,
@@ -64,10 +66,11 @@ async function handleSignIn(
     }
 }
 
-export const SignIn = ({ dictionary }: SignInProps) => {
+export const SignIn = ({ dictionary, locale }: SignInProps) => {
+    const handleSignInWithLocale = handleSignIn.bind(null, locale);
     return (
         <div className="grid gap-6">
-            <SignInForm dictionary={dictionary} handleSignIn={handleSignIn} />
+            <SignInForm dictionary={dictionary} handleSignIn={handleSignInWithLocale} />
 
             {/* Navigation to Sign Up */}
             <div className="text-center">

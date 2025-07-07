@@ -154,6 +154,34 @@ export async function getDishById(dishId: string) {
  */
 export async function updateDish(dishId: string, data: DishFormData) {
     try {
+        const userId = await getCurrentUserId();
+        if (!userId) {
+            throw new Error("Usuario no autenticado");
+        }
+
+        const existingDish = await database.dish.findFirst({
+            where: {
+                id: dishId,
+                createdById: userId
+            },
+            select: { imageUrl: true }
+        });
+
+        if (!existingDish) {
+            throw new Error("Plato no encontrado o no tienes permiso para editarlo.");
+        }
+
+        // Si se proporciona una nueva URL de imagen y es diferente a la anterior, borrar la antigua.
+        if (data.imageUrl && existingDish?.imageUrl && data.imageUrl !== existingDish.imageUrl) {
+            try {
+                const key = existingDish.imageUrl.split('/').slice(-2).join('/');
+                await deleteR2Image(key);
+            } catch (imageError) {
+                console.error("Error al eliminar la imagen antigua de R2:", imageError);
+                // No relanzar el error para permitir que la actualización continúe
+            }
+        }
+
         // Actualizar plato en la base de datos
         const dish = await database.dish.update({
             where: { id: dishId },
@@ -187,11 +215,23 @@ export async function updateDish(dishId: string, data: DishFormData) {
  */
 export async function deleteDish(dishId: string) {
     try {
-        // Primero obtener el plato para ver si tiene imagen
-        const dish = await database.dish.findUnique({
-            where: { id: dishId },
+        const userId = await getCurrentUserId();
+        if (!userId) {
+            throw new Error("Usuario no autenticado");
+        }
+
+        // Primero obtener el plato para ver si tiene imagen y si pertenece al usuario
+        const dish = await database.dish.findFirst({
+            where: {
+                id: dishId,
+                createdById: userId
+            },
             select: { imageUrl: true }
         });
+
+        if (!dish) {
+            throw new Error("Plato no encontrado o no tienes permiso para eliminarlo.");
+        }
 
         // Eliminar plato de la base de datos
         await database.dish.delete({

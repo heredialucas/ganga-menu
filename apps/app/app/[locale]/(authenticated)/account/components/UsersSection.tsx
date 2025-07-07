@@ -11,9 +11,9 @@ import { Switch } from '@repo/design-system/components/ui/switch';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@repo/design-system/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@repo/design-system/components/ui/alert-dialog';
 import { useToast } from '@repo/design-system/hooks/use-toast';
-import { User, Mail, Plus, Edit, Trash2, AlertCircle } from 'lucide-react';
+import { User, Mail, Plus, Edit, Trash2 } from 'lucide-react';
 import type { UserData } from '@repo/data-services/src/types/user';
-import { UserRole } from '@repo/database';
+import { UserRole } from '@repo/database/generated/client';
 import type { Dictionary } from '@repo/internationalization';
 import { createUser, updateUser, deleteUser } from '../actions';
 import { ScrollArea } from '@repo/design-system/components/ui/scroll-area';
@@ -26,10 +26,9 @@ interface UsersSectionProps {
     allPermissions: Permission[];
 }
 
-// Función para agrupar permisos por categoría (ej. 'clients:view' -> 'clients')
 const groupPermissions = (permissions: Permission[]) => {
     return permissions.reduce((acc, permission) => {
-        const [group] = permission.split(':');
+        const group = permission.split(':')[0] ?? '';
         if (!acc[group]) {
             acc[group] = [];
         }
@@ -50,7 +49,7 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
         lastName: '',
         email: '',
         password: '',
-        role: 'seller' as UserRole,
+        role: 'user' as UserRole,
         permissions: [] as string[],
     });
 
@@ -62,7 +61,7 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
             email: '',
             password: '',
             role: 'user',
-            permissions: ['account:view_own', 'account:edit_own', 'account:change_password'], // Permisos por defecto para usuarios
+            permissions: ['account:view_own', 'account:edit_own', 'account:change_password'],
         });
         setIsUserDialogOpen(true);
     };
@@ -91,10 +90,8 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
 
     const handleRoleChange = (role: UserRole) => {
         if (role === 'admin') {
-            // Si el rol es admin, los permisos específicos no son necesarios.
-            setUserForm(prev => ({ ...prev, role, permissions: [] }));
+            setUserForm(prev => ({ ...prev, role, permissions: allPermissions }));
         } else if (role === 'user') {
-            // Si el rol es user, asignar permisos por defecto
             setUserForm(prev => ({
                 ...prev,
                 role,
@@ -106,7 +103,6 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
     };
 
     const handleUserSubmit = async () => {
-        // Validaciones básicas del lado del cliente para UX
         if (!userForm.name || !userForm.lastName || !userForm.email) {
             toast({ title: "Error", description: "Nombre, apellido y email son requeridos", variant: "destructive" });
             return;
@@ -134,17 +130,10 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
                 : await createUser(formData);
 
             if (result.success) {
-                toast({
-                    title: "Éxito",
-                    description: result.message,
-                });
+                toast({ title: "Éxito", description: result.message });
                 setIsUserDialogOpen(false);
             } else {
-                toast({
-                    title: "Error",
-                    description: result.message,
-                    variant: "destructive",
-                });
+                toast({ title: "Error", description: result.message, variant: "destructive" });
             }
         });
     };
@@ -153,20 +142,15 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
         startTransition(async () => {
             const result = await deleteUser(user.id);
             if (result.success) {
-                toast({
-                    title: "Éxito",
-                    description: result.message,
-                });
+                toast({ title: "Éxito", description: result.message, });
                 setDeleteUserDialog({ open: false, user: null });
             } else {
-                toast({
-                    title: "Error",
-                    description: result.message,
-                    variant: "destructive",
-                });
+                toast({ title: "Error", description: result.message, variant: "destructive", });
             }
         });
     };
+
+    const groupedPermissions = groupPermissions(allPermissions);
 
     return (
         <>
@@ -190,88 +174,35 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-4">
-                        {users.length === 0 ? (
-                            <div className="text-center py-8">
-                                <p className="text-muted-foreground">
-                                    No hay usuarios registrados
-                                </p>
-                            </div>
-                        ) : (
-                            users.map((user) => (
-                                <div key={user.id} className="flex flex-col lg:flex-row lg:items-center justify-between p-4 border rounded-lg gap-4">
-                                    <div className="flex items-center gap-4 flex-1">
-                                        <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-                                            <span className="text-sm font-medium">
-                                                {user.name[0]}{user.lastName[0]}
-                                            </span>
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                            <p className="font-medium truncate">
-                                                {user.name} {user.lastName}
-                                            </p>
-                                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                                <Mail className="h-3 w-3 shrink-0" />
-                                                <span className="truncate">{user.email}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                                        <div className="flex-1 sm:text-right space-y-1">
-                                            <div className="flex flex-col gap-1">
-                                                <Badge
-                                                    variant={user.role === 'admin' ? 'default' : 'secondary'}
-                                                    className="w-fit"
-                                                >
-                                                    {user.role === 'admin' ? 'Administrador' : 'Usuario'}
-                                                </Badge>
-                                                <Badge
-                                                    variant={user.permissions.length > 0 ? 'default' : 'destructive'}
-                                                    className="w-fit text-xs"
-                                                >
-                                                    {user.permissions.length > 0 ? `✓ ${user.permissions.length} permisos` : '✗ Sin permisos'}
-                                                </Badge>
-                                            </div>
-                                            <p className="text-xs text-muted-foreground">
-                                                Creado: {new Date(user.createdAt).toLocaleDateString('es-ES')}
-                                            </p>
-                                        </div>
-                                        <div className="flex gap-2">
-                                            <Button
-                                                variant="outline"
-                                                size="sm"
-                                                onClick={() => handleEditUser(user)}
-                                                disabled={isPending}
-                                            >
-                                                <Edit className="h-4 w-4" />
-                                            </Button>
-                                            <Button
-                                                variant="outline"
-                                                size="sm"
-                                                onClick={() => setDeleteUserDialog({ open: true, user })}
-                                                disabled={user.id === currentUser?.id || isPending}
-                                            >
-                                                <Trash2 className="h-4 w-4" />
-                                            </Button>
-                                        </div>
+                        {users.map((user) => (
+                            <div key={user.id} className="flex items-center justify-between p-4 border rounded-lg">
+                                <div className="flex items-center gap-4">
+                                    <div className="flex flex-col">
+                                        <p className="font-semibold">{user.name} {user.lastName}</p>
+                                        <p className="text-sm text-muted-foreground flex items-center gap-1"><Mail className="h-3 w-3" />{user.email}</p>
+                                        <Badge variant="outline" className="capitalize mt-1 w-fit">{user.role}</Badge>
                                     </div>
                                 </div>
-                            ))
-                        )}
+                                <div className="flex items-center gap-2">
+                                    <Button variant="ghost" size="icon" onClick={() => handleEditUser(user)}>
+                                        <Edit className="h-4 w-4" />
+                                    </Button>
+                                    <Button variant="ghost" size="icon" onClick={() => setDeleteUserDialog({ open: true, user })} disabled={user.id === currentUser?.id}>
+                                        <Trash2 className="h-4 w-4 text-red-500" />
+                                    </Button>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </CardContent>
             </Card>
 
             <Dialog open={isUserDialogOpen} onOpenChange={setIsUserDialogOpen}>
-                <DialogContent className="max-h-[90vh] overflow-y-auto">
+                <DialogContent className="sm:max-w-[425px] md:max-w-2xl">
                     <DialogHeader>
-                        <DialogTitle>
-                            {editingUser ? 'Editar Usuario' : 'Crear Nuevo Usuario'}
-                        </DialogTitle>
+                        <DialogTitle>{editingUser ? 'Editar Usuario' : 'Crear Usuario'}</DialogTitle>
                         <DialogDescription>
-                            {editingUser ?
-                                'Actualiza los datos del usuario.' :
-                                'Completa el formulario para agregar un nuevo usuario.'
-                            }
+                            {editingUser ? 'Actualiza los detalles del usuario.' : 'Crea un nuevo usuario y asigna sus permisos.'}
                         </DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
@@ -298,92 +229,55 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
                                     <SelectValue placeholder="Selecciona un rol" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="admin">Admin</SelectItem>
-                                    <SelectItem value="seller">Seller</SelectItem>
+                                    <SelectItem value="admin">Administrador</SelectItem>
+                                    <SelectItem value="premium">Premium</SelectItem>
+                                    <SelectItem value="user">Usuario</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
-
-                        {/* Sección de Permisos */}
                         <div className="grid grid-cols-4 items-start gap-4 pt-4">
                             <Label className="text-right pt-2">Permisos</Label>
-                            <div className="col-span-3 space-y-2">
-                                <ScrollArea
-                                    className="h-60 rounded-md border p-4"
-                                    style={{ opacity: userForm.role === 'admin' ? 0.5 : 1 }}
-                                >
-                                    <div className="space-y-4" style={{ pointerEvents: userForm.role === 'admin' ? 'none' : 'auto' }}>
-                                        {Object.entries(groupPermissions(allPermissions)).map(([group, permissions]) => (
-                                            <div key={group}>
-                                                <h4 className="font-medium capitalize mb-3 text-base text-gray-800 dark:text-gray-200">
-                                                    {dictionary.app.admin.permissions.groups[group as keyof typeof dictionary.app.admin.permissions.groups] || group}
-                                                </h4>
-                                                <div className="space-y-4 pl-2">
-                                                    {permissions.map(permission => (
-                                                        <div key={permission} className="flex items-start justify-between">
-                                                            <div className="flex-1">
-                                                                <label htmlFor={permission} className="text-sm font-normal text-gray-700 dark:text-gray-300">
-                                                                    {dictionary.app.admin.permissions.labels[permission as keyof typeof dictionary.app.admin.permissions.labels] || permission.split(':')[1].replace(/_/g, ' ')}
-                                                                </label>
-                                                                <p className="text-xs text-muted-foreground pr-2">
-                                                                    {dictionary.app.admin.permissions.descriptions[permission as keyof typeof dictionary.app.admin.permissions.descriptions] || 'Sin descripción'}
-                                                                </p>
-                                                            </div>
-                                                            <Switch
-                                                                id={permission}
-                                                                checked={userForm.permissions.includes(permission)}
-                                                                onCheckedChange={(checked) => handlePermissionChange(permission, !!checked)}
-                                                                className="mt-1"
-                                                            />
-                                                        </div>
-                                                    ))}
+                            <ScrollArea className="col-span-3 h-48 rounded-md border p-4">
+                                <div className="space-y-4">
+                                    {Object.entries(groupedPermissions).map(([group, permissions]) => (
+                                        <div key={group}>
+                                            <h4 className="font-semibold capitalize mb-2">{group}</h4>
+                                            {permissions.map(permission => (
+                                                <div key={permission} className="flex items-center space-x-2">
+                                                    <Switch
+                                                        id={permission}
+                                                        checked={userForm.permissions.includes(permission)}
+                                                        onCheckedChange={checked => handlePermissionChange(permission, checked)}
+                                                    />
+                                                    <Label htmlFor={permission} className="font-normal">{permission.split(':')[1]?.replace(/_/g, ' ')}</Label>
                                                 </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </ScrollArea>
-                                {userForm.role === 'admin' && (
-                                    <p className="text-xs text-muted-foreground italic">
-                                        Los administradores tienen todos los permisos por defecto.
-                                    </p>
-                                )}
-                            </div>
+                                            ))}
+                                        </div>
+                                    ))}
+                                </div>
+                            </ScrollArea>
                         </div>
                     </div>
                     <DialogFooter>
-                        <Button variant="outline" onClick={() => setIsUserDialogOpen(false)}>Cancelar</Button>
+                        <Button type="button" variant="ghost" onClick={() => setIsUserDialogOpen(false)}>Cancelar</Button>
                         <Button onClick={handleUserSubmit} disabled={isPending}>
-                            {isPending ? 'Guardando...' : 'Guardar Cambios'}
+                            {isPending ? 'Guardando...' : 'Guardar'}
                         </Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
 
-            <AlertDialog
-                open={deleteUserDialog.open}
-                onOpenChange={(open) => setDeleteUserDialog(prev => ({ ...prev, open }))}
-            >
+            <AlertDialog open={deleteUserDialog.open} onOpenChange={(open) => !open && setDeleteUserDialog({ open: false, user: null })}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle className="flex items-center gap-2">
-                            <AlertCircle className="h-5 w-5 text-destructive" />
-                            Confirmar eliminación
-                        </AlertDialogTitle>
+                        <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
                         <AlertDialogDescription>
-                            ¿Estás seguro de que deseas eliminar este usuario?
-                            <br />
-                            <strong>
-                                {deleteUserDialog.user?.name} {deleteUserDialog.user?.lastName}
-                            </strong>
+                            Esta acción no se puede deshacer. Se eliminará permanentemente al usuario {deleteUserDialog.user?.name}.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel disabled={isPending}>Cancelar</AlertDialogCancel>
-                        <AlertDialogAction
-                            onClick={() => deleteUserDialog.user && handleDeleteUser(deleteUserDialog.user)}
-                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                            disabled={isPending}
-                        >
+                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => handleDeleteUser(deleteUserDialog.user!)} disabled={isPending}>
                             {isPending ? 'Eliminando...' : 'Eliminar'}
                         </AlertDialogAction>
                     </AlertDialogFooter>

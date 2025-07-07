@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useTransition } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@repo/design-system/components/ui/card';
 import { Button } from '@repo/design-system/components/ui/button';
 import { Input } from '@repo/design-system/components/ui/input';
@@ -8,62 +8,47 @@ import { Label } from '@repo/design-system/components/ui/label';
 import { useToast } from '@repo/design-system/hooks/use-toast';
 import { Shield } from 'lucide-react';
 import type { Dictionary } from '@repo/internationalization';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { changePassword } from '../actions';
-import { getAccountPermissions } from '../../utils/permissions';
+
+const passwordSchema = z.object({
+    currentPassword: z.string().min(1, 'La contraseña actual es requerida'),
+    newPassword: z.string().min(6, 'La nueva contraseña debe tener al menos 6 caracteres'),
+    confirmPassword: z.string(),
+}).refine(data => data.newPassword === data.confirmPassword, {
+    message: "Las contraseñas no coinciden",
+    path: ["confirmPassword"],
+});
+
+type PasswordFormValues = z.infer<typeof passwordSchema>;
 
 interface PasswordSectionProps {
     currentUser: any;
     dictionary: Dictionary;
+    canChange: boolean;
 }
 
-export function PasswordSection({ currentUser, dictionary }: PasswordSectionProps) {
+export function PasswordSection({ currentUser, dictionary, canChange }: PasswordSectionProps) {
     const { toast } = useToast();
     const [isPending, startTransition] = useTransition();
-    const [passwordForm, setPasswordForm] = useState({
-        currentPassword: '',
-        newPassword: '',
-        confirmPassword: '',
+
+    const form = useForm<PasswordFormValues>({
+        resolver: zodResolver(passwordSchema),
+        defaultValues: {
+            currentPassword: '',
+            newPassword: '',
+            confirmPassword: '',
+        },
     });
 
-    // Verificar si el usuario tiene permisos para cambiar su contraseña
-    const { canChangePassword } = getAccountPermissions(currentUser);
-
-    const handlePasswordChange = async () => {
-        if (!currentUser) return;
-
-        // Validations
-        if (!passwordForm.currentPassword || !passwordForm.newPassword || !passwordForm.confirmPassword) {
-            toast({
-                title: "Error",
-                description: "Todos los campos son requeridos",
-                variant: "destructive",
-            });
-            return;
-        }
-
-        if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-            toast({
-                title: "Error",
-                description: "Las contraseñas no coinciden",
-                variant: "destructive",
-            });
-            return;
-        }
-
-        if (passwordForm.newPassword.length < 6) {
-            toast({
-                title: "Error",
-                description: "La contraseña debe tener al menos 6 caracteres",
-                variant: "destructive",
-            });
-            return;
-        }
-
+    const onSubmit = (data: PasswordFormValues) => {
         startTransition(async () => {
             const formData = new FormData();
-            formData.append('currentPassword', passwordForm.currentPassword);
-            formData.append('newPassword', passwordForm.newPassword);
-            formData.append('confirmPassword', passwordForm.confirmPassword);
+            formData.append('currentPassword', data.currentPassword);
+            formData.append('newPassword', data.newPassword);
+            formData.append('confirmPassword', data.confirmPassword);
 
             const result = await changePassword(currentUser.id, formData);
 
@@ -72,7 +57,7 @@ export function PasswordSection({ currentUser, dictionary }: PasswordSectionProp
                     title: "Éxito",
                     description: result.message,
                 });
-                setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+                form.reset();
             } else {
                 toast({
                     title: "Error",
@@ -83,7 +68,7 @@ export function PasswordSection({ currentUser, dictionary }: PasswordSectionProp
         });
     };
 
-    if (!canChangePassword) {
+    if (!canChange) {
         return null;
     }
 
@@ -98,50 +83,52 @@ export function PasswordSection({ currentUser, dictionary }: PasswordSectionProp
                     Gestiona tu contraseña y configuración de seguridad
                 </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-                <div className="space-y-2">
-                    <Label htmlFor="current-password">
-                        Contraseña Actual
-                    </Label>
-                    <Input
-                        id="current-password"
-                        type="password"
-                        value={passwordForm.currentPassword}
-                        onChange={(e) => setPasswordForm(prev => ({ ...prev, currentPassword: e.target.value }))}
+            <CardContent>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="current-password">Contraseña Actual</Label>
+                        <Input
+                            id="current-password"
+                            type="password"
+                            {...form.register('currentPassword')}
+                            disabled={isPending}
+                        />
+                        {form.formState.errors.currentPassword && (
+                            <p className="text-sm text-red-500">{form.formState.errors.currentPassword.message}</p>
+                        )}
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="new-password">Nueva Contraseña</Label>
+                        <Input
+                            id="new-password"
+                            type="password"
+                            {...form.register('newPassword')}
+                            disabled={isPending}
+                        />
+                        {form.formState.errors.newPassword && (
+                            <p className="text-sm text-red-500">{form.formState.errors.newPassword.message}</p>
+                        )}
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="confirm-password">Confirmar Nueva Contraseña</Label>
+                        <Input
+                            id="confirm-password"
+                            type="password"
+                            {...form.register('confirmPassword')}
+                            disabled={isPending}
+                        />
+                        {form.formState.errors.confirmPassword && (
+                            <p className="text-sm text-red-500">{form.formState.errors.confirmPassword.message}</p>
+                        )}
+                    </div>
+                    <Button
+                        type="submit"
+                        className="w-full"
                         disabled={isPending}
-                    />
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor="new-password">
-                        Nueva Contraseña
-                    </Label>
-                    <Input
-                        id="new-password"
-                        type="password"
-                        value={passwordForm.newPassword}
-                        onChange={(e) => setPasswordForm(prev => ({ ...prev, newPassword: e.target.value }))}
-                        disabled={isPending}
-                    />
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor="confirm-password">
-                        Confirmar Nueva Contraseña
-                    </Label>
-                    <Input
-                        id="confirm-password"
-                        type="password"
-                        value={passwordForm.confirmPassword}
-                        onChange={(e) => setPasswordForm(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                        disabled={isPending}
-                    />
-                </div>
-                <Button
-                    className="w-full"
-                    onClick={handlePasswordChange}
-                    disabled={isPending}
-                >
-                    {isPending ? "Actualizando..." : "Actualizar Contraseña"}
-                </Button>
+                    >
+                        {isPending ? "Actualizando..." : "Actualizar Contraseña"}
+                    </Button>
+                </form>
             </CardContent>
         </Card>
     );

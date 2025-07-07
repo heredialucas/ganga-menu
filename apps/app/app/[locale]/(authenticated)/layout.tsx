@@ -1,35 +1,41 @@
-import { env } from '@/env';
-import { getCurrentUser } from '@repo/auth/server';
-import { getUserById } from '@repo/data-services';
+import { redirect } from 'next/navigation';
 import { SidebarProvider } from '@repo/design-system/components/ui/sidebar';
-import { showBetaFeature } from '@repo/feature-flags';
-import { NotificationsProvider } from '@repo/notifications/components/provider';
-import { AuthProvider } from '@repo/auth/provider';
-import { secure } from '@repo/security';
-import type { ReactNode } from 'react';
+import { getCurrentUserWithPermissions } from '@repo/auth/server-permissions';
+import { getDictionary } from '@repo/internationalization';
+import type { Locale } from '@repo/internationalization';
+import { AdminSidebar } from './components/sidebar-components/admin-sidebar';
+import { UserHeaderServer } from './components/user-header/userHeaderServer';
 
-type AppLayoutProperties = {
-  readonly children: ReactNode;
-};
+export default async function AuthenticatedLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: Promise<{ locale: Locale }>;
+}) {
+  const { locale } = await params;
+  const dictionary = await getDictionary(locale);
+  const user = await getCurrentUserWithPermissions();
 
-const AppLayout = async ({ children }: AppLayoutProperties) => {
-  if (env.ARCJET_KEY) {
-    await secure(['CATEGORY:PREVIEW']);
+  if (!user) {
+    return redirect(`/${locale}/sign-in`);
   }
 
-  const betaFeature = await showBetaFeature();
-  // Obtener usuario actual usando nuestra implementación local
-  // const user = await getCurrentUser();
-
   return (
-    // <NotificationsProvider userId={user.id}>
-    //   <AuthProvider>
     <SidebarProvider>
-      {children}
-    </SidebarProvider>
-    //   </AuthProvider>
-    // </NotificationsProvider>
-  );
-};
+      <div className="flex w-full min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white">
+        <UserHeaderServer />
 
-export default AppLayout;
+        <div className="pt-16 flex w-full h-full">
+          <AdminSidebar dictionary={dictionary} />
+
+          <main className="bg-gray-50 dark:bg-zinc-950 flex-1 md:py-6 min-h-screen pb-20 md:pb-0">
+            <div className="w-full p-4">
+              {children}
+            </div>
+          </main>
+        </div>
+      </div>
+    </SidebarProvider>
+  );
+}

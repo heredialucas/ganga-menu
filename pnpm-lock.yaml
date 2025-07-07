@@ -124,6 +124,9 @@ importers:
       '@aws-sdk/lib-storage':
         specifier: ^3.828.0
         version: 3.828.0(@aws-sdk/client-s3@3.828.0)
+      '@hookform/resolvers':
+        specifier: ^4.1.3
+        version: 4.1.3(react-hook-form@7.54.2)
       '@prisma/client':
         specifier: 6.4.1
         version: 6.4.1(prisma@6.4.1)(typescript@5.8.2)
@@ -208,12 +211,18 @@ importers:
       react-dom:
         specifier: 19.0.0
         version: 19.0.0(react@19.0.0)
+      react-hook-form:
+        specifier: ^7.54.2
+        version: 7.54.2(react@19.0.0)
       react-konva:
         specifier: ^19.0.6
         version: 19.0.6(@types/react@19.0.10)(konva@9.3.20)(react-dom@19.0.0)(react@19.0.0)
       require-in-the-middle:
         specifier: ^7.5.2
         version: 7.5.2
+      sonner:
+        specifier: ^2.0.1
+        version: 2.0.1(react-dom@19.0.0)(react@19.0.0)
       stripe:
         specifier: ^17.7.0
         version: 17.7.0
@@ -694,6 +703,9 @@ importers:
       bcryptjs:
         specifier: ^3.0.2
         version: 3.0.2
+      date-fns:
+        specifier: ^4.1.0
+        version: 4.1.0
       next:
         specifier: ^15.0.0
         version: 15.1.7(@babel/core@7.26.9)(@opentelemetry/api@1.9.0)(react-dom@19.0.0)(react@19.0.0)
@@ -858,6 +870,9 @@ importers:
       '@repo/observability':
         specifier: workspace:*
         version: link:../observability
+      '@tanstack/react-table':
+        specifier: ^8.21.3
+        version: 8.21.3(react-dom@19.0.0)(react@19.0.0)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -8446,6 +8461,23 @@ packages:
       lodash.merge: 4.6.2
       postcss-selector-parser: 6.0.10
       tailwindcss: 3.4.17
+    dev: false
+
+  /@tanstack/react-table@8.21.3(react-dom@19.0.0)(react@19.0.0):
+    resolution: {integrity: sha512-5nNMTSETP4ykGegmVkhjcS8tTLW6Vl4axfEGQN3v0zdHYbK4UfoqfPChclTrJ4EoK9QynqAu9oUf8VEmrpZ5Ww==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      react: '>=16.8'
+      react-dom: '>=16.8'
+    dependencies:
+      '@tanstack/table-core': 8.21.3
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+    dev: false
+
+  /@tanstack/table-core@8.21.3:
+    resolution: {integrity: sha512-ldZXEhOBb8Is7xLs01fR3YEc3DERiz5silj8tnGkFZytt1abEvl/GhUmCE0PMLaMPTa3Jk4HbKmRlHmu+gCftg==}
+    engines: {node: '>=12'}
     dev: false
 
   /@telegraph/appearance@0.0.4(@types/react@19.0.10)(react-dom@18.3.1)(react@19.0.0):

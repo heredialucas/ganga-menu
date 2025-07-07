@@ -37,8 +37,8 @@ export default async function AccountPage({ params }: AccountPageProps) {
     }
 
     // Verificar si puede gestionar usuarios para obtener la lista
-    const canManageUsers = await hasPermission('account:manage_users');
-    const users = canManageUsers ? await getAllUsers(currentUser.id) : []; // Excluir al usuario actual
+    const canManageUsers = await hasPermission('admin:manage_users');
+    const users = canManageUsers ? await getAllUsers(currentUser.id) : [];
 
     // Filtrar los permisos de administrador para que no se puedan asignar desde la UI
     const assignablePermissions = ADMIN_PERMISSIONS.filter(p => !p.startsWith('admin:'));
@@ -69,8 +69,16 @@ export default async function AccountPage({ params }: AccountPageProps) {
                 </div>
 
                 <TabsContent value="profile" className="space-y-4">
-                    <ProfileSection currentUser={currentUser} dictionary={dictionary} />
-                    <PasswordSection currentUser={currentUser} dictionary={dictionary} />
+                    <ProfileSection
+                        currentUser={currentUser}
+                        dictionary={dictionary}
+                        canEdit={await hasPermission('account:edit_own')}
+                    />
+                    <PasswordSection
+                        currentUser={currentUser}
+                        dictionary={dictionary}
+                        canChange={await hasPermission('account:change_password')}
+                    />
                 </TabsContent>
 
                 {canManageUsers && (

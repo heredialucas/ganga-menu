@@ -6,37 +6,58 @@ import {
 } from '@repo/security/middleware';
 import { env } from './env';
 import { internationalizationMiddleware } from '@repo/internationalization/middleware';
-// Dynamic role system - easily extendable
+
+// --- 1. Definición de Roles ---
 const ROLES = {
   ADMIN: 'admin',
+  PREMIUM: 'premium',
   USER: 'user',
-  // Add more roles as needed
 } as const;
 
 type Role = typeof ROLES[keyof typeof ROLES];
 
-// Role configuration with route permissions
-interface RoleConfig {
-  defaultRedirect: string;
-  allowedRoutes: string[];
-}
+// --- 2. Permisos y Rutas con sistema granular ---
+const ROUTE_PERMISSIONS: Record<string, string[]> = {
+  // Main 4 sections
+  '/account': ['account:view_own'],
+  '/menu': ['dishes:view'], // Menu section includes dishes, categories, daily specials
+  '/waiter': ['waiter:view_orders', 'waiter:create_orders'],
+  '/restaurant': ['restaurant:view_config'],
 
-// Map roles to their configurations
-// To add a new role, simply add a new entry here
-const ROLE_CONFIGURATION: Record<Role, RoleConfig> = {
-  [ROLES.ADMIN]: {
-    defaultRedirect: '/admin/dashboard',
-    allowedRoutes: ['/admin']
-  },
-  [ROLES.USER]: {
-    defaultRedirect: '/client/dashboard',
-    allowedRoutes: ['/client']
+  // Menu sub-routes
+  '/menu/dishes': ['dishes:view'],
+  '/menu/categories': ['categories:view'],
+  '/menu/daily-specials': ['daily_specials:view'],
+
+  // Waiter sub-routes
+  '/waiter/orders': ['orders:view'],
+  '/waiter/history': ['orders:view'],
+
+  // Restaurant sub-routes
+  '/restaurant/config': ['restaurant:view_config'],
+  '/restaurant/design': ['restaurant:view_design'],
+
+  // Kitchen routes (existing)
+  '/kitchen': ['kitchen:view_orders'],
+
+  // Client routes (if they exist - fallback)
+  '/client': ['account:view_own'],
+};
+
+// --- 3. Redirección por Rol con soporte para rutas existentes ---
+const getDefaultRedirect = (userRole: Role, userPermissions: string[]): string => {
+  if (userRole === ROLES.ADMIN || userRole === ROLES.PREMIUM) {
+    // Redirigir a la sección de menú como página principal
+    return '/menu';
   }
-  // Example for adding a new role:
-  // [ROLES.PROFESSIONAL]: {
-  //   defaultRedirect: '/professional/dashboard',
-  //   allowedRoutes: ['/professional']
-  // }
+
+  // Para usuarios regulares, puede acceder a su cuenta
+  if (userPermissions.includes('account:view_own')) {
+    return '/account';
+  }
+
+  // Fallback a cliente si existe esa ruta
+  return '/client/dashboard';
 };
 
 // Public routes that don't require authentication
@@ -45,7 +66,7 @@ const PUBLIC_ROUTES = [
   '/sign-up',
   '/api/webhooks',
   '/access-denied',
-  '/menu', // Public menu pages for sharing
+  // Removed /menu from public routes since it's now an authenticated section
 ];
 
 // Authentication cookie name
@@ -67,15 +88,31 @@ const isAuthenticatedRoute = (pathname: string): boolean => {
   return !isPublicRoute(pathname);
 };
 
-// Check if user has access to the current route based on their role
-const hasAccessToRoute = (pathname: string, userRole: Role): boolean => {
-  // If user doesn't have a configured role, they don't have access
-  if (!ROLE_CONFIGURATION[userRole]) return false;
+// --- 4. Lógica de Acceso Mejorada con Permisos ---
+const hasAccessToRoute = (pathname: string, userRole: Role, userPermissions: string[] = []): boolean => {
+  // El Admin y Premium siempre tienen acceso a todo
+  if (userRole === ROLES.ADMIN || userRole === ROLES.PREMIUM) {
+    return true;
+  }
 
-  // Check if current route is allowed for user's role
-  return ROLE_CONFIGURATION[userRole].allowedRoutes.some(route =>
-    pathname === route || pathname.startsWith(`${route}/`)
-  );
+  // Encuentra la ruta base más específica que coincida con el pathname actual
+  const matchingRoute = Object.keys(ROUTE_PERMISSIONS)
+    .filter(route => pathname.startsWith(route))
+    .sort((a, b) => b.length - a.length)[0];
+
+  if (matchingRoute) {
+    const requiredPermissions = ROUTE_PERMISSIONS[matchingRoute];
+    // El usuario debe tener al menos uno de los permisos requeridos para la ruta
+    return requiredPermissions.some(permission => userPermissions.includes(permission));
+  }
+
+  // Si está en una ruta de primer nivel pero no hay una regla definida, denegar por seguridad
+  if (!pathname.includes('/', 1)) {
+    return false;
+  }
+
+  // Por defecto, permitir acceso a sub-rutas si la ruta base está permitida
+  return !!matchingRoute;
 };
 
 // Determine user role from session claims
@@ -88,6 +125,10 @@ const getUserRole = (role?: string): Role => {
   // Check for admin role
   if (roleStr === ROLES.ADMIN) {
     return ROLES.ADMIN;
+  }
+
+  if (roleStr === ROLES.PREMIUM) {
+    return ROLES.PREMIUM;
   }
 
   // Add more role checks as needed
@@ -129,6 +170,7 @@ export function middleware(req: NextRequest) {
   const tokenCookie = req.cookies.get(AUTH_COOKIE_NAME);
   let userId: string | undefined;
   let userRole: Role = ROLES.USER;
+  let userPermissions: string[] = [];
 
   // Parse token if it exists
   if (tokenCookie) {
@@ -136,43 +178,31 @@ export function middleware(req: NextRequest) {
       const token = JSON.parse(tokenCookie.value);
       userId = token.id;
       userRole = getUserRole(token.role);
+      userPermissions = token.permissions || [];
     } catch (error) {
       console.error('Error parsing auth token:', error);
+      // Si el token es inválido, tratar al usuario como no autenticado
+      const response = NextResponse.redirect(new URL(`/${locale}/sign-in`, req.url));
+      response.cookies.delete(AUTH_COOKIE_NAME);
+      return response;
     }
   }
 
-  // User is not authenticated but trying to access an authenticated route
-  if (!userId && isAuthenticatedRoute(pathnameWithoutLocale)) {
-    return NextResponse.redirect(new URL(`/${locale}/sign-in`, req.url));
+  // Si no hay ID de usuario y la ruta no es pública, redirigir a sign-in
+  if (!userId) {
+    return NextResponse.redirect(new URL(`/${locale}/sign-in?redirect=${pathname}`, req.url));
   }
 
-  // User is authenticated
-  if (userId) {
-    // Root path redirect to role-specific dashboard
-    if (pathnameWithoutLocale === '/' || pathnameWithoutLocale === '') {
-      const redirectUrl = ROLE_CONFIGURATION[userRole]?.defaultRedirect ||
-        ROLE_CONFIGURATION[ROLES.USER].defaultRedirect;
-      return NextResponse.redirect(new URL(`/${locale}${redirectUrl}`, req.url));
-    }
+  // Si el usuario está autenticado
+  // Redirigir desde la raíz a su página por defecto
+  if (pathnameWithoutLocale === '/' || pathnameWithoutLocale === '') {
+    const redirectUrl = getDefaultRedirect(userRole, userPermissions);
+    return NextResponse.redirect(new URL(`/${locale}${redirectUrl}`, req.url));
+  }
 
-    // Check if user has access to the requested route
-    if (!hasAccessToRoute(pathnameWithoutLocale, userRole)) {
-      // Admin can access any route
-      if (userRole === ROLES.ADMIN) {
-        return securityHeaders();
-      }
-
-      // Handle specific route access permissions
-
-      if (pathnameWithoutLocale.startsWith('/admin')) {
-        return NextResponse.redirect(new URL(`/${locale}/access-denied`, req.url));
-      }
-
-      // Otherwise redirect to their default route
-      const redirectUrl = ROLE_CONFIGURATION[userRole]?.defaultRedirect ||
-        ROLE_CONFIGURATION[ROLES.USER].defaultRedirect;
-      return NextResponse.redirect(new URL(`/${locale}${redirectUrl}`, req.url));
-    }
+  // Verificar si tiene acceso a la ruta solicitada
+  if (!hasAccessToRoute(pathnameWithoutLocale, userRole, userPermissions)) {
+    return NextResponse.redirect(new URL(`/${locale}/access-denied`, req.url));
   }
 
   // Apply security headers

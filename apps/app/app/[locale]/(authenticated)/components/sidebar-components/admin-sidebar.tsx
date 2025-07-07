@@ -19,7 +19,7 @@ import {
     SidebarMenu,
     SidebarMenuItem
 } from '@repo/design-system/components/ui/sidebar';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { Dictionary } from '@repo/internationalization';
 
 type MenuItemProps = {
@@ -35,48 +35,42 @@ type AdminSidebarProps = {
 
 export function AdminSidebar({ dictionary }: AdminSidebarProps) {
     const pathname = usePathname();
-    const searchParams = useSearchParams();
-    const activeTab = searchParams.get('tab') || 'config';
 
     const menuItems: MenuItemProps[] = [
         {
-            title: 'Inicio',
-            mobileTitle: 'Inicio',
-            icon: Settings,
-            href: '/admin/dashboard?tab=config',
+            title: 'Cuenta',
+            mobileTitle: 'Cuenta',
+            icon: UsersIcon,
+            href: '/account',
         },
         {
-            title: 'Categorías',
-            mobileTitle: 'Categorías',
-            icon: FolderOpen,
-            href: '/admin/dashboard?tab=categories',
-        },
-        {
-            title: 'Platos',
-            mobileTitle: 'Platos',
+            title: 'Menú',
+            mobileTitle: 'Menú',
             icon: UtensilsCrossed,
-            href: '/admin/dashboard?tab=dishes',
+            href: '/menu',
         },
         {
-            title: 'Especiales del Día',
-            mobileTitle: 'Especiales',
-            icon: Star,
-            href: '/admin/dashboard?tab=dailySpecials',
+            title: 'Mozos',
+            mobileTitle: 'Mozos',
+            icon: Settings,
+            href: '/waiter',
         },
         {
             title: 'Restaurante',
             mobileTitle: 'Restaurante',
             icon: Layout,
-            href: '/admin/dashboard?tab=restaurant',
+            href: '/restaurant',
         },
     ];
 
     const isActivePath = (path: string) => {
-        if (path.includes('?tab=')) {
-            const [basePath, tab] = path.split('?tab=');
-            return pathname.startsWith(basePath) && activeTab === tab;
+        // Remove locale from pathname for comparison
+        const currentPath = pathname.replace(/^\/[a-z]{2}/, '');
+
+        if (path === '/' && currentPath === '') {
+            return true;
         }
-        return pathname.startsWith(path);
+        return currentPath === path;
     };
 
     return (

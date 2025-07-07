@@ -9,9 +9,8 @@ import bcrypt from 'bcryptjs';
 /**
  * Crear un nuevo usuario
  */
-export async function createUser(data: UserFormData & { role: UserRole }) {
+export async function createUser(data: UserFormData & { role: UserRole, creatorId: string, permissionNames: string[] }) {
     try {
-        // Verificar si ya existe un usuario con ese email
         const existingUser = await database.user.findUnique({
             where: { email: data.email },
         });
@@ -24,10 +23,22 @@ export async function createUser(data: UserFormData & { role: UserRole }) {
             };
         }
 
-        // Hash de la contraseña
         const hashedPassword = await bcrypt.hash(data.password, 12);
 
-        // Crear el usuario con contraseña hasheada
+        // Buscar los IDs de los permisos
+        const permissions = await database.permission.findMany({
+            where: { name: { in: data.permissionNames } },
+            select: { id: true }
+        });
+
+        if (permissions.length !== data.permissionNames.length) {
+            return {
+                success: false,
+                message: 'Alguno de los permisos proporcionados no es válido',
+                error: 'INVALID_PERMISSIONS'
+            };
+        }
+
         const user = await database.user.create({
             data: {
                 name: data.name,
@@ -35,10 +46,15 @@ export async function createUser(data: UserFormData & { role: UserRole }) {
                 email: data.email,
                 password: hashedPassword,
                 role: data.role,
+                createdById: data.creatorId,
+                permissions: {
+                    create: permissions.map(p => ({
+                        permissionId: p.id
+                    }))
+                }
             },
         });
 
-        // Retornar usuario sin contraseña
         return {
             success: true,
             user: {
@@ -60,6 +76,34 @@ export async function createUser(data: UserFormData & { role: UserRole }) {
         };
     }
 }
+
+/**
+ * Obtener un usuario por email
+ */
+export async function findUserByEmail(email: string, include?: { permissions?: boolean }) {
+    try {
+        const user = await database.user.findUnique({
+            where: { email },
+            include: {
+                permissions: include?.permissions ? {
+                    include: {
+                        permission: true
+                    }
+                } : false,
+            }
+        });
+
+        if (!user) {
+            return null;
+        }
+
+        return user;
+    } catch (error) {
+        console.error('Error al obtener usuario por email:', error);
+        throw new Error('No se pudo obtener el usuario');
+    }
+}
+
 
 /**
  * Obtener un usuario por ID
@@ -93,14 +137,24 @@ export async function getUserById(userId: string) {
 /**
  * Obtener todos los usuarios
  */
-export async function getAllUsers() {
+export async function getAllUsers(creatorId: string) {
     try {
-        // Implementación real con la base de datos
+        if (!creatorId) {
+            return [];
+        }
+
         const users = await database.user.findMany({
+            where: { createdById: creatorId },
             orderBy: { createdAt: 'desc' },
+            include: {
+                permissions: {
+                    include: {
+                        permission: true
+                    }
+                }
+            }
         });
 
-        // Mapear para no incluir passwords
         return users.map(user => ({
             id: user.id,
             name: user.name,
@@ -108,7 +162,8 @@ export async function getAllUsers() {
             email: user.email,
             role: user.role,
             createdAt: user.createdAt,
-            updatedAt: user.updatedAt
+            updatedAt: user.updatedAt,
+            permissions: user.permissions.map(p => p.permission.name)
         })) as UserData[];
     } catch (error) {
         console.error("Error al obtener usuarios:", error);
@@ -174,6 +229,35 @@ export async function deleteUser(userId: string) {
     } catch (error) {
         console.error("Error al eliminar usuario:", error);
         throw new Error("No se pudo eliminar el usuario");
+    }
+}
+
+/**
+ * Cambiar la contraseña de un usuario
+ */
+export async function changePasswordService(userId: string, currentPassword: string, newPassword: string) {
+    try {
+        const user = await database.user.findUnique({ where: { id: userId } });
+        if (!user) {
+            return { success: false, message: 'Usuario no encontrado' };
+        }
+
+        const passwordMatch = await bcrypt.compare(currentPassword, user.password);
+        if (!passwordMatch) {
+            return { success: false, message: 'La contraseña actual es incorrecta' };
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 12);
+        await database.user.update({
+            where: { id: userId },
+            data: { password: hashedPassword },
+        });
+
+        return { success: true, message: 'Contraseña actualizada correctamente' };
+
+    } catch (error) {
+        console.error("Error al cambiar la contraseña:", error);
+        return { success: false, message: 'Error interno al cambiar la contraseña' };
     }
 }
 

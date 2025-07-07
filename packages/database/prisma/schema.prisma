@@ -22,6 +22,11 @@ enum DishStatus {
   INACTIVE
 }
 
+enum RecurrenceType {
+  WEEKLY
+  MONTHLY
+}
+
 model User {
   id               String   @id @default(uuid())
   email            String   @unique
@@ -33,12 +38,44 @@ model User {
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
+  // Relaciones para seguimiento de creación
+  createdById  String?
+  createdBy    User?   @relation("UserCreations", fields: [createdById], references: [id])
+  createdUsers User[]  @relation("UserCreations")
+
   // Relaciones
   createdDishes     Dish[]             @relation("CreatedBy")
   createdCategories Category[]         @relation("CategoryCreatedBy")
   dailySpecials     DailySpecial[]     @relation("DailySpecialCreatedBy")
   restaurantConfigs RestaurantConfig[] @relation("RestaurantConfigCreatedBy")
   restaurantDesigns RestaurantDesign[] @relation("RestaurantDesignCreatedBy")
+
+  // Relación con permisos
+  permissions UserPermission[]
+}
+
+model Permission {
+  id          String   @id @default(uuid())
+  name        String   @unique // e.g., "users:create", "menu:edit"
+  description String?
+  createdAt   DateTime @default(now())
+
+  // Relación con usuarios
+  users UserPermission[]
+}
+
+model UserPermission {
+  userId       String
+  permissionId String
+  assignedAt   DateTime @default(now())
+
+  // Relaciones
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([userId, permissionId])
+  @@index([userId])
+  @@index([permissionId])
 }
 
 model Category {
@@ -94,6 +131,12 @@ model DailySpecial {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  // Campos para recurrencia
+  recurrenceType     RecurrenceType?
+  recurrenceDays     String? // e.g., "1,3,5" for Mon, Wed, Fri
+  recurrenceEndDate  DateTime?
+  recurrenceParentId String? // ID of the first special in a recurring series
+
   // Relaciones
   dish        Dish   @relation(fields: [dishId], references: [id], onDelete: Cascade)
   dishId      String
@@ -102,6 +145,7 @@ model DailySpecial {
 
   @@index([date])
   @@index([isActive])
+  @@index([recurrenceParentId])
 }
 
 model RestaurantConfig {

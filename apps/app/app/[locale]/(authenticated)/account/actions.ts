@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import {
-    changePassword as changePasswordService,
+    changePasswordService,
     createUser as createUserService,
     deleteUser as deleteUserService,
     updateUser as updateUserService,
@@ -10,6 +10,7 @@ import {
 import { z } from 'zod';
 import type { UserRole } from '@repo/database';
 import { hasPermission } from '@repo/auth/server-permissions';
+import { getCurrentUserId } from '@repo/data-services/src/services/authService';
 
 // Esquema para la actualización del perfil
 const profileSchema = z.object({
@@ -34,7 +35,7 @@ const userSchema = z.object({
     lastName: z.string().min(1, 'El apellido es requerido'),
     email: z.string().email('Email inválido'),
     password: z.string().min(6, 'La contraseña debe tener al menos 6 caracteres').optional().or(z.literal('')),
-    role: z.enum(['admin', 'seller']),
+    role: z.enum(['admin', 'premium', 'user']),
     permissions: z.array(z.string()),
 });
 
@@ -93,8 +94,13 @@ export async function changePassword(userId: string, formData: FormData) {
 
 export async function createUser(formData: FormData) {
     try {
-        if (!await hasPermission('account:manage_users')) {
+        if (!await hasPermission('admin:manage_users')) {
             return { success: false, message: 'No tienes permisos para crear usuarios.' };
+        }
+
+        const creatorId = await getCurrentUserId();
+        if (!creatorId) {
+            return { success: false, message: 'No se pudo identificar al creador del usuario.' };
         }
 
         const data = {
@@ -114,7 +120,15 @@ export async function createUser(formData: FormData) {
             return { success: false, message: "La contraseña es requerida para nuevos usuarios." };
         }
 
-        const result = await createUserService({ ...validated.data, role: validated.data.role as UserRole, password: validated.data.password });
+        const { permissions, ...userData } = validated.data;
+
+        const result = await createUserService({
+            ...userData,
+            password: userData.password!,
+            role: userData.role as UserRole,
+            creatorId,
+            permissionNames: permissions,
+        });
 
         if (!result.success) {
             return { success: false, message: result.message || 'Error al crear el usuario' };
@@ -130,7 +144,7 @@ export async function createUser(formData: FormData) {
 
 export async function updateUser(userId: string, formData: FormData) {
     try {
-        if (!await hasPermission('account:manage_users')) {
+        if (!await hasPermission('admin:manage_users')) {
             return { success: false, message: 'No tienes permisos para actualizar usuarios.' };
         }
 
@@ -160,7 +174,7 @@ export async function updateUser(userId: string, formData: FormData) {
 
 export async function deleteUser(userId: string) {
     try {
-        if (!await hasPermission('account:manage_users')) {
+        if (!await hasPermission('admin:manage_users')) {
             return { success: false, message: 'No tienes permisos para eliminar usuarios.' };
         }
 

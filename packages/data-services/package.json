@@ -1,8 +1,11 @@
 {
   "name": "@repo/data-services",
   "version": "0.0.0",
-  "main": "./index.ts",
-  "types": "./index.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
@@ -14,6 +17,7 @@
     "@repo/database": "workspace:*",
     "@types/bcryptjs": "^3.0.0",
     "bcryptjs": "^3.0.2",
+    "date-fns": "^4.1.0",
     "next": "^15.0.0",
     "server-only": "^0.0.1",
     "zod": "^3.24.2"

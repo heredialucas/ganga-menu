@@ -11,7 +11,7 @@ import {
 import { LogOut } from 'lucide-react';
 import { useTransition } from 'react';
 import { Dictionary } from '@repo/internationalization';
-import { logoutAction } from '../actions';
+import { signOut } from '@repo/data-services/src/services/authService';
 
 interface LogoutButtonProps {
     userName?: string;
@@ -23,7 +23,7 @@ export function LogoutButton({ userName, dictionary }: LogoutButtonProps) {
 
     const handleLogout = () => {
         startTransition(async () => {
-            await logoutAction();
+            await signOut();
         });
     };
 

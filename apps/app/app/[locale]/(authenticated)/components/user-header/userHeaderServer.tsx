@@ -14,5 +14,5 @@ type User = {
 export async function UserHeaderServer({ locale }: { locale: string }) {
     const user = await getCurrentUser();
     const dictionary = await getDictionary(locale);
-    return <UserHeaderClient user={user as User} dictionary={dictionary} logo={<Image src={logo} alt="Logo" width={32} height={32} />} />;
+    return <UserHeaderClient user={user as User} dictionary={dictionary} logo={<Image src={logo} alt="Logo" width={32} height={32} />} locale={locale} />;
 }

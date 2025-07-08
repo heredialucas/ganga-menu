@@ -12,18 +12,21 @@ import { LogOut } from 'lucide-react';
 import { useTransition } from 'react';
 import { Dictionary } from '@repo/internationalization';
 import { signOut } from '@repo/data-services/src/services/authService';
+import { useRouter } from 'next/navigation';
 
 interface LogoutButtonProps {
     userName?: string;
     dictionary?: Dictionary;
+    locale?: string;
 }
 
-export function LogoutButton({ userName, dictionary }: LogoutButtonProps) {
+export function LogoutButton({ userName, dictionary, locale }: LogoutButtonProps) {
     const [isPending, startTransition] = useTransition();
-
+    const router = useRouter();
     const handleLogout = () => {
         startTransition(async () => {
             await signOut();
+            router.push(`/${locale}/sign-in`);
         });
     };
 

@@ -21,9 +21,10 @@ interface UserHeaderClientProps {
     extraItems?: ReactNode;
     dictionary?: Dictionary;
     user?: User;
+    locale?: string;
 }
 
-export function UserHeaderClient({ logo, title = 'Ganga-Menú', extraItems, dictionary, user }: UserHeaderClientProps) {
+export function UserHeaderClient({ logo, title = 'Ganga-Menú', extraItems, dictionary, user, locale }: UserHeaderClientProps) {
     const stripeProLink = (process.env.NODE_ENV === 'development'
         ? env.NEXT_PUBLIC_STRIPE_PRO_LINK_TEST
         : env.NEXT_PUBLIC_STRIPE_PRO_LINK_LIVE) + `?client_reference_id=${user?.id}`;
@@ -50,7 +51,7 @@ export function UserHeaderClient({ logo, title = 'Ganga-Menú', extraItems, dict
                     <ModeToggle />
                     {/* <LanguageSwitcher /> */}
                     {extraItems}
-                    <LogoutButton userName={user?.name} dictionary={dictionary} />
+                    <LogoutButton userName={user?.name} dictionary={dictionary} locale={locale} />
                 </div>
             </div>
         </header>

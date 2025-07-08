@@ -12,7 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@repo
 import { Label } from '@repo/design-system/components/ui/label';
 import { Textarea } from '@repo/design-system/components/ui/textarea';
 import { ImageUpload } from './ImageUploadClient';
-import { Loader2, Save, QrCode, Download } from 'lucide-react';
+import { Loader2, Save, QrCode, Download, Copy, ExternalLink } from 'lucide-react';
 import {
     Select,
     SelectContent,
@@ -58,9 +58,9 @@ export function RestaurantConfigForm({
     const [isPending, startTransition] = useTransition();
     const [slug, setSlug] = useState(config?.slug || '');
     const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string | null>(null);
+    const menuUrl = `${appUrl}/es/menu/${slug || 'tu-restaurante'}`;
 
     useEffect(() => {
-        const menuUrl = `${appUrl}/es/menu/${slug || 'tu-restaurante'}`;
         toDataURL(menuUrl, { errorCorrectionLevel: 'H', width: 256, margin: 2 }, (err, dataUrl) => {
             if (err) {
                 console.error("QR Code Generation Error:", err);
@@ -68,7 +68,12 @@ export function RestaurantConfigForm({
             }
             setQrCodeDataUrl(dataUrl);
         });
-    }, [appUrl, slug]);
+    }, [menuUrl]);
+
+    const handleCopyToClipboard = () => {
+        navigator.clipboard.writeText(menuUrl);
+        toast.success("Enlace del menú copiado al portapapeles.");
+    };
 
     const handleDownloadQR = () => {
         if (!qrCodeDataUrl) return;
@@ -166,9 +171,21 @@ export function RestaurantConfigForm({
                                 <Label htmlFor="slug">Enlace Personalizado (URL)</Label>
                                 <div className="flex items-center">
                                     <span className="flex-shrink-0 text-sm text-muted-foreground p-2 bg-muted rounded-l-md border border-r-0">
-                                        {`${appUrl}/es/`}
+                                        {`${appUrl}/es/menu/`}
                                     </span>
                                     <Input id="slug" name="slug" value={slug} onChange={(e) => setSlug(e.target.value)} placeholder="tu-restaurante" className="rounded-l-none min-w-0" />
+                                </div>
+                                <div className="flex flex-col sm:flex-row items-center gap-2 pt-2">
+                                    <Button type="button" variant="outline" onClick={handleCopyToClipboard} className="w-full">
+                                        <Copy className="mr-2 h-4 w-4" />
+                                        Copiar Enlace
+                                    </Button>
+                                    <a href={menuUrl} target="_blank" rel="noopener noreferrer" className="w-full">
+                                        <Button type="button" variant="outline" className="w-full">
+                                            <ExternalLink className="mr-2 h-4 w-4" />
+                                            Vista previa
+                                        </Button>
+                                    </a>
                                 </div>
                                 {state?.errors?.slug && <p className="text-sm text-red-500">{state.errors.slug[0]}</p>}
                             </div>

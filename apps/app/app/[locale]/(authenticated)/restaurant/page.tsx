@@ -3,7 +3,7 @@ import { getRestaurantConfig } from '@repo/data-services/src/services/restaurant
 import { getRestaurantDesignByConfigId } from '@repo/data-services/src/services/restaurantDesignService';
 import { getDictionary } from '@repo/internationalization';
 import { RestaurantViewManager } from './components/RestaurantViewManager';
-import { env } from '@/env';
+import { getAppUrl } from '@/lib/utils';
 
 export default async function RestaurantPage({
     params
@@ -34,7 +34,7 @@ export default async function RestaurantPage({
                 config={restaurantConfig}
                 design={restaurantDesign}
                 dictionary={dictionary}
-                appUrl={env.NEXT_PUBLIC_APP_URL}
+                appUrl={getAppUrl()}
             />
         </div>
     );

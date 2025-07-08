@@ -9,8 +9,6 @@ export {
     getCurrentUser,
     type Permission,
     ADMIN_PERMISSIONS,
-    PREMIUM_PERMISSIONS,
-    USER_DEFAULT_PERMISSIONS,
     getCurrentUserWithPermissions,
     hasPermission,
     hasAllPermissions,

@@ -3,18 +3,39 @@
 import { database } from '@repo/database';
 import { revalidatePath } from 'next/cache';
 
-export interface RestaurantElement {
+// Tipos base para los elementos del diseño
+interface BaseElement {
     id: string;
-    type: 'table' | 'bar' | 'decoration';
-    shape: 'circle' | 'rectangle' | 'square';
     x: number;
     y: number;
+    rotation?: number;
+    fill: string;
+}
+
+interface ShapeElement extends BaseElement {
+    type: 'table' | 'bar';
+    shape: 'circle' | 'rectangle' | 'square';
     width: number;
     height: number;
-    fill: string;
     name: string;
     capacity?: number;
 }
+
+interface WallElement {
+    id: string;
+    type: 'wall';
+    points: number[];
+    fill: string;
+}
+
+interface StaircaseElement extends BaseElement {
+    type: 'staircase';
+    width: number;
+    height: number;
+}
+
+export type RestaurantElement = ShapeElement | WallElement | StaircaseElement;
+
 
 // Helper function para validar y convertir JsonValue a RestaurantElement[]
 function parseElements(elementsJson: unknown): RestaurantElement[] {
@@ -22,20 +43,36 @@ function parseElements(elementsJson: unknown): RestaurantElement[] {
         return [];
     }
 
-    return elementsJson.filter((item): item is RestaurantElement => {
-        return (
-            typeof item === 'object' &&
-            item !== null &&
-            typeof item.id === 'string' &&
-            typeof item.type === 'string' &&
-            typeof item.shape === 'string' &&
-            typeof item.x === 'number' &&
-            typeof item.y === 'number' &&
-            typeof item.width === 'number' &&
-            typeof item.height === 'number' &&
-            typeof item.fill === 'string' &&
-            typeof item.name === 'string'
-        );
+    return elementsJson.filter((item: any): item is RestaurantElement => {
+        if (typeof item !== 'object' || item === null || typeof item.id !== 'string' || typeof item.type !== 'string') {
+            return false;
+        }
+
+        switch (item.type) {
+            case 'table':
+            case 'bar':
+                return (
+                    typeof item.x === 'number' &&
+                    typeof item.y === 'number' &&
+                    typeof item.width === 'number' &&
+                    typeof item.height === 'number' &&
+                    typeof item.fill === 'string' &&
+                    typeof item.name === 'string' &&
+                    typeof item.shape === 'string'
+                );
+            case 'wall':
+                return Array.isArray(item.points) && typeof item.fill === 'string';
+            case 'staircase':
+                return (
+                    typeof item.x === 'number' &&
+                    typeof item.y === 'number' &&
+                    typeof item.width === 'number' &&
+                    typeof item.height === 'number' &&
+                    typeof item.fill === 'string'
+                );
+            default:
+                return false;
+        }
     });
 }
 
@@ -81,14 +118,8 @@ export async function getRestaurantDesignByConfigId(restaurantConfigId: string):
     }
 
     return {
-        id: design.id,
-        name: design.name,
+        ...design,
         elements: parseElements(design.elements),
-        canvasWidth: design.canvasWidth,
-        canvasHeight: design.canvasHeight,
-        restaurantConfigId: design.restaurantConfigId,
-        createdAt: design.createdAt,
-        updatedAt: design.updatedAt
     };
 }
 
@@ -108,14 +139,8 @@ export async function createRestaurantDesign(input: CreateRestaurantDesignInput)
     });
 
     return {
-        id: design.id,
-        name: design.name,
+        ...design,
         elements: parseElements(design.elements),
-        canvasWidth: design.canvasWidth,
-        canvasHeight: design.canvasHeight,
-        restaurantConfigId: design.restaurantConfigId,
-        createdAt: design.createdAt,
-        updatedAt: design.updatedAt
     };
 }
 
@@ -126,22 +151,16 @@ export async function updateRestaurantDesign(id: string, input: UpdateRestaurant
     const design = await database.restaurantDesign.update({
         where: { id },
         data: {
-            ...(input.name && { name: input.name }),
-            ...(input.elements && { elements: input.elements as any }),
-            ...(input.canvasWidth && { canvasWidth: input.canvasWidth }),
-            ...(input.canvasHeight && { canvasHeight: input.canvasHeight })
+            name: input.name,
+            elements: input.elements as any,
+            canvasWidth: input.canvasWidth,
+            canvasHeight: input.canvasHeight
         }
     });
 
     return {
-        id: design.id,
-        name: design.name,
+        ...design,
         elements: parseElements(design.elements),
-        canvasWidth: design.canvasWidth,
-        canvasHeight: design.canvasHeight,
-        restaurantConfigId: design.restaurantConfigId,
-        createdAt: design.createdAt,
-        updatedAt: design.updatedAt
     };
 }
 
@@ -155,20 +174,17 @@ export async function saveRestaurantDesign(
     canvasWidth: number,
     canvasHeight: number
 ): Promise<RestaurantDesignData> {
-    // Verificar si ya existe un diseño
     const existingDesign = await getRestaurantDesignByConfigId(restaurantConfigId);
 
     let result: RestaurantDesignData;
 
     if (existingDesign) {
-        // Actualizar diseño existente
         result = await updateRestaurantDesign(existingDesign.id, {
             elements,
             canvasWidth,
             canvasHeight
         });
     } else {
-        // Crear nuevo diseño
         result = await createRestaurantDesign({
             elements,
             canvasWidth,
@@ -178,8 +194,7 @@ export async function saveRestaurantDesign(
         });
     }
 
-    // Revalidar la página del dashboard para actualizar los datos
-    revalidatePath('/[locale]/admin/dashboard');
+    revalidatePath('/[locale]/restaurant');
 
     return result;
 } 

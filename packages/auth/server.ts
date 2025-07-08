@@ -5,8 +5,6 @@ export { getCurrentUser } from '@repo/data-services/src/services/authService';
 export {
     type Permission,
     ADMIN_PERMISSIONS,
-    PREMIUM_PERMISSIONS,
-    USER_DEFAULT_PERMISSIONS,
     getCurrentUserWithPermissions,
     hasPermission,
     hasAllPermissions,

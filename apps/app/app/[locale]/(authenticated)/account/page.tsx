@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/design-system/co
 import { ProfileSection } from './components/ProfileSection';
 import { PasswordSection } from './components/PasswordSection';
 import { UsersSection } from './components/UsersSection';
+import { ShareLinksWidget } from '@/components/ShareLinksWidget';
 
 interface AccountPageProps {
     params: Promise<{ locale: string }>;
@@ -44,14 +45,17 @@ export default async function AccountPage({ params }: AccountPageProps) {
     const assignablePermissions = ADMIN_PERMISSIONS.filter(p => !p.startsWith('admin:'));
 
     return (
-        <div className="space-y-6 p-4 md:p-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <h1 className="text-2xl md:text-3xl font-bold">
-                    Gestión de Cuenta
-                </h1>
-                <div className="text-sm text-muted-foreground">
-                    Configuración y usuarios
+        <div className="space-y-6">
+            <div className="flex flex-row items-start justify-between gap-4">
+                <div>
+                    <h1 className="text-3xl font-bold tracking-tight">
+                        Gestión de Cuenta
+                    </h1>
+                    <p className="text-muted-foreground">
+                        Configuración y usuarios
+                    </p>
                 </div>
+                <ShareLinksWidget dictionary={dictionary} />
             </div>
 
             <Tabs defaultValue="profile" className="space-y-4">

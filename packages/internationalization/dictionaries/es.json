@@ -6,6 +6,15 @@
       "services": "Servicios",
       "restaurant": "Restaurante"
     },
+    "share": {
+      "title": "Compartir Enlaces",
+      "description": "Comparte estos enlaces para dar acceso a las diferentes vistas de tu restaurante.",
+      "open": "Abrir diálogo para compartir",
+      "links_button": "Enlaces",
+      "menu": "Enlace al Menú Público",
+      "kitchen": "Enlace a la Vista de Cocina",
+      "waiter": "Enlace a la Vista de Mozos"
+    },
     "admin": {
       "title": "Ganga-Menú",
       "navigation": {

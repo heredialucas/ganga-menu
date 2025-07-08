@@ -4,6 +4,7 @@ import { getDictionary } from '@repo/internationalization';
 import { getRestaurantConfig } from '@repo/data-services/src/services/restaurantConfigService';
 import { ServicesCards } from './components/ServicesCards';
 import Link from 'next/link';
+import { ShareLinksWidget } from '@/components/ShareLinksWidget';
 
 export default async function ServicesPage({
     params
@@ -25,13 +26,16 @@ export default async function ServicesPage({
     if (!restaurantConfig) {
         return (
             <div className="space-y-6">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight">
-                        Servicios
-                    </h1>
-                    <p className="text-muted-foreground">
-                        Herramientas para la gestión de tu restaurante.
-                    </p>
+                <div className="flex flex-row items-start justify-between gap-4">
+                    <div>
+                        <h1 className="text-3xl font-bold tracking-tight">
+                            Servicios
+                        </h1>
+                        <p className="text-muted-foreground">
+                            Herramientas para la gestión de tu restaurante.
+                        </p>
+                    </div>
+                    <ShareLinksWidget dictionary={dictionary} />
                 </div>
                 <div className="border rounded-lg p-6 text-center">
                     <h2 className="text-xl font-semibold mb-2">Configuración Requerida</h2>
@@ -49,13 +53,16 @@ export default async function ServicesPage({
 
     return (
         <div className="space-y-6">
-            <div>
-                <h1 className="text-3xl font-bold tracking-tight">
-                    Servicios
-                </h1>
-                <p className="text-muted-foreground">
-                    Accesos directos para el personal de tu restaurante.
-                </p>
+            <div className="flex flex-row items-start justify-between gap-4">
+                <div>
+                    <h1 className="text-3xl font-bold tracking-tight">
+                        Servicios
+                    </h1>
+                    <p className="text-muted-foreground">
+                        Accesos directos para el personal de tu restaurante.
+                    </p>
+                </div>
+                <ShareLinksWidget dictionary={dictionary} />
             </div>
             <ServicesCards
                 restaurantConfig={restaurantConfig}

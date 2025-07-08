@@ -183,10 +183,12 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
                                 Gestiona los usuarios y sus permisos
                             </CardDescription>
                         </div>
-                        <Button className="w-full sm:w-auto" onClick={handleCreateUser}>
-                            <Plus className="h-4 w-4 mr-2" />
-                            Nuevo Usuario
-                        </Button>
+                        <div className="flex shrink-0 gap-2">
+                            <Button className="w-full sm:w-auto" onClick={handleCreateUser}>
+                                <Plus className="h-4 w-4 mr-2" />
+                                Nuevo Usuario
+                            </Button>
+                        </div>
                     </div>
                 </CardHeader>
                 <CardContent>
@@ -246,9 +248,7 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
                                     <SelectValue placeholder="Selecciona un rol" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="admin">Administrador</SelectItem>
-                                    <SelectItem value="premium">Premium</SelectItem>
-                                    <SelectItem value="user">Usuario</SelectItem>
+                                    <SelectItem value="user">Encargado de restaurante</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>

@@ -6,11 +6,18 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@r
 import { DishManager } from './components/DishManager';
 import { CategoryManager } from './components/CategoryManager';
 import { DailySpecialManager } from './components/DailySpecialManager';
+import { getDictionary } from '@repo/internationalization';
+import { ShareLinksWidget } from '@/components/ShareLinksWidget';
 
-export default async function MenuPage() {
+export default async function MenuPage({ params }: { params: Promise<{ locale: string }> }) {
+    const { locale } = await params;
     await requirePermission('dishes:view');
 
-    const user = await getCurrentUser();
+    const [user, dictionary] = await Promise.all([
+        getCurrentUser(),
+        getDictionary(locale),
+    ]);
+
     if (!user) {
         return <p className="p-4 text-center">Usuario no autenticado.</p>;
     }
@@ -33,13 +40,16 @@ export default async function MenuPage() {
 
     return (
         <div className="space-y-6">
-            <div>
-                <h1 className="text-3xl font-bold tracking-tight">
-                    Gestión del Menú
-                </h1>
-                <p className="text-muted-foreground">
-                    Crea y edita tus platos. Usa los desplegables para configuraciones avanzadas.
-                </p>
+            <div className="flex flex-row items-start justify-between gap-4">
+                <div>
+                    <h1 className="text-3xl font-bold tracking-tight">
+                        Gestión del Menú
+                    </h1>
+                    <p className="text-muted-foreground">
+                        Crea y edita tus platos. Usa los desplegables para configuraciones avanzadas.
+                    </p>
+                </div>
+                <ShareLinksWidget dictionary={dictionary} />
             </div>
 
             <DishManager dishes={dishes} categories={categories} />

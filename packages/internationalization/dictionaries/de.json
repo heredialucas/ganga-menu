@@ -110,6 +110,28 @@
       "primaryCta": "Kontaktieren Sie uns",
       "secondaryCta": "Jetzt loslegen"
     },
+    "menu": {
+      "title": "Unsere Speisekarte",
+      "todaySpecial": "Tagesgericht",
+      "specialDescription": "Entdecken Sie unser heutiges Tagesgericht, zubereitet mit frischen Zutaten und bester Qualität.",
+      "todayOnly": "Nur heute",
+      "address": "Adresse",
+      "hours": "Öffnungszeiten",
+      "contact": "Kontakt",
+      "searchPlaceholder": "Gerichte suchen...",
+      "allCategories": "Alle Kategorien",
+      "specialsOnly": "Nur Sonderangebote",
+      "noResults": "Keine Gerichte mit den angewandten Filtern gefunden.",
+      "clearFilters": "Filter löschen",
+      "closed": "Geschlossen",
+      "categories": {
+        "noDishes": "In dieser Kategorie sind keine Gerichte verfügbar"
+      },
+      "footer": {
+        "poweredBy": "Digitales Menü erstellt mit"
+      },
+      "comingSoon": "Demnächst... Wir bereiten unsere Speisekarte vor."
+    },
     "header": {
       "home": "Startseite",
       "projects": "Projekte",

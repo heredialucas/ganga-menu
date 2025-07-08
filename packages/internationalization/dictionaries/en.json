@@ -189,6 +189,28 @@
     "global": {
       "primaryCta": "Contact us",
       "secondaryCta": "Get started now"
+    },
+    "menu": {
+      "title": "Our Menu",
+      "todaySpecial": "Today's Special",
+      "specialDescription": "Discover our special dish of the day, prepared with fresh ingredients and the best quality.",
+      "todayOnly": "Today only",
+      "address": "Address",
+      "hours": "Hours",
+      "contact": "Contact",
+      "searchPlaceholder": "Search dishes...",
+      "allCategories": "All categories",
+      "specialsOnly": "Specials only",
+      "noResults": "No dishes found with the applied filters.",
+      "clearFilters": "Clear filters",
+      "closed": "Closed",
+      "categories": {
+        "noDishes": "No dishes available in this category"
+      },
+      "footer": {
+        "poweredBy": "Digital menu created with"
+      },
+      "comingSoon": "Coming soon... We are preparing our menu."
     }
   }
 }

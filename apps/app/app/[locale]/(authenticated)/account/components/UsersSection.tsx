@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@repo/design-system/components/ui/switch';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@repo/design-system/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@repo/design-system/components/ui/alert-dialog';
-import { useToast } from '@repo/design-system/hooks/use-toast';
+import { toast } from 'sonner';
 import { User, Mail, Plus, Edit, Trash2 } from 'lucide-react';
 import type { UserData } from '@repo/data-services/src/types/user';
 import { UserRole } from '@repo/database/generated/client';
@@ -38,7 +38,6 @@ const groupPermissions = (permissions: Permission[]) => {
 };
 
 export function UsersSection({ users, currentUser, dictionary, allPermissions }: UsersSectionProps) {
-    const { toast } = useToast();
     const [isUserDialogOpen, setIsUserDialogOpen] = useState(false);
     const [editingUser, setEditingUser] = useState<UserData | null>(null);
     const [deleteUserDialog, setDeleteUserDialog] = useState<{ open: boolean; user: UserData | null }>({ open: false, user: null });
@@ -102,21 +101,21 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
         }
     };
 
-    const handleUserSubmit = async () => {
+    const handleUserSubmit = () => {
         if (!userForm.name || !userForm.lastName || !userForm.email) {
-            toast({ title: "Error", description: "Nombre, apellido y email son requeridos", variant: "destructive" });
+            toast.error("Nombre, apellido y email son requeridos");
             return;
         }
         if (!editingUser && !userForm.password) {
-            toast({ title: "Error", description: "La contraseña es requerida para nuevos usuarios", variant: "destructive" });
+            toast.error("La contraseña es requerida para nuevos usuarios");
             return;
         }
         if (userForm.password && userForm.password.length < 6) {
-            toast({ title: "Error", description: "La contraseña debe tener al menos 6 caracteres", variant: "destructive" });
+            toast.error("La contraseña debe tener al menos 6 caracteres");
             return;
         }
 
-        startTransition(async () => {
+        const promise = async () => {
             const formData = new FormData();
             formData.append('name', userForm.name);
             formData.append('lastName', userForm.lastName);
@@ -129,24 +128,42 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
                 ? await updateUser(editingUser.id, formData)
                 : await createUser(formData);
 
-            if (result.success) {
-                toast({ title: "Éxito", description: result.message });
-                setIsUserDialogOpen(false);
-            } else {
-                toast({ title: "Error", description: result.message, variant: "destructive" });
+            if (!result.success) {
+                throw new Error(result.message);
             }
+            return result;
+        };
+
+        startTransition(() => {
+            toast.promise(promise(), {
+                loading: editingUser ? 'Actualizando usuario...' : 'Creando usuario...',
+                success: (data) => {
+                    setIsUserDialogOpen(false);
+                    return `${data.message || `Usuario ${editingUser ? 'actualizado' : 'creado'} correctamente.`}`;
+                },
+                error: (err) => err.message,
+            });
         });
     };
 
-    const handleDeleteUser = async (user: UserData) => {
-        startTransition(async () => {
+    const handleDeleteUser = (user: UserData) => {
+        const promise = async () => {
             const result = await deleteUser(user.id);
-            if (result.success) {
-                toast({ title: "Éxito", description: result.message, });
-                setDeleteUserDialog({ open: false, user: null });
-            } else {
-                toast({ title: "Error", description: result.message, variant: "destructive", });
+            if (!result.success) {
+                throw new Error(result.message);
             }
+            return result;
+        };
+
+        startTransition(() => {
+            toast.promise(promise(), {
+                loading: 'Eliminando usuario...',
+                success: (data) => {
+                    setDeleteUserDialog({ open: false, user: null });
+                    return `${data.message || 'Usuario eliminado correctamente.'}`;
+                },
+                error: (err) => err.message,
+            });
         });
     };
 
@@ -259,9 +276,9 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
                         </div>
                     </div>
                     <DialogFooter>
-                        <Button type="button" variant="ghost" onClick={() => setIsUserDialogOpen(false)}>Cancelar</Button>
+                        <Button variant="ghost" onClick={() => setIsUserDialogOpen(false)}>Cancelar</Button>
                         <Button onClick={handleUserSubmit} disabled={isPending}>
-                            {isPending ? 'Guardando...' : 'Guardar'}
+                            {isPending ? 'Guardando...' : (editingUser ? 'Guardar Cambios' : 'Crear Usuario')}
                         </Button>
                     </DialogFooter>
                 </DialogContent>
@@ -272,17 +289,17 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
                     <AlertDialogHeader>
                         <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Esta acción no se puede deshacer. Se eliminará permanentemente al usuario {deleteUserDialog.user?.name}.
+                            Esta acción no se puede deshacer. Se eliminará permanentemente al usuario "{deleteUserDialog.user?.name} {deleteUserDialog.user?.lastName}".
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel>Cancelar</AlertDialogCancel>
                         <AlertDialogAction onClick={() => handleDeleteUser(deleteUserDialog.user!)} disabled={isPending}>
-                            {isPending ? 'Eliminando...' : 'Eliminar'}
+                            {isPending ? "Eliminando..." : "Eliminar"}
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
         </>
     );
-} 
+}

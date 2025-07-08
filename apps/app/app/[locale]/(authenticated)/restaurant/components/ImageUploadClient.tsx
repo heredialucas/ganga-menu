@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { Button } from '@repo/design-system/components/ui/button';
 import { Image as ImageIcon, Trash2, UploadCloud } from 'lucide-react';
 import Image from 'next/image';
@@ -12,6 +12,7 @@ interface ImageUploadProps {
 
 export function ImageUpload({ name, initialUrl }: ImageUploadProps) {
     const [preview, setPreview] = useState<string | null>(initialUrl || null);
+    const [urlValue, setUrlValue] = useState(initialUrl || ''); // For the hidden input
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,11 +23,14 @@ export function ImageUpload({ name, initialUrl }: ImageUploadProps) {
                 setPreview(reader.result as string);
             };
             reader.readAsDataURL(file);
+            // An empty string in urlValue while there's a file means "replace"
+            setUrlValue('');
         }
     };
 
     const handleRemove = () => {
         setPreview(null);
+        setUrlValue(''); // This empty value now consistently signals removal or replacement
         if (fileInputRef.current) {
             fileInputRef.current.value = '';
         }
@@ -56,11 +60,16 @@ export function ImageUpload({ name, initialUrl }: ImageUploadProps) {
                 </Button>
                 <input
                     type="file"
-                    name={name}
+                    name={`${name}File`} // Use a different name for the file to avoid conflict
                     ref={fileInputRef}
                     accept="image/*"
                     className="hidden"
                     onChange={handleFileChange}
+                />
+                <input
+                    type="hidden"
+                    name={name}
+                    value={urlValue}
                 />
                 {preview && (
                     <Button type="button" variant="destructive" size="icon" onClick={handleRemove}>

@@ -2,7 +2,8 @@ import { getCurrentUser, requirePermission } from '@repo/auth/server';
 import { getRestaurantConfig } from '@repo/data-services/src/services/restaurantConfigService';
 import { getRestaurantDesignByConfigId } from '@repo/data-services/src/services/restaurantDesignService';
 import { getDictionary } from '@repo/internationalization';
-import { RestaurantViewManager } from './components/restaurant-view-manager';
+import { RestaurantViewManager } from './components/RestaurantViewManager';
+import { env } from '@/env';
 
 export default async function RestaurantPage({
     params
@@ -33,6 +34,7 @@ export default async function RestaurantPage({
                 config={restaurantConfig}
                 design={restaurantDesign}
                 dictionary={dictionary}
+                appUrl={env.NEXT_PUBLIC_APP_URL}
             />
         </div>
     );

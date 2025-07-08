@@ -6,7 +6,7 @@ import { Button } from '@repo/design-system/components/ui/button';
 import { Input } from '@repo/design-system/components/ui/input';
 import { Label } from '@repo/design-system/components/ui/label';
 import { Badge } from '@repo/design-system/components/ui/badge';
-import { useToast } from '@repo/design-system/hooks/use-toast';
+import { toast } from 'sonner';
 import { User } from 'lucide-react';
 import type { Dictionary } from '@repo/internationalization';
 import { useForm } from 'react-hook-form';
@@ -29,7 +29,6 @@ interface ProfileSectionProps {
 }
 
 export function ProfileSection({ currentUser, dictionary, canEdit }: ProfileSectionProps) {
-    const { toast } = useToast();
     const [isPending, startTransition] = useTransition();
 
     const form = useForm<ProfileFormValues>({
@@ -44,26 +43,25 @@ export function ProfileSection({ currentUser, dictionary, canEdit }: ProfileSect
     const onSubmit = (data: ProfileFormValues) => {
         if (!canEdit) return;
 
-        startTransition(async () => {
+        const promise = async () => {
             const formData = new FormData();
             formData.append('name', data.name);
             formData.append('lastName', data.lastName);
             formData.append('email', data.email);
 
             const result = await updateProfile(currentUser.id, formData);
-
-            if (result.success) {
-                toast({
-                    title: "Éxito",
-                    description: result.message,
-                });
-            } else {
-                toast({
-                    title: "Error",
-                    description: result.message,
-                    variant: "destructive",
-                });
+            if (!result.success) {
+                throw new Error(result.message);
             }
+            return result;
+        };
+
+        startTransition(() => {
+            toast.promise(promise(), {
+                loading: 'Actualizando perfil...',
+                success: (data) => `${data.message || 'Perfil actualizado exitosamente.'}`,
+                error: (err) => err.message,
+            });
         });
     };
 

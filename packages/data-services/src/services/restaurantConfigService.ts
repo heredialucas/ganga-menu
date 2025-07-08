@@ -3,6 +3,28 @@
 import { revalidatePath } from 'next/cache';
 import { database } from '@repo/database';
 import { getCurrentUserId } from './authService';
+import { uploadR2Image, deleteR2Image } from './uploadR2Image';
+import { z } from 'zod';
+
+const restaurantConfigSchema = z.object({
+    name: z.string().min(1, 'El nombre es requerido'),
+    description: z.string().optional(),
+    address: z.string().optional(),
+    phone: z.string().optional(),
+    email: z.string().email('Email inválido').optional().or(z.literal('')),
+    hours: z.string().optional().refine((val) => {
+        if (!val) return true;
+        try {
+            JSON.parse(val);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }, { message: "Formato de horarios inválido." }),
+    logoUrl: z.string().url('URL de logo inválida').optional().or(z.literal('')),
+    slug: z.string().min(3, 'El enlace debe tener al menos 3 caracteres').optional(),
+    themeColor: z.string().optional(),
+});
 
 export interface RestaurantConfigData {
     id: string;
@@ -22,6 +44,9 @@ export interface RestaurantConfigData {
     updatedAt: Date;
 }
 
+/**
+ * DEPRECATED: Use Zod schema from this service.
+ */
 export interface RestaurantConfigFormData {
     name: string;
     description?: string;
@@ -62,69 +87,44 @@ export async function getRestaurantConfig(userId?: string): Promise<RestaurantCo
 }
 
 /**
- * Crear o actualizar la configuración del restaurante
+ * Crear o actualizar la configuración del restaurante.
+ * NO maneja la lógica de subida de imágenes; eso debe hacerse antes.
  */
-export async function upsertRestaurantConfig(data: RestaurantConfigFormData, createdById: string) {
+export async function upsertRestaurantConfig(
+    data: z.infer<typeof restaurantConfigSchema>,
+    createdById: string,
+    existingId?: string
+) {
     try {
-        // Buscar si ya existe una configuración para ESTE usuario específico
-        const existingConfig = await database.restaurantConfig.findFirst({
-            where: {
-                isActive: true,
-                createdById: createdById  // ✅ FILTRAR POR USUARIO ESPECÍFICO
-            }
-        });
-
         // Validar que el slug sea único (solo si se está cambiando)
-        const slugToUse = data.slug || (existingConfig?.slug) || 'mi-restaurante';
-        if (slugToUse !== existingConfig?.slug) {
+        const slugToUse = data.slug || 'mi-restaurante';
+        if (!existingId || (existingId && data.slug)) {
             const existingSlug = await database.restaurantConfig.findFirst({
                 where: {
                     slug: slugToUse,
                     isActive: true,
-                    id: { not: existingConfig?.id } // Excluir la configuración actual si existe
+                    id: { not: existingId }
                 }
             });
-
             if (existingSlug) {
-                throw new Error('Ya existe un restaurante con este enlace personalizado. Por favor elige otro nombre para tu enlace.');
+                throw new Error('Ya existe un restaurante con este enlace personalizado.');
             }
         }
 
-        let config;
+        const dbData = { ...data, slug: slugToUse };
 
-        if (existingConfig) {
-            // Actualizar configuración existente del usuario
+        let config;
+        if (existingId) {
             config = await database.restaurantConfig.update({
-                where: { id: existingConfig.id },
-                data: {
-                    name: data.name,
-                    description: data.description,
-                    address: data.address,
-                    phone: data.phone,
-                    email: data.email,
-                    hours: data.hours,
-                    logoUrl: data.logoUrl,
-                    slug: slugToUse,
-                    themeColor: data.themeColor || existingConfig.themeColor,
-                    waiterCode: data.waiterCode || existingConfig.waiterCode,
-                }
+                where: { id: existingId },
+                data: dbData,
             });
         } else {
-            // Crear nueva configuración para el usuario
             config = await database.restaurantConfig.create({
                 data: {
-                    name: data.name,
-                    description: data.description,
-                    address: data.address,
-                    phone: data.phone,
-                    email: data.email,
-                    hours: data.hours,
-                    logoUrl: data.logoUrl,
-                    slug: slugToUse,
-                    themeColor: data.themeColor || 'green',
-                    waiterCode: data.waiterCode || '1234',
+                    ...dbData,
                     createdById,
-                }
+                },
             });
         }
 
@@ -134,10 +134,10 @@ export async function upsertRestaurantConfig(data: RestaurantConfigFormData, cre
         return config;
     } catch (error) {
         console.error('Error al guardar configuración del restaurante:', error);
-        // Re-lanzar el error original para mantener el mensaje específico
         throw error;
     }
 }
+
 
 /**
  * Obtener la configuración pública del restaurante por slug

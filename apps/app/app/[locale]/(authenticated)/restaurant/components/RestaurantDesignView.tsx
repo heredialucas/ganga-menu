@@ -12,7 +12,7 @@ import {
 } from '@repo/design-system/components/ui/alert-dialog';
 import { Popover, PopoverContent, PopoverTrigger } from '@repo/design-system/components/ui/popover';
 import { PlusCircle, Save, Square, Circle as CircleIcon, MinusSquare, Pen, Trash2, MousePointer, Loader2, ChevronsUp } from 'lucide-react';
-import { saveRestaurantDesign } from './actions';
+import { saveRestaurantDesign } from '../actions';
 import type { RestaurantConfigData } from '@repo/data-services/src/services/restaurantConfigService';
 import type { RestaurantElement } from '@repo/data-services/src/services/restaurantDesignService';
 import Konva from 'konva';

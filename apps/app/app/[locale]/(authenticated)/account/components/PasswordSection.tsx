@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@repo
 import { Button } from '@repo/design-system/components/ui/button';
 import { Input } from '@repo/design-system/components/ui/input';
 import { Label } from '@repo/design-system/components/ui/label';
-import { useToast } from '@repo/design-system/hooks/use-toast';
+import { toast } from 'sonner';
 import { Shield } from 'lucide-react';
 import type { Dictionary } from '@repo/internationalization';
 import { useForm } from 'react-hook-form';
@@ -31,7 +31,6 @@ interface PasswordSectionProps {
 }
 
 export function PasswordSection({ currentUser, dictionary, canChange }: PasswordSectionProps) {
-    const { toast } = useToast();
     const [isPending, startTransition] = useTransition();
 
     const form = useForm<PasswordFormValues>({
@@ -44,7 +43,7 @@ export function PasswordSection({ currentUser, dictionary, canChange }: Password
     });
 
     const onSubmit = (data: PasswordFormValues) => {
-        startTransition(async () => {
+        const promise = async () => {
             const formData = new FormData();
             formData.append('currentPassword', data.currentPassword);
             formData.append('newPassword', data.newPassword);
@@ -52,19 +51,19 @@ export function PasswordSection({ currentUser, dictionary, canChange }: Password
 
             const result = await changePassword(currentUser.id, formData);
 
-            if (result.success) {
-                toast({
-                    title: "Éxito",
-                    description: result.message,
-                });
-                form.reset();
-            } else {
-                toast({
-                    title: "Error",
-                    description: result.message,
-                    variant: "destructive",
-                });
+            if (!result.success) {
+                throw new Error(result.message);
             }
+            form.reset();
+            return result;
+        };
+
+        startTransition(() => {
+            toast.promise(promise(), {
+                loading: 'Actualizando contraseña...',
+                success: (data) => `${data.message || 'Contraseña actualizada exitosamente.'}`,
+                error: (err) => err.message,
+            });
         });
     };
 

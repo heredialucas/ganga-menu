@@ -2,14 +2,14 @@
 
 import dynamic from 'next/dynamic';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/design-system/components/ui/tabs';
-import { RestaurantConfigForm } from './restaurant-config-form';
+import { RestaurantConfigForm } from './RestaurantConfigForm';
 import type { RestaurantConfigData } from '@repo/data-services/src/services/restaurantConfigService';
 import type { Dictionary } from '@repo/internationalization';
 import { Settings, LayoutDashboard } from 'lucide-react';
 import { Skeleton } from '@repo/design-system/components/ui/skeleton';
 
 const RestaurantDesignView = dynamic(
-    () => import('./restaurant-design-view').then(mod => mod.RestaurantDesignView),
+    () => import('./RestaurantDesignView').then(mod => mod.RestaurantDesignView),
     {
         ssr: false,
         loading: () => (
@@ -25,9 +25,10 @@ interface RestaurantViewManagerProps {
     config: RestaurantConfigData | null;
     design: { elements: any[] } | null;
     dictionary: Dictionary;
+    appUrl: string;
 }
 
-export function RestaurantViewManager({ config, design, dictionary }: RestaurantViewManagerProps) {
+export function RestaurantViewManager({ config, design, dictionary, appUrl }: RestaurantViewManagerProps) {
     return (
         <Tabs defaultValue="config" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
@@ -44,6 +45,7 @@ export function RestaurantViewManager({ config, design, dictionary }: Restaurant
                 <RestaurantConfigForm
                     dictionary={dictionary}
                     config={config}
+                    appUrl={appUrl}
                 />
             </TabsContent>
             <TabsContent value="design" className="mt-6">

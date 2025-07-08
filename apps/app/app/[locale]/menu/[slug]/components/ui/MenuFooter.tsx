@@ -7,53 +7,7 @@ import { SnowParticlesWrapper } from './SnowParticlesWrapper';
 interface MenuFooterProps {
     restaurantConfig: RestaurantConfigData;
     dictionary: Dictionary;
-    themeColors?: {
-        decorative: {
-            primary: string;
-            secondary: string;
-            tertiary: string;
-            accent: string;
-        };
-    };
 }
-
-// Función para obtener gradientes temáticos para el footer
-const getFooterGradients = (theme: string) => {
-    const gradients = {
-        green: {
-            bg: 'bg-gradient-to-t from-slate-900 via-emerald-900 to-green-800',
-            overlay: 'bg-gradient-to-br from-emerald-800/30 via-green-700/20 to-teal-800/30',
-            text: 'bg-gradient-to-r from-emerald-200 via-white to-teal-200 bg-clip-text text-transparent',
-            accent: 'from-emerald-400 to-teal-400'
-        },
-        red: {
-            bg: 'bg-gradient-to-t from-slate-900 via-red-900 to-rose-800',
-            overlay: 'bg-gradient-to-br from-red-800/30 via-rose-700/20 to-pink-800/30',
-            text: 'bg-gradient-to-r from-rose-200 via-white to-pink-200 bg-clip-text text-transparent',
-            accent: 'from-red-400 to-pink-400'
-        },
-        blue: {
-            bg: 'bg-gradient-to-t from-slate-900 via-blue-900 to-indigo-800',
-            overlay: 'bg-gradient-to-br from-blue-800/30 via-indigo-700/20 to-purple-800/30',
-            text: 'bg-gradient-to-r from-blue-200 via-white to-purple-200 bg-clip-text text-transparent',
-            accent: 'from-blue-400 to-purple-400'
-        },
-        yellow: {
-            bg: 'bg-gradient-to-t from-slate-900 via-orange-900 to-yellow-800',
-            overlay: 'bg-gradient-to-br from-yellow-800/30 via-orange-700/20 to-red-800/30',
-            text: 'bg-gradient-to-r from-yellow-200 via-white to-orange-200 bg-clip-text text-transparent',
-            accent: 'from-yellow-400 to-orange-400'
-        },
-        brown: {
-            bg: 'bg-gradient-to-t from-slate-900 via-amber-900 to-orange-800',
-            overlay: 'bg-gradient-to-br from-amber-800/30 via-orange-700/20 to-red-800/30',
-            text: 'bg-gradient-to-r from-amber-200 via-white to-orange-200 bg-clip-text text-transparent',
-            accent: 'from-amber-400 to-orange-400'
-        }
-    };
-
-    return gradients[theme as keyof typeof gradients] || gradients.green;
-};
 
 // Función para formatear horarios con soporte a múltiples rangos
 function formatHoursAsJSX(hours: string, dictionary: Dictionary): React.ReactElement {
@@ -121,15 +75,13 @@ function formatHoursAsJSX(hours: string, dictionary: Dictionary): React.ReactEle
     return <div className="text-white/70 bg-black/20 rounded-lg p-3 backdrop-blur-sm">{hours}</div>;
 }
 
-export default function MenuFooter({ restaurantConfig, dictionary, themeColors }: MenuFooterProps) {
-    const gradients = getFooterGradients(restaurantConfig.themeColor || 'green');
-
+export default function MenuFooter({ restaurantConfig, dictionary }: MenuFooterProps) {
     return (
-        <footer className={`${gradients.bg} text-white py-12 mt-12 relative overflow-hidden`}>
+        <footer className={`text-white py-12 mt-12 relative overflow-hidden`} style={{ background: 'var(--gradient-header)' }}>
             {/* Gradientes animados de fondo más hermosos */}
             <div className="absolute inset-0">
                 {/* Gradiente base con movimiento */}
-                <div className={`absolute inset-0 ${gradients.overlay} animate-pulse`}></div>
+                <div className={`absolute inset-0 animate-pulse`} style={{ background: 'var(--gradient-overlay)' }}></div>
 
                 {/* Gradientes animados múltiples */}
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/8 to-transparent animate-shimmer"></div>
@@ -144,29 +96,23 @@ export default function MenuFooter({ restaurantConfig, dictionary, themeColors }
             </div>
 
             {/* Partículas de nieve en el footer */}
-            {themeColors && (
-                <div className="absolute inset-0 overflow-hidden">
-                    <SnowParticlesWrapper
-                        themeColors={themeColors}
-                        count={25}
-                    />
-                </div>
-            )}
+            <div className="absolute inset-0 overflow-hidden">
+                <SnowParticlesWrapper
+                    count={25}
+                />
+            </div>
 
             {/* Elementos decorativos */}
-            {themeColors && (
-                <DecorativeElements
-                    themeColors={themeColors}
-                    variant="background"
-                />
-            )}
+            <DecorativeElements
+                variant="background"
+            />
 
             {/* Efecto de ondas en la parte superior */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-white/40 to-transparent"></div>
 
             <div className="max-w-6xl mx-auto px-4 text-center relative z-10">
                 <div className="animate-fadeInUp">
-                    <h3 className={`text-3xl md:text-4xl font-bold mb-4 ${gradients.text} drop-shadow-2xl hover:scale-105 transition-all duration-500`}>
+                    <h3 className={`text-3xl md:text-4xl font-bold mb-4 drop-shadow-2xl hover:scale-105 transition-all duration-500 bg-clip-text text-transparent`} style={{ backgroundImage: 'var(--theme-text-gradient)' }}>
                         {restaurantConfig.name}
                     </h3>
                     {restaurantConfig.description && (
@@ -222,7 +168,7 @@ export default function MenuFooter({ restaurantConfig, dictionary, themeColors }
 
                     <p className="text-sm md:text-base text-white/70 hover:text-white/90 transition-colors duration-300">
                         {dictionary.web?.menu?.footer?.poweredBy || 'Menú digital creado con'}
-                        <span className={`font-bold ml-2 text-lg md:text-xl ${gradients.text} hover:scale-110 inline-block transition-all duration-300 drop-shadow-lg`}>
+                        <span className={`font-bold ml-2 text-lg md:text-xl drop-shadow-lg hover:scale-110 inline-block transition-all duration-300 bg-clip-text text-transparent`} style={{ backgroundImage: 'var(--theme-text-gradient)' }}>
                             Ganga Menu
                         </span>
                     </p>

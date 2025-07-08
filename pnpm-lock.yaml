@@ -226,6 +226,9 @@ importers:
       stripe:
         specifier: ^17.7.0
         version: 17.7.0
+      tinycolor2:
+        specifier: ^1.6.0
+        version: 1.6.0
       zod:
         specifier: ^3.24.2
         version: 3.24.2
@@ -254,6 +257,9 @@ importers:
       '@types/react-dom':
         specifier: 19.0.4
         version: 19.0.4(@types/react@19.0.10)
+      '@types/tinycolor2':
+        specifier: ^1.4.6
+        version: 1.4.6
       jsdom:
         specifier: ^26.0.0
         version: 26.0.0
@@ -18067,7 +18073,6 @@ packages:
 
   /tinycolor2@1.6.0:
     resolution: {integrity: sha512-XPaBkWQJdsf3pLKJV9p4qN/S+fm2Oj8AIPo1BTUhg5oxkvm9+SVEGFdhyOz7tTdUTfvxMiAs4sp6/eZO2Ew+pw==}
-    dev: true
 
   /tinyexec@0.3.2:
     resolution: {integrity: sha512-KQQR9yN7R5+OSwaK0XQoj22pwHoTlgYqmUscPYoknOoWCWfj/5/ABTMRi69FrKU5ffPVh5QcFikpWJI/P1ocHA==}

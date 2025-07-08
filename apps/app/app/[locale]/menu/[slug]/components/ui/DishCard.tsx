@@ -8,34 +8,13 @@ import ImageModal from './ImageModal';
 
 interface DishCardProps {
     dish: Dish;
-    themeColors: {
-        bg: string;
-        text: string;
-        accent: string;
-        priceColor: string;
-        promotionalPriceColor: string;
-        offerBadge: string;
-        gradients: {
-            header: string;
-            category: string;
-            special: string;
-            overlay: string;
-            badge: string;
-        };
-        decorative: {
-            primary: string;
-            secondary: string;
-            tertiary: string;
-            accent: string;
-        };
-    };
     dictionary: Dictionary;
     restaurantName: string;
     restaurantPhone?: string | null;
     specialDishIds: Set<string>;
 }
 
-export default function DishCard({ dish, themeColors, dictionary, restaurantName, restaurantPhone, specialDishIds }: DishCardProps) {
+export default function DishCard({ dish, dictionary, restaurantName, restaurantPhone, specialDishIds }: DishCardProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const whatsappLink = restaurantPhone ? generateWhatsAppLinkForDish(restaurantPhone, dish.name, restaurantName) : '';
     const isSpecialDish = specialDishIds.has(dish.id);
@@ -80,15 +59,15 @@ export default function DishCard({ dish, themeColors, dictionary, restaurantName
                                     <span className="text-xs sm:text-sm text-gray-400 line-through whitespace-nowrap">
                                         ${dish.price.toFixed(2)}
                                     </span>
-                                    <span className={`text-base sm:text-lg md:text-xl font-bold ${themeColors.promotionalPriceColor} whitespace-nowrap`}>
+                                    <span className={`text-base sm:text-lg md:text-xl font-bold whitespace-nowrap`} style={{ color: 'var(--theme-promotional-price)' }}>
                                         ${dish.promotionalPrice.toFixed(2)}
                                     </span>
-                                    <span className={`${themeColors.offerBadge} text-xs font-semibold px-1.5 py-0.5 rounded-full mt-1 whitespace-nowrap`}>
+                                    <span className={`text-xs font-semibold px-1.5 py-0.5 rounded-full mt-1 whitespace-nowrap`} style={{ backgroundColor: 'var(--theme-offer-badge-bg)', color: 'var(--theme-offer-badge-text)' }}>
                                         OFERTA
                                     </span>
                                 </>
                             ) : (
-                                <span className={`text-base sm:text-lg md:text-xl font-bold ${themeColors.priceColor} whitespace-nowrap`}>
+                                <span className={`text-base sm:text-lg md:text-xl font-bold whitespace-nowrap`} style={{ color: 'var(--theme-price)' }}>
                                     ${dish.price.toFixed(2)}
                                 </span>
                             )}
@@ -104,7 +83,8 @@ export default function DishCard({ dish, themeColors, dictionary, restaurantName
                             href={whatsappLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className={`inline-flex items-center justify-center gap-2 w-full px-3 sm:px-4 py-2 sm:py-2.5 ${themeColors.bg} hover:opacity-90 ${themeColors.text} rounded-lg transition-all duration-300 text-xs sm:text-sm font-medium shadow-md hover:shadow-lg mt-auto`}
+                            className={`inline-flex items-center justify-center gap-2 w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg transition-all duration-300 text-xs sm:text-sm font-medium shadow-md hover:shadow-lg mt-auto`}
+                            style={{ backgroundColor: 'var(--theme-bg)', color: 'var(--theme-text)' }}
                         >
                             <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4" />
                             <span className="whitespace-nowrap">Consultar</span>
@@ -124,7 +104,6 @@ export default function DishCard({ dish, themeColors, dictionary, restaurantName
                     price={dish.price}
                     promotionalPrice={dish.promotionalPrice ?? undefined}
                     isSpecialDish={isSpecialDish}
-                    themeColors={themeColors}
                 />
             )}
         </>

@@ -19,44 +19,23 @@ interface Dish {
 
 interface CategorySectionProps {
     category: Category;
-    themeColors: {
-        bg: string;
-        text: string;
-        accent: string;
-        priceColor: string;
-        promotionalPriceColor: string;
-        offerBadge: string;
-        gradients: {
-            header: string;
-            category: string;
-            special: string;
-            overlay: string;
-            badge: string;
-        };
-        decorative: {
-            primary: string;
-            secondary: string;
-            tertiary: string;
-            accent: string;
-        };
-    };
     dictionary: Dictionary;
     restaurantName: string;
     restaurantPhone?: string | null;
     specialDishIds: Set<string>;
 }
 
-export default function CategorySection({ category, themeColors, dictionary, restaurantName, restaurantPhone, specialDishIds }: CategorySectionProps) {
+export default function CategorySection({ category, dictionary, restaurantName, restaurantPhone, specialDishIds }: CategorySectionProps) {
     if (category.dishes.length === 0) return null;
 
     return (
         <section className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-white/20 relative">
             {/* Category Header con gradientes temáticos */}
-            <div className={`${themeColors.gradients.category} ${themeColors.text} p-6 relative overflow-hidden`}>
+            <div className={`p-6 relative overflow-hidden`} style={{ background: 'var(--gradient-category)', color: 'var(--theme-text)' }}>
                 {/* Gradientes animados de fondo */}
                 <div className="absolute inset-0">
                     {/* Gradiente base con movimiento */}
-                    <div className={`absolute inset-0 ${themeColors.gradients.overlay} animate-pulse`}></div>
+                    <div className={`absolute inset-0 animate-pulse`} style={{ background: 'var(--gradient-overlay)' }}></div>
 
                     {/* Gradientes animados múltiples */}
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shimmer"></div>
@@ -95,7 +74,6 @@ export default function CategorySection({ category, themeColors, dictionary, res
                             <DishCard
                                 key={dish.id}
                                 dish={dish}
-                                themeColors={themeColors}
                                 dictionary={dictionary}
                                 restaurantName={restaurantName}
                                 restaurantPhone={restaurantPhone}

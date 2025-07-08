@@ -12,27 +12,6 @@ interface ImageModalProps {
     price: number;
     promotionalPrice?: number;
     isSpecialDish?: boolean;
-    themeColors: {
-        bg: string;
-        text: string;
-        accent: string;
-        priceColor: string;
-        promotionalPriceColor: string;
-        offerBadge: string;
-        gradients: {
-            header: string;
-            category: string;
-            special: string;
-            overlay: string;
-            badge: string;
-        };
-        decorative: {
-            primary: string;
-            secondary: string;
-            tertiary: string;
-            accent: string;
-        };
-    };
 }
 
 export default function ImageModal({
@@ -44,7 +23,6 @@ export default function ImageModal({
     price,
     promotionalPrice,
     isSpecialDish,
-    themeColors
 }: ImageModalProps) {
     const [mounted, setMounted] = React.useState(false);
 
@@ -113,11 +91,11 @@ export default function ImageModal({
                     </div>
 
                     {/* Información de la imagen con gradiente temático */}
-                    <div className={`${themeColors.gradients.category} ${themeColors.text} p-3 sm:p-4 md:p-6 relative overflow-hidden`}>
+                    <div className={`p-3 sm:p-4 md:p-6 relative overflow-hidden`} style={{ background: 'var(--gradient-category)', color: 'var(--theme-text)' }}>
                         {/* Gradientes animados de fondo */}
                         <div className="absolute inset-0">
                             {/* Gradiente base con movimiento */}
-                            <div className={`absolute inset-0 ${themeColors.gradients.overlay} animate-pulse`}></div>
+                            <div className={`absolute inset-0 animate-pulse`} style={{ background: 'var(--gradient-overlay)' }}></div>
 
                             {/* Gradientes animados múltiples */}
                             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shimmer"></div>
@@ -135,10 +113,10 @@ export default function ImageModal({
                                 <div className="flex flex-col items-start sm:items-end text-left sm:text-right shrink-0">
                                     {isSpecialDish && promotionalPrice && promotionalPrice > 0 ? (
                                         <>
-                                            <span className="text-sm sm:text-base md:text-lg text-white/70 line-through whitespace-nowrap drop-shadow-md">
+                                            <span className="text-sm sm:text-base md:text-lg line-through whitespace-nowrap drop-shadow-md" style={{ opacity: 0.7 }}>
                                                 ${price.toFixed(2)}
                                             </span>
-                                            <span className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white drop-shadow-lg whitespace-nowrap">
+                                            <span className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold drop-shadow-lg whitespace-nowrap">
                                                 ${promotionalPrice.toFixed(2)}
                                             </span>
                                             <span className="bg-red-500 text-white text-xs sm:text-sm font-semibold px-2 py-1 rounded-full mt-1 whitespace-nowrap drop-shadow-md">
@@ -146,7 +124,7 @@ export default function ImageModal({
                                             </span>
                                         </>
                                     ) : (
-                                        <span className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white drop-shadow-lg whitespace-nowrap">
+                                        <span className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold drop-shadow-lg whitespace-nowrap">
                                             ${price.toFixed(2)}
                                         </span>
                                     )}
@@ -154,7 +132,7 @@ export default function ImageModal({
                             </div>
 
                             {description && (
-                                <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/90 drop-shadow-md leading-relaxed break-words">
+                                <p className="text-sm sm:text-base md:text-lg lg:text-xl drop-shadow-md leading-relaxed break-words" style={{ opacity: 0.9 }}>
                                     {description}
                                 </p>
                             )}

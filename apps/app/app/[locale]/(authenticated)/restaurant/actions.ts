@@ -20,7 +20,7 @@ const restaurantConfigSchema = z.object({
     }, { message: "Formato de horarios inválido." }),
     logoUrl: z.string().url('URL de logo inválida').optional().or(z.literal('')),
     slug: z.string().min(3, 'El enlace debe tener al menos 3 caracteres').optional(),
-    themeColor: z.string().optional(),
+    themeColor: z.string().regex(/^#[0-9a-fA-F]{6}$/, 'El color debe ser un código hexadecimal válido (ej: #16a34a)').optional(),
 });
 
 

@@ -26,54 +26,32 @@ interface TodaySpecialData {
 
 interface TodaySpecialProps {
     todaySpecial: TodaySpecialData;
-    themeColors: {
-        bg: string;
-        text: string;
-        accent: string;
-        priceColor: string;
-        promotionalPriceColor: string;
-        offerBadge: string;
-        gradients: {
-            header: string;
-            category: string;
-            special: string;
-            overlay: string;
-            badge: string;
-        };
-        decorative: {
-            primary: string;
-            secondary: string;
-            tertiary: string;
-            accent: string;
-        };
-    };
     dictionary: Dictionary;
     restaurantName: string;
     restaurantPhone?: string | null;
 }
 
-export default function TodaySpecial({ todaySpecial, themeColors, dictionary, restaurantName, restaurantPhone }: TodaySpecialProps) {
+export default function TodaySpecial({ todaySpecial, dictionary, restaurantName, restaurantPhone }: TodaySpecialProps) {
     const whatsappLink = restaurantPhone ? generateWhatsAppLinkForDish(restaurantPhone, todaySpecial.dish.name, restaurantName) : '';
 
     return (
-        <section className={`relative ${themeColors.gradients.special} border-b overflow-hidden`}>
+        <section className={`relative border-b overflow-hidden`} style={{ background: 'var(--gradient-special)' }}>
             {/* Gradiente base temático */}
-            <div className={`absolute inset-0 ${themeColors.gradients.overlay}`}></div>
+            <div className={`absolute inset-0`} style={{ background: 'var(--gradient-overlay)' }}></div>
 
             {/* Elementos decorativos como en web-base */}
             <DecorativeElements
-                themeColors={themeColors}
                 variant="section"
             />
 
             <div className="relative max-w-6xl mx-auto px-4 py-12 z-10">
                 <div className="text-center mb-8">
-                    <div className={`inline-flex items-center px-4 py-2 ${themeColors.gradients.badge} text-white rounded-full text-sm font-semibold mb-2 shadow-lg`}>
+                    <div className={`inline-flex items-center px-4 py-2 text-white rounded-full text-sm font-semibold mb-2 shadow-lg`} style={{ background: 'var(--gradient-badge)' }}>
                         <Star className="animate-pulse mr-2 w-4 h-4" />
                         {dictionary.web?.menu?.todaySpecial || 'Plato del Día'}
                         <Star className="animate-pulse ml-2 w-4 h-4" />
                     </div>
-                    <h2 className="text-4xl font-bold text-gray-900 mb-2">
+                    <h2 className="text-4xl font-bold mb-2" style={{ color: 'var(--color-dark-text)' }}>
                         {dictionary.web?.menu?.todaySpecial || 'Plato del Día'}
                     </h2>
                     <p className="text-gray-600 max-w-2xl mx-auto">
@@ -104,12 +82,12 @@ export default function TodaySpecial({ todaySpecial, themeColors, dictionary, re
                         <div className={`${todaySpecial.dish.imageUrl ? 'lg:w-1/2' : 'w-full'} p-8 lg:p-12 flex flex-col justify-center`}>
                             <div className="mb-4">
                                 {todaySpecial.dish.category && (
-                                    <span className={`inline-block px-3 py-1 text-xs font-semibold rounded-full ${themeColors.bg} ${themeColors.text} shadow-md`}>
+                                    <span className={`inline-block px-3 py-1 text-xs font-semibold rounded-full shadow-md`} style={{ backgroundColor: 'var(--theme-bg)', color: 'var(--theme-text)' }}>
                                         {todaySpecial.dish.category.name}
                                     </span>
                                 )}
                             </div>
-                            <h3 className="text-3xl font-bold text-gray-900 mb-4">
+                            <h3 className="text-3xl font-bold text-gray-900 mb-4" style={{ color: 'var(--color-dark-text)' }}>
                                 {todaySpecial.dish.name}
                             </h3>
                             <p className="text-gray-600 text-lg leading-relaxed mb-6">
@@ -122,15 +100,15 @@ export default function TodaySpecial({ todaySpecial, themeColors, dictionary, re
                                             <span className="text-2xl font-medium text-gray-400 line-through">
                                                 ${todaySpecial.dish.price.toFixed(2)}
                                             </span>
-                                            <span className={`text-4xl font-bold ${themeColors.promotionalPriceColor}`}>
+                                            <span className={`text-4xl font-bold`} style={{ color: 'var(--theme-promotional-price)' }}>
                                                 ${todaySpecial.dish.promotionalPrice.toFixed(2)}
                                             </span>
-                                            <span className={`${themeColors.offerBadge} text-sm font-semibold px-2 py-1 rounded-full shadow-md animate-pulse`}>
+                                            <span className={`text-sm font-semibold px-2 py-1 rounded-full shadow-md animate-pulse`} style={{ backgroundColor: 'var(--theme-offer-badge-bg)', color: 'var(--theme-offer-badge-text)' }}>
                                                 ¡OFERTA!
                                             </span>
                                         </>
                                     ) : (
-                                        <span className={`text-4xl font-bold ${themeColors.priceColor}`}>
+                                        <span className={`text-4xl font-bold`} style={{ color: 'var(--theme-price)' }}>
                                             ${todaySpecial.dish.price.toFixed(2)}
                                         </span>
                                     )}
@@ -147,7 +125,8 @@ export default function TodaySpecial({ todaySpecial, themeColors, dictionary, re
                                     href={whatsappLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className={`inline-flex items-center justify-center gap-2 px-6 py-3 ${themeColors.bg} hover:opacity-90 ${themeColors.text} rounded-lg transition-all duration-300 font-medium shadow-lg hover:shadow-xl hover:scale-105`}
+                                    className={`inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg transition-all duration-300 font-medium shadow-lg hover:shadow-xl hover:scale-105`}
+                                    style={{ backgroundColor: 'var(--theme-bg)', color: 'var(--theme-text)' }}
                                 >
                                     <MessageCircle className="w-5 h-5" />
                                     Consultar Plato Especial

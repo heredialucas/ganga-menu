@@ -71,10 +71,12 @@ export default function MenuFilters({
                         {hasSpecial && (
                             <button
                                 onClick={() => setShowSpecialOnly(!showSpecialOnly)}
-                                className={`px-4 py-2 rounded-lg border transition-colors backdrop-blur-sm ${showSpecialOnly
-                                    ? 'bg-orange-500 text-white border-orange-500'
-                                    : 'bg-white/80 text-gray-700 border-gray-300 hover:bg-gray-50/80'
-                                    }`}
+                                className={`px-4 py-2 rounded-lg border transition-colors backdrop-blur-sm ${!showSpecialOnly && 'hover:bg-gray-50/80 border-gray-300'}`}
+                                style={{
+                                    backgroundColor: showSpecialOnly ? 'var(--theme-bg)' : 'rgba(255, 255, 255, 0.8)',
+                                    color: showSpecialOnly ? 'var(--theme-text)' : '#374151',
+                                    borderColor: showSpecialOnly ? 'var(--theme-bg)' : '#D1D5DB'
+                                }}
                             >
                                 {dictionary.web?.menu?.specialsOnly || 'Solo platos del día'}
                             </button>

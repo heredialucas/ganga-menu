@@ -9,68 +9,18 @@ import { SnowParticlesWrapper } from './SnowParticlesWrapper';
 
 interface MenuHeaderProps {
     restaurantConfig: RestaurantConfigData;
-    themeColors: {
-        bg: string;
-        text: string;
-        accent: string;
-        decorative: {
-            primary: string;
-            secondary: string;
-            tertiary: string;
-            accent: string;
-        };
-    };
     dictionary: Dictionary;
 }
 
-// Función para obtener gradientes temáticos
-const getThemeGradients = (theme: string) => {
-    const gradients = {
-        green: {
-            bg: 'bg-gradient-to-br from-emerald-600 via-green-600 to-teal-700',
-            overlay: 'bg-gradient-to-r from-emerald-500/20 via-green-400/30 to-teal-500/20',
-            text: 'bg-gradient-to-r from-white via-emerald-100 to-white bg-clip-text text-transparent',
-            accent: 'from-emerald-400 to-teal-400'
-        },
-        red: {
-            bg: 'bg-gradient-to-br from-red-600 via-rose-600 to-pink-700',
-            overlay: 'bg-gradient-to-r from-red-500/20 via-rose-400/30 to-pink-500/20',
-            text: 'bg-gradient-to-r from-white via-rose-100 to-white bg-clip-text text-transparent',
-            accent: 'from-red-400 to-pink-400'
-        },
-        blue: {
-            bg: 'bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700',
-            overlay: 'bg-gradient-to-r from-blue-500/20 via-indigo-400/30 to-purple-500/20',
-            text: 'bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent',
-            accent: 'from-blue-400 to-purple-400'
-        },
-        yellow: {
-            bg: 'bg-gradient-to-br from-yellow-500 via-orange-500 to-red-600',
-            overlay: 'bg-gradient-to-r from-yellow-400/20 via-orange-400/30 to-red-400/20',
-            text: 'bg-gradient-to-r from-white via-yellow-100 to-white bg-clip-text text-transparent',
-            accent: 'from-yellow-400 to-orange-400'
-        },
-        brown: {
-            bg: 'bg-gradient-to-br from-amber-700 via-orange-700 to-red-800',
-            overlay: 'bg-gradient-to-r from-amber-600/20 via-orange-500/30 to-red-600/20',
-            text: 'bg-gradient-to-r from-white via-amber-100 to-white bg-clip-text text-transparent',
-            accent: 'from-amber-400 to-orange-400'
-        }
-    };
-
-    return gradients[theme as keyof typeof gradients] || gradients.green;
-};
-
-export default function MenuHeader({ restaurantConfig, themeColors, dictionary }: MenuHeaderProps) {
+export default function MenuHeader({ restaurantConfig, dictionary }: MenuHeaderProps) {
     const whatsappLink = restaurantConfig.phone ? generateWhatsAppLink(restaurantConfig.phone) : '';
-    const gradients = getThemeGradients(restaurantConfig.themeColor);
 
     return (
-        <header className={`${gradients.bg} text-white shadow-2xl relative overflow-hidden min-h-[200px] flex items-center`}>
+        <header className={`text-white shadow-2xl relative overflow-hidden min-h-[200px] flex items-center`} style={{ background: 'var(--gradient-header)' }}>
             {/* Gradientes animados de fondo más hermosos */}
             <div className="absolute inset-0">
                 {/* Gradiente base con movimiento */}
-                <div className={`absolute inset-0 ${gradients.overlay} animate-pulse`}></div>
+                <div className={`absolute inset-0 animate-pulse`} style={{ background: 'var(--gradient-overlay)' }}></div>
 
                 {/* Gradientes animados múltiples */}
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shimmer"></div>
@@ -87,14 +37,12 @@ export default function MenuHeader({ restaurantConfig, themeColors, dictionary }
             {/* Partículas de nieve en el header */}
             <div className="absolute inset-0 overflow-hidden">
                 <SnowParticlesWrapper
-                    themeColors={themeColors}
                     count={30}
                 />
             </div>
 
             {/* Elementos decorativos */}
             <DecorativeElements
-                themeColors={themeColors}
                 variant="hero"
             />
 
@@ -118,7 +66,7 @@ export default function MenuHeader({ restaurantConfig, themeColors, dictionary }
                             </div>
                         )}
                         <div className="space-y-2 flex-1 lg:max-w-2xl">
-                            <h1 className={`text-4xl md:text-5xl lg:text-6xl font-bold ${gradients.text} drop-shadow-2xl hover:scale-105 transition-all duration-500 animate-fadeInUp`}>
+                            <h1 className={`text-4xl md:text-5xl lg:text-6xl font-bold drop-shadow-2xl hover:scale-105 transition-all duration-500 animate-fadeInUp bg-clip-text text-transparent`} style={{ backgroundImage: 'var(--theme-text-gradient)' }}>
                                 {restaurantConfig.name}
                             </h1>
                             {restaurantConfig.description && (
@@ -152,6 +100,10 @@ export default function MenuHeader({ restaurantConfig, themeColors, dictionary }
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white rounded-xl transition-all duration-500 text-sm md:text-base font-bold shadow-2xl hover:shadow-green-500/25 hover:scale-110 relative overflow-hidden group animate-glow whitespace-nowrap"
+                                    style={{
+                                        background: 'var(--gradient-badge)',
+                                        color: 'var(--theme-text)'
+                                    }}
                                 >
                                     {/* Efecto de brillo en el botón */}
                                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>

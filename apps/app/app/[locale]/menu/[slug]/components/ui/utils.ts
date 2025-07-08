@@ -1,114 +1,84 @@
-// Función para obtener colores del tema
-export function getThemeColors(theme: string) {
-    const themes = {
-        green: {
-            bg: 'bg-green-600',
-            text: 'text-white',
-            accent: 'text-green-600',
-            priceColor: 'text-green-600',
-            promotionalPriceColor: 'text-green-700',
-            offerBadge: 'bg-green-100 text-green-800',
-            gradients: {
-                header: 'bg-gradient-to-br from-emerald-600 via-green-600 to-teal-700',
-                category: 'bg-gradient-to-br from-emerald-500 via-green-500 to-teal-600',
-                special: 'bg-gradient-to-br from-emerald-50 to-green-50',
-                overlay: 'bg-gradient-to-r from-emerald-200/20 to-green-200/20',
-                badge: 'bg-gradient-to-r from-emerald-500 to-green-500'
-            },
-            decorative: {
-                primary: 'bg-green-600/20',
-                secondary: 'bg-green-400/10',
-                tertiary: 'bg-green-500/15',
-                accent: 'bg-green-600/30'
-            }
-        },
-        red: {
-            bg: 'bg-red-600',
-            text: 'text-white',
-            accent: 'text-red-600',
-            priceColor: 'text-red-600',
-            promotionalPriceColor: 'text-red-700',
-            offerBadge: 'bg-red-100 text-red-800',
-            gradients: {
-                header: 'bg-gradient-to-br from-red-600 via-rose-600 to-pink-700',
-                category: 'bg-gradient-to-br from-red-500 via-rose-500 to-pink-600',
-                special: 'bg-gradient-to-br from-red-50 to-rose-50',
-                overlay: 'bg-gradient-to-r from-red-200/20 to-rose-200/20',
-                badge: 'bg-gradient-to-r from-red-500 to-rose-500'
-            },
-            decorative: {
-                primary: 'bg-red-600/20',
-                secondary: 'bg-red-400/10',
-                tertiary: 'bg-red-500/15',
-                accent: 'bg-red-600/30'
-            }
-        },
-        blue: {
-            bg: 'bg-blue-600',
-            text: 'text-white',
-            accent: 'text-blue-600',
-            priceColor: 'text-blue-600',
-            promotionalPriceColor: 'text-blue-700',
-            offerBadge: 'bg-blue-100 text-blue-800',
-            gradients: {
-                header: 'bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700',
-                category: 'bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600',
-                special: 'bg-gradient-to-br from-blue-50 to-indigo-50',
-                overlay: 'bg-gradient-to-r from-blue-200/20 to-indigo-200/20',
-                badge: 'bg-gradient-to-r from-blue-500 to-indigo-500'
-            },
-            decorative: {
-                primary: 'bg-blue-600/20',
-                secondary: 'bg-blue-400/10',
-                tertiary: 'bg-blue-500/15',
-                accent: 'bg-blue-600/30'
-            }
-        },
-        yellow: {
-            bg: 'bg-yellow-600',
-            text: 'text-white',
-            accent: 'text-yellow-600',
-            priceColor: 'text-yellow-600',
-            promotionalPriceColor: 'text-yellow-700',
-            offerBadge: 'bg-yellow-100 text-yellow-800',
-            gradients: {
-                header: 'bg-gradient-to-br from-yellow-500 via-orange-500 to-red-600',
-                category: 'bg-gradient-to-br from-yellow-400 via-orange-400 to-red-500',
-                special: 'bg-gradient-to-br from-yellow-50 to-orange-50',
-                overlay: 'bg-gradient-to-r from-yellow-200/20 to-orange-200/20',
-                badge: 'bg-gradient-to-r from-yellow-500 to-orange-500'
-            },
-            decorative: {
-                primary: 'bg-yellow-600/20',
-                secondary: 'bg-yellow-400/10',
-                tertiary: 'bg-yellow-500/15',
-                accent: 'bg-yellow-600/30'
-            }
-        },
-        brown: {
-            bg: 'bg-amber-700',
-            text: 'text-white',
-            accent: 'text-amber-700',
-            priceColor: 'text-amber-700',
-            promotionalPriceColor: 'text-amber-800',
-            offerBadge: 'bg-amber-100 text-amber-800',
-            gradients: {
-                header: 'bg-gradient-to-br from-amber-700 via-orange-700 to-red-800',
-                category: 'bg-gradient-to-br from-amber-600 via-orange-600 to-red-700',
-                special: 'bg-gradient-to-br from-amber-50 to-orange-50',
-                overlay: 'bg-gradient-to-r from-amber-200/20 to-orange-200/20',
-                badge: 'bg-gradient-to-r from-amber-600 to-orange-600'
-            },
-            decorative: {
-                primary: 'bg-amber-700/20',
-                secondary: 'bg-amber-600/10',
-                tertiary: 'bg-amber-500/15',
-                accent: 'bg-amber-700/30'
-            }
-        }
+import tinycolor from 'tinycolor2';
+
+// Función para obtener colores del tema dinámicamente
+export function getThemeColors(baseColor: string) {
+    const color = tinycolor(baseColor);
+
+    // 1. Determinar si el color base es claro u oscuro para el contraste del texto
+    const isLight = color.getBrightness() > 180;
+    const textColor = isLight ? 'hsl(0 0% 10%)' : 'hsl(0 0% 98%)';
+    const textGradient = isLight
+        ? `linear-gradient(to bottom, hsl(0 0% 20%), hsl(0 0% 10%))`
+        : `linear-gradient(to bottom, hsl(0 0% 98%), hsl(0 0% 85%))`;
+
+    // 2. Generar una paleta de colores armónica en lugar de solo oscurecer
+    const analogousColors = color.analogous();
+    const accentColor = analogousColors[1].saturate(10);
+    const darkShade = color.clone().darken(isLight ? 15 : 25).saturate(5);
+    const lightShade = color.clone().lighten(isLight ? 20 : 15).desaturate(10);
+
+    // 3. Definir colores específicos para elementos de la UI con la nueva paleta
+    const priceColor = darkShade.toHslString();
+    const promotionalPriceColor = accentColor.darken(10).toHslString();
+
+    const gradients = {
+        // Degradado más sutil y basado en el color de acento
+        header: `linear-gradient(to bottom right, ${color.toHslString()}, ${accentColor.toHslString()})`,
+        category: `linear-gradient(to bottom right, ${color.clone().lighten(5).toHslString()}, ${color.toHslString()})`,
+        special: `linear-gradient(to bottom right, ${lightShade.toHslString()}, ${color.clone().lighten(15).toHslString()})`,
+        overlay: `linear-gradient(to right, ${color.clone().setAlpha(0.1).toRgbString()}, ${color.clone().setAlpha(0.15).toRgbString()})`,
+        badge: `linear-gradient(to right, ${accentColor.toHslString()}, ${darkShade.toHslString()})`
     };
 
-    return themes[theme as keyof typeof themes] || themes.green;
+    const decorativeColors = {
+        primary: color.clone().setAlpha(0.2).toRgbString(),
+        secondary: accentColor.clone().setAlpha(0.1).toRgbString(),
+        tertiary: accentColor.clone().setAlpha(0.15).toRgbString(),
+        accent: color.clone().complement().setAlpha(0.3).toRgbString()
+    };
+
+    // 4. Mapear todo a variables CSS para que la UI las consuma
+    const cssVariables = {
+        '--theme-bg': color.toHslString(),
+        '--theme-text': textColor,
+        '--theme-text-gradient': textGradient,
+        '--theme-accent': accentColor.toHslString(),
+        '--theme-price': priceColor,
+        '--theme-promotional-price': promotionalPriceColor,
+        '--theme-offer-badge-bg': accentColor.isLight() ? accentColor.darken(15).toHslString() : accentColor.lighten(15).toHslString(),
+        '--theme-offer-badge-text': accentColor.isLight() ? 'hsl(0 0% 98%)' : 'hsl(0 0% 10%)',
+
+        '--gradient-header': gradients.header,
+        '--gradient-category': gradients.category,
+        '--gradient-special': gradients.special,
+        '--gradient-overlay': gradients.overlay,
+        '--gradient-badge': gradients.badge,
+
+        '--decorative-primary': decorativeColors.primary,
+        '--decorative-secondary': decorativeColors.secondary,
+        '--decorative-tertiary': decorativeColors.tertiary,
+        '--decorative-accent': decorativeColors.accent,
+
+        '--color-dark-text': 'hsl(0 0% 10%)',
+        '--color-light-text': 'hsl(0 0% 98%)',
+    } as React.CSSProperties;
+
+
+    return {
+        isLight: color.isLight(),
+        bg: color.toHslString(),
+        text: textColor,
+        accent: accentColor.toHslString(),
+        priceColor: priceColor,
+        promotionalPriceColor: promotionalPriceColor,
+        offerBadge: {
+            bg: lightShade.toHslString(),
+            text: darkShade.toHslString(),
+        },
+        gradients,
+        decorative: decorativeColors,
+        cssVariables
+    };
 }
 
 // Función para generar enlace de WhatsApp
@@ -131,51 +101,4 @@ export function generateWhatsAppLink(phone: string, message?: string): string {
 export function generateWhatsAppLinkForDish(phone: string, dishName: string, restaurantName: string): string {
     const message = `¡Hola ${restaurantName}! Me interesa el plato "${dishName}" que vi en su menú.`;
     return generateWhatsAppLink(phone, message);
-}
-
-// Función para generar elementos decorativos temáticos
-export function getDecorativeElements(themeColors: any) {
-    return {
-        // Elementos grandes para background
-        large: [
-            {
-                className: `absolute -top-20 right-1/4 w-32 h-32 sm:w-40 sm:h-40 md:w-56 md:h-56 lg:w-72 lg:h-72 ${themeColors.decorative.primary} rounded-full blur-3xl`,
-                position: 'top-right'
-            },
-            {
-                className: `absolute bottom-10 left-1/3 w-24 h-24 sm:w-32 sm:h-32 md:w-48 md:h-48 lg:w-64 lg:h-64 ${themeColors.decorative.secondary} rounded-full blur-2xl`,
-                position: 'bottom-left'
-            },
-            {
-                className: `absolute top-1/2 -left-10 w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 ${themeColors.decorative.tertiary} rounded-full blur-2xl`,
-                position: 'middle-left'
-            }
-        ],
-        // Elementos medianos para secciones
-        medium: [
-            {
-                className: `absolute right-0 bottom-0 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-32 lg:h-32 ${themeColors.decorative.primary} rounded-full blur-xl`,
-                position: 'section-bottom-right'
-            },
-            {
-                className: `absolute -left-5 top-1/2 w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 ${themeColors.decorative.secondary} rounded-full blur-xl`,
-                position: 'section-middle-left'
-            }
-        ],
-        // Elementos pequeños para detalles
-        small: [
-            {
-                className: `absolute top-1/3 left-1/4 w-1 h-1 sm:w-2 sm:h-2 ${themeColors.decorative.accent} rounded-full`,
-                position: 'detail-1'
-            },
-            {
-                className: `absolute bottom-1/4 right-1/3 w-1.5 h-1.5 sm:w-2 sm:h-2 ${themeColors.decorative.accent} rounded-full`,
-                position: 'detail-2'
-            },
-            {
-                className: `absolute top-1/2 left-1/2 w-1 h-1 sm:w-1.5 sm:h-1.5 ${themeColors.decorative.accent} rounded-full`,
-                position: 'detail-3'
-            }
-        ]
-    };
 } 

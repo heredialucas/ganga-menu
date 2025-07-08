@@ -49,7 +49,7 @@ export default function MenuLanding({
     const [selectedCategory, setSelectedCategory] = useState<string>('all');
     const [showSpecialOnly, setShowSpecialOnly] = useState(false);
 
-    const themeColors = getThemeColors(restaurantConfig.themeColor);
+    const themeColors = getThemeColors(restaurantConfig.themeColor || '#16a34a');
 
     // Crear Set de IDs de platos especiales para identificar cuáles mostrar con precio promocional
     const specialDishIds = new Set(todaySpecials.map(special => special.dish.id));
@@ -92,17 +92,15 @@ export default function MenuLanding({
     }));
 
     return (
-        <div className="min-h-screen bg-gray-50 relative">
+        <div className="min-h-screen bg-gray-50 relative" style={themeColors.cssVariables}>
             {/* Elementos decorativos de fondo como en web-base */}
             <DecorativeElements
-                themeColors={themeColors}
                 variant="background"
                 className="fixed inset-0 z-0 pointer-events-none"
             />
 
             {/* Partículas de nieve animadas */}
             <SnowParticlesWrapper
-                themeColors={themeColors}
                 count={70}
             />
 
@@ -111,7 +109,6 @@ export default function MenuLanding({
                 {/* Header */}
                 <MenuHeader
                     restaurantConfig={restaurantConfig}
-                    themeColors={themeColors}
                     dictionary={dictionary}
                 />
 
@@ -132,7 +129,6 @@ export default function MenuLanding({
                 {todaySpecial && (
                     <TodaySpecial
                         todaySpecial={todaySpecial}
-                        themeColors={themeColors}
                         dictionary={dictionary}
                         restaurantName={restaurantConfig.name}
                         restaurantPhone={restaurantConfig.phone}
@@ -144,7 +140,6 @@ export default function MenuLanding({
                 {/* Menu Categories */}
                 <main className="max-w-6xl mx-auto px-4 py-8 relative">
                     <DecorativeElements
-                        themeColors={themeColors}
                         variant="section"
                     />
                     {filteredCategories.length === 0 ? (
@@ -162,13 +157,11 @@ export default function MenuLanding({
                                     {/* Elementos decorativos alternados para cada categoría */}
                                     {index % 2 === 0 && (
                                         <DecorativeElements
-                                            themeColors={themeColors}
                                             variant="minimal"
                                         />
                                     )}
                                     <CategorySection
                                         category={category}
-                                        themeColors={themeColors}
                                         dictionary={dictionary}
                                         restaurantName={restaurantConfig.name}
                                         restaurantPhone={restaurantConfig.phone}
@@ -184,7 +177,6 @@ export default function MenuLanding({
                 <MenuFooter
                     restaurantConfig={restaurantConfig}
                     dictionary={dictionary}
-                    themeColors={themeColors}
                 />
             </div>
         </div>

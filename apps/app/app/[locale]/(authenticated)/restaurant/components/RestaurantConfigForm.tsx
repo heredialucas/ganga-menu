@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useActionState, useEffect, useRef, useTransition } from 'react';
+import { useState, useEffect, useRef, useTransition } from 'react';
 import { useFormStatus } from 'react-dom';
 import { toast } from 'sonner';
 import { saveRestaurantConfig } from '../actions';
@@ -12,16 +12,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@repo
 import { Label } from '@repo/design-system/components/ui/label';
 import { Textarea } from '@repo/design-system/components/ui/textarea';
 import { ImageUpload } from './ImageUploadClient';
-import { Loader2, Save, QrCode, Download, Copy, ExternalLink } from 'lucide-react';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@repo/design-system/components/ui/select';
+import { Loader2, Save, QrCode, Download, Copy, ExternalLink, Clock } from 'lucide-react';
 import { OpeningHoursManager } from './OpeningHoursManager';
 import { toDataURL } from 'qrcode';
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@repo/design-system/components/ui/accordion";
 
 const initialState: {
     success: boolean;
@@ -58,6 +57,7 @@ export function RestaurantConfigForm({
     const [isPending, startTransition] = useTransition();
     const [slug, setSlug] = useState(config?.slug || '');
     const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string | null>(null);
+    const [themeColor, setThemeColor] = useState(config?.themeColor || '#16a34a'); // Default to a nice green
     const menuUrl = `${appUrl}/es/menu/${slug || 'tu-restaurante'}`;
 
     useEffect(() => {
@@ -127,7 +127,7 @@ export function RestaurantConfigForm({
 
     return (
         <form ref={formRef} action={handleSubmit}>
-            <div className="space-y-8">
+            <div className="space-y-8 pb-24">
                 {/* General Info Section */}
                 <Card>
                     <CardHeader>
@@ -191,18 +191,27 @@ export function RestaurantConfigForm({
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="themeColor">Color Principal del Sitio</Label>
-                                <Select name="themeColor" defaultValue={config?.themeColor || 'green'}>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Selecciona un color" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="green">Verde</SelectItem>
-                                        <SelectItem value="red">Rojo</SelectItem>
-                                        <SelectItem value="blue">Azul</SelectItem>
-                                        <SelectItem value="yellow">Amarillo</SelectItem>
-                                        <SelectItem value="brown">Marrón</SelectItem>
-                                    </SelectContent>
-                                </Select>
+                                <div className="flex items-center gap-2">
+                                    <div
+                                        className="w-8 h-8 rounded-md border"
+                                        style={{ backgroundColor: themeColor }}
+                                    />
+                                    <Input
+                                        id="themeColor"
+                                        name="themeColor"
+                                        type="color"
+                                        value={themeColor}
+                                        onChange={(e) => setThemeColor(e.target.value)}
+                                        className="p-1 h-8 w-12"
+                                    />
+                                    <Input
+                                        type="text"
+                                        value={themeColor}
+                                        onChange={(e) => setThemeColor(e.target.value)}
+                                        placeholder="#16a34a"
+                                        className="w-28"
+                                    />
+                                </div>
                                 <p className="text-xs text-muted-foreground">Este será el color predominante en la página que ven tus clientes.</p>
                                 {state?.errors?.themeColor && <p className="text-sm text-red-500">{state.errors.themeColor[0]}</p>}
                             </div>
@@ -244,31 +253,52 @@ export function RestaurantConfigForm({
                                 <Input id="phone" name="phone" defaultValue={config?.phone || ''} />
                                 {state?.errors?.phone && <p className="text-sm text-red-500">{state.errors.phone[0]}</p>}
                             </div>
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="email">Email de Contacto</Label>
-                            <Input id="email" name="email" type="email" defaultValue={config?.email || ''} />
-                            {state?.errors?.email && <p className="text-sm text-red-500">{state.errors.email[0]}</p>}
+                            <div className="space-y-2">
+                                <Label htmlFor="email">Email de Contacto</Label>
+                                <Input id="email" name="email" type="email" defaultValue={config?.email || ''} />
+                                {state?.errors?.email && <p className="text-sm text-red-500">{state.errors.email[0]}</p>}
+                            </div>
+                            {/* <div className="space-y-2">
+                                <Label htmlFor="socialMedia.instagram">Instagram</Label>
+                                <Input id="socialMedia.instagram" name="socialMedia.instagram" defaultValue={config?.socialMedia?.instagram || ''} placeholder="https://instagram.com/tu-restaurante" />
+                                {state?.errors?.['socialMedia.instagram'] && <p className="text-sm text-red-500">{state.errors['socialMedia.instagram'][0]}</p>}
+                            </div> */}
                         </div>
                     </CardContent>
                 </Card>
 
                 {/* Opening Hours Section */}
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Horarios de Apertura</CardTitle>
-                        <CardDescription>
-                            Define los días y horas en que tu restaurante está abierto.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <OpeningHoursManager initialHours={config?.hours || undefined} />
-                        {state?.errors?.hours && <p className="text-sm text-red-500">{state.errors.hours[0]}</p>}
-                    </CardContent>
-                </Card>
+                <Accordion type="single" collapsible className="w-full">
+                    <AccordionItem value="item-1">
+                        <AccordionTrigger className="text-lg font-medium">
+                            <div className="flex items-center gap-2">
+                                <Clock className="h-5 w-5" />
+                                Horarios de Apertura
+                            </div>
+                        </AccordionTrigger>
+                        <AccordionContent>
+                            <Card className="border-none">
+                                <CardHeader>
+                                    <CardDescription>
+                                        Define los días y horas en que tu restaurante está abierto.
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <OpeningHoursManager initialHours={config?.hours || undefined} />
+                                    {state?.errors?.hours && <p className="text-sm text-red-500 mt-2">{state.errors.hours[0]}</p>}
+                                </CardContent>
+                            </Card>
+                        </AccordionContent>
+                    </AccordionItem>
+                </Accordion>
+            </div>
 
-                <div className="flex justify-end">
-                    <SubmitButton dictionary={dictionary} />
+            {/* Sticky Footer for Submit Button */}
+            <div className="fixed bottom-0 left-0 md:left-64 right-0 z-50">
+                <div className="bg-background/95 backdrop-blur-sm supports-[backdrop-filter]:bg-background/60 border-t p-4">
+                    <div className="max-w-6xl mx-auto flex justify-end">
+                        <SubmitButton dictionary={dictionary} />
+                    </div>
                 </div>
             </div>
         </form>

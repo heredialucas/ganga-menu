@@ -1,29 +1,18 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { SnowParticles } from './SnowParticles';
+import dynamic from 'next/dynamic';
+
+const SnowParticles = dynamic(
+    () => import('./SnowParticles').then((mod) => mod.SnowParticles),
+    {
+        ssr: false,
+    }
+);
 
 interface SnowParticlesWrapperProps {
-    themeColors: {
-        decorative: {
-            primary: string;
-            secondary: string;
-            tertiary: string;
-            accent: string;
-        };
-    };
     count?: number;
 }
 
-export const SnowParticlesWrapper = ({ themeColors, count = 70 }: SnowParticlesWrapperProps) => {
-    const [mounted, setMounted] = useState(false);
-
-    // Only show particles after mounting to avoid hydration mismatch
-    useEffect(() => {
-        setMounted(true);
-    }, []);
-
-    if (!mounted) return null;
-
-    return <SnowParticles themeColors={themeColors} count={count} />;
+export const SnowParticlesWrapper = ({ count = 70 }: SnowParticlesWrapperProps) => {
+    return <SnowParticles count={count} />;
 }; 

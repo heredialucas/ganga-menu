@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { database } from '@repo/database';
-import { deleteR2Image } from './uploadR2Image';
+import { deleteR2Image, uploadR2Image } from './uploadR2Image';
 import { getCurrentUserId } from './authService';
 
 export interface DishData {
@@ -26,6 +26,7 @@ export interface DishFormData {
     price: number;
     promotionalPrice?: number | null;
     imageUrl?: string;
+    imageFile?: File;
     status?: 'ACTIVE' | 'INACTIVE';
     order?: number;
     categoryId?: string;
@@ -36,6 +37,20 @@ export interface DishFormData {
  */
 export async function createDish(data: DishFormData, createdById: string) {
     try {
+        let imageUrl = data.imageUrl;
+
+        if (data.imageFile) {
+            const { url } = await uploadR2Image({
+                file: data.imageFile,
+                name: data.name,
+                folder: 'dishes',
+                alt: data.name,
+                description: data.description,
+                url: '',
+            });
+            imageUrl = url;
+        }
+
         // Crear el plato
         const dish = await database.dish.create({
             data: {
@@ -43,7 +58,7 @@ export async function createDish(data: DishFormData, createdById: string) {
                 description: data.description,
                 price: data.price,
                 promotionalPrice: data.promotionalPrice,
-                imageUrl: data.imageUrl,
+                imageUrl: imageUrl,
                 status: data.status || 'ACTIVE',
                 order: data.order || 0,
                 categoryId: data.categoryId || null,
@@ -171,14 +186,36 @@ export async function updateDish(dishId: string, data: DishFormData) {
             throw new Error("Plato no encontrado o no tienes permiso para editarlo.");
         }
 
-        // Si se proporciona una nueva URL de imagen y es diferente a la anterior, borrar la antigua.
-        if (data.imageUrl && existingDish?.imageUrl && data.imageUrl !== existingDish.imageUrl) {
+        let imageUrl = data.imageUrl;
+
+        // Si se sube un nuevo archivo
+        if (data.imageFile) {
+            // Borrar el antiguo si existe
+            if (existingDish.imageUrl) {
+                try {
+                    const oldKey = existingDish.imageUrl.split(process.env.CLOUDFLARE_R2_PUBLIC_DOMAIN!)[1]?.substring(1);
+                    if (oldKey) await deleteR2Image(oldKey);
+                } catch (imageError) {
+                    console.error("Error al eliminar la imagen antigua de R2:", imageError);
+                }
+            }
+            // Subir el nuevo
+            const { url } = await uploadR2Image({
+                file: data.imageFile,
+                name: data.name,
+                folder: 'dishes',
+                alt: data.name,
+                description: data.description,
+                url: '',
+            });
+            imageUrl = url;
+        } else if (!data.imageUrl && existingDish.imageUrl) {
+            // Si no se proporciona nueva URL ni archivo, y existía una, borrarla
             try {
-                const key = existingDish.imageUrl.split('/').slice(-2).join('/');
-                await deleteR2Image(key);
+                const oldKey = existingDish.imageUrl.split(process.env.CLOUDFLARE_R2_PUBLIC_DOMAIN!)[1]?.substring(1);
+                if (oldKey) await deleteR2Image(oldKey);
             } catch (imageError) {
                 console.error("Error al eliminar la imagen antigua de R2:", imageError);
-                // No relanzar el error para permitir que la actualización continúe
             }
         }
 
@@ -190,7 +227,7 @@ export async function updateDish(dishId: string, data: DishFormData) {
                 description: data.description,
                 price: data.price,
                 promotionalPrice: data.promotionalPrice,
-                imageUrl: data.imageUrl,
+                imageUrl: imageUrl,
                 status: data.status,
                 order: data.order,
                 categoryId: data.categoryId || null,
@@ -242,9 +279,8 @@ export async function deleteDish(dishId: string) {
         if (dish?.imageUrl) {
             try {
                 // Extraer el key de la URL (la parte después del dominio)
-                const urlParts = dish.imageUrl.split('/');
-                const key = urlParts.slice(-2).join('/'); // dishes/timestamp-filename
-                await deleteR2Image(key);
+                const key = dish.imageUrl.split(process.env.CLOUDFLARE_R2_PUBLIC_DOMAIN!)[1]?.substring(1);
+                if (key) await deleteR2Image(key);
             } catch (imageError) {
                 console.error("Error al eliminar imagen de R2:", imageError);
                 // No lanzar error, el plato ya se eliminó

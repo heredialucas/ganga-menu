@@ -2,6 +2,14 @@
 
 import { database } from '@repo/database';
 import { revalidatePath } from 'next/cache';
+import type { RestaurantTable } from '@repo/database';
+import { getCurrentUserId } from './authService';
+
+export type SaveDesignResult = {
+    success: boolean;
+    message: string;
+    tables?: RestaurantTable[];
+};
 
 // Tipos base para los elementos del diseño
 interface BaseElement {
@@ -13,19 +21,10 @@ interface BaseElement {
 }
 
 interface ShapeElement extends BaseElement {
-    type: 'table' | 'bar';
+    type: 'bar' | 'wall';
     shape: 'circle' | 'rectangle' | 'square';
     width: number;
     height: number;
-    name: string;
-    capacity?: number;
-}
-
-interface WallElement {
-    id: string;
-    type: 'wall';
-    points: number[];
-    fill: string;
 }
 
 interface StaircaseElement extends BaseElement {
@@ -34,8 +33,8 @@ interface StaircaseElement extends BaseElement {
     height: number;
 }
 
-export type RestaurantElement = ShapeElement | WallElement | StaircaseElement;
-
+export type RestaurantElement = ShapeElement | StaircaseElement;
+export type RestaurantTableData = RestaurantTable;
 
 // Helper function para validar y convertir JsonValue a RestaurantElement[]
 function parseElements(elementsJson: unknown): RestaurantElement[] {
@@ -49,19 +48,16 @@ function parseElements(elementsJson: unknown): RestaurantElement[] {
         }
 
         switch (item.type) {
-            case 'table':
             case 'bar':
+            case 'wall':
                 return (
                     typeof item.x === 'number' &&
                     typeof item.y === 'number' &&
                     typeof item.width === 'number' &&
                     typeof item.height === 'number' &&
                     typeof item.fill === 'string' &&
-                    typeof item.name === 'string' &&
                     typeof item.shape === 'string'
                 );
-            case 'wall':
-                return Array.isArray(item.points) && typeof item.fill === 'string';
             case 'staircase':
                 return (
                     typeof item.x === 'number' &&
@@ -80,6 +76,7 @@ export interface RestaurantDesignData {
     id: string;
     name: string;
     elements: RestaurantElement[];
+    tables: RestaurantTableData[];
     canvasWidth: number;
     canvasHeight: number;
     restaurantConfigId: string;
@@ -87,20 +84,12 @@ export interface RestaurantDesignData {
     updatedAt: Date;
 }
 
-export interface CreateRestaurantDesignInput {
-    name?: string;
-    elements: RestaurantElement[];
-    canvasWidth: number;
-    canvasHeight: number;
+export interface SaveDesignPayload {
     restaurantConfigId: string;
-    createdById: string;
-}
-
-export interface UpdateRestaurantDesignInput {
-    name?: string;
-    elements?: RestaurantElement[];
-    canvasWidth?: number;
-    canvasHeight?: number;
+    tables: string;
+    elements: string;
+    canvasWidth: string;
+    canvasHeight: string;
 }
 
 /**
@@ -110,6 +99,9 @@ export async function getRestaurantDesignByConfigId(restaurantConfigId: string):
     const design = await database.restaurantDesign.findUnique({
         where: {
             restaurantConfigId
+        },
+        include: {
+            restaurantTables: true,
         }
     });
 
@@ -120,81 +112,112 @@ export async function getRestaurantDesignByConfigId(restaurantConfigId: string):
     return {
         ...design,
         elements: parseElements(design.elements),
+        tables: design.restaurantTables,
     };
 }
 
-/**
- * Crea un nuevo diseño de restaurante
- */
-export async function createRestaurantDesign(input: CreateRestaurantDesignInput): Promise<RestaurantDesignData> {
-    const design = await database.restaurantDesign.create({
-        data: {
-            name: input.name || 'Mi Diseño',
-            elements: input.elements as any,
-            canvasWidth: input.canvasWidth,
-            canvasHeight: input.canvasHeight,
-            restaurantConfigId: input.restaurantConfigId,
-            createdById: input.createdById
-        }
-    });
-
-    return {
-        ...design,
-        elements: parseElements(design.elements),
-    };
-}
-
-/**
- * Actualiza un diseño de restaurante existente
- */
-export async function updateRestaurantDesign(id: string, input: UpdateRestaurantDesignInput): Promise<RestaurantDesignData> {
-    const design = await database.restaurantDesign.update({
-        where: { id },
-        data: {
-            name: input.name,
-            elements: input.elements as any,
-            canvasWidth: input.canvasWidth,
-            canvasHeight: input.canvasHeight
-        }
-    });
-
-    return {
-        ...design,
-        elements: parseElements(design.elements),
-    };
-}
 
 /**
  * Guarda o actualiza el diseño del restaurante
  */
 export async function saveRestaurantDesign(
-    restaurantConfigId: string,
-    userId: string,
-    elements: RestaurantElement[],
-    canvasWidth: number,
-    canvasHeight: number
-): Promise<RestaurantDesignData> {
-    const existingDesign = await getRestaurantDesignByConfigId(restaurantConfigId);
+    prevState: any,
+    formData: FormData,
+): Promise<SaveDesignResult> {
+    'use server'
 
-    let result: RestaurantDesignData;
+    console.log("--- INICIANDO GUARDADO DE DISEÑO ---");
 
-    if (existingDesign) {
-        result = await updateRestaurantDesign(existingDesign.id, {
-            elements,
-            canvasWidth,
-            canvasHeight
-        });
-    } else {
-        result = await createRestaurantDesign({
-            elements,
-            canvasWidth,
-            canvasHeight,
-            restaurantConfigId,
-            createdById: userId
-        });
+    const restaurantConfigId = formData.get('restaurantConfigId') as string;
+    const tablesPayload = formData.get('tables') as string;
+    const elementsPayload = formData.get('elements') as string;
+    const canvasWidth = parseInt(formData.get('canvasWidth') as string, 10);
+    const canvasHeight = parseInt(formData.get('canvasHeight') as string, 10);
+
+    console.log("Restaurant Config ID:", restaurantConfigId);
+    console.log("Canvas Dims:", { width: canvasWidth, height: canvasHeight });
+    console.log("RAW Payload - Tables:", tablesPayload);
+    console.log("RAW Payload - Elements:", elementsPayload);
+
+    let tables: RestaurantTableData[];
+    let elements: RestaurantElement[];
+
+    try {
+        tables = JSON.parse(tablesPayload) as RestaurantTableData[];
+        elements = JSON.parse(elementsPayload) as RestaurantElement[];
+        console.log("Payload Parseado - Tables Count:", tables.length);
+        console.log("Payload Parseado - Elements Count:", elements.length);
+    } catch (e: any) {
+        console.error("Error al parsear JSON:", e.message);
+        return { success: false, message: 'Error interno: El formato de los datos es inválido.' };
     }
 
-    revalidatePath('/[locale]/restaurant');
+    const userId = await getCurrentUserId();
 
-    return result;
+    if (!restaurantConfigId || !userId) {
+        console.error("Error: Falta restaurantConfigId o userId.");
+        return { success: false, message: 'ID de configuración o de usuario no válido' };
+    }
+
+    try {
+        const existingDesign = await database.restaurantDesign.findUnique({
+            where: { restaurantConfigId },
+        });
+
+        if (!existingDesign) {
+            console.log("No existe diseño. Creando uno nuevo...");
+            const newDesign = await database.restaurantDesign.create({
+                data: {
+                    restaurantConfigId,
+                    canvasWidth,
+                    canvasHeight,
+                    elements: elements as any,
+                    createdById: userId,
+                    restaurantTables: {
+                        create: tables.map(table => ({
+                            label: table.label, x: table.x, y: table.y, width: table.width,
+                            height: table.height, rotation: table.rotation, shape: table.shape, fill: table.fill,
+                        })),
+                    },
+                },
+                include: { restaurantTables: true }
+            });
+
+            console.log("Diseño creado exitosamente.");
+            revalidatePath('/[locale]/restaurant');
+            return { success: true, message: 'Diseño guardado exitosamente', tables: newDesign.restaurantTables };
+        }
+
+        console.log("Diseño existente encontrado. Actualizando con estrategia 'Borrar y Recrear'.");
+        console.log(`Borrando ${tables.length} mesas existentes...`);
+
+        const [, updatedDesign] = await database.$transaction([
+            database.restaurantTable.deleteMany({
+                where: { restaurantDesignId: existingDesign.id },
+            }),
+            database.restaurantDesign.update({
+                where: { id: existingDesign.id },
+                data: {
+                    canvasWidth,
+                    canvasHeight,
+                    elements: elements as any,
+                    restaurantTables: {
+                        create: tables.map(table => ({
+                            label: table.label, x: table.x, y: table.y, width: table.width,
+                            height: table.height, rotation: table.rotation, shape: table.shape, fill: table.fill
+                        })),
+                    }
+                },
+                include: { restaurantTables: true }
+            })
+        ]);
+
+        console.log("Diseño actualizado exitosamente.");
+        revalidatePath('/[locale]/restaurant');
+        return { success: true, message: 'Diseño actualizado exitosamente', tables: updatedDesign.restaurantTables };
+
+    } catch (error) {
+        console.error("--- ERROR EN LA OPERACIÓN DE BASE DE DATOS ---", error);
+        return { success: false, message: 'Hubo un error al guardar el diseño. Verifique que los nombres de las mesas no estén repetidos.' };
+    }
 } 

@@ -4,6 +4,7 @@ import { getAllCategoriesWithDishesAndUncategorized } from '@repo/data-services/
 import { getRestaurantConfigBySlug } from '@repo/data-services/src/services/restaurantConfigService';
 import { getAllDailySpecials } from '@repo/data-services/src/services/dailySpecialService';
 import { getOrdersByRestaurant } from '@repo/data-services';
+import { getRestaurantDesignByConfigId } from '@repo/data-services/src/services/restaurantDesignService';
 import WaiterInterface from './components/WaiterInterface';
 
 interface PageProps {
@@ -25,6 +26,9 @@ export default async function WaiterPage({ params }: PageProps) {
         notFound();
     }
 
+    const restaurantDesign = await getRestaurantDesignByConfigId(restaurantConfig.id);
+    const tables = restaurantDesign?.tables || [];
+
     // Obtener datos del menú y órdenes usando el userId del restaurante
     const [dictionary, categoriesWithDishes, dailySpecials, existingOrders] = await Promise.all([
         getDictionary(locale),
@@ -42,6 +46,7 @@ export default async function WaiterPage({ params }: PageProps) {
             dailySpecials={dailySpecials}
             dictionary={dictionary}
             existingOrders={existingOrders}
+            tables={tables}
         />
     );
 }

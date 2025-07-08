@@ -4,16 +4,16 @@ import React, { useState } from 'react';
 import { Dictionary } from '@repo/internationalization';
 import { RestaurantConfigData } from '@repo/data-services/src/services/restaurantConfigService';
 import { OrderData } from '@repo/data-services';
-import { updateOrderStatusAction } from '../actions';
 import {
     ChefHat,
     Clock,
-    CheckCircle,
-    Play,
     Filter,
     User,
-    StickyNote
+    StickyNote,
+    XCircle,
+    HelpCircle,
 } from 'lucide-react';
+import { Card, CardHeader, CardContent } from '@repo/design-system/components/ui/card';
 
 interface KitchenInterfaceProps {
     restaurantConfig: RestaurantConfigData;
@@ -26,67 +26,74 @@ export default function KitchenInterface({
     orders,
     dictionary
 }: KitchenInterfaceProps) {
-    const [allOrders, setAllOrders] = useState<OrderData[]>(orders);
-    const [orderFilter, setOrderFilter] = useState<'all' | 'pending' | 'in_progress' | 'ready' | 'delivered'>('all');
-    const [isUpdatingStatus, setIsUpdatingStatus] = useState<string | null>(null);
+    const [orderFilter, setOrderFilter] = useState<'all' | 'in_progress' | 'ready'>('all');
 
-    // Filtrar órdenes según el filtro seleccionado
-    const filteredOrders = allOrders.filter(order => {
-        if (orderFilter === 'all') return true;
-        if (orderFilter === 'pending') return order.status === 'PENDING';
-        if (orderFilter === 'in_progress') return order.status === 'IN_PROGRESS';
-        if (orderFilter === 'ready') return order.status === 'READY';
-        if (orderFilter === 'delivered') return order.status === 'DELIVERED';
-        return true;
+    const getOrderConfig = (status: OrderData['status']) => {
+        switch (status) {
+            case 'PENDING':
+                return {
+                    bg: 'bg-red-50',
+                    blob: 'bg-red-200',
+                    accent: 'bg-red-500',
+                    text: 'Pendiente',
+                    borderColor: 'border-red-200'
+                };
+            case 'IN_PROGRESS':
+                return {
+                    bg: 'bg-blue-50',
+                    blob: 'bg-blue-200',
+                    accent: 'bg-blue-500',
+                    text: 'En preparación',
+                    borderColor: 'border-blue-200'
+                };
+            case 'READY':
+                return {
+                    bg: 'bg-green-50',
+                    blob: 'bg-green-200',
+                    accent: 'bg-green-500',
+                    text: 'Listo',
+                    borderColor: 'border-green-200'
+                };
+            default:
+                return {
+                    bg: 'bg-gray-50',
+                    blob: 'bg-gray-200',
+                    accent: 'bg-gray-500',
+                    text: 'Completado',
+                    borderColor: 'border-gray-200'
+                };
+        }
+    };
+
+    const getTimeElapsedString = (date: string | Date) => {
+        const orderTime = new Date(date).getTime();
+        const now = new Date().getTime();
+        const diffMinutes = Math.round((now - orderTime) / (1000 * 60));
+
+        if (diffMinutes < 1) return '<1m';
+        if (diffMinutes < 60) return `${diffMinutes}m`;
+
+        const diffHours = Math.floor(diffMinutes / 60);
+        const remainingMinutes = diffMinutes % 60;
+        return `${diffHours}h ${remainingMinutes}m`;
+    };
+
+    const kitchenOrders = orders.filter(order =>
+        ['PENDING', 'IN_PROGRESS', 'READY'].includes(order.status)
+    );
+
+    const filteredOrders = kitchenOrders.filter(order => {
+        if (orderFilter === 'all') {
+            return true;
+        }
+        if (orderFilter === 'in_progress') {
+            return order.status === 'PENDING' || order.status === 'IN_PROGRESS';
+        }
+        if (orderFilter === 'ready') {
+            return order.status === 'READY';
+        }
+        return false;
     });
-
-    // Actualizar estado de orden
-    const updateOrderState = async (orderId: string, newStatus: 'IN_PROGRESS' | 'READY') => {
-        setIsUpdatingStatus(orderId);
-        try {
-            const result = await updateOrderStatusAction(orderId, newStatus);
-            if (result.success && result.order) {
-                setAllOrders(prev =>
-                    prev.map(order =>
-                        order.id === orderId
-                            ? { ...order, status: newStatus }
-                            : order
-                    )
-                );
-            } else {
-                alert(result.error || 'Error al actualizar estado');
-            }
-        } catch (error) {
-            console.error('Error updating order:', error);
-            alert('Error al actualizar estado');
-        } finally {
-            setIsUpdatingStatus(null);
-        }
-    };
-
-    // Función para obtener el color del estado
-    const getStatusColor = (status: string) => {
-        switch (status) {
-            case 'PENDING': return 'bg-red-100 text-red-800 border-red-200';
-            case 'IN_PROGRESS': return 'bg-blue-100 text-blue-800 border-blue-200';
-            case 'READY': return 'bg-green-100 text-green-800 border-green-200';
-            case 'DELIVERED': return 'bg-gray-100 text-gray-800 border-gray-200';
-            case 'CANCELLED': return 'bg-red-100 text-red-800 border-red-200';
-            default: return 'bg-gray-100 text-gray-800 border-gray-200';
-        }
-    };
-
-    // Función para obtener el texto del estado
-    const getStatusText = (status: string) => {
-        switch (status) {
-            case 'PENDING': return 'Pendiente';
-            case 'IN_PROGRESS': return 'En preparación';
-            case 'READY': return 'Listo';
-            case 'DELIVERED': return 'Entregado';
-            case 'CANCELLED': return 'Cancelado';
-            default: return status;
-        }
-    };
 
     // Obtener órdenes por prioridad (pendientes primero, luego en proceso, etc.)
     const sortedOrders = [...filteredOrders].sort((a, b) => {
@@ -121,8 +128,8 @@ export default function KitchenInterface({
                         </div>
                         <div className="flex items-center gap-4">
                             <div className="text-right">
-                                <p className="text-sm text-gray-600">Total órdenes</p>
-                                <p className="text-2xl font-bold text-orange-600">{allOrders.length}</p>
+                                <p className="text-sm text-gray-600">Órdenes activas</p>
+                                <p className="text-2xl font-bold text-orange-600">{kitchenOrders.length}</p>
                             </div>
                         </div>
                     </div>
@@ -146,16 +153,7 @@ export default function KitchenInterface({
                                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                 }`}
                         >
-                            Todas ({allOrders.length})
-                        </button>
-                        <button
-                            onClick={() => setOrderFilter('pending')}
-                            className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors ${orderFilter === 'pending'
-                                ? 'bg-red-600 text-white'
-                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                }`}
-                        >
-                            Pendientes ({allOrders.filter(o => o.status === 'PENDING').length})
+                            Todas ({kitchenOrders.length})
                         </button>
                         <button
                             onClick={() => setOrderFilter('in_progress')}
@@ -164,7 +162,7 @@ export default function KitchenInterface({
                                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                 }`}
                         >
-                            En proceso ({allOrders.filter(o => o.status === 'IN_PROGRESS').length})
+                            En Proceso ({kitchenOrders.filter(o => o.status === 'PENDING' || o.status === 'IN_PROGRESS').length})
                         </button>
                         <button
                             onClick={() => setOrderFilter('ready')}
@@ -173,173 +171,86 @@ export default function KitchenInterface({
                                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                 }`}
                         >
-                            Listos ({allOrders.filter(o => o.status === 'READY').length})
-                        </button>
-                        <button
-                            onClick={() => setOrderFilter('delivered')}
-                            className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors ${orderFilter === 'delivered'
-                                ? 'bg-gray-600 text-white'
-                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                }`}
-                        >
-                            Entregados ({allOrders.filter(o => o.status === 'DELIVERED').length})
+                            Listos ({kitchenOrders.filter(o => o.status === 'READY').length})
                         </button>
                     </div>
                 </div>
 
                 {/* Lista de órdenes */}
-                <div className="bg-white rounded-lg shadow-sm">
-                    <div className="p-4 border-b">
-                        <h3 className="text-lg font-semibold text-gray-900">
-                            Órdenes Activas ({sortedOrders.length})
-                        </h3>
+                {sortedOrders.length === 0 ? (
+                    <div className="text-center py-24 text-gray-500 bg-white rounded-lg shadow-sm">
+                        <ChefHat className="w-16 h-16 mx-auto text-gray-300 mb-4" />
+                        <h3 className="text-xl font-semibold">No hay órdenes para mostrar</h3>
+                        <p className="text-sm">Cuando lleguen nuevas órdenes, aparecerán aquí.</p>
                     </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                        {sortedOrders.map((order) => {
+                            const config = getOrderConfig(order.status);
+                            const timeElapsed = getTimeElapsedString(order.createdAt);
 
-                    <div className="max-h-[calc(100vh-300px)] overflow-y-auto">
-                        {sortedOrders.length === 0 ? (
-                            <div className="text-center py-12 text-gray-500">
-                                <ChefHat className="w-12 h-12 mx-auto text-gray-300 mb-4" />
-                                <p>No hay órdenes para mostrar</p>
-                            </div>
-                        ) : (
-                            <div className="divide-y divide-gray-200">
-                                {sortedOrders.map((order, index) => (
+                            return (
+                                <Card
+                                    key={order.id}
+                                    className={`${config.bg} ${config.borderColor} border-2 relative overflow-hidden transition-all hover:shadow-xl pb-4`}
+                                >
+                                    {/* Blobs decorativos */}
                                     <div
-                                        key={order.id}
-                                        className={`p-4 sm:p-6 hover:bg-gray-50 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-gray-25'
-                                            } ${order.status === 'PENDING' ? 'border-l-4 border-l-red-500' :
-                                                order.status === 'IN_PROGRESS' ? 'border-l-4 border-l-blue-500' :
-                                                    order.status === 'READY' ? 'border-l-4 border-l-green-500' :
-                                                        'border-l-4 border-l-gray-300'
-                                            }`}
-                                    >
-                                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-4">
-                                            <div className="flex items-center gap-4">
-                                                <div className="text-center flex-shrink-0">
-                                                    <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-1">
-                                                        <span className="text-lg font-bold text-orange-800">
-                                                            {order.tableNumber}
-                                                        </span>
-                                                    </div>
-                                                    <span className="text-xs text-gray-500">Mesa</span>
-                                                </div>
-                                                <div>
-                                                    <div className="flex items-center gap-2 mb-1">
-                                                        <span className={`px-3 py-1 rounded-full text-sm font-medium border ${getStatusColor(order.status)}`}>
-                                                            {getStatusText(order.status)}
-                                                        </span>
-                                                        {order.waiterName && (
-                                                            <div className="flex items-center gap-1 text-sm text-gray-600">
-                                                                <User className="w-4 h-4" />
-                                                                <span>{order.waiterName}</span>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                    <div className="flex items-center gap-1 text-sm text-gray-500">
-                                                        <Clock className="w-4 h-4" />
-                                                        <span>
-                                                            {new Date(order.createdAt).toLocaleString('es-ES', {
-                                                                day: '2-digit',
-                                                                month: '2-digit',
-                                                                year: 'numeric',
-                                                                hour: '2-digit',
-                                                                minute: '2-digit'
-                                                            })}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="text-right sm:text-right">
-                                                <p className="text-xl font-bold text-green-600">${order.total.toFixed(2)}</p>
-                                                <div className="flex gap-2 mt-2 flex-wrap justify-end">
-                                                    {order.status === 'PENDING' && (
-                                                        <>
-                                                            <button
-                                                                onClick={() => updateOrderState(order.id, 'IN_PROGRESS')}
-                                                                disabled={isUpdatingStatus === order.id}
-                                                                className="flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded text-sm font-medium hover:bg-blue-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                                                            >
-                                                                <Play className="w-3 h-3" />
-                                                                {isUpdatingStatus === order.id ? '...' : 'Iniciar'}
-                                                            </button>
-                                                            <button
-                                                                onClick={() => updateOrderState(order.id, 'READY')}
-                                                                disabled={isUpdatingStatus === order.id}
-                                                                className="flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 rounded text-sm font-medium hover:bg-green-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                                                            >
-                                                                <CheckCircle className="w-3 h-3" />
-                                                                {isUpdatingStatus === order.id ? '...' : 'Listo'}
-                                                            </button>
-                                                        </>
-                                                    )}
-                                                    {order.status === 'IN_PROGRESS' && (
-                                                        <button
-                                                            onClick={() => updateOrderState(order.id, 'READY')}
-                                                            disabled={isUpdatingStatus === order.id}
-                                                            className="flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 rounded text-sm font-medium hover:bg-green-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                                                        >
-                                                            <CheckCircle className="w-3 h-3" />
-                                                            {isUpdatingStatus === order.id ? 'Actualizando...' : 'Marcar Listo'}
-                                                        </button>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
+                                        className={`absolute -top-4 -right-4 w-20 h-16 ${config.blob} opacity-20 rounded-full`}
+                                        style={{ borderRadius: "60% 40% 30% 70% / 60% 30% 70% 40%" }}
+                                    ></div>
+                                    <div
+                                        className={`absolute -bottom-2 -left-2 w-12 h-10 ${config.blob} opacity-15 rounded-full`}
+                                        style={{ borderRadius: "40% 60% 70% 30% / 40% 70% 30% 60%" }}
+                                    ></div>
+                                    <div
+                                        className={`absolute top-1/2 left-1/2 w-6 h-8 ${config.blob} opacity-10 rounded-full animate-pulse`}
+                                        style={{ borderRadius: "70% 30% 60% 40% / 30% 60% 40% 70%" }}
+                                    ></div>
 
-                                        {/* Items de la orden */}
-                                        <div className="space-y-3">
-                                            {order.items.map(item => (
-                                                <div key={item.id} className="bg-gray-50 rounded-lg p-3 border border-gray-200">
-                                                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
-                                                        <div className="flex-1">
-                                                            <div className="flex items-center gap-2 mb-1 flex-wrap">
-                                                                <span className="bg-orange-600 text-white text-xs px-2 py-1 rounded-full font-bold">
-                                                                    {item.quantity}x
-                                                                </span>
-                                                                <span className="font-medium text-gray-900">
-                                                                    {item.dish.name}
-                                                                </span>
-                                                            </div>
-                                                            <p className="text-sm text-gray-600 mb-2">
-                                                                {item.dish.description}
-                                                            </p>
-                                                            {item.notes && (
-                                                                <div className="flex items-start gap-2 bg-yellow-50 border-l-4 border-yellow-400 p-2 rounded">
-                                                                    <StickyNote className="w-4 h-4 text-yellow-600 mt-0.5 flex-shrink-0" />
-                                                                    <p className="text-sm text-yellow-800 font-medium">
-                                                                        {item.notes}
-                                                                    </p>
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                        <span className="text-lg font-semibold text-gray-900 sm:ml-4">
-                                                            ${(item.price * item.quantity).toFixed(2)}
-                                                        </span>
-                                                    </div>
+                                    <CardHeader className="pb-3 relative z-10">
+                                        <div className="flex items-center justify-between">
+                                            <div
+                                                className={`${config.accent} text-white px-4 py-2 text-sm font-medium`}
+                                                style={{ borderRadius: "50% 20% 80% 30% / 60% 70% 30% 40%" }}
+                                            >
+                                                {config.text}
+                                            </div>
+                                            <span className="text-sm font-mono bg-white px-2 py-1 rounded-full border">#{order.id.substring(0, 5)}</span>
+                                        </div>
+                                        <div className="flex items-center justify-between mt-2">
+                                            <h3 className="font-bold text-xl text-gray-800">Mesa {order.table?.label || 'Mostrador'}</h3>
+                                            <span className="text-sm text-gray-500">hace {timeElapsed}</span>
+                                        </div>
+                                    </CardHeader>
+                                    <CardContent className="relative z-10">
+                                        <div className="space-y-2">
+                                            {order.items.map((item) => (
+                                                <div key={item.id} className="flex items-center gap-3">
+                                                    <div
+                                                        className={`w-3 h-3 ${config.blob} opacity-60 flex-shrink-0`}
+                                                        style={{ borderRadius: "60% 40% 30% 70%" }}
+                                                    ></div>
+                                                    <p className="text-sm text-gray-700">
+                                                        <span className='font-bold'>{item.quantity}x</span> {item.dish.name}
+                                                    </p>
                                                 </div>
                                             ))}
-                                        </div>
-
-                                        {/* Notas de la orden */}
-                                        {order.notes && (
-                                            <div className="mt-4 bg-blue-50 border-l-4 border-blue-400 p-3 rounded">
-                                                <div className="flex items-start gap-2">
-                                                    <StickyNote className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
-                                                    <div>
-                                                        <p className="text-sm font-medium text-blue-900 mb-1">
-                                                            Notas de la orden:
-                                                        </p>
-                                                        <p className="text-sm text-blue-800">{order.notes}</p>
+                                            {order.notes && (
+                                                <div className="pt-2 mt-2 border-t border-gray-200">
+                                                    <div className="flex items-start gap-2 bg-yellow-50/50 p-2 rounded-lg">
+                                                        <StickyNote className="w-4 h-4 text-yellow-600 mt-0.5 flex-shrink-0" />
+                                                        <p className="text-sm text-yellow-800">{order.notes}</p>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
-                        )}
+                                            )}
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            );
+                        })}
                     </div>
-                </div>
+                )}
             </div>
         </div>
     );

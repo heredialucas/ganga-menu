@@ -40,6 +40,7 @@ interface WaiterInterfaceProps {
     dailySpecials: DailySpecialData[];
     dictionary: Dictionary;
     existingOrders: OrderData[];
+    tables: { id: string; label: string; }[];
 }
 
 export default function WaiterInterface({
@@ -49,7 +50,8 @@ export default function WaiterInterface({
     categories,
     dailySpecials,
     dictionary,
-    existingOrders
+    existingOrders,
+    tables
 }: WaiterInterfaceProps) {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -71,6 +73,7 @@ export default function WaiterInterface({
             dailySpecials={dailySpecials}
             dictionary={dictionary}
             existingOrders={existingOrders}
+            tables={tables}
         />
     );
 }

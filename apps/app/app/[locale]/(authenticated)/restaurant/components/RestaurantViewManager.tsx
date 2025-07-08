@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/design-system/components/ui/tabs';
 import { RestaurantConfigForm } from './RestaurantConfigForm';
 import type { RestaurantConfigData } from '@repo/data-services/src/services/restaurantConfigService';
+import type { RestaurantDesignData } from '@repo/data-services/src/services/restaurantDesignService';
 import type { Dictionary } from '@repo/internationalization';
 import { Settings, LayoutDashboard } from 'lucide-react';
 import { Skeleton } from '@repo/design-system/components/ui/skeleton';
@@ -23,7 +24,7 @@ const RestaurantDesignView = dynamic(
 
 interface RestaurantViewManagerProps {
     config: RestaurantConfigData | null;
-    design: { elements: any[] } | null;
+    design: RestaurantDesignData | null;
     dictionary: Dictionary;
     appUrl: string;
 }

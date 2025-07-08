@@ -190,8 +190,35 @@ model RestaurantDesign {
   createdBy   User   @relation("RestaurantDesignCreatedBy", fields: [createdById], references: [id])
   createdById String
 
+  // Relación con RestaurantTables (uno a muchos)
+  restaurantTables RestaurantTable[] @relation("DesignToTables")
+
   @@index([createdById])
   @@index([restaurantConfigId])
+}
+
+model RestaurantTable {
+  id        String   @id @default(uuid())
+  label     String
+  x         Float
+  y         Float
+  width     Float
+  height    Float
+  rotation  Float    @default(0)
+  shape     String // "rectangle" or "circle"
+  fill      String   @default("#89CFF0")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relación con RestaurantDesign
+  restaurantDesign   RestaurantDesign @relation("DesignToTables", fields: [restaurantDesignId], references: [id], onDelete: Cascade)
+  restaurantDesignId String
+
+  // Relación con Orders
+  orders Order[]
+
+  @@unique([restaurantDesignId, label]) // No puede haber dos mesas con el mismo label en el mismo diseño
+  @@index([restaurantDesignId])
 }
 
 enum OrderStatus {
@@ -203,23 +230,26 @@ enum OrderStatus {
 }
 
 model Order {
-  id          String      @id @default(uuid())
-  tableNumber String // Número de mesa
-  status      OrderStatus @default(PENDING)
-  total       Float       @default(0)
-  notes       String? // Notas especiales del pedido
-  waiterName  String? // Nombre del mozo que tomó la orden
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  id         String      @id @default(uuid())
+  status     OrderStatus @default(PENDING)
+  total      Float       @default(0)
+  notes      String? // Notas especiales del pedido
+  waiterName String? // Nombre del mozo que tomó la orden
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
 
   // Relaciones
   restaurantConfig   RestaurantConfig @relation(fields: [restaurantConfigId], references: [id], onDelete: Cascade)
   restaurantConfigId String
   items              OrderItem[]
 
+  table   RestaurantTable? @relation(fields: [tableId], references: [id], onDelete: SetNull)
+  tableId String?
+
   @@index([restaurantConfigId])
   @@index([status])
   @@index([createdAt])
+  @@index([tableId])
 }
 
 model OrderItem {

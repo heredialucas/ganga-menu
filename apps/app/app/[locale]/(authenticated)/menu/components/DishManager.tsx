@@ -60,29 +60,19 @@ export function DishManager({ dishes, categories }: DishManagerProps) {
 
         const promise = async () => {
             const imageFile = formData.get('image') as File;
-            let imageUrl: string | undefined = editingDish?.imageUrl || undefined;
 
-            if (imageFile && imageFile.size > 0) {
-                const imageFormData: import('@repo/data-services/src/types/image').ImageFormData = {
-                    file: imageFile,
-                    name: name,
-                    alt: name,
-                    description: formData.get('description') as string || '',
-                    url: '',
-                    folder: 'dishes'
-                };
-                const r2Response = await uploadR2Image(imageFormData);
-                imageUrl = r2Response.url;
-            }
-
-            const dishData = {
+            const dishData: any = {
                 name: formData.get('name') as string,
                 description: formData.get('description') as string,
                 price: parseFloat(formData.get('price') as string),
                 promotionalPrice: formData.get('promotionalPrice') ? parseFloat(formData.get('promotionalPrice') as string) : null,
                 categoryId: formData.get('categoryId') as string,
-                imageUrl: imageUrl,
+                imageUrl: editingDish?.imageUrl || undefined,
             };
+
+            if (imageFile && imageFile.size > 0) {
+                dishData.imageFile = imageFile;
+            }
 
             if (editingDish) {
                 await updateDish(editingDish.id, dishData);

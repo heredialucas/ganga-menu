@@ -46,8 +46,8 @@ export async function saveRestaurantConfig(prevState: any, formData: FormData) {
             }
             const { url } = await uploadR2Image({
                 file: logoFile,
-                name: 'logo',
-                folder: `restaurants/${user.id}`,
+                name: data.name as string || 'logo',
+                folder: 'logos',
                 url: '',
                 description: 'Logo del restaurante',
                 alt: 'Logo'
@@ -95,38 +95,7 @@ export async function saveRestaurantConfig(prevState: any, formData: FormData) {
 }
 
 export async function saveRestaurantDesign(prevState: any, formData: FormData) {
-    try {
-        const user = await getCurrentUser();
-        if (!user) {
-            throw new Error('Not authenticated');
-        }
-
-        const rawData = Object.fromEntries(formData.entries());
-
-        // La validación ahora debería estar dentro del servicio, pero si no, la haríamos aquí.
-        // Asumiendo que el servicio valida:
-
-        const { restaurantConfigId, elements, canvasWidth, canvasHeight } = rawData;
-
-        await saveDesign(
-            restaurantConfigId as string,
-            user.id,
-            JSON.parse(elements as string),
-            parseInt(canvasWidth as string, 10),
-            parseInt(canvasHeight as string, 10)
-        );
-
-        revalidatePath('/(authenticated)/restaurant');
-
-        return {
-            success: true,
-            message: 'Diseño guardado con éxito!',
-        };
-
-    } catch (error: any) {
-        return {
-            success: false,
-            message: error.message || 'Error al guardar el diseño.',
-        };
-    }
+    // The `saveDesign` service function handles authentication, data parsing,
+    // database operations, and revalidation. This wrapper simply passes the arguments through.
+    return saveDesign(prevState, formData);
 } 

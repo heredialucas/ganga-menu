@@ -2,7 +2,7 @@ import { database } from '@repo/database';
 
 export interface OrderData {
     id: string;
-    tableNumber: string;
+    table: { id: string; label: string } | null;
     status: 'PENDING' | 'IN_PROGRESS' | 'READY' | 'DELIVERED' | 'CANCELLED';
     total: number;
     notes?: string | null;
@@ -28,7 +28,7 @@ export interface OrderItemData {
 }
 
 export interface CreateOrderData {
-    tableNumber: string;
+    tableId: string;
     waiterName?: string;
     notes?: string;
     restaurantConfigId: string;
@@ -61,7 +61,7 @@ export async function createOrder(data: CreateOrderData): Promise<OrderData> {
 
         const order = await database.order.create({
             data: {
-                tableNumber: data.tableNumber,
+                tableId: data.tableId,
                 waiterName: data.waiterName,
                 notes: data.notes,
                 total,
@@ -76,6 +76,9 @@ export async function createOrder(data: CreateOrderData): Promise<OrderData> {
                 }
             },
             include: {
+                table: {
+                    select: { id: true, label: true }
+                },
                 items: {
                     include: {
                         dish: {
@@ -107,6 +110,9 @@ export async function getOrdersByRestaurant(restaurantConfigId: string): Promise
         const orders = await database.order.findMany({
             where: { restaurantConfigId },
             include: {
+                table: {
+                    select: { id: true, label: true }
+                },
                 items: {
                     include: {
                         dish: {
@@ -139,6 +145,9 @@ export async function getOrderById(orderId: string): Promise<OrderData | null> {
         const order = await database.order.findUnique({
             where: { id: orderId },
             include: {
+                table: {
+                    select: { id: true, label: true }
+                },
                 items: {
                     include: {
                         dish: {
@@ -174,6 +183,9 @@ export async function updateOrderStatus(
             where: { id: orderId },
             data: { status },
             include: {
+                table: {
+                    select: { id: true, label: true }
+                },
                 items: {
                     include: {
                         dish: {

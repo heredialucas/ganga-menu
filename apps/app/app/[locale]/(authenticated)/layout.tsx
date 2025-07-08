@@ -30,7 +30,7 @@ export default async function AuthenticatedLayout({
     <SidebarProvider>
       <RestaurantConfigProvider config={restaurantConfig}>
         <div className="flex w-full min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white">
-          <UserHeaderServer />
+          <UserHeaderServer locale={locale} />
 
           <div className="pt-16 flex w-full h-full">
             <AdminSidebar dictionary={dictionary} menuItems={authorizedSidebarItems} />

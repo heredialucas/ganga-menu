@@ -3,7 +3,7 @@
 import { createOrder, verifyWaiterCode, getOrdersByRestaurant, updateOrderStatus } from '@repo/data-services'
 
 export interface CreateOrderAction {
-    tableNumber: string;
+    tableId: string;
     waiterName?: string;
     notes?: string;
     restaurantConfigId: string;

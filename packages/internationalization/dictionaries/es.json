@@ -1,5 +1,11 @@
 {
   "app": {
+    "sidebar": {
+      "account": "Cuenta",
+      "menu": "Menú",
+      "services": "Servicios",
+      "restaurant": "Restaurante"
+    },
     "admin": {
       "title": "Ganga-Menú",
       "navigation": {

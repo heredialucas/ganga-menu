@@ -214,61 +214,40 @@ export interface SidebarItem {
     mobileLabel: string;
     href: string;
     icon: string;
-    requiredPermissions: Permission[];
+    allRequiredPermissions?: Permission[]; // AND condition
+    anyRequiredPermissions?: Permission[]; // OR condition
     adminOnly?: boolean;
     premiumOnly?: boolean;
 }
 
 export const SIDEBAR_CONFIG: SidebarItem[] = [
     {
-        label: 'dashboard',
-        mobileLabel: 'dashboardMobile',
-        href: '/admin/dashboard',
-        icon: 'LayoutDashboard',
-        requiredPermissions: ['admin:full_access'],
-        adminOnly: true,
-    },
-    {
-        label: 'dishes',
-        mobileLabel: 'dishesMenu',
-        href: '/admin/dishes',
-        icon: 'UtensilsCrossed',
-        requiredPermissions: ['dishes:view'],
-    },
-    {
-        label: 'categories',
-        mobileLabel: 'categoriesMenu',
-        href: '/admin/categories',
-        icon: 'FolderOpen',
-        requiredPermissions: ['categories:view'],
-    },
-    {
-        label: 'dailySpecials',
-        mobileLabel: 'specialsMenu',
-        href: '/admin/daily-specials',
-        icon: 'Star',
-        requiredPermissions: ['daily_specials:view'],
-    },
-    {
-        label: 'restaurant',
-        mobileLabel: 'restaurantMenu',
-        href: '/admin/restaurant',
-        icon: 'Store',
-        requiredPermissions: ['restaurant:view_config'],
-    },
-    {
-        label: 'orders',
-        mobileLabel: 'ordersMenu',
-        href: '/admin/orders',
-        icon: 'ShoppingCart',
-        requiredPermissions: ['orders:view'],
-    },
-    {
-        label: 'account',
-        mobileLabel: 'accountMobile',
+        label: 'sidebar.account',
+        mobileLabel: 'sidebar.account',
         href: '/account',
-        icon: 'User',
-        requiredPermissions: ['account:view_own'],
+        icon: 'UsersIcon',
+        allRequiredPermissions: ['account:view_own'],
+    },
+    {
+        label: 'sidebar.menu',
+        mobileLabel: 'sidebar.menu',
+        href: '/menu',
+        icon: 'UtensilsCrossed',
+        allRequiredPermissions: ['dishes:view'],
+    },
+    {
+        label: 'sidebar.restaurant',
+        mobileLabel: 'sidebar.restaurant',
+        href: '/restaurant',
+        icon: 'Layout',
+        allRequiredPermissions: ['restaurant:view_config'],
+    },
+    {
+        label: 'sidebar.services',
+        mobileLabel: 'sidebar.services',
+        href: '/services',
+        icon: 'Settings',
+        anyRequiredPermissions: ['waiter:view_orders', 'kitchen:view_orders'],
     },
 ];
 
@@ -292,12 +271,17 @@ export async function getAuthorizedSidebarItems(): Promise<SidebarItem[]> {
             continue;
         }
 
-        // Verificar si tiene todos los permisos requeridos
-        const hasRequiredPermissions = item.requiredPermissions.every(
+        // Check for all required permissions (AND condition)
+        const hasAllPermissions = !item.allRequiredPermissions || item.allRequiredPermissions.every(
             permission => userWithPermissions.permissions.includes(permission)
         );
 
-        if (hasRequiredPermissions) {
+        // Check for any required permissions (OR condition)
+        const hasAnyPermissions = !item.anyRequiredPermissions || item.anyRequiredPermissions.some(
+            permission => userWithPermissions.permissions.includes(permission)
+        );
+
+        if (hasAllPermissions && hasAnyPermissions) {
             authorizedItems.push(item);
         }
     }

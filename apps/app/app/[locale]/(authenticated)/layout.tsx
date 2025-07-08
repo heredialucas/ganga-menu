@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { SidebarProvider } from '@repo/design-system/components/ui/sidebar';
-import { getCurrentUserWithPermissions } from '@repo/auth/server-permissions';
+import { getAuthorizedSidebarItems } from '@repo/auth/server-permissions';
 import { getDictionary } from '@repo/internationalization';
 import type { Locale } from '@repo/internationalization';
 import { AdminSidebar } from './components/sidebar-components/admin-sidebar';
@@ -14,10 +14,12 @@ export default async function AuthenticatedLayout({
   params: Promise<{ locale: Locale }>;
 }) {
   const { locale } = await params;
-  const dictionary = await getDictionary(locale);
-  const user = await getCurrentUserWithPermissions();
+  const [dictionary, authorizedSidebarItems] = await Promise.all([
+    getDictionary(locale),
+    getAuthorizedSidebarItems(),
+  ]);
 
-  if (!user) {
+  if (authorizedSidebarItems.length === 0) {
     return redirect(`/${locale}/sign-in`);
   }
 
@@ -27,7 +29,7 @@ export default async function AuthenticatedLayout({
         <UserHeaderServer />
 
         <div className="pt-16 flex w-full h-full">
-          <AdminSidebar dictionary={dictionary} />
+          <AdminSidebar dictionary={dictionary} menuItems={authorizedSidebarItems} />
 
           <main className="bg-gray-50 dark:bg-zinc-950 flex-1 md:py-6 min-h-screen pb-20 md:pb-0">
             <div className="w-full p-4">

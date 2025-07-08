@@ -42,10 +42,10 @@ export default async function MenuPage({ params }: { params: Promise<{ locale: s
         <div className="space-y-6">
             <div className="flex flex-row items-start justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight">
+                    <h1 className="text-xl font-bold tracking-tight sm:text-3xl">
                         Gestión del Menú
                     </h1>
-                    <p className="text-muted-foreground">
+                    <p className="text-sm text-muted-foreground">
                         Crea y edita tus platos. Usa los desplegables para configuraciones avanzadas.
                     </p>
                 </div>

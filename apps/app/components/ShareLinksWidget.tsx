@@ -53,8 +53,8 @@ export function ShareLinksWidget({ dictionary }: ShareLinksWidgetProps) {
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
                 <Button variant="outline">
-                    <Share2 className="h-4 w-4 mr-2" />
-                    {dictionary.app.share.links_button}
+                    <Share2 className="h-4 w-4 sm:mr-2" />
+                    <span className="hidden sm:inline">{dictionary.app.share.links_button}</span>
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">

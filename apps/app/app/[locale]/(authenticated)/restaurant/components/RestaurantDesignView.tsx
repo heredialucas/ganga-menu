@@ -147,16 +147,6 @@ export function RestaurantDesignView({ config, design }: {
 
     const stageRef = useRef<any>(null);
     const trRef = useRef<any>(null);
-    const containerRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        const checkSize = () => {
-            if (containerRef.current) setDimensions({ width: containerRef.current.offsetWidth, height: 500 });
-        };
-        checkSize();
-        window.addEventListener('resize', checkSize);
-        return () => window.removeEventListener('resize', checkSize);
-    }, []);
 
     useEffect(() => {
         if (!selectedId) {
@@ -177,7 +167,7 @@ export function RestaurantDesignView({ config, design }: {
         } else {
             trRef.current?.nodes([]);
         }
-    }, [selectedId, elements, dimensions]);
+    }, [selectedId, elements]);
 
 
     const addElement = (type: 'table' | 'bar' | 'staircase', shape: 'rectangle' | 'circle' | null) => {
@@ -291,7 +281,7 @@ export function RestaurantDesignView({ config, design }: {
                             </div>
                         )}
 
-                        <div ref={containerRef} className="bg-gray-50 border rounded-lg overflow-hidden relative" style={{ cursor: activeTool === 'wall' ? 'crosshair' : 'default' }}>
+                        <div className="bg-gray-50 border rounded-lg overflow-x-auto relative" style={{ cursor: activeTool === 'wall' ? 'crosshair' : 'default' }}>
                             <Stage width={dimensions.width} height={dimensions.height} ref={stageRef} onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
                                 <Layer>
                                     {elements.map((el) => (

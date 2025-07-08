@@ -24,10 +24,10 @@ export default async function RestaurantPage({
         <div className="space-y-6">
             <div className="flex flex-row items-start justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight">
+                    <h1 className="text-xl font-bold tracking-tight sm:text-3xl">
                         Gestión del Restaurante
                     </h1>
-                    <p className="text-muted-foreground">
+                    <p className="text-sm text-muted-foreground">
                         Define la configuración de tu restaurante y diseña la distribución de las mesas.
                     </p>
                 </div>

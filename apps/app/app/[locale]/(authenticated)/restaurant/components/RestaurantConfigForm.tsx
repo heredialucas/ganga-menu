@@ -127,7 +127,7 @@ export function RestaurantConfigForm({
 
     return (
         <form ref={formRef} action={handleSubmit}>
-            <div className="space-y-8 pb-24">
+            <div className="space-y-8 md:pb-24">
                 {/* General Info Section */}
                 <Card>
                     <CardHeader>
@@ -294,7 +294,7 @@ export function RestaurantConfigForm({
             </div>
 
             {/* Sticky Footer for Submit Button */}
-            <div className="fixed bottom-0 left-0 md:left-64 right-0 z-50">
+            <div className="static md:fixed bottom-0 left-0 md:left-64 right-0 z-50">
                 <div className="bg-background/95 backdrop-blur-sm supports-[backdrop-filter]:bg-background/60 border-t p-4">
                     <div className="max-w-6xl mx-auto flex justify-end">
                         <SubmitButton dictionary={dictionary} />

@@ -135,11 +135,13 @@ const Shape: FC<ShapeProps> = ({ shapeProps, onSelect, onChange }) => {
     const { Group, Rect, Circle, Text } = KonvaComponents;
 
     const handleTransformEnd = () => {
-        console.log('🔄 Transform:', shapeProps.id);
+        console.log('🔄 Transform:', shapeProps.id, 'Type:', shapeProps.type);
         const node = shapeRef.current;
         if (!node) return;
         const scaleX = node.scaleX();
         const scaleY = node.scaleY();
+        const rotation = node.rotation();
+        console.log('📐 Transform data:', { scaleX, scaleY, rotation });
         node.scaleX(1); node.scaleY(1);
 
         const baseProps = shapeProps as any;
@@ -154,7 +156,7 @@ const Shape: FC<ShapeProps> = ({ shapeProps, onSelect, onChange }) => {
 
         const newAttrs = {
             ...shapeProps,
-            x: node.x(), y: node.y(), rotation: node.rotation(),
+            x: node.x(), y: node.y(), rotation: rotation,
             width: newWidth,
             height: newHeight,
         };
@@ -590,21 +592,25 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
                         <Transformer
                             ref={trRef}
                             boundBoxFunc={(oldBox: any, newBox: any) => (newBox.width < 10 || newBox.height < 10 ? oldBox : newBox)}
-                            rotationSnaps={[0, 45, 90, 135, 180, 225, 270, 315]}
-                            rotateAnchorOffset={50}
-                            anchorSize={14}
+                            rotationSnaps={[0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180, 195, 210, 225, 240, 255, 270, 285, 300, 315, 330, 345]}
+                            rotateAnchorOffset={80}
+                            rotateEnabled={true}
+                            anchorSize={18}
                             anchorFill={'#4F46E5'}
                             anchorStroke={'#312E81'}
-                            anchorStrokeWidth={2}
-                            anchorCornerRadius={3}
+                            anchorStrokeWidth={3}
+                            anchorCornerRadius={4}
                             borderStroke={'#4F46E5'}
-                            borderStrokeWidth={2}
-                            borderDash={[4, 4]}
+                            borderStrokeWidth={3}
+                            borderDash={[6, 6]}
                             keepRatio={false}
                             centeredScaling={false}
                             enabledAnchors={['top-left', 'top-right', 'bottom-left', 'bottom-right', 'top-center', 'middle-right', 'bottom-center', 'middle-left']}
                             ignoreStroke={true}
                             flipEnabled={false}
+                            shouldOverdrawWholeArea={true}
+                            useSingleNodeRotation={false}
+                            rotateAnchorCursor="crosshair"
                         />
                     </Layer>
                 </Stage>

@@ -56,7 +56,7 @@ const Staircase: FC<{ width: number; height: number; fill: string; onSelect?: ()
     const { Group, Rect, Line, Text } = KonvaComponents;
 
     const handleClick = (e: any) => {
-        console.log('🏢 Staircase clicked!');
+        alert('🏢 Staircase clicked!');
         if (onSelect) {
             e.cancelBubble = true;
             onSelect();
@@ -64,7 +64,7 @@ const Staircase: FC<{ width: number; height: number; fill: string; onSelect?: ()
     };
 
     const handleTap = (e: any) => {
-        console.log('🏢 Staircase tapped!');
+        alert('🏢 Staircase tapped!');
         if (onSelect) {
             e.cancelBubble = true;
             onSelect();
@@ -133,15 +133,14 @@ const Shape: FC<ShapeProps> = ({ shapeProps, onSelect, onChange }) => {
     });
 
     const handleTransformEnd = () => {
-        console.log('🔄 Transform end triggered for:', shapeProps.id);
+        alert(`🔄 Transform end triggered for: ${shapeProps.id}`);
         const node = shapeRef.current;
         if (!node) {
-            console.log('❌ No node found in shapeRef');
+            alert('❌ No node found in shapeRef');
             return;
         }
         const scaleX = node.scaleX();
         const scaleY = node.scaleY();
-        console.log('📏 Scale values:', { scaleX, scaleY });
         node.scaleX(1); node.scaleY(1);
 
         const baseProps = shapeProps as any;
@@ -152,7 +151,6 @@ const Shape: FC<ShapeProps> = ({ shapeProps, onSelect, onChange }) => {
             const diameter = Math.max(newWidth, newHeight);
             newWidth = diameter;
             newHeight = diameter;
-            console.log('🔵 Circle resize - diameter:', diameter);
         }
 
         const newAttrs = {
@@ -161,24 +159,23 @@ const Shape: FC<ShapeProps> = ({ shapeProps, onSelect, onChange }) => {
             width: newWidth,
             height: newHeight,
         };
-        console.log('✅ Calling onChange with new attrs:', newAttrs);
         onChange(newAttrs as RestaurantElement | RestaurantTableData);
     };
 
     const handleClick = (e: any) => {
-        console.log('🖱️ Shape clicked:', shapeProps.id, shapeProps.type);
+        alert(`🖱️ Shape clicked: ${shapeProps.id} ${shapeProps.type}`);
         e.cancelBubble = true;
         onSelect();
     };
 
     const handleTap = (e: any) => {
-        console.log('👆 Shape tapped:', shapeProps.id, shapeProps.type);
+        alert(`👆 Shape tapped: ${shapeProps.id} ${shapeProps.type}`);
         e.cancelBubble = true;
         onSelect();
     };
 
     const handleDragEnd = (e: any) => {
-        console.log('🚚 Drag end for:', shapeProps.id, 'new position:', { x: e.target.x(), y: e.target.y() });
+        alert(`🚚 Drag end for: ${shapeProps.id}`);
         onChange({ ...shapeProps, x: e.target.x(), y: e.target.y() } as any);
     };
 
@@ -357,7 +354,7 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
         console.log('🔍 Looking for node with ID:', selectedId);
         const selectedNode = stageRef.current.findOne('#' + selectedId);
         if (selectedNode) {
-            console.log('✅ Found selected node:', selectedNode);
+            alert(`✅ Found selected node: ${selectedId}`);
             trRef.current.nodes([selectedNode]);
 
             // Configurar transformer basado en el tipo de forma seleccionada
@@ -366,12 +363,12 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
             console.log('📋 Selected item:', selectedItem);
 
             if (selectedItem && 'shape' in selectedItem && selectedItem.shape === 'circle') {
-                console.log('🔵 Configuring transformer for circle');
+                alert('🔵 Configuring transformer for circle');
                 // Para círculos, mantener proporción y habilitar solo algunos anchors
                 trRef.current.keepRatio(true);
                 trRef.current.enabledAnchors(['top-left', 'top-right', 'bottom-left', 'bottom-right']);
             } else {
-                console.log('⬛ Configuring transformer for rectangle/other');
+                alert('⬛ Configuring transformer for rectangle/other');
                 // Para rectangulos, permitir redimensionamiento libre
                 trRef.current.keepRatio(false);
                 trRef.current.enabledAnchors(['top-left', 'top-right', 'bottom-left', 'bottom-right', 'top-center', 'middle-right', 'bottom-center', 'middle-left']);
@@ -547,7 +544,7 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
                             return (
                                 <Shape key={item.id} shapeProps={item}
                                     onSelect={() => {
-                                        console.log('🎯 Item selected:', item.id, item.type);
+                                        alert(`🎯 Item selected: ${item.id} ${item.type}`);
                                         setActiveTool('select');
                                         setSelectedId(item.id);
                                     }}

@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect, type FC, useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
-import { Stage, Layer, Rect, Circle, Transformer, Line, Group, Text } from 'react-konva';
 import { toast } from 'sonner';
 import { Button } from '@repo/design-system/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@repo/design-system/components/ui/card';
@@ -16,7 +15,6 @@ import { PlusCircle, Save, Square, Circle as CircleIcon, MinusSquare, Pen, Trash
 import { saveRestaurantDesign } from '@repo/data-services/src/services/restaurantDesignService';
 import type { RestaurantConfigData } from '@repo/data-services/src/services/restaurantConfigService';
 import type { RestaurantDesignData, RestaurantTableData as BaseRestaurantTableData, RestaurantElement, SaveDesignResult } from '@repo/data-services/src/services/restaurantDesignService';
-import Konva from 'konva';
 
 type RestaurantTableData = BaseRestaurantTableData & { type: 'table' };
 
@@ -36,9 +34,25 @@ function SubmitButton() {
     );
 }
 
+// Importar componentes de Konva directamente para evitar problemas de SSR
+let KonvaComponents: any = null;
+
+const initializeKonva = async () => {
+    if (typeof window !== 'undefined' && !KonvaComponents) {
+        const { Stage, Layer, Rect, Circle, Transformer, Line, Group, Text } = await import('react-konva');
+        KonvaComponents = { Stage, Layer, Rect, Circle, Transformer, Line, Group, Text };
+    }
+    return KonvaComponents;
+};
+
 const Staircase: FC<{ width: number; height: number; fill: string; }> = ({ width, height, fill }) => {
     const stepCount = 5;
     const stepHeight = height / stepCount;
+
+    if (!KonvaComponents) return null;
+
+    const { Group, Rect, Line, Text } = KonvaComponents;
+
     return (
         <Group>
             <Rect width={width} height={height} stroke="#333" strokeWidth={1} fill={fill} />
@@ -58,6 +72,10 @@ interface ShapeProps {
 
 const Shape: FC<ShapeProps> = ({ shapeProps, onSelect, onChange }) => {
     const shapeRef = useRef<any>(null);
+
+    if (!KonvaComponents) return null;
+
+    const { Group, Rect, Circle, Text } = KonvaComponents;
 
     const handleTransformEnd = () => {
         const node = shapeRef.current;
@@ -91,6 +109,10 @@ const Shape: FC<ShapeProps> = ({ shapeProps, onSelect, onChange }) => {
     const height = 'height' in shapeProps ? shapeProps.height : 50;
     const fill = 'fill' in shapeProps ? shapeProps.fill : '#ccc';
 
+    // Para círculos, usar el diámetro como width y height para centrar el texto correctamente
+    const textWidth = ('shape' in shapeProps && shapeProps.shape === 'circle') ? width : width;
+    const textHeight = ('shape' in shapeProps && shapeProps.shape === 'circle') ? width : height;
+
     switch (shapeProps.type) {
         case 'staircase':
             component = <Staircase width={width} height={height} fill={fill} />;
@@ -113,28 +135,40 @@ const Shape: FC<ShapeProps> = ({ shapeProps, onSelect, onChange }) => {
         <Group
             ref={shapeRef} id={shapeProps.id} x={(shapeProps as any).x || 0} y={(shapeProps as any).y || 0}
             rotation={(shapeProps as any).rotation || 0} draggable onClick={onSelect} onTap={onSelect}
-            onDragEnd={(e) => onChange({ ...shapeProps, x: e.target.x(), y: e.target.y() } as any)}
+            onDragEnd={(e: any) => onChange({ ...shapeProps, x: e.target.x(), y: e.target.y() } as any)}
             onTransformEnd={handleTransformEnd}
         >
             {component}
             {label && (
-                <Text text={label} fontSize={14} fill="#333" width={width} height={height} align="center" verticalAlign="middle" listening={false} />
+                <Text
+                    text={label}
+                    fontSize={14}
+                    fill="#333"
+                    width={textWidth}
+                    height={textHeight}
+                    align="center"
+                    verticalAlign="middle"
+                    listening={false}
+                />
             )}
         </Group>
     );
 };
 
-export function RestaurantDesignView({ config, design }: {
-    config: RestaurantConfigData | null;
+function DesignCanvas({ config, design, tables, setTables, elements, setElements }: {
+    config: RestaurantConfigData;
     design: RestaurantDesignData | null;
+    tables: RestaurantTableData[];
+    setTables: React.Dispatch<React.SetStateAction<RestaurantTableData[]>>;
+    elements: RestaurantElement[];
+    setElements: React.Dispatch<React.SetStateAction<RestaurantElement[]>>;
 }) {
-    const [tables, setTables] = useState<RestaurantTableData[]>((design?.tables || []).map(t => ({ ...t, type: 'table' })));
-    const [elements, setElements] = useState<RestaurantElement[]>(design?.elements || []);
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const [activeTool, setActiveTool] = useState<'select' | 'wall'>('select');
     const [isDrawing, setIsDrawing] = useState(false);
     const [currentWall, setCurrentWall] = useState<number[]>([]);
-    const [state, formAction] = useActionState(saveRestaurantDesign, initialState);
+    const [isMounted, setIsMounted] = useState(false);
+    const [konvaReady, setKonvaReady] = useState(false);
 
     const designSize = {
         width: design?.canvasWidth || 800,
@@ -147,20 +181,19 @@ export function RestaurantDesignView({ config, design }: {
     const stageRef = useRef<any>(null);
     const trRef = useRef<any>(null);
 
+    // Asegurar que el componente se monta correctamente en el cliente
     useEffect(() => {
-        if (state.message) {
-            if (state.success) {
-                toast.success(state.message);
-                if (state.tables) {
-                    setTables(state.tables.map((t: BaseRestaurantTableData) => ({ ...t, type: 'table' })));
-                }
-            } else {
-                toast.error(state.message || 'Error desconocido');
-            }
-        }
-    }, [state]);
+        const init = async () => {
+            await initializeKonva();
+            setKonvaReady(true);
+            setIsMounted(true);
+        };
+        init();
+    }, []);
 
     useEffect(() => {
+        if (!isMounted) return;
+
         const container = containerRef.current;
         if (!container) return;
 
@@ -174,16 +207,20 @@ export function RestaurantDesignView({ config, design }: {
         resizeObserver.observe(container);
 
         return () => resizeObserver.disconnect();
-    }, [designSize.width, designSize.height]);
+    }, [designSize.width, designSize.height, isMounted]);
 
     useEffect(() => {
+        if (!isMounted || !stageRef.current || !trRef.current) return;
+
         if (!selectedId) {
             setTooltipPos(null);
-            trRef.current?.nodes([]); return;
+            trRef.current.nodes([]);
+            return;
         }
-        const selectedNode = stageRef.current?.findOne('#' + selectedId);
+
+        const selectedNode = stageRef.current.findOne('#' + selectedId);
         if (selectedNode) {
-            trRef.current?.nodes([selectedNode]);
+            trRef.current.nodes([selectedNode]);
             const stageBox = stageRef.current.container().getBoundingClientRect();
             const nodeBox = selectedNode.getClientRect({ relativeTo: stageRef.current });
             setTooltipPos({
@@ -191,7 +228,7 @@ export function RestaurantDesignView({ config, design }: {
                 left: stageBox.left + window.scrollX + nodeBox.x - 50,
             });
         }
-    }, [selectedId, tables, elements]);
+    }, [selectedId, tables, elements, isMounted]);
 
     const addElement = (type: 'table' | 'bar' | 'staircase', shape: 'rectangle' | 'circle' | null) => {
         const common = { id: `el_${Date.now()}_${Math.random()}`, x: 50, y: 50, rotation: 0 };
@@ -277,81 +314,137 @@ export function RestaurantDesignView({ config, design }: {
     const allItems = [...tables, ...elements];
     const selectedItem = allItems.find(item => item.id === selectedId);
 
+    if (!isMounted || !konvaReady || !KonvaComponents) {
+        return <div className="h-96 bg-gray-50 border rounded-lg flex items-center justify-center">Cargando diseñador...</div>;
+    }
+
+    const { Stage, Layer, Line, Transformer } = KonvaComponents;
+
+    return (
+        <div className="space-y-4">
+            <div className="flex flex-wrap gap-4 items-center p-2 border rounded-lg">
+                <Button type="button" variant={activeTool === 'select' ? 'secondary' : 'outline'} onClick={() => setActiveTool('select')}><MousePointer className="mr-2 h-4" /> Seleccionar</Button>
+                <Button type="button" variant={activeTool === 'wall' ? 'secondary' : 'outline'} onClick={() => setActiveTool('wall')}><Pen className="mr-2 h-4" /> Pared</Button>
+                <Popover>
+                    <PopoverTrigger asChild><Button type="button" variant="outline"><PlusCircle className="mr-2 h-4" /> Añadir Objeto</Button></PopoverTrigger>
+                    <PopoverContent className="w-auto p-2">
+                        <div className="flex gap-2">
+                            <Button type="button" variant="ghost" onClick={() => addElement('table', 'rectangle')} className="flex-col h-auto"><Square className="h-6" /><span className="text-xs">Mesa</span></Button>
+                            <Button type="button" variant="ghost" onClick={() => addElement('table', 'circle')} className="flex-col h-auto"><CircleIcon className="h-6" /><span className="text-xs">Mesa Red.</span></Button>
+                            <Button type="button" variant="ghost" onClick={() => addElement('bar', 'rectangle')} className="flex-col h-auto"><MinusSquare className="h-6" /><span className="text-xs">Barra</span></Button>
+                            <Button type="button" variant="ghost" onClick={() => addElement('staircase', null)} className="flex-col h-auto"><ChevronsUp className="h-6" /><span className="text-xs">Escalera</span></Button>
+                        </div>
+                    </PopoverContent>
+                </Popover>
+                <AlertDialog>
+                    <AlertDialogTrigger asChild><Button type="button" variant="outline" disabled={!tables.length && !elements.length}><Trash2 className="mr-2 h-4" /> Limpiar</Button></AlertDialogTrigger>
+                    <AlertDialogContent>
+                        <AlertDialogHeader><AlertDialogTitle>¿Estás seguro?</AlertDialogTitle><AlertDialogDescription>Esta acción no se puede deshacer. Se eliminará todo el diseño.</AlertDialogDescription></AlertDialogHeader>
+                        <AlertDialogFooter><AlertDialogCancel>Cancelar</AlertDialogCancel><AlertDialogAction onClick={() => { setElements([]); setTables([]); }}>Confirmar</AlertDialogAction></AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
+            </div>
+            {tooltipPos && selectedItem && (
+                <div className="flex items-center gap-2 p-2 rounded-lg bg-background border shadow-lg" style={{ position: 'absolute', top: tooltipPos.top, left: tooltipPos.left, zIndex: 10 }}>
+                    {selectedItem.type === 'table' && (
+                        <div className="flex items-center gap-2">
+                            <Type className="h-4 w-4" />
+                            <Input type="text" value={selectedItem.label} onChange={(e) => updateLabel(selectedId!, e.target.value)} className="h-8 w-24" placeholder="Nombre" />
+                        </div>
+                    )}
+                    {'fill' in selectedItem && <input type="color" value={selectedItem.fill || '#000'} onChange={(e) => handleUpdate({ ...selectedItem, fill: e.target.value } as any)} className="w-8 h-8 p-0 border-0 rounded cursor-pointer" />}
+                    <Button type="button" variant="ghost" size="icon" onClick={deleteSelected} className="text-destructive"><Trash2 className="h-4 w-4" /></Button>
+                </div>
+            )}
+            <div ref={containerRef} className="bg-gray-50 border rounded-lg overflow-x-auto relative mt-4" style={{ cursor: activeTool === 'wall' ? 'crosshair' : 'default' }}>
+                <Stage
+                    width={stageSize.width}
+                    height={stageSize.height}
+                    ref={stageRef}
+                    onMouseDown={handleMouseDown}
+                    onMouseMove={handleMouseMove}
+                    onMouseUp={handleMouseUp}
+                >
+                    <Layer>
+                        {allItems.map((item) => (
+                            <Shape key={item.id} shapeProps={item}
+                                onSelect={() => {
+                                    setActiveTool('select');
+                                    setSelectedId(item.id);
+                                }}
+                                onChange={handleUpdate}
+                            />
+                        ))}
+                        {isDrawing && <Line points={currentWall} stroke="#333" strokeWidth={5} />}
+                        <Transformer
+                            ref={trRef}
+                            boundBoxFunc={(oldBox: any, newBox: any) => (newBox.width < 10 || newBox.height < 10 ? oldBox : newBox)}
+                            rotationSnaps={[0, 45, 90, 135, 180, 225, 270, 315]}
+                            rotateAnchorOffset={40}
+                            anchorSize={12}
+                            anchorFill={'#4F46E5'}
+                            anchorStroke={'#312E81'}
+                            anchorStrokeWidth={2}
+                            borderStroke={'#4F46E5'}
+                            borderStrokeWidth={2}
+                            borderDash={[4, 4]}
+                            keepRatio={false}
+                            enabledAnchors={['top-left', 'top-right', 'bottom-left', 'bottom-right', 'top-center', 'middle-right', 'bottom-center', 'middle-left']}
+                        />
+                    </Layer>
+                </Stage>
+            </div>
+        </div>
+    );
+}
+
+export function RestaurantDesignView({ config, design }: {
+    config: RestaurantConfigData | null;
+    design: RestaurantDesignData | null;
+}) {
+    const [tables, setTables] = useState<RestaurantTableData[]>((design?.tables || []).map(t => ({ ...t, type: 'table' })));
+    const [elements, setElements] = useState<RestaurantElement[]>(design?.elements || []);
+    const [state, formAction] = useActionState(saveRestaurantDesign, initialState);
+
+    const designSize = {
+        width: design?.canvasWidth || 800,
+        height: design?.canvasHeight || 600,
+    };
+
+    useEffect(() => {
+        if (state.message) {
+            if (state.success) {
+                toast.success(state.message);
+                if (state.tables) {
+                    setTables(state.tables.map((t: BaseRestaurantTableData) => ({ ...t, type: 'table' })));
+                }
+            } else {
+                toast.error(state.message || 'Error desconocido');
+            }
+        }
+    }, [state]);
+
     return (
         <form action={formAction}>
             <Card>
                 <CardHeader><CardTitle>Diseño del Restaurante</CardTitle></CardHeader>
                 <CardContent>
                     {!config ? (<div className="text-center py-8"><p>Guarda la configuración para empezar.</p></div>) : (
-                        <div className="space-y-4">
+                        <div>
                             <input type="hidden" name="restaurantConfigId" value={config.id} />
                             <input type="hidden" name="tables" value={JSON.stringify(tables.map(({ type, ...rest }) => rest))} />
                             <input type="hidden" name="elements" value={JSON.stringify(elements)} />
                             <input type="hidden" name="canvasWidth" value={designSize.width} />
                             <input type="hidden" name="canvasHeight" value={designSize.height} />
 
-                            <div className="flex flex-wrap gap-4 items-center p-2 border rounded-lg">
-                                <Button type="button" variant={activeTool === 'select' ? 'secondary' : 'outline'} onClick={() => setActiveTool('select')}><MousePointer className="mr-2 h-4" /> Seleccionar</Button>
-                                <Button type="button" variant={activeTool === 'wall' ? 'secondary' : 'outline'} onClick={() => setActiveTool('wall')}><Pen className="mr-2 h-4" /> Pared</Button>
-                                <Popover>
-                                    <PopoverTrigger asChild><Button type="button" variant="outline"><PlusCircle className="mr-2 h-4" /> Añadir Objeto</Button></PopoverTrigger>
-                                    <PopoverContent className="w-auto p-2">
-                                        <div className="flex gap-2">
-                                            <Button type="button" variant="ghost" onClick={() => addElement('table', 'rectangle')} className="flex-col h-auto"><Square className="h-6" /><span className="text-xs">Mesa</span></Button>
-                                            <Button type="button" variant="ghost" onClick={() => addElement('table', 'circle')} className="flex-col h-auto"><CircleIcon className="h-6" /><span className="text-xs">Mesa Red.</span></Button>
-                                            <Button type="button" variant="ghost" onClick={() => addElement('bar', 'rectangle')} className="flex-col h-auto"><MinusSquare className="h-6" /><span className="text-xs">Barra</span></Button>
-                                            <Button type="button" variant="ghost" onClick={() => addElement('staircase', null)} className="flex-col h-auto"><ChevronsUp className="h-6" /><span className="text-xs">Escalera</span></Button>
-                                        </div>
-                                    </PopoverContent>
-                                </Popover>
-                                <AlertDialog>
-                                    <AlertDialogTrigger asChild><Button type="button" variant="outline" disabled={!tables.length && !elements.length}><Trash2 className="mr-2 h-4" /> Limpiar</Button></AlertDialogTrigger>
-                                    <AlertDialogContent>
-                                        <AlertDialogHeader><AlertDialogTitle>¿Estás seguro?</AlertDialogTitle><AlertDialogDescription>Esta acción no se puede deshacer. Se eliminará todo el diseño.</AlertDialogDescription></AlertDialogHeader>
-                                        <AlertDialogFooter><AlertDialogCancel>Cancelar</AlertDialogCancel><AlertDialogAction onClick={() => { setElements([]); setTables([]); }}>Confirmar</AlertDialogAction></AlertDialogFooter>
-                                    </AlertDialogContent>
-                                </AlertDialog>
-                            </div>
-                            {tooltipPos && selectedItem && (
-                                <div className="flex items-center gap-2 p-2 rounded-lg bg-background border shadow-lg" style={{ position: 'absolute', top: tooltipPos.top, left: tooltipPos.left, zIndex: 10 }}>
-                                    {selectedItem.type === 'table' && (
-                                        <div className="flex items-center gap-2">
-                                            <Type className="h-4 w-4" />
-                                            <Input type="text" value={selectedItem.label} onChange={(e) => updateLabel(selectedId!, e.target.value)} className="h-8 w-24" placeholder="Nombre" />
-                                        </div>
-                                    )}
-                                    {'fill' in selectedItem && <input type="color" value={selectedItem.fill || '#000'} onChange={(e) => handleUpdate({ ...selectedItem, fill: e.target.value } as any)} className="w-8 h-8 p-0 border-0 rounded cursor-pointer" />}
-                                    <Button type="button" variant="ghost" size="icon" onClick={deleteSelected} className="text-destructive"><Trash2 className="h-4 w-4" /></Button>
-                                </div>
-                            )}
-                            <div ref={containerRef} className="bg-gray-50 border rounded-lg overflow-x-auto relative mt-4" style={{ cursor: activeTool === 'wall' ? 'crosshair' : 'default' }}>
-                                <Stage width={stageSize.width} height={stageSize.height} ref={stageRef} onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
-                                    <Layer>
-                                        {allItems.map((item) => (
-                                            <Shape key={item.id} shapeProps={item}
-                                                onSelect={() => {
-                                                    setActiveTool('select');
-                                                    setSelectedId(item.id);
-                                                }}
-                                                onChange={handleUpdate}
-                                            />
-                                        ))}
-                                        {isDrawing && <Line points={currentWall} stroke="#333" strokeWidth={5} />}
-                                        <Transformer
-                                            ref={trRef}
-                                            boundBoxFunc={(oldBox, newBox) => (newBox.width < 10 || newBox.height < 10 ? oldBox : newBox)}
-                                            rotationSnaps={[0, 45, 90, 135, 180, 225, 270, 315]}
-                                            rotateAnchorOffset={30}
-                                            anchorSize={10}
-                                            anchorFill={'#fff'}
-                                            anchorStroke={'#666'}
-                                            anchorStrokeWidth={1}
-                                            borderStroke={'#666'}
-                                            borderDash={[3, 3]}
-                                        />
-                                    </Layer>
-                                </Stage>
-                            </div>
+                            <DesignCanvas
+                                config={config}
+                                design={design}
+                                tables={tables}
+                                setTables={setTables}
+                                elements={elements}
+                                setElements={setElements}
+                            />
                         </div>
                     )}
                 </CardContent>

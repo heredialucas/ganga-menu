@@ -56,7 +56,7 @@ const Staircase: FC<{ width: number; height: number; fill: string; onSelect?: ()
     const { Group, Rect, Line, Text } = KonvaComponents;
 
     const handleClick = (e: any) => {
-        alert('🏢 Staircase clicked!');
+        console.log('🏢 Staircase clicked!');
         if (onSelect) {
             e.cancelBubble = true;
             onSelect();
@@ -64,7 +64,7 @@ const Staircase: FC<{ width: number; height: number; fill: string; onSelect?: ()
     };
 
     const handleTap = (e: any) => {
-        alert('🏢 Staircase tapped!');
+        console.log('🏢 Staircase tapped!');
         if (onSelect) {
             e.cancelBubble = true;
             onSelect();
@@ -136,10 +136,10 @@ const Shape: FC<ShapeProps> = ({ shapeProps, onSelect, onChange }) => {
     });
 
     const handleTransformEnd = () => {
-        alert(`🔄 Transform end triggered for: ${shapeProps.id}`);
+        console.log('🔄 Transform end triggered for:', shapeProps.id);
         const node = shapeRef.current;
         if (!node) {
-            alert('❌ No node found in shapeRef');
+            console.log('❌ No node found in shapeRef');
             return;
         }
         const scaleX = node.scaleX();
@@ -166,19 +166,19 @@ const Shape: FC<ShapeProps> = ({ shapeProps, onSelect, onChange }) => {
     };
 
     const handleClick = (e: any) => {
-        alert(`🖱️ Shape clicked: ${shapeProps.id} ${shapeProps.type}`);
+        console.log('🖱️ Shape clicked:', shapeProps.id, shapeProps.type);
         e.cancelBubble = true;
         onSelect();
     };
 
     const handleTap = (e: any) => {
-        alert(`👆 Shape tapped: ${shapeProps.id} ${shapeProps.type}`);
+        console.log('👆 Shape tapped:', shapeProps.id, shapeProps.type);
         e.cancelBubble = true;
         onSelect();
     };
 
     const handleDragEnd = (e: any) => {
-        alert(`🚚 Drag end for: ${shapeProps.id}`);
+        console.log('🚚 Drag end for:', shapeProps.id);
         onChange({ ...shapeProps, x: e.target.x(), y: e.target.y() } as any);
     };
 
@@ -268,11 +268,11 @@ const Shape: FC<ShapeProps> = ({ shapeProps, onSelect, onChange }) => {
             listening={true}
             perfectDrawEnabled={false}
             onClick={(e: any) => {
-                alert(`🎯 Group clicked: ${shapeProps.id}`);
+                console.log('🎯 Group clicked:', shapeProps.id);
                 handleClick(e);
             }}
             onTap={(e: any) => {
-                alert(`🎯 Group tapped: ${shapeProps.id}`);
+                console.log('🎯 Group tapped:', shapeProps.id);
                 handleTap(e);
             }}
         >
@@ -373,7 +373,7 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
         console.log('🔍 Looking for node with ID:', selectedId);
         const selectedNode = stageRef.current.findOne('#' + selectedId);
         if (selectedNode) {
-            alert(`✅ Found selected node: ${selectedId}`);
+            console.log('✅ Found selected node:', selectedId);
             trRef.current.nodes([selectedNode]);
 
             // Configurar transformer basado en el tipo de forma seleccionada
@@ -382,12 +382,12 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
             console.log('📋 Selected item:', selectedItem);
 
             if (selectedItem && 'shape' in selectedItem && selectedItem.shape === 'circle') {
-                alert('🔵 Configuring transformer for circle');
+                console.log('🔵 Configuring transformer for circle');
                 // Para círculos, mantener proporción y habilitar solo algunos anchors
                 trRef.current.keepRatio(true);
                 trRef.current.enabledAnchors(['top-left', 'top-right', 'bottom-left', 'bottom-right']);
             } else {
-                alert('⬛ Configuring transformer for rectangle/other');
+                console.log('⬛ Configuring transformer for rectangle/other');
                 // Para rectangulos, permitir redimensionamiento libre
                 trRef.current.keepRatio(false);
                 trRef.current.enabledAnchors(['top-left', 'top-right', 'bottom-left', 'bottom-right', 'top-center', 'middle-right', 'bottom-center', 'middle-left']);
@@ -448,8 +448,47 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
         }
     }
 
+    const allItems = [...tables, ...elements];
+    console.log('📋 All items:', allItems.length, 'tables:', tables.length, 'elements:', elements.length);
+    const selectedItem = allItems.find(item => item.id === selectedId);
+    console.log('🎯 Currently selected item:', selectedItem);
+
     const handleMouseDown = (e: any) => {
         console.log('🖱️ Stage mouse down:', e.target);
+
+        // Obtener el objeto clickeado
+        const clickedShape = e.target;
+        console.log('🎯 Clicked target:', clickedShape);
+        console.log('🎯 Target ID:', clickedShape.id ? clickedShape.id() : 'no-id');
+        console.log('🎯 Target attrs:', clickedShape.attrs);
+
+        // Buscar si el elemento clickeado o su padre tiene un ID válido
+        let targetElement = clickedShape;
+        let targetId = null;
+
+        // Intentar obtener ID del elemento clickeado
+        if (targetElement.id && typeof targetElement.id === 'function') {
+            targetId = targetElement.id();
+        }
+
+        // Si no tiene ID, buscar en el padre (Group)
+        if (!targetId && targetElement.getParent && targetElement.getParent()) {
+            const parent = targetElement.getParent();
+            if (parent.id && typeof parent.id === 'function') {
+                targetId = parent.id();
+                targetElement = parent;
+            }
+        }
+
+        console.log('🎯 Final target ID:', targetId);
+
+        if (targetId && allItems.find(item => item.id === targetId)) {
+            console.log('🎯 Found valid item with ID:', targetId);
+            setActiveTool('select');
+            setSelectedId(targetId);
+            return;
+        }
+
         const clickedOnEmpty = e.target === e.target.getStage();
         console.log('🎯 Clicked on empty:', clickedOnEmpty);
         if (clickedOnEmpty) {
@@ -500,11 +539,6 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
         setElements((prev) => [...prev, newWall]);
         setCurrentWall([]);
     };
-
-    const allItems = [...tables, ...elements];
-    console.log('📋 All items:', allItems.length, 'tables:', tables.length, 'elements:', elements.length);
-    const selectedItem = allItems.find(item => item.id === selectedId);
-    console.log('🎯 Currently selected item:', selectedItem);
 
     if (!isMounted || !konvaReady || !KonvaComponents) {
         return <div className="h-96 bg-gray-50 border rounded-lg flex items-center justify-center">Cargando diseñador...</div>;
@@ -563,7 +597,7 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
                             return (
                                 <Shape key={item.id} shapeProps={item}
                                     onSelect={() => {
-                                        alert(`🎯 Item selected: ${item.id} ${item.type}`);
+                                        console.log(`🎯 Item selected: ${item.id} ${item.type}`);
                                         setActiveTool('select');
                                         setSelectedId(item.id);
                                     }}

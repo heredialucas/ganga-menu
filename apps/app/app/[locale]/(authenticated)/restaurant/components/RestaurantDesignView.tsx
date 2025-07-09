@@ -49,14 +49,11 @@ const Staircase: FC<{ width: number; height: number; fill: string; onSelect?: ()
     const stepCount = 5;
     const stepHeight = height / stepCount;
 
-    console.log('🏢 Staircase rendering:', { width, height, fill, onSelect: !!onSelect });
-
     if (!KonvaComponents) return null;
 
     const { Group, Rect, Line, Text } = KonvaComponents;
 
     const handleClick = (e: any) => {
-        console.log('🏢 Staircase clicked!');
         if (onSelect) {
             e.cancelBubble = true;
             onSelect();
@@ -64,7 +61,6 @@ const Staircase: FC<{ width: number; height: number; fill: string; onSelect?: ()
     };
 
     const handleTap = (e: any) => {
-        console.log('🏢 Staircase tapped!');
         if (onSelect) {
             e.cancelBubble = true;
             onSelect();
@@ -84,9 +80,22 @@ const Staircase: FC<{ width: number; height: number; fill: string; onSelect?: ()
                 hitStrokeWidth={10}
                 listening={true}
                 opacity={0.8}
-                onClick={handleClick}
-                onTap={handleTap}
-                onMouseDown={handleClick}
+                zIndex={200}
+                onClick={(e: any) => {
+                    e.cancelBubble = true;
+                    e.evt?.stopPropagation?.();
+                    handleClick(e);
+                }}
+                onTap={(e: any) => {
+                    e.cancelBubble = true;
+                    e.evt?.stopPropagation?.();
+                    handleTap(e);
+                }}
+                onMouseDown={(e: any) => {
+                    e.cancelBubble = true;
+                    e.evt?.stopPropagation?.();
+                    handleClick(e);
+                }}
             />
             {Array.from({ length: stepCount - 1 }).map((_, i) => (
                 <Line
@@ -125,23 +134,10 @@ const Shape: FC<ShapeProps> = ({ shapeProps, onSelect, onChange }) => {
 
     const { Group, Rect, Circle, Text } = KonvaComponents;
 
-    console.log('🔧 Shape rendering:', {
-        id: shapeProps.id,
-        type: shapeProps.type,
-        shape: 'shape' in shapeProps ? shapeProps.shape : 'none',
-        x: (shapeProps as any).x,
-        y: (shapeProps as any).y,
-        width: 'width' in shapeProps ? shapeProps.width : 'none',
-        height: 'height' in shapeProps ? shapeProps.height : 'none'
-    });
-
     const handleTransformEnd = () => {
-        console.log('🔄 Transform end triggered for:', shapeProps.id);
+        console.log('🔄 Transform:', shapeProps.id);
         const node = shapeRef.current;
-        if (!node) {
-            console.log('❌ No node found in shapeRef');
-            return;
-        }
+        if (!node) return;
         const scaleX = node.scaleX();
         const scaleY = node.scaleY();
         node.scaleX(1); node.scaleY(1);
@@ -166,19 +162,19 @@ const Shape: FC<ShapeProps> = ({ shapeProps, onSelect, onChange }) => {
     };
 
     const handleClick = (e: any) => {
-        console.log('🖱️ Shape clicked:', shapeProps.id, shapeProps.type);
+        console.log('🎯 Selected:', shapeProps.id);
         e.cancelBubble = true;
         onSelect();
     };
 
     const handleTap = (e: any) => {
-        console.log('👆 Shape tapped:', shapeProps.id, shapeProps.type);
+        console.log('🎯 Selected:', shapeProps.id);
         e.cancelBubble = true;
         onSelect();
     };
 
     const handleDragEnd = (e: any) => {
-        console.log('🚚 Drag end for:', shapeProps.id);
+        console.log('🚚 Moved:', shapeProps.id);
         onChange({ ...shapeProps, x: e.target.x(), y: e.target.y() } as any);
     };
 
@@ -203,11 +199,8 @@ const Shape: FC<ShapeProps> = ({ shapeProps, onSelect, onChange }) => {
         listening: true,
     };
 
-    console.log('🎨 Common shape props for', shapeProps.id, ':', commonShapeProps);
-
     switch (shapeProps.type) {
         case 'staircase':
-            console.log('🏢 Rendering staircase component');
             component = <Staircase width={width} height={height} fill={fill} onSelect={() => onSelect()} />;
             break;
         case 'wall':
@@ -215,7 +208,6 @@ const Shape: FC<ShapeProps> = ({ shapeProps, onSelect, onChange }) => {
         case 'table':
             if ('shape' in shapeProps && shapeProps.shape) {
                 if (shapeProps.shape === 'rectangle' || shapeProps.shape === 'square') {
-                    console.log('⬛ Rendering rectangle component for:', shapeProps.id);
                     component = (
                         <Rect
                             width={width}
@@ -228,32 +220,55 @@ const Shape: FC<ShapeProps> = ({ shapeProps, onSelect, onChange }) => {
                             hitStrokeWidth={10}
                             listening={true}
                             opacity={0.8}
-                            onClick={handleClick}
-                            onTap={handleTap}
-                            onMouseDown={handleClick}
+                            zIndex={200}
+                            onClick={(e: any) => {
+                                console.log('🔲 Rect clicked:', shapeProps.id);
+                                e.cancelBubble = true;
+                                e.evt?.stopPropagation?.();
+                                handleClick(e);
+                            }}
+                            onTap={(e: any) => {
+                                e.cancelBubble = true;
+                                e.evt?.stopPropagation?.();
+                                handleTap(e);
+                            }}
+                            onMouseDown={(e: any) => {
+                                e.cancelBubble = true;
+                                e.evt?.stopPropagation?.();
+                                handleClick(e);
+                            }}
                         />
                     );
                 } else if (shapeProps.shape === 'circle') {
-                    console.log('🔵 Rendering circle component for:', shapeProps.id);
                     component = (
                         <Circle
                             radius={width / 2}
                             {...commonShapeProps}
-                            onClick={handleClick}
-                            onTap={handleTap}
+                            zIndex={200}
+                            onClick={(e: any) => {
+                                console.log('🔵 Circle clicked:', shapeProps.id);
+                                e.cancelBubble = true;
+                                e.evt?.stopPropagation?.();
+                                handleClick(e);
+                            }}
+                            onTap={(e: any) => {
+                                e.cancelBubble = true;
+                                e.evt?.stopPropagation?.();
+                                handleTap(e);
+                            }}
+                            onMouseDown={(e: any) => {
+                                e.cancelBubble = true;
+                                e.evt?.stopPropagation?.();
+                                handleClick(e);
+                            }}
                         />
                     );
                 }
-            } else {
-                console.log('❌ No shape property for:', shapeProps.type);
             }
             break;
         default:
-            console.log('❌ Unknown shape type:', (shapeProps as any).type);
             return null;
     }
-
-    console.log('✅ Shape component created for:', shapeProps.id, component ? 'SUCCESS' : 'FAILED');
 
     return (
         <Group
@@ -267,13 +282,21 @@ const Shape: FC<ShapeProps> = ({ shapeProps, onSelect, onChange }) => {
             onTransformEnd={handleTransformEnd}
             listening={true}
             perfectDrawEnabled={false}
+            zIndex={100}
             onClick={(e: any) => {
-                console.log('🎯 Group clicked:', shapeProps.id);
+                e.cancelBubble = true;
+                e.evt?.stopPropagation?.();
                 handleClick(e);
             }}
             onTap={(e: any) => {
-                console.log('🎯 Group tapped:', shapeProps.id);
+                e.cancelBubble = true;
+                e.evt?.stopPropagation?.();
                 handleTap(e);
+            }}
+            onMouseDown={(e: any) => {
+                e.cancelBubble = true;
+                e.evt?.stopPropagation?.();
+                handleClick(e);
             }}
         >
             {component}
@@ -349,46 +372,28 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
     }, [designSize.width, designSize.height, isMounted]);
 
     useEffect(() => {
-        console.log('🎯 Selection useEffect triggered:', {
-            isMounted,
-            stageRef: !!stageRef.current,
-            trRef: !!trRef.current,
-            selectedId,
-            tablesCount: tables.length,
-            elementsCount: elements.length
-        });
-
         if (!isMounted || !stageRef.current || !trRef.current) {
-            console.log('❌ Early return - not ready for selection');
             return;
         }
 
         if (!selectedId) {
-            console.log('🚫 No selection - clearing transformer');
             setTooltipPos(null);
             trRef.current.nodes([]);
             return;
         }
 
-        console.log('🔍 Looking for node with ID:', selectedId);
         const selectedNode = stageRef.current.findOne('#' + selectedId);
         if (selectedNode) {
-            console.log('✅ Found selected node:', selectedId);
             trRef.current.nodes([selectedNode]);
 
             // Configurar transformer basado en el tipo de forma seleccionada
             const allItems = [...tables, ...elements];
             const selectedItem = allItems.find(item => item.id === selectedId);
-            console.log('📋 Selected item:', selectedItem);
 
             if (selectedItem && 'shape' in selectedItem && selectedItem.shape === 'circle') {
-                console.log('🔵 Configuring transformer for circle');
-                // Para círculos, mantener proporción y habilitar solo algunos anchors
                 trRef.current.keepRatio(true);
                 trRef.current.enabledAnchors(['top-left', 'top-right', 'bottom-left', 'bottom-right']);
             } else {
-                console.log('⬛ Configuring transformer for rectangle/other');
-                // Para rectangulos, permitir redimensionamiento libre
                 trRef.current.keepRatio(false);
                 trRef.current.enabledAnchors(['top-left', 'top-right', 'bottom-left', 'bottom-right', 'top-center', 'middle-right', 'bottom-center', 'middle-left']);
             }
@@ -399,35 +404,28 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
                 top: stageBox.top + window.scrollY + nodeBox.y - 120,
                 left: stageBox.left + window.scrollX + nodeBox.x - 50,
             };
-            console.log('📍 Setting tooltip position:', tooltipPosition);
             setTooltipPos(tooltipPosition);
-        } else {
-            console.log('❌ Node not found with ID:', selectedId);
         }
     }, [selectedId, tables, elements, isMounted]);
 
     const addElement = (type: 'table' | 'bar' | 'staircase', shape: 'rectangle' | 'circle' | null) => {
-        console.log('➕ Adding element:', { type, shape });
         const common = { id: `el_${Date.now()}_${Math.random()}`, x: 50, y: 50, rotation: 0 };
         if (type === 'table') {
             const newTable: RestaurantTableData = {
                 ...common, type, shape: shape!, width: shape === 'circle' ? 60 : 120, height: 60, fill: '#89CFF0',
                 label: `Mesa ${tables.length + 1}`, createdAt: new Date(), updatedAt: new Date(), restaurantDesignId: design!.id,
             };
-            console.log('🍽️ New table created:', newTable);
             setTables(prev => [...prev, newTable]);
         } else {
             const newElement = {
                 ...common, type, width: 80, height: type === 'staircase' ? 120 : 60,
                 fill: type === 'bar' ? '#A0A0A0' : '#D2B48C', shape: type === 'bar' ? 'rectangle' : undefined,
             } as RestaurantElement;
-            console.log('🏗️ New element created:', newElement);
             setElements(prev => [...prev, newElement]);
         }
     };
 
     const deleteSelected = () => {
-        console.log('🗑️ Deleting selected:', selectedId);
         if (!selectedId) return;
         setTables(prev => prev.filter(t => t.id !== selectedId));
         setElements(prev => prev.filter(e => e.id !== selectedId));
@@ -435,12 +433,10 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
     };
 
     const updateLabel = (id: string, newLabel: string) => {
-        console.log('📝 Updating label for:', id, 'to:', newLabel);
         setTables(prev => prev.map(t => t.id === id ? { ...t, label: newLabel } : t));
     };
 
     const handleUpdate = (newAttrs: RestaurantTableData | RestaurantElement) => {
-        console.log('🔄 Updating element:', newAttrs.id, newAttrs);
         if (newAttrs.type === 'table') {
             setTables(prev => prev.map(t => t.id === newAttrs.id ? newAttrs as RestaurantTableData : t));
         } else {
@@ -449,18 +445,12 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
     }
 
     const allItems = [...tables, ...elements];
-    console.log('📋 All items:', allItems.length, 'tables:', tables.length, 'elements:', elements.length);
     const selectedItem = allItems.find(item => item.id === selectedId);
-    console.log('🎯 Currently selected item:', selectedItem);
 
     const handleMouseDown = (e: any) => {
-        console.log('🖱️ Stage mouse down:', e.target);
 
         // Obtener el objeto clickeado
         const clickedShape = e.target;
-        console.log('🎯 Clicked target:', clickedShape);
-        console.log('🎯 Target ID:', clickedShape.id ? clickedShape.id() : 'no-id');
-        console.log('🎯 Target attrs:', clickedShape.attrs);
 
         // Buscar si el elemento clickeado o su padre tiene un ID válido
         let targetElement = clickedShape;
@@ -480,25 +470,19 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
             }
         }
 
-        console.log('🎯 Final target ID:', targetId);
-
         if (targetId && allItems.find(item => item.id === targetId)) {
-            console.log('🎯 Found valid item with ID:', targetId);
             setActiveTool('select');
             setSelectedId(targetId);
             return;
         }
 
         const clickedOnEmpty = e.target === e.target.getStage();
-        console.log('🎯 Clicked on empty:', clickedOnEmpty);
         if (clickedOnEmpty) {
             if (activeTool === 'wall') {
-                console.log('🧱 Starting wall drawing');
                 setIsDrawing(true);
                 const pos = e.target.getStage().getPointerPosition();
                 setCurrentWall([pos.x, pos.y, pos.x, pos.y]);
             } else {
-                console.log('🚫 Clearing selection');
                 setSelectedId(null);
             }
         }
@@ -512,7 +496,6 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
 
     const handleMouseUp = () => {
         if (!isDrawing || activeTool !== 'wall') return;
-        console.log('🧱 Finishing wall drawing');
         setIsDrawing(false);
         if (currentWall.length < 4 || (currentWall[0] === currentWall[2] && currentWall[1] === currentWall[3])) {
             setCurrentWall([]);
@@ -535,7 +518,6 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
             rotation: angle,
         };
 
-        console.log('🧱 New wall created:', newWall);
         setElements((prev) => [...prev, newWall]);
         setCurrentWall([]);
     };
@@ -590,14 +572,13 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
                     onMouseDown={handleMouseDown}
                     onMouseMove={handleMouseMove}
                     onMouseUp={handleMouseUp}
+                    listening={true}
                 >
-                    <Layer>
+                    <Layer listening={true}>
                         {allItems.map((item) => {
-                            console.log('🎨 Rendering item:', item.id, item.type, 'shape' in item ? item.shape : 'no-shape');
                             return (
                                 <Shape key={item.id} shapeProps={item}
                                     onSelect={() => {
-                                        console.log(`🎯 Item selected: ${item.id} ${item.type}`);
                                         setActiveTool('select');
                                         setSelectedId(item.id);
                                     }}
@@ -605,7 +586,7 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
                                 />
                             );
                         })}
-                        {isDrawing && <Line points={currentWall} stroke="#333" strokeWidth={5} />}
+                        {isDrawing && <Line points={currentWall} stroke="#333" strokeWidth={5} listening={false} />}
                         <Transformer
                             ref={trRef}
                             boundBoxFunc={(oldBox: any, newBox: any) => (newBox.width < 10 || newBox.height < 10 ? oldBox : newBox)}

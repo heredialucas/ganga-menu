@@ -40,13 +40,13 @@ const Staircase: FC<{ width: number; height: number; fill: string; }> = ({ width
     const stepCount = 5;
     const stepHeight = height / stepCount;
     return (
-        <>
+        <Group>
             <Rect width={width} height={height} stroke="#333" strokeWidth={1} fill={fill} />
             {Array.from({ length: stepCount - 1 }).map((_, i) => (
                 <Line key={i} points={[0, (i + 1) * stepHeight, width, (i + 1) * stepHeight]} stroke="#333" strokeWidth={0.5} />
             ))}
             <Text text="Escalera" fontSize={12} fill="#333" width={width} align="center" verticalAlign="middle" listening={false} />
-        </>
+        </Group>
     );
 };
 

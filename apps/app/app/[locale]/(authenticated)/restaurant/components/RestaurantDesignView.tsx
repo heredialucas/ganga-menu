@@ -45,7 +45,7 @@ const initializeKonva = async () => {
     return KonvaComponents;
 };
 
-const Staircase: FC<{ width: number; height: number; fill: string; }> = ({ width, height, fill }) => {
+const Staircase: FC<{ width: number; height: number; fill: string; onSelect?: () => void; }> = ({ width, height, fill, onSelect }) => {
     const stepCount = 5;
     const stepHeight = height / stepCount;
 
@@ -53,13 +53,54 @@ const Staircase: FC<{ width: number; height: number; fill: string; }> = ({ width
 
     const { Group, Rect, Line, Text } = KonvaComponents;
 
+    const handleClick = (e: any) => {
+        if (onSelect) {
+            e.cancelBubble = true;
+            onSelect();
+        }
+    };
+
+    const handleTap = (e: any) => {
+        if (onSelect) {
+            e.cancelBubble = true;
+            onSelect();
+        }
+    };
+
     return (
         <Group>
-            <Rect width={width} height={height} stroke="#333" strokeWidth={1} fill={fill} />
+            <Rect
+                width={width}
+                height={height}
+                stroke="#333"
+                strokeWidth={1}
+                fill={fill}
+                perfectDrawEnabled={false}
+                shadowForStrokeEnabled={false}
+                listening={true}
+                onClick={handleClick}
+                onTap={handleTap}
+            />
             {Array.from({ length: stepCount - 1 }).map((_, i) => (
-                <Line key={i} points={[0, (i + 1) * stepHeight, width, (i + 1) * stepHeight]} stroke="#333" strokeWidth={0.5} />
+                <Line
+                    key={i}
+                    points={[0, (i + 1) * stepHeight, width, (i + 1) * stepHeight]}
+                    stroke="#333"
+                    strokeWidth={0.5}
+                    listening={false}
+                    perfectDrawEnabled={false}
+                />
             ))}
-            <Text text="Escalera" fontSize={12} fill="#333" width={width} align="center" verticalAlign="middle" listening={false} />
+            <Text
+                text="Escalera"
+                fontSize={12}
+                fill="#333"
+                width={width}
+                align="center"
+                verticalAlign="middle"
+                listening={false}
+                perfectDrawEnabled={false}
+            />
         </Group>
     );
 };
@@ -103,6 +144,20 @@ const Shape: FC<ShapeProps> = ({ shapeProps, onSelect, onChange }) => {
         onChange(newAttrs as RestaurantElement | RestaurantTableData);
     };
 
+    const handleClick = (e: any) => {
+        e.cancelBubble = true;
+        onSelect();
+    };
+
+    const handleTap = (e: any) => {
+        e.cancelBubble = true;
+        onSelect();
+    };
+
+    const handleDragEnd = (e: any) => {
+        onChange({ ...shapeProps, x: e.target.x(), y: e.target.y() } as any);
+    };
+
     let component;
     const label = 'label' in shapeProps ? shapeProps.label : null;
     const width = 'width' in shapeProps ? shapeProps.width : 50;
@@ -113,18 +168,44 @@ const Shape: FC<ShapeProps> = ({ shapeProps, onSelect, onChange }) => {
     const textWidth = ('shape' in shapeProps && shapeProps.shape === 'circle') ? width : width;
     const textHeight = ('shape' in shapeProps && shapeProps.shape === 'circle') ? width : height;
 
+    // Propiedades comunes para mejorar la detección de hits
+    const commonShapeProps = {
+        stroke: '#transparent',
+        strokeWidth: 0,
+        fill: fill,
+        perfectDrawEnabled: false,
+        shadowForStrokeEnabled: false,
+        hitStrokeWidth: 0,
+        listening: true,
+    };
+
     switch (shapeProps.type) {
         case 'staircase':
-            component = <Staircase width={width} height={height} fill={fill} />;
+            component = <Staircase width={width} height={height} fill={fill} onSelect={() => onSelect()} />;
             break;
         case 'wall':
         case 'bar':
         case 'table':
             if ('shape' in shapeProps) {
                 if (shapeProps.shape === 'rectangle' || shapeProps.shape === 'square') {
-                    component = <Rect width={width} height={height} fill={fill} />;
+                    component = (
+                        <Rect
+                            width={width}
+                            height={height}
+                            {...commonShapeProps}
+                            onClick={handleClick}
+                            onTap={handleTap}
+                        />
+                    );
                 } else {
-                    component = <Circle radius={width / 2} fill={fill} />;
+                    component = (
+                        <Circle
+                            radius={width / 2}
+                            {...commonShapeProps}
+                            onClick={handleClick}
+                            onTap={handleTap}
+                        />
+                    );
                 }
             }
             break;
@@ -133,10 +214,16 @@ const Shape: FC<ShapeProps> = ({ shapeProps, onSelect, onChange }) => {
 
     return (
         <Group
-            ref={shapeRef} id={shapeProps.id} x={(shapeProps as any).x || 0} y={(shapeProps as any).y || 0}
-            rotation={(shapeProps as any).rotation || 0} draggable onClick={onSelect} onTap={onSelect}
-            onDragEnd={(e: any) => onChange({ ...shapeProps, x: e.target.x(), y: e.target.y() } as any)}
+            ref={shapeRef}
+            id={shapeProps.id}
+            x={(shapeProps as any).x || 0}
+            y={(shapeProps as any).y || 0}
+            rotation={(shapeProps as any).rotation || 0}
+            draggable
+            onDragEnd={handleDragEnd}
             onTransformEnd={handleTransformEnd}
+            listening={true}
+            perfectDrawEnabled={false}
         >
             {component}
             {label && (
@@ -149,6 +236,7 @@ const Shape: FC<ShapeProps> = ({ shapeProps, onSelect, onChange }) => {
                     align="center"
                     verticalAlign="middle"
                     listening={false}
+                    perfectDrawEnabled={false}
                 />
             )}
         </Group>
@@ -221,6 +309,19 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
         const selectedNode = stageRef.current.findOne('#' + selectedId);
         if (selectedNode) {
             trRef.current.nodes([selectedNode]);
+
+            // Configurar transformer basado en el tipo de forma seleccionada
+            const selectedItem = allItems.find(item => item.id === selectedId);
+            if (selectedItem && 'shape' in selectedItem && selectedItem.shape === 'circle') {
+                // Para círculos, mantener proporción y habilitar solo algunos anchors
+                trRef.current.keepRatio(true);
+                trRef.current.enabledAnchors(['top-left', 'top-right', 'bottom-left', 'bottom-right']);
+            } else {
+                // Para rectangulos, permitir redimensionamiento libre
+                trRef.current.keepRatio(false);
+                trRef.current.enabledAnchors(['top-left', 'top-right', 'bottom-left', 'bottom-right', 'top-center', 'middle-right', 'bottom-center', 'middle-left']);
+            }
+
             const stageBox = stageRef.current.container().getBoundingClientRect();
             const nodeBox = selectedNode.getClientRect({ relativeTo: stageRef.current });
             setTooltipPos({
@@ -380,16 +481,20 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
                             ref={trRef}
                             boundBoxFunc={(oldBox: any, newBox: any) => (newBox.width < 10 || newBox.height < 10 ? oldBox : newBox)}
                             rotationSnaps={[0, 45, 90, 135, 180, 225, 270, 315]}
-                            rotateAnchorOffset={40}
-                            anchorSize={12}
+                            rotateAnchorOffset={50}
+                            anchorSize={14}
                             anchorFill={'#4F46E5'}
                             anchorStroke={'#312E81'}
                             anchorStrokeWidth={2}
+                            anchorCornerRadius={3}
                             borderStroke={'#4F46E5'}
                             borderStrokeWidth={2}
                             borderDash={[4, 4]}
                             keepRatio={false}
+                            centeredScaling={false}
                             enabledAnchors={['top-left', 'top-right', 'bottom-left', 'bottom-right', 'top-center', 'middle-right', 'bottom-center', 'middle-left']}
+                            ignoreStroke={true}
+                            flipEnabled={false}
                         />
                     </Layer>
                 </Stage>

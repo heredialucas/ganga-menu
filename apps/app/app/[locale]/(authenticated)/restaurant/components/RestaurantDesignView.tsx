@@ -81,9 +81,12 @@ const Staircase: FC<{ width: number; height: number; fill: string; onSelect?: ()
                 fill={fill}
                 perfectDrawEnabled={false}
                 shadowForStrokeEnabled={false}
+                hitStrokeWidth={10}
                 listening={true}
+                opacity={0.8}
                 onClick={handleClick}
                 onTap={handleTap}
+                onMouseDown={handleClick}
             />
             {Array.from({ length: stepCount - 1 }).map((_, i) => (
                 <Line
@@ -217,9 +220,17 @@ const Shape: FC<ShapeProps> = ({ shapeProps, onSelect, onChange }) => {
                         <Rect
                             width={width}
                             height={height}
-                            {...commonShapeProps}
+                            stroke="#000"
+                            strokeWidth={1}
+                            fill={fill}
+                            perfectDrawEnabled={false}
+                            shadowForStrokeEnabled={false}
+                            hitStrokeWidth={10}
+                            listening={true}
+                            opacity={0.8}
                             onClick={handleClick}
                             onTap={handleTap}
+                            onMouseDown={handleClick}
                         />
                     );
                 } else if (shapeProps.shape === 'circle') {
@@ -256,6 +267,14 @@ const Shape: FC<ShapeProps> = ({ shapeProps, onSelect, onChange }) => {
             onTransformEnd={handleTransformEnd}
             listening={true}
             perfectDrawEnabled={false}
+            onClick={(e: any) => {
+                alert(`🎯 Group clicked: ${shapeProps.id}`);
+                handleClick(e);
+            }}
+            onTap={(e: any) => {
+                alert(`🎯 Group tapped: ${shapeProps.id}`);
+                handleTap(e);
+            }}
         >
             {component}
             {label && (

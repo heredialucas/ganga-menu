@@ -65,13 +65,22 @@ const Shape: FC<ShapeProps> = ({ shapeProps, onSelect, onChange }) => {
         const scaleX = node.scaleX();
         const scaleY = node.scaleY();
         node.scaleX(1); node.scaleY(1);
+
+        const baseProps = shapeProps as any;
+        let newWidth = Math.max(10, baseProps.width * scaleX);
+        let newHeight = Math.max(10, baseProps.height * scaleY);
+
+        if ('shape' in shapeProps && shapeProps.shape === 'circle') {
+            const diameter = Math.max(newWidth, newHeight);
+            newWidth = diameter;
+            newHeight = diameter;
+        }
+
         const newAttrs = {
             ...shapeProps,
             x: node.x(), y: node.y(), rotation: node.rotation(),
-            width: Math.max(10, (shapeProps as any).width * scaleX),
-            height: ('shape' in shapeProps && shapeProps.shape === 'circle')
-                ? Math.max(10, (shapeProps as any).width * scaleX)
-                : Math.max(10, (shapeProps as any).height * scaleY),
+            width: newWidth,
+            height: newHeight,
         };
         onChange(newAttrs as RestaurantElement | RestaurantTableData);
     };
@@ -178,8 +187,8 @@ export function RestaurantDesignView({ config, design }: {
             const stageBox = stageRef.current.container().getBoundingClientRect();
             const nodeBox = selectedNode.getClientRect({ relativeTo: stageRef.current });
             setTooltipPos({
-                top: stageBox.top + window.scrollY + nodeBox.y - 70,
-                left: stageBox.left + window.scrollX + nodeBox.x,
+                top: stageBox.top + window.scrollY + nodeBox.y - 120,
+                left: stageBox.left + window.scrollX + nodeBox.x - 50,
             });
         }
     }, [selectedId, tables, elements]);
@@ -328,7 +337,18 @@ export function RestaurantDesignView({ config, design }: {
                                             />
                                         ))}
                                         {isDrawing && <Line points={currentWall} stroke="#333" strokeWidth={5} />}
-                                        <Transformer ref={trRef} boundBoxFunc={(oldBox, newBox) => newBox.width < 10 || newBox.height < 10 ? oldBox : newBox} />
+                                        <Transformer
+                                            ref={trRef}
+                                            boundBoxFunc={(oldBox, newBox) => (newBox.width < 10 || newBox.height < 10 ? oldBox : newBox)}
+                                            rotationSnaps={[0, 45, 90, 135, 180, 225, 270, 315]}
+                                            rotateAnchorOffset={30}
+                                            anchorSize={10}
+                                            anchorFill={'#fff'}
+                                            anchorStroke={'#666'}
+                                            anchorStrokeWidth={1}
+                                            borderStroke={'#666'}
+                                            borderDash={[3, 3]}
+                                        />
                                     </Layer>
                                 </Stage>
                             </div>

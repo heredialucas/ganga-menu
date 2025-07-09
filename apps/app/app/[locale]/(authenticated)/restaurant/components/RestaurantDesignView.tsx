@@ -232,6 +232,7 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
     const [isDrawing, setIsDrawing] = useState(false);
     const [currentWall, setCurrentWall] = useState<number[]>([]);
     const [konvaReady, setKonvaReady] = useState(false);
+    const [tooltipPos, setTooltipPos] = useState<{ top: number, left: number } | null>(null);
 
     const stageRef = useRef<any>(null);
     const layerRef = useRef<any>(null);
@@ -274,9 +275,19 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
             if (selectedNode) {
                 trRef.current.nodes([selectedNode]);
                 layerRef.current?.batchDraw();
+
+                // Configurar posición del tooltip
+                const stageBox = stageRef.current.container().getBoundingClientRect();
+                const nodeBox = selectedNode.getClientRect({ relativeTo: stageRef.current });
+                const tooltipPosition = {
+                    top: stageBox.top + window.scrollY + nodeBox.y - 120,
+                    left: stageBox.left + window.scrollX + nodeBox.x - 50,
+                };
+                setTooltipPos(tooltipPosition);
             }
         } else {
             trRef.current.nodes([]);
+            setTooltipPos(null);
         }
     }, [selectedId, konvaReady]);
 
@@ -374,6 +385,22 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
         setSelectedId(null);
     };
 
+    const updateLabel = (id: string, newLabel: string) => {
+        setTables(prev => prev.map(t => t.id === id ? { ...t, label: newLabel } : t));
+    };
+
+    const updateColor = (id: string, newColor: string) => {
+        const allItems = [...tables, ...elements];
+        const item = allItems.find(item => item.id === id);
+        if (!item) return;
+
+        if (item.type === 'table') {
+            setTables(prev => prev.map(t => t.id === id ? { ...t, fill: newColor } : t));
+        } else {
+            setElements(prev => prev.map(e => e.id === id ? { ...e, fill: newColor } : e));
+        }
+    };
+
     if (!konvaReady) {
         return <div className="h-96 bg-gray-50 border rounded-lg flex items-center justify-center">Cargando diseñador...</div>;
     }
@@ -439,6 +466,56 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
                     </AlertDialogContent>
                 </AlertDialog>
             </div>
+
+            {tooltipPos && selectedId && (() => {
+                const allItems = [...tables, ...elements];
+                const selectedItem = allItems.find(item => item.id === selectedId);
+                if (!selectedItem) return null;
+
+                return (
+                    <div
+                        className="flex items-center gap-2 p-2 rounded-lg bg-background border shadow-lg z-50"
+                        style={{
+                            position: 'absolute',
+                            top: tooltipPos.top,
+                            left: tooltipPos.left,
+                            zIndex: 50
+                        }}
+                    >
+                        {selectedItem.type === 'table' && 'label' in selectedItem && (
+                            <div className="flex items-center gap-2">
+                                <Type className="h-4 w-4" />
+                                <Input
+                                    type="text"
+                                    value={selectedItem.label || ''}
+                                    onChange={(e) => updateLabel(selectedId, e.target.value)}
+                                    className="h-8 w-24"
+                                    placeholder="Nombre"
+                                />
+                            </div>
+                        )}
+                        {'fill' in selectedItem && (
+                            <input
+                                type="color"
+                                value={selectedItem.fill || '#000'}
+                                onChange={(e) => updateColor(selectedId, e.target.value)}
+                                className="w-8 h-8 p-0 border-0 rounded cursor-pointer"
+                                title="Cambiar color"
+                            />
+                        )}
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={deleteSelected}
+                            className="text-destructive hover:text-destructive/80"
+                            title="Eliminar elemento"
+                        >
+                            <Trash2 className="h-4 w-4" />
+                        </Button>
+                    </div>
+                );
+            })()}
 
             <div ref={containerRef} className="bg-gray-50 border rounded-lg overflow-x-auto relative mt-4" style={{ cursor: activeTool === 'wall' ? 'crosshair' : 'default' }}>
                 <Stage

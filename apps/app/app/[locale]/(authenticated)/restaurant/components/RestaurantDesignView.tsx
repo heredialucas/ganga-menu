@@ -71,7 +71,6 @@ const KonvaElement: FC<ElementProps> = ({ element, isSelected, onSelect, onChang
     }, [isSelected]);
 
     const handleDragEnd = (e: any) => {
-        console.log('🚚 Moved:', element.id);
         const node = e.target;
         onChange({
             ...element,
@@ -81,15 +80,12 @@ const KonvaElement: FC<ElementProps> = ({ element, isSelected, onSelect, onChang
     };
 
     const handleTransformEnd = (e: any) => {
-        console.log('🔄 Transform:', element.id, 'Type:', element.type);
         const node = shapeRef.current;
         if (!node) return;
 
         const scaleX = node.scaleX();
         const scaleY = node.scaleY();
         const rotation = node.rotation();
-
-        console.log('📐 Transform data:', { scaleX, scaleY, rotation });
 
         // Reset scale
         node.scaleX(1);
@@ -119,7 +115,6 @@ const KonvaElement: FC<ElementProps> = ({ element, isSelected, onSelect, onChang
     };
 
     const handleClick = () => {
-        console.log('🎯 Selected:', element.id, element.type);
         onSelect();
     };
 
@@ -189,10 +184,10 @@ const KonvaElement: FC<ElementProps> = ({ element, isSelected, onSelect, onChang
                         text={label}
                         fontSize={14}
                         fill="#333"
+                        x={-width / 2}
+                        y={-7}
                         width={width}
-                        height={width}
                         align="center"
-                        verticalAlign="middle"
                         listening={false}
                     />
                 )}
@@ -290,8 +285,48 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
     const handleStageClick = (e: any) => {
         const clickedOnEmpty = e.target === e.target.getStage();
         if (clickedOnEmpty) {
-            setSelectedId(null);
+            if (activeTool === 'wall') {
+                setIsDrawing(true);
+                const pos = e.target.getStage().getPointerPosition();
+                setCurrentWall([pos.x, pos.y, pos.x, pos.y]);
+            } else {
+                setSelectedId(null);
+            }
         }
+    };
+
+    const handleMouseMove = (e: any) => {
+        if (!isDrawing || activeTool !== 'wall') return;
+        const pos = e.target.getStage().getPointerPosition();
+        setCurrentWall(prev => [prev[0], prev[1], pos.x, pos.y]);
+    };
+
+    const handleMouseUp = () => {
+        if (!isDrawing || activeTool !== 'wall') return;
+        setIsDrawing(false);
+        if (currentWall.length < 4 || (currentWall[0] === currentWall[2] && currentWall[1] === currentWall[3])) {
+            setCurrentWall([]);
+            return;
+        }
+
+        const [x1, y1, x2, y2] = currentWall;
+        const length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+        const angle = (Math.atan2(y2 - y1, x2 - x1) * 180) / Math.PI;
+
+        const newWall: RestaurantElement = {
+            id: `wall_${Date.now()}`,
+            type: 'wall',
+            shape: 'rectangle',
+            x: x1,
+            y: y1,
+            width: length,
+            height: 5,
+            fill: '#333',
+            rotation: angle,
+        };
+
+        setElements((prev) => [...prev, newWall]);
+        setCurrentWall([]);
     };
 
     const handleElementChange = (newAttrs: any) => {
@@ -349,6 +384,9 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
                 <Button type="button" variant={activeTool === 'select' ? 'secondary' : 'outline'} onClick={() => setActiveTool('select')}>
                     <MousePointer className="mr-2 h-4" /> Seleccionar
                 </Button>
+                <Button type="button" variant={activeTool === 'wall' ? 'secondary' : 'outline'} onClick={() => setActiveTool('wall')}>
+                    <Pen className="mr-2 h-4" /> Pared
+                </Button>
                 <Popover>
                     <PopoverTrigger asChild>
                         <Button type="button" variant="outline">
@@ -379,15 +417,38 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
                 <Button type="button" variant="outline" onClick={deleteSelected} disabled={!selectedId}>
                     <Trash2 className="mr-2 h-4" /> Eliminar
                 </Button>
+                <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                        <Button type="button" variant="outline" disabled={!tables.length && !elements.length}>
+                            <Trash2 className="mr-2 h-4" /> Limpiar
+                        </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                Esta acción no se puede deshacer. Se eliminará todo el diseño.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => { setElements([]); setTables([]); setSelectedId(null); }}>
+                                Confirmar
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
             </div>
 
-            <div ref={containerRef} className="bg-gray-50 border rounded-lg overflow-x-auto relative mt-4">
+            <div ref={containerRef} className="bg-gray-50 border rounded-lg overflow-x-auto relative mt-4" style={{ cursor: activeTool === 'wall' ? 'crosshair' : 'default' }}>
                 <Stage
                     width={stageSize.width}
                     height={stageSize.height}
                     ref={stageRef}
                     onClick={handleStageClick}
                     onTap={handleStageClick}
+                    onMouseMove={handleMouseMove}
+                    onMouseUp={handleMouseUp}
                 >
                     <Layer ref={layerRef}>
                         {allItems.map((item) => (
@@ -399,6 +460,8 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
                                 onChange={handleElementChange}
                             />
                         ))}
+
+                        {isDrawing && <Line points={currentWall} stroke="#333" strokeWidth={5} listening={false} />}
 
                         <Transformer
                             ref={trRef}

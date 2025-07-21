@@ -160,6 +160,7 @@ model RestaurantConfig {
   slug        String   @unique @default("mi-restaurante") // slug único para la URL
   themeColor  String   @default("green") // green, red, blue, yellow, brown
   waiterCode  String   @default("1234") // código para que los mozos accedan
+  kitchenCode String   @default("5678") // código para que la cocina acceda
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

@@ -38,6 +38,7 @@ export interface RestaurantConfigData {
     slug: string;
     themeColor: string;
     waiterCode: string;
+    kitchenCode: string;
     isActive: boolean;
     createdById: string;
     createdAt: Date;

@@ -66,7 +66,9 @@ const PUBLIC_ROUTES = [
   '/sign-up',
   '/api/webhooks',
   '/access-denied',
-  // Removed /menu from public routes since it's now an authenticated section
+  '/menu', // Menu público - accesible sin autenticación
+  '/waiter', // Waiter - requiere código pero no autenticación de usuario
+  '/kitchen', // Kitchen - requiere código pero no autenticación de usuario
 ];
 
 // Authentication cookie name

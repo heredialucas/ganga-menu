@@ -586,6 +586,17 @@
         "markDelivered": "Marcar Entregado",
         "updating": "Actualizando..."
       }
+    },
+    "kitchen": {
+      "title": "Panel de Cocina",
+      "auth": {
+        "title": "Acceso de Cocina",
+        "code": "Código de Acceso",
+        "enter": "Ingresar",
+        "invalidCode": "Código incorrecto",
+        "placeholder": "Ingresa el código",
+        "codeRequired": "Código requerido"
+      }
     }
   }
 }

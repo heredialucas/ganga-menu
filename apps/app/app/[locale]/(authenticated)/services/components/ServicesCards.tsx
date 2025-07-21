@@ -9,7 +9,7 @@ import { ChefHat, UtensilsCrossed, Copy, ExternalLink, Save, QrCode, Download } 
 import type { Dictionary } from '@repo/internationalization';
 import { toast } from 'sonner';
 import { toDataURL } from 'qrcode';
-import { updateWaiterCode } from '../actions';
+import { updateWaiterCode, updateKitchenCode } from '../actions';
 
 interface ServicesCardsProps {
     restaurantConfig: RestaurantConfigData;
@@ -82,6 +82,7 @@ const ShareableLink = ({ link, linkName, onCopy }: ShareableLinkProps) => {
 export function ServicesCards({ restaurantConfig, dictionary, locale }: ServicesCardsProps) {
     const [isPending, startTransition] = useTransition();
     const [waiterCode, setWaiterCode] = useState(restaurantConfig.waiterCode);
+    const [kitchenCode, setKitchenCode] = useState(restaurantConfig.kitchenCode || '5678');
 
     const kitchenLink = `${window.location.origin}/${locale}/kitchen/${restaurantConfig.slug}`;
     const waiterLink = `${window.location.origin}/${locale}/waiter/${restaurantConfig.slug}`;
@@ -91,11 +92,29 @@ export function ServicesCards({ restaurantConfig, dictionary, locale }: Services
         toast.success(`Enlace para ${name} copiado al portapapeles.`);
     };
 
-    const handleUpdateCode = () => {
+    const handleUpdateWaiterCode = () => {
         const promise = async () => {
             const formData = new FormData();
             formData.append('code', waiterCode);
             const result = await updateWaiterCode(formData);
+            if (!result.success) {
+                throw new Error(result.message);
+            }
+            return result;
+        };
+
+        toast.promise(promise(), {
+            loading: 'Guardando nuevo código...',
+            success: (result) => `${result.message}`,
+            error: (err) => `Error: ${err.message}`,
+        });
+    };
+
+    const handleUpdateKitchenCode = () => {
+        const promise = async () => {
+            const formData = new FormData();
+            formData.append('code', kitchenCode);
+            const result = await updateKitchenCode(formData);
             if (!result.success) {
                 throw new Error(result.message);
             }
@@ -138,7 +157,7 @@ export function ServicesCards({ restaurantConfig, dictionary, locale }: Services
                                 onChange={(e) => setWaiterCode(e.target.value)}
                                 className="flex-grow"
                             />
-                            <Button type="button" onClick={handleUpdateCode} disabled={isPending} className="flex-shrink-0">
+                            <Button type="button" onClick={handleUpdateWaiterCode} disabled={isPending} className="flex-shrink-0">
                                 <Save className="mr-2 h-4 w-4" />
                                 {isPending ? 'Guardando...' : 'Guardar'}
                             </Button>
@@ -166,15 +185,34 @@ export function ServicesCards({ restaurantConfig, dictionary, locale }: Services
                     <div className="flex items-center gap-4">
                         <ChefHat className="h-8 w-8 text-orange-500" />
                         <div>
-                            <CardTitle>Acceso para Cocina</CardTitle>
+                            <CardTitle>Gestión de Cocina</CardTitle>
                             <CardDescription>
-                                Comparte el enlace de acceso directo al panel de cocina.
+                                Modifica el código de acceso y comparte el enlace.
                             </CardDescription>
                         </div>
                     </div>
                 </CardHeader>
                 <CardContent className="flex-grow flex flex-col p-6">
-                    <div className="mt-auto">
+                    <div>
+                        <label className="text-sm font-medium">Código de Acceso para Cocina</label>
+                        <p className="text-sm text-muted-foreground mb-2">
+                            Este es el código que la cocina usará para acceder.
+                        </p>
+                        <div className="flex flex-col sm:flex-row w-full items-stretch sm:items-center gap-2">
+                            <Input
+                                type="text"
+                                placeholder="4+ dígitos"
+                                value={kitchenCode}
+                                onChange={(e) => setKitchenCode(e.target.value)}
+                                className="flex-grow"
+                            />
+                            <Button type="button" onClick={handleUpdateKitchenCode} disabled={isPending} className="flex-shrink-0">
+                                <Save className="mr-2 h-4 w-4" />
+                                {isPending ? 'Guardando...' : 'Guardar'}
+                            </Button>
+                        </div>
+                    </div>
+                    <div className="mt-auto pt-6">
                         <label className="text-sm font-medium">Enlace de Acceso para Cocina</label>
                         <ShareableLink
                             link={kitchenLink}

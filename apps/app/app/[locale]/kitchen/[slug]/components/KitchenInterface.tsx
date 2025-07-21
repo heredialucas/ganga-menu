@@ -18,6 +18,7 @@ import {
 import { Card, CardHeader, CardContent } from '@repo/design-system/components/ui/card';
 import { Badge } from '@repo/design-system/components/ui/badge';
 import { useSocket } from '@/hooks/useSocket';
+import KitchenAuth from './KitchenAuth';
 
 interface KitchenInterfaceProps {
     restaurantConfig: RestaurantConfigData;
@@ -30,10 +31,9 @@ export default function KitchenInterface({
     orders,
     dictionary
 }: KitchenInterfaceProps) {
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [orderFilter, setOrderFilter] = useState<'all' | 'in_progress' | 'ready'>('all');
     const [kitchenOrders, setKitchenOrders] = useState<OrderData[]>(orders);
-
-
     const [isConnected, setIsConnected] = useState(false);
 
     // WebSocket connection para tiempo real
@@ -68,6 +68,17 @@ export default function KitchenInterface({
     useEffect(() => {
         setIsConnected(socketConnected);
     }, [socketConnected]);
+
+    if (!isAuthenticated) {
+        return (
+            <KitchenAuth
+                slug={restaurantConfig.slug}
+                restaurantName={restaurantConfig.name}
+                dictionary={dictionary}
+                onAuthenticated={() => setIsAuthenticated(true)}
+            />
+        );
+    }
 
     const getOrderConfig = (status: OrderData['status']) => {
         switch (status) {

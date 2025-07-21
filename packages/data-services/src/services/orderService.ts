@@ -257,6 +257,27 @@ export async function verifyWaiterCode(restaurantSlug: string, code: string): Pr
 }
 
 /**
+ * Verificar código de cocina
+ */
+export async function verifyKitchenCode(restaurantSlug: string, code: string): Promise<boolean> {
+    try {
+        const restaurantConfig = await database.restaurantConfig.findUnique({
+            where: { slug: restaurantSlug },
+            select: { kitchenCode: true }
+        });
+
+        if (!restaurantConfig) {
+            return false;
+        }
+
+        return restaurantConfig.kitchenCode === code;
+    } catch (error) {
+        console.error("Error al verificar código de cocina:", error);
+        return false;
+    }
+}
+
+/**
  * Marcar todas las órdenes de una mesa como pagadas
  */
 export async function markTableAsPaid(tableId: string): Promise<OrderData[]> {

@@ -537,6 +537,20 @@
         "error_message": "Error al enviar el mensaje. Por favor, inténtalo de nuevo más tarde."
       }
     },
+    "feedback": {
+      "title": "Enviar Feedback",
+      "name": "Nombre",
+      "email": "Email",
+      "message": "Mensaje",
+      "namePlaceholder": "Tu nombre",
+      "emailPlaceholder": "tu@email.com",
+      "messagePlaceholder": "Cuéntanos qué piensas...",
+      "cancel": "Cancelar",
+      "send": "Enviar",
+      "sending": "Enviando...",
+      "success": "¡Gracias por tu feedback!",
+      "error": "Error al enviar feedback. Inténtalo de nuevo."
+    },
     "waiter": {
       "title": "Sistema de Órdenes",
       "auth": {

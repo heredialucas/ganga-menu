@@ -8,6 +8,7 @@ import { UserHeaderServer } from './components/user-header/userHeaderServer';
 import { getRestaurantConfig } from '@repo/data-services/src/services/restaurantConfigService';
 import { RestaurantConfigProvider } from '@/store/restaurant-config-context';
 import { Toaster } from 'sonner';
+import { FeedbackWidget } from '@/components/FeedbackWidget';
 
 export default async function AuthenticatedLayout({
   children,
@@ -44,6 +45,7 @@ export default async function AuthenticatedLayout({
           </div>
         </div>
         <Toaster />
+        <FeedbackWidget dictionary={dictionary} />
       </RestaurantConfigProvider>
     </SidebarProvider>
   );

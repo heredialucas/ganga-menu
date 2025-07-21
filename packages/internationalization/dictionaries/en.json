@@ -183,6 +183,20 @@
       "menu": "Link to Public Menu",
       "kitchen": "Link to Kitchen View",
       "waiter": "Link to Waiter View"
+    },
+    "feedback": {
+      "title": "Send Feedback",
+      "name": "Name",
+      "email": "Email",
+      "message": "Message",
+      "namePlaceholder": "Your name",
+      "emailPlaceholder": "your@email.com",
+      "messagePlaceholder": "Tell us what you think...",
+      "cancel": "Cancel",
+      "send": "Send",
+      "sending": "Sending...",
+      "success": "Thank you for your feedback!",
+      "error": "Error sending feedback. Please try again."
     }
   },
   "web": {

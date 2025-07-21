@@ -103,6 +103,20 @@
         "title": "Interne Tools für AppWise",
         "description": "Interne Tools für AppWise, die Ihnen bei der Verwaltung unserer Produkte und Dienstleistungen helfen."
       }
+    },
+    "feedback": {
+      "title": "Feedback senden",
+      "name": "Name",
+      "email": "E-Mail",
+      "message": "Nachricht",
+      "namePlaceholder": "Ihr Name",
+      "emailPlaceholder": "ihre@email.com",
+      "messagePlaceholder": "Erzählen Sie uns, was Sie denken...",
+      "cancel": "Abbrechen",
+      "send": "Senden",
+      "sending": "Senden...",
+      "success": "Vielen Dank für Ihr Feedback!",
+      "error": "Fehler beim Senden des Feedbacks. Bitte versuchen Sie es erneut."
     }
   },
   "web": {

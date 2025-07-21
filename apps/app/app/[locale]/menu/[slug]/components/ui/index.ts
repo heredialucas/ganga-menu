@@ -8,6 +8,7 @@ export { default as EmptyState } from './EmptyState';
 export { default as MenuFooter } from './MenuFooter';
 export { default as DecorativeElements } from './DecorativeElements';
 export { default as ImageModal } from './ImageModal';
+export { default as OrderCart } from './OrderCart';
 export { SnowParticlesWrapper } from './SnowParticlesWrapper';
 
 // Tipos

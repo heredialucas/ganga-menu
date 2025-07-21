@@ -222,16 +222,15 @@ model RestaurantTable {
 }
 
 enum OrderStatus {
-  PENDING // Pendiente
-  IN_PROGRESS // En preparación
-  READY // Listo
-  DELIVERED // Entregado
-  CANCELLED // Cancelado
+  ACTIVE // Órdenes activas/en proceso (pendientes y en preparación)
+  READY // Listas/Entregadas
+  CANCELLED // Canceladas
+  PAID // Pagadas - mesa liberada
 }
 
 model Order {
   id         String      @id @default(uuid())
-  status     OrderStatus @default(PENDING)
+  status     OrderStatus @default(ACTIVE)
   total      Float       @default(0)
   notes      String? // Notas especiales del pedido
   waiterName String? // Nombre del mozo que tomó la orden

@@ -2,7 +2,7 @@
 
 import { updateOrderStatus } from '@repo/data-services'
 
-export async function updateOrderStatusAction(orderId: string, status: 'PENDING' | 'IN_PROGRESS' | 'READY' | 'DELIVERED' | 'CANCELLED') {
+export async function updateOrderStatusAction(orderId: string, status: 'ACTIVE' | 'READY' | 'CANCELLED') {
     try {
         const order = await updateOrderStatus(orderId, status);
         return { success: true, order };

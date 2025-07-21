@@ -3,10 +3,11 @@
 import dynamic from 'next/dynamic';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/design-system/components/ui/tabs';
 import { RestaurantConfigForm } from './RestaurantConfigForm';
+import { TableQRGenerator } from './TableQRGenerator';
 import type { RestaurantConfigData } from '@repo/data-services/src/services/restaurantConfigService';
 import type { RestaurantDesignData } from '@repo/data-services/src/services/restaurantDesignService';
 import type { Dictionary } from '@repo/internationalization';
-import { Settings, LayoutDashboard } from 'lucide-react';
+import { Settings, LayoutDashboard, QrCode } from 'lucide-react';
 import { Skeleton } from '@repo/design-system/components/ui/skeleton';
 
 const RestaurantDesignView = dynamic(
@@ -32,7 +33,7 @@ interface RestaurantViewManagerProps {
 export function RestaurantViewManager({ config, design, dictionary, appUrl }: RestaurantViewManagerProps) {
     return (
         <Tabs defaultValue="config" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="config" className="gap-2">
                     <Settings className="h-4 w-4" />
                     Configuración
@@ -40,6 +41,10 @@ export function RestaurantViewManager({ config, design, dictionary, appUrl }: Re
                 <TabsTrigger value="design" className="gap-2">
                     <LayoutDashboard className="h-4 w-4" />
                     Diseño
+                </TabsTrigger>
+                <TabsTrigger value="qr" className="gap-2">
+                    <QrCode className="h-4 w-4" />
+                    QR por Mesa
                 </TabsTrigger>
             </TabsList>
             <TabsContent value="config" className="mt-6">
@@ -53,6 +58,12 @@ export function RestaurantViewManager({ config, design, dictionary, appUrl }: Re
                 <RestaurantDesignView
                     config={config}
                     design={design}
+                />
+            </TabsContent>
+            <TabsContent value="qr" className="mt-6">
+                <TableQRGenerator
+                    config={config}
+                    appUrl={appUrl}
                 />
             </TabsContent>
         </Tabs>

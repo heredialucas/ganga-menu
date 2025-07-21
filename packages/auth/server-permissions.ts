@@ -248,6 +248,12 @@ export const SIDEBAR_CONFIG: SidebarItem[] = [
         href: '/services',
         icon: 'Settings',
         anyRequiredPermissions: ['waiter:view_orders', 'kitchen:view_orders'],
+    }, {
+        label: 'sidebar.orders',
+        mobileLabel: 'sidebar.orders',
+        href: '/orders',
+        icon: 'ClipboardList',
+        allRequiredPermissions: ['orders:view'],
     },
 ];
 

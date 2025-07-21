@@ -1,6 +1,6 @@
 'use server'
 
-import { createOrder, verifyWaiterCode, getOrdersByRestaurant, updateOrderStatus } from '@repo/data-services'
+import { createOrder, verifyWaiterCode, getOrdersByRestaurant, updateOrderStatus, markTableAsPaid } from '@repo/data-services'
 
 export interface CreateOrderAction {
     tableId: string;
@@ -40,7 +40,7 @@ export async function getRestaurantOrdersAction(restaurantConfigId: string) {
     }
 }
 
-export async function updateOrderStatusAction(orderId: string, status: 'PENDING' | 'IN_PROGRESS' | 'READY' | 'DELIVERED' | 'CANCELLED') {
+export async function updateOrderStatusAction(orderId: string, status: 'ACTIVE' | 'READY' | 'CANCELLED' | 'PAID') {
     try {
         const order = await updateOrderStatus(orderId, status);
         return { success: true, order };
@@ -76,5 +76,22 @@ export async function verifyWaiterCodeAction(slug: string, code: string) {
             isValid: false,
             error: 'Error verifying code'
         }
+    }
+}
+
+export async function markTableAsPaidAction(tableId: string) {
+    try {
+        const orders = await markTableAsPaid(tableId);
+        return {
+            success: true,
+            orders,
+            message: `Mesa marcada como pagada. ${orders.length} órdenes actualizadas.`
+        };
+    } catch (error) {
+        console.error('Error marking table as paid:', error);
+        return {
+            success: false,
+            error: error instanceof Error ? error.message : 'Error al marcar mesa como pagada'
+        };
     }
 }

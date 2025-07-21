@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dictionary } from '@repo/internationalization';
 import { RestaurantConfigData } from '@repo/data-services/src/services/restaurantConfigService';
 import { OrderData } from '@repo/data-services';
@@ -12,8 +12,12 @@ import {
     StickyNote,
     XCircle,
     HelpCircle,
+    Wifi,
+    WifiOff,
 } from 'lucide-react';
 import { Card, CardHeader, CardContent } from '@repo/design-system/components/ui/card';
+import { Badge } from '@repo/design-system/components/ui/badge';
+import { useSocket } from '@/hooks/useSocket';
 
 interface KitchenInterfaceProps {
     restaurantConfig: RestaurantConfigData;
@@ -27,32 +31,69 @@ export default function KitchenInterface({
     dictionary
 }: KitchenInterfaceProps) {
     const [orderFilter, setOrderFilter] = useState<'all' | 'in_progress' | 'ready'>('all');
+    const [kitchenOrders, setKitchenOrders] = useState<OrderData[]>(orders);
+
+
+    const [isConnected, setIsConnected] = useState(false);
+
+    // WebSocket connection para tiempo real
+    const { isConnected: socketConnected, updateOrderStatus: socketUpdateOrderStatus } = useSocket({
+        restaurantSlug: restaurantConfig.slug,
+        roomType: 'kitchen',
+        onOrderEvent: (event) => {
+            if (event.type === 'ORDER_CREATED') {
+                const newOrder = event.order;
+                setKitchenOrders(prev => {
+                    // Verificar si la orden ya existe para evitar duplicados
+                    const orderExists = prev.some(order => order.id === newOrder.id);
+                    if (orderExists) {
+                        return prev;
+                    }
+                    return [newOrder, ...prev];
+                });
+            } else if (event.type === 'ORDER_STATUS_CHANGED') {
+                setKitchenOrders(prev => prev.map(order =>
+                    order.id === event.order.id ? { ...order, status: event.order.status, updatedAt: event.order.updatedAt } : order
+                ));
+            } else if (event.type === 'ORDER_DELETED') {
+                setKitchenOrders(prev => prev.filter(order => order.id !== event.orderId));
+            }
+        },
+        onError: (error) => {
+            console.error('Error de WebSocket en kitchen:', error);
+        }
+    });
+
+    // Actualizar estado de conexión
+    useEffect(() => {
+        setIsConnected(socketConnected);
+    }, [socketConnected]);
 
     const getOrderConfig = (status: OrderData['status']) => {
         switch (status) {
-            case 'PENDING':
+            case 'ACTIVE':
                 return {
-                    bg: 'bg-red-50',
-                    blob: 'bg-red-200',
-                    accent: 'bg-red-500',
-                    text: 'Pendiente',
-                    borderColor: 'border-red-200'
-                };
-            case 'IN_PROGRESS':
-                return {
-                    bg: 'bg-blue-50',
-                    blob: 'bg-blue-200',
-                    accent: 'bg-blue-500',
-                    text: 'En preparación',
-                    borderColor: 'border-blue-200'
+                    bg: 'bg-yellow-50',
+                    blob: 'bg-yellow-200',
+                    accent: 'bg-yellow-500',
+                    text: 'Activa',
+                    borderColor: 'border-yellow-200'
                 };
             case 'READY':
                 return {
                     bg: 'bg-green-50',
                     blob: 'bg-green-200',
                     accent: 'bg-green-500',
-                    text: 'Listo',
+                    text: 'Lista/Entregada',
                     borderColor: 'border-green-200'
+                };
+            case 'CANCELLED':
+                return {
+                    bg: 'bg-red-50',
+                    blob: 'bg-red-200',
+                    accent: 'bg-red-500',
+                    text: 'Cancelada',
+                    borderColor: 'border-red-200'
                 };
             default:
                 return {
@@ -78,16 +119,16 @@ export default function KitchenInterface({
         return `${diffHours}h ${remainingMinutes}m`;
     };
 
-    const kitchenOrders = orders.filter(order =>
-        ['PENDING', 'IN_PROGRESS', 'READY'].includes(order.status)
+    const activeOrders = kitchenOrders.filter(order =>
+        order.status === 'ACTIVE' || order.status === 'READY'
     );
 
-    const filteredOrders = kitchenOrders.filter(order => {
+    const filteredOrders = activeOrders.filter(order => {
         if (orderFilter === 'all') {
             return true;
         }
         if (orderFilter === 'in_progress') {
-            return order.status === 'PENDING' || order.status === 'IN_PROGRESS';
+            return order.status === 'ACTIVE';
         }
         if (orderFilter === 'ready') {
             return order.status === 'READY';
@@ -95,11 +136,11 @@ export default function KitchenInterface({
         return false;
     });
 
-    // Obtener órdenes por prioridad (pendientes primero, luego en proceso, etc.)
+    // Obtener órdenes por prioridad (activas primero, luego listas, etc.)
     const sortedOrders = [...filteredOrders].sort((a, b) => {
-        const priority = { 'PENDING': 1, 'IN_PROGRESS': 2, 'READY': 3, 'DELIVERED': 4, 'CANCELLED': 5 };
-        const aPriority = priority[a.status as keyof typeof priority] || 6;
-        const bPriority = priority[b.status as keyof typeof priority] || 6;
+        const priority = { 'ACTIVE': 1, 'READY': 2, 'CANCELLED': 3 };
+        const aPriority = priority[a.status as keyof typeof priority] || 4;
+        const bPriority = priority[b.status as keyof typeof priority] || 4;
 
         if (aPriority !== bPriority) {
             return aPriority - bPriority;
@@ -127,9 +168,21 @@ export default function KitchenInterface({
                             </div>
                         </div>
                         <div className="flex items-center gap-4">
+                            {/* Estado de conexión WebSocket */}
+                            {isConnected ? (
+                                <Badge variant="default" className="bg-green-500">
+                                    <Wifi className="w-3 h-3 mr-1" />
+                                    Conectado
+                                </Badge>
+                            ) : (
+                                <Badge variant="destructive">
+                                    <WifiOff className="w-3 h-3 mr-1" />
+                                    Desconectado
+                                </Badge>
+                            )}
                             <div className="text-right">
                                 <p className="text-sm text-gray-600">Órdenes activas</p>
-                                <p className="text-2xl font-bold text-orange-600">{kitchenOrders.length}</p>
+                                <p className="text-2xl font-bold text-orange-600">{activeOrders.length}</p>
                             </div>
                         </div>
                     </div>
@@ -153,7 +206,7 @@ export default function KitchenInterface({
                                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                 }`}
                         >
-                            Todas ({kitchenOrders.length})
+                            Todas ({activeOrders.length})
                         </button>
                         <button
                             onClick={() => setOrderFilter('in_progress')}
@@ -162,7 +215,7 @@ export default function KitchenInterface({
                                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                 }`}
                         >
-                            En Proceso ({kitchenOrders.filter(o => o.status === 'PENDING' || o.status === 'IN_PROGRESS').length})
+                            En Proceso ({activeOrders.filter(o => o.status === 'ACTIVE').length})
                         </button>
                         <button
                             onClick={() => setOrderFilter('ready')}
@@ -171,7 +224,7 @@ export default function KitchenInterface({
                                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                 }`}
                         >
-                            Listos ({kitchenOrders.filter(o => o.status === 'READY').length})
+                            Listos ({activeOrders.filter(o => o.status === 'READY').length})
                         </button>
                     </div>
                 </div>
@@ -225,14 +278,14 @@ export default function KitchenInterface({
                                     </CardHeader>
                                     <CardContent className="relative z-10">
                                         <div className="space-y-2">
-                                            {order.items.map((item) => (
-                                                <div key={item.id} className="flex items-center gap-3">
+                                            {order.items.map((item, index) => (
+                                                <div key={item.id || `item-${index}`} className="flex items-center gap-3">
                                                     <div
                                                         className={`w-3 h-3 ${config.blob} opacity-60 flex-shrink-0`}
                                                         style={{ borderRadius: "60% 40% 30% 70%" }}
                                                     ></div>
                                                     <p className="text-sm text-gray-700">
-                                                        <span className='font-bold'>{item.quantity}x</span> {item.dish.name}
+                                                        <span className='font-bold'>{item.quantity}x</span> {item.dish?.name || 'Plato no disponible'}
                                                     </p>
                                                 </div>
                                             ))}

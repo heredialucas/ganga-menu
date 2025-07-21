@@ -1,9 +1,10 @@
 'use server';
 
-import { getCurrentUser } from '@repo/auth/server';
+import { getCurrentUser, requirePermission } from '@repo/auth/server';
 import { saveRestaurantDesign as saveDesign } from '@repo/data-services/src/services/restaurantDesignService';
 import { getRestaurantConfig, upsertRestaurantConfig } from '@repo/data-services/src/services/restaurantConfigService';
 import { uploadR2Image, deleteR2Image } from '@repo/data-services/src/services/uploadR2Image';
+import { getTablesByRestaurant } from '@repo/data-services/src/services/tableService';
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 
@@ -98,4 +99,36 @@ export async function saveRestaurantDesign(prevState: any, formData: FormData) {
     // The `saveDesign` service function handles authentication, data parsing,
     // database operations, and revalidation. This wrapper simply passes the arguments through.
     return saveDesign(prevState, formData);
+}
+
+export async function getRestaurantTables() {
+    try {
+        await requirePermission('restaurant:view_config');
+        const user = await getCurrentUser();
+
+        if (!user) {
+            throw new Error('Usuario no autenticado');
+        }
+
+        const restaurantConfig = await getRestaurantConfig(user.id);
+
+        if (!restaurantConfig) {
+            return { success: false, message: 'Restaurante no configurado', tables: [] };
+        }
+
+        const tables = await getTablesByRestaurant(restaurantConfig.id);
+
+        return {
+            success: true,
+            message: 'Mesas obtenidas correctamente',
+            tables
+        };
+    } catch (error) {
+        console.error('Error obteniendo mesas:', error);
+        return {
+            success: false,
+            message: 'Error al obtener las mesas',
+            tables: []
+        };
+    }
 } 

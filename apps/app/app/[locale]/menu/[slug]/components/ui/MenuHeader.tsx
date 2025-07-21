@@ -94,28 +94,26 @@ export default function MenuHeader({ restaurantConfig, dictionary }: MenuHeaderP
 
                         {/* Botón de WhatsApp con efectos mejorados */}
                         {whatsappLink && (
-                            <div className="flex justify-center lg:justify-end">
-                                <a
-                                    href={whatsappLink}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white rounded-xl transition-all duration-500 text-sm md:text-base font-bold shadow-2xl hover:shadow-green-500/25 hover:scale-110 relative overflow-hidden group animate-glow whitespace-nowrap"
-                                    style={{
-                                        background: 'var(--gradient-badge)',
-                                        color: 'var(--theme-text)'
-                                    }}
-                                >
-                                    {/* Efecto de brillo en el botón */}
-                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                                    <MessageCircle className="w-5 h-5 relative z-10 animate-pulse" />
-                                    <span className="relative z-10">Contactar por WhatsApp</span>
-                                    {/* Partículas en el botón */}
-                                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                                        <div className="absolute top-1 right-2 w-1 h-1 bg-white rounded-full animate-ping"></div>
-                                        <div className="absolute bottom-2 left-3 w-0.5 h-0.5 bg-white rounded-full animate-ping" style={{ animationDelay: '0.5s' }}></div>
-                                    </div>
-                                </a>
-                            </div>
+                            <a
+                                href={whatsappLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white rounded-xl transition-all duration-500 text-sm md:text-base font-bold shadow-2xl hover:shadow-green-500/25 hover:scale-110 relative overflow-hidden group animate-glow whitespace-nowrap"
+                                style={{
+                                    background: 'var(--gradient-badge)',
+                                    color: 'var(--theme-text)'
+                                }}
+                            >
+                                {/* Efecto de brillo en el botón */}
+                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                                <MessageCircle className="w-5 h-5 relative z-10 animate-pulse" />
+                                <span className="relative z-10">Contactar por WhatsApp</span>
+                                {/* Partículas en el botón */}
+                                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                                    <div className="absolute top-1 right-2 w-1 h-1 bg-white rounded-full animate-ping"></div>
+                                    <div className="absolute bottom-2 left-3 w-0.5 h-0.5 bg-white rounded-full animate-ping" style={{ animationDelay: '0.5s' }}></div>
+                                </div>
+                            </a>
                         )}
                     </div>
                 </div>

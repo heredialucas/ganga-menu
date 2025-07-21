@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { MessageCircle, Expand } from 'lucide-react';
+import { MessageCircle, Expand, Plus, Minus } from 'lucide-react';
 import { Dictionary } from '@repo/internationalization';
 import { Dish } from './types';
 import { generateWhatsAppLinkForDish } from './utils';
@@ -12,15 +12,26 @@ interface DishCardProps {
     restaurantName: string;
     restaurantPhone?: string | null;
     specialDishIds: Set<string>;
+    restaurantConfigId: string;
+    onAddToOrder?: (dishId: string, quantity: number) => void;
 }
 
-export default function DishCard({ dish, dictionary, restaurantName, restaurantPhone, specialDishIds }: DishCardProps) {
+export default function DishCard({ dish, dictionary, restaurantName, restaurantPhone, specialDishIds, restaurantConfigId, onAddToOrder }: DishCardProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [quantity, setQuantity] = useState(1);
     const whatsappLink = restaurantPhone ? generateWhatsAppLinkForDish(restaurantPhone, dish.name, restaurantName) : '';
     const isSpecialDish = specialDishIds.has(dish.id);
 
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
+
+    const handleAddToOrder = () => {
+        onAddToOrder?.(dish.id, quantity);
+        setQuantity(1); // Reset quantity after adding
+    };
+
+    const increaseQuantity = () => setQuantity(prev => prev + 1);
+    const decreaseQuantity = () => setQuantity(prev => Math.max(1, prev - 1));
 
     return (
         <>
@@ -76,6 +87,33 @@ export default function DishCard({ dish, dictionary, restaurantName, restaurantP
                     <p className="text-gray-600 text-xs sm:text-sm md:text-base mb-3 flex-1 break-words line-clamp-3">
                         {dish.description}
                     </p>
+
+                    {/* Controles de cantidad */}
+                    <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={decreaseQuantity}
+                                className="p-1 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+                                disabled={quantity <= 1}
+                            >
+                                <Minus className="w-3 h-3" />
+                            </button>
+                            <span className="text-sm font-medium min-w-[2rem] text-center">{quantity}</span>
+                            <button
+                                onClick={increaseQuantity}
+                                className="p-1 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+                            >
+                                <Plus className="w-3 h-3" />
+                            </button>
+                        </div>
+                        <button
+                            onClick={handleAddToOrder}
+                            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-300 shadow-md hover:shadow-lg`}
+                            style={{ backgroundColor: 'var(--theme-bg)', color: 'var(--theme-text)' }}
+                        >
+                            Agregar
+                        </button>
+                    </div>
 
                     {/* Botón de WhatsApp con colores temáticos */}
                     {whatsappLink && (

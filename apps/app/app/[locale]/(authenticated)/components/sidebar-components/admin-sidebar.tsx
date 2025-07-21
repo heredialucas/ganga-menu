@@ -8,7 +8,8 @@ import {
     FolderOpen,
     UtensilsCrossed,
     Star,
-    Layout
+    Layout,
+    ClipboardList
 } from 'lucide-react';
 import Link from 'next/link';
 import {
@@ -30,6 +31,7 @@ const iconMap: { [key: string]: React.ElementType } = {
     UtensilsCrossed,
     Star,
     Layout,
+    ClipboardList,
 };
 
 type AdminSidebarProps = {

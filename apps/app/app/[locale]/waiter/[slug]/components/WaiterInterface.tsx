@@ -1,10 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dictionary } from '@repo/internationalization';
 import { RestaurantConfigData } from '@repo/data-services/src/services/restaurantConfigService';
 import { DailySpecialData } from '@repo/data-services/src/services/dailySpecialService';
 import { OrderData } from '@repo/data-services';
+import { useSocket } from '@/hooks/useSocket';
+import { Badge } from '@repo/design-system/components/ui/badge';
+import { Wifi, WifiOff } from 'lucide-react';
 import WaiterAuth from './WaiterAuth';
 import OrderInterface from './OrderInterface';
 
@@ -54,6 +57,42 @@ export default function WaiterInterface({
     tables
 }: WaiterInterfaceProps) {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [orders, setOrders] = useState<OrderData[]>(existingOrders as OrderData[]);
+
+
+    const [isConnected, setIsConnected] = useState(false);
+
+    // WebSocket connection para waiter
+    const { isConnected: socketConnected } = useSocket({
+        restaurantSlug: slug,
+        roomType: 'waiter',
+        onOrderEvent: (event) => {
+            if (event.type === 'ORDER_CREATED') {
+                setOrders(prev => {
+                    // Verificar si la orden ya existe para evitar duplicados
+                    const orderExists = prev.some(order => order.id === event.order.id);
+                    if (orderExists) {
+                        return prev;
+                    }
+                    return [event.order, ...prev];
+                });
+            } else if (event.type === 'ORDER_STATUS_CHANGED') {
+                setOrders(prev => prev.map(order =>
+                    order.id === event.order.id ? { ...order, status: event.order.status, updatedAt: event.order.updatedAt } : order
+                ));
+            } else if (event.type === 'ORDER_DELETED') {
+                setOrders(prev => prev.filter(order => order.id !== event.orderId));
+            }
+        },
+        onError: (error) => {
+            console.error('Error de WebSocket en waiter:', error);
+        }
+    });
+
+    // Actualizar estado de conexión
+    useEffect(() => {
+        setIsConnected(socketConnected);
+    }, [socketConnected]);
 
     if (!isAuthenticated) {
         return (
@@ -72,8 +111,10 @@ export default function WaiterInterface({
             categories={categories}
             dailySpecials={dailySpecials}
             dictionary={dictionary}
-            existingOrders={existingOrders}
+            existingOrders={orders}
             tables={tables}
+            onOrdersUpdate={(newOrders) => setOrders(newOrders as OrderData[])}
+            isConnected={isConnected}
         />
     );
 }

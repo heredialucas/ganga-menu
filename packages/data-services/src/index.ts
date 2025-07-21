@@ -8,3 +8,4 @@ export * from './services/restaurantConfigService';
 export * from './services/restaurantDesignService';
 export * from './services/orderService';
 export * from './services/userService';
+export * from './services/tableService';

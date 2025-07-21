@@ -495,41 +495,42 @@ export default function OrderInterface({
     const FilterButton = ({ filter, label, count }: { filter: typeof orderFilter, label: string, count: number }) => (
         <button
             onClick={() => setOrderFilter(filter)}
-            className={`px-3 py-1 rounded-full text-xs font-medium ${orderFilter === filter
+            className={`px-2 sm:px-3 py-1 rounded-full text-xs font-medium ${orderFilter === filter
                 ? 'bg-blue-600 text-white'
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                 }`}
         >
-            {label} ({count})
+            <span className="hidden sm:inline">{label}</span>
+            <span className="sm:hidden">{label.charAt(0)}</span> ({count})
         </button>
     );
 
     return (
         <div className="min-h-screen bg-gray-50">
             <header className="bg-white shadow-sm border-b">
-                <div className="max-w-4xl mx-auto px-4 py-4">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                                <ChefHat className="w-6 h-6 text-white" />
+                <div className="max-w-4xl mx-auto px-4 py-3 sm:py-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
+                        <div className="flex items-center gap-2 sm:gap-3">
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                                <ChefHat className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
                             </div>
-                            <div>
-                                <h1 className="text-xl font-bold text-gray-900">{waiterDict.title || 'Tomar Orden'}</h1>
-                                <p className="text-sm text-gray-600">{restaurantConfig.name}</p>
+                            <div className="min-w-0 flex-1">
+                                <h1 className="text-lg sm:text-xl font-bold text-gray-900 truncate">{waiterDict.title || 'Tomar Orden'}</h1>
+                                <p className="text-xs sm:text-sm text-gray-600 truncate">{restaurantConfig.name}</p>
                             </div>
                         </div>
 
                         {/* Estado de conexión WebSocket */}
                         <div className="flex items-center gap-2">
                             {isConnected ? (
-                                <Badge variant="default" className="bg-green-500">
+                                <Badge variant="default" className="bg-green-500 text-xs sm:text-sm">
                                     <Wifi className="w-3 h-3 mr-1" />
-                                    Conectado
+                                    <span className="hidden sm:inline">Conectado</span>
                                 </Badge>
                             ) : (
-                                <Badge variant="destructive">
+                                <Badge variant="destructive" className="text-xs sm:text-sm">
                                     <WifiOff className="w-3 h-3 mr-1" />
-                                    Desconectado
+                                    <span className="hidden sm:inline">Desconectado</span>
                                 </Badge>
                             )}
                         </div>
@@ -544,24 +545,24 @@ export default function OrderInterface({
                 </div>
             )}
 
-            <div className="max-w-4xl mx-auto px-4 py-6">
+            <div className="max-w-4xl mx-auto px-4 py-4 sm:py-6">
                 {submittedOrders.length > 0 && (
                     <Card className="bg-white rounded-lg shadow-sm mb-6">
                         <button
                             onClick={() => setIsOrdersExpanded(!isOrdersExpanded)}
-                            className="w-full p-4 flex items-center justify-between hover:bg-gray-50"
+                            className="w-full p-3 sm:p-4 flex items-center justify-between hover:bg-gray-50"
                         >
-                            <div className="flex items-center gap-3">
-                                <Clock className="w-5 h-5 text-blue-600" />
-                                <h3 className="text-lg font-semibold text-gray-900">{waiterDict.submittedOrders || 'Órdenes'}</h3>
+                            <div className="flex items-center gap-2 sm:gap-3">
+                                <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
+                                <h3 className="text-base sm:text-lg font-semibold text-gray-900">{waiterDict.submittedOrders || 'Órdenes'}</h3>
                             </div>
-                            {isOrdersExpanded ? <ChevronUp className="w-5 h-5 text-gray-400" /> : <ChevronDown className="w-5 h-5 text-gray-400" />}
+                            {isOrdersExpanded ? <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" /> : <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />}
                         </button>
 
                         {isOrdersExpanded && (
                             <div className="border-t">
-                                <div className="p-4 border-b bg-gray-50">
-                                    <div className="flex gap-2 flex-wrap">
+                                <div className="p-3 sm:p-4 border-b bg-gray-50">
+                                    <div className="flex gap-1 sm:gap-2 flex-wrap">
                                         <FilterButton filter="all" label="Todas" count={submittedOrders.filter(o => o.status !== 'PAID' && o.status !== 'CANCELLED').length} />
                                         <FilterButton filter="active" label="Activas" count={submittedOrders.filter(o => o.status === 'ACTIVE').length} />
                                         <FilterButton filter="ready" label="Listas" count={submittedOrders.filter(o => o.status === 'READY').length} />
@@ -569,7 +570,7 @@ export default function OrderInterface({
 
                                     </div>
                                 </div>
-                                <div className="max-h-96 overflow-y-auto p-4 space-y-4">
+                                <div className="max-h-96 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4">
                                     {filteredOrders.length === 0 ? (
                                         <div className="text-center py-8 text-gray-500">{waiterDict.noOrdersFound || 'No se encontraron órdenes'}</div>
                                     ) : (
@@ -581,46 +582,46 @@ export default function OrderInterface({
                                                     <div className={`absolute -bottom-2 -left-2 w-12 h-10 ${config.blob} opacity-15 r-blob`}></div>
                                                     <CardHeader className="pb-3 relative z-10">
                                                         <div className="flex items-center justify-between">
-                                                            <div className={`${config.accent} text-white px-4 py-2 text-sm font-medium r-blob-b`}>{config.text}</div>
-                                                            <span className="text-sm font-mono bg-white px-2 py-1 rounded-full border">#{order.id.substring(0, 5)}</span>
+                                                            <div className={`${config.accent} text-white px-3 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-medium r-blob-b`}>{config.text}</div>
+                                                            <span className="text-xs sm:text-sm font-mono bg-white px-2 py-1 rounded-full border">#{order.id.substring(0, 5)}</span>
                                                         </div>
-                                                        <div className="flex items-center justify-between mt-2">
-                                                            <h3 className="font-bold text-xl text-gray-800">Mesa {order.table?.label || 'Mostrador'}</h3>
-                                                            <span className="text-sm text-gray-500">hace {getTimeElapsedString(order.createdAt)}</span>
+                                                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-0 mt-2">
+                                                            <h3 className="font-bold text-lg sm:text-xl text-gray-800">Mesa {order.table?.label || 'Mostrador'}</h3>
+                                                            <span className="text-xs sm:text-sm text-gray-500">hace {getTimeElapsedString(order.createdAt)}</span>
                                                         </div>
                                                         {order.waiterName && <p className="text-xs text-gray-600 mt-1">Por: {order.waiterName}</p>}
                                                     </CardHeader>
                                                     <CardContent className="relative z-10">
                                                         <div className="space-y-2">
                                                             {order.items.map((item, index) => (
-                                                                <div key={item.id || `item-${index}`} className="flex justify-between items-start text-sm">
-                                                                    <div className="flex-1">
+                                                                <div key={item.id || `item-${index}`} className="flex justify-between items-start text-xs sm:text-sm">
+                                                                    <div className="flex-1 min-w-0">
                                                                         <span className="font-medium text-gray-800">
                                                                             {item.quantity}x {item.dish?.name || 'Plato no disponible'}
                                                                         </span>
                                                                         {item.notes && <p className="text-xs text-gray-600 mt-1 italic">"{item.notes}"</p>}
                                                                     </div>
-                                                                    <span className="text-gray-700 ml-2 font-mono">${(item.price * item.quantity).toFixed(2)}</span>
+                                                                    <span className="text-gray-700 ml-2 font-mono flex-shrink-0">${(item.price * item.quantity).toFixed(2)}</span>
                                                                 </div>
                                                             ))}
                                                         </div>
                                                     </CardContent>
                                                     <CardFooter className="relative z-10 flex-col items-start gap-3 pt-4 border-t">
-                                                        <div className="w-full flex justify-between items-center"><p className="text-lg font-bold text-green-700">Total: ${(order.total || 0).toFixed(2)}</p></div>
+                                                        <div className="w-full flex justify-between items-center"><p className="text-base sm:text-lg font-bold text-green-700">Total: ${(order.total || 0).toFixed(2)}</p></div>
                                                         <div className="w-full flex flex-col sm:flex-row gap-2 pt-2 border-t">
                                                             {(order.status === 'ACTIVE' || order.status === 'READY') && (
-                                                                <button onClick={() => addToExistingOrder(order.id)} className="flex-1 text-xs bg-blue-100 text-blue-700 px-3 py-2 rounded hover:bg-blue-200 font-medium">+ {waiterDict.addDishes || 'Agregar platos'}</button>
+                                                                <button onClick={() => addToExistingOrder(order.id)} className="flex-1 text-xs bg-blue-100 text-blue-700 px-2 sm:px-3 py-2 rounded hover:bg-blue-200 font-medium">+ {waiterDict.addDishes || 'Agregar platos'}</button>
                                                             )}
                                                             {(order.status === 'READY' || order.status === 'ACTIVE') && (
-                                                                <button onClick={() => updateOrderState(order.id, 'READY')} disabled={isUpdatingStatus === order.id} className="flex-1 text-xs bg-green-100 text-green-700 px-3 py-2 rounded hover:bg-green-200 font-medium disabled:opacity-50">{isUpdatingStatus === order.id ? (waiterDict.updating || '...') : (waiterDict.markDelivered || 'Marcar Entregado')}</button>
+                                                                <button onClick={() => updateOrderState(order.id, 'READY')} disabled={isUpdatingStatus === order.id} className="flex-1 text-xs bg-green-100 text-green-700 px-2 sm:px-3 py-2 rounded hover:bg-green-200 font-medium disabled:opacity-50">{isUpdatingStatus === order.id ? (waiterDict.updating || '...') : (waiterDict.markDelivered || 'Marcar Entregado')}</button>
                                                             )}
                                                             {(order.status === 'ACTIVE' || order.status === 'READY') && order.table && (
                                                                 <button
                                                                     onClick={() => handleMarkTableAsPaid(order.table!.id)}
                                                                     disabled={isMarkingAsPaid === order.table!.id}
-                                                                    className="flex-1 text-xs bg-purple-100 text-purple-700 px-3 py-2 rounded hover:bg-purple-200 font-medium disabled:opacity-50"
+                                                                    className="flex-1 text-xs bg-purple-100 text-purple-700 px-2 sm:px-3 py-2 rounded hover:bg-purple-200 font-medium disabled:opacity-50"
                                                                 >
-                                                                    {isMarkingAsPaid === order.table!.id ? 'Marcando...' : 'Marcar toda la mesa como pagada'}
+                                                                    {isMarkingAsPaid === order.table!.id ? 'Marcando...' : <span className="hidden sm:inline">Marcar toda la mesa como pagada</span>}
                                                                 </button>
                                                             )}
                                                         </div>
@@ -639,23 +640,23 @@ export default function OrderInterface({
                 <Card className="bg-white rounded-lg shadow-sm mb-6">
                     <button
                         onClick={() => setIsTakingOrderExpanded(!isTakingOrderExpanded)}
-                        className="w-full p-4 flex items-center justify-between hover:bg-gray-50"
+                        className="w-full p-3 sm:p-4 flex items-center justify-between hover:bg-gray-50"
                     >
-                        <div className="flex items-center gap-3">
-                            <ChefHat className="w-5 h-5 text-green-600" />
-                            <h3 className="text-lg font-semibold text-gray-900">Tomar Orden</h3>
+                        <div className="flex items-center gap-2 sm:gap-3">
+                            <ChefHat className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
+                            <h3 className="text-base sm:text-lg font-semibold text-gray-900">Tomar Orden</h3>
                         </div>
-                        {isTakingOrderExpanded ? <ChevronUp className="w-5 h-5 text-gray-400" /> : <ChevronDown className="w-5 h-5 text-gray-400" />}
+                        {isTakingOrderExpanded ? <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" /> : <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />}
                     </button>
 
                     {isTakingOrderExpanded && (
                         <div className="border-t">
-                            <div className="p-4">
+                            <div className="p-3 sm:p-4">
                                 <Card className="relative overflow-hidden border-2 border-gray-200 bg-white/50 shadow-sm mb-6">
                                     <div className={`absolute -top-8 -left-8 w-40 h-32 bg-blue-200 opacity-15 r-blob`}></div>
-                                    <CardContent className="p-6 relative z-10">
-                                        <div className="flex items-center justify-between mb-4">
-                                            <h3 className="text-lg font-semibold text-gray-900">
+                                    <CardContent className="p-4 sm:p-6 relative z-10">
+                                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 mb-4">
+                                            <h3 className="text-base sm:text-lg font-semibold text-gray-900">
                                                 {addingToOrderId ? `${waiterDict.addToOrder || 'Nueva Orden'} - ${tables.find(t => t.id === tableId)?.label}` : (waiterDict.orderInfo || 'Nueva Orden')}
                                             </h3>
                                             {addingToOrderId && (
@@ -667,31 +668,31 @@ export default function OrderInterface({
                                                         setOrderNotes('');
                                                         setOrderItems([]);
                                                     }}
-                                                    className="text-sm text-gray-500 hover:text-gray-700"
+                                                    className="text-xs sm:text-sm text-gray-500 hover:text-gray-700 self-start sm:self-center"
                                                 >
                                                     Cancelar
                                                 </button>
                                             )}
                                         </div>
-                                        <div className="grid md:grid-cols-3 gap-4 mb-4">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-4">
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-1">{waiterDict.table || 'Mesa'} *</label>
-                                                <div className="relative"><MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" /><select value={tableId} onChange={(e) => setTableId(e.target.value)} className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" required disabled={!!addingToOrderId}>{tables.map(table => <option key={table.id} value={table.id}>{table.label}</option>)}</select></div>
+                                                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">{waiterDict.table || 'Mesa'} *</label>
+                                                <div className="relative"><MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" /><select value={tableId} onChange={(e) => setTableId(e.target.value)} className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm" required disabled={!!addingToOrderId}>{tables.map(table => <option key={table.id} value={table.id}>{table.label}</option>)}</select></div>
                                             </div>
                                             <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-1">{waiterDict.waiterName || 'Nombre Mozo'}</label>
-                                                <div className="relative"><User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" /><input type="text" value={waiterName} onChange={(e) => setWaiterName(e.target.value)} className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Opcional" /></div>
+                                                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">{waiterDict.waiterName || 'Nombre Mozo'}</label>
+                                                <div className="relative"><User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" /><input type="text" value={waiterName} onChange={(e) => setWaiterName(e.target.value)} className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm" placeholder="Opcional" /></div>
                                             </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-1">{waiterDict.total || 'Total'}</label>
-                                                <div className="text-2xl font-bold text-green-600 py-1">${total.toFixed(2)}</div>
+                                            <div className="sm:col-span-2 lg:col-span-1">
+                                                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">{waiterDict.total || 'Total'}</label>
+                                                <div className="text-xl sm:text-2xl font-bold text-green-600 py-1">${total.toFixed(2)}</div>
                                             </div>
                                         </div>
 
                                         {/* Cantidades de platos seleccionados */}
                                         {orderItems.length > 0 && (
                                             <div className="mb-4">
-                                                <h4 className="text-sm font-medium text-gray-700 mb-3">Cantidades y Notas:</h4>
+                                                <h4 className="text-xs sm:text-sm font-medium text-gray-700 mb-3">Cantidades y Notas:</h4>
                                                 <div className="space-y-2 max-h-40 overflow-y-auto">
                                                     {orderItems.map((item) => {
                                                         const price = getCorrectPrice(item.dish);
@@ -700,10 +701,10 @@ export default function OrderInterface({
                                                         const finalPrice = hasPromotion ? item.dish.promotionalPrice! : item.dish.price;
 
                                                         return (
-                                                            <div key={item.dish.id} className="flex items-center justify-between p-2 bg-gray-50 rounded-lg border">
+                                                            <div key={item.dish.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-2 bg-gray-50 rounded-lg border gap-2">
                                                                 <div className="flex-1 min-w-0">
                                                                     <div className="flex items-center gap-2">
-                                                                        <h5 className="font-medium text-gray-900 text-sm truncate">{item.dish.name}</h5>
+                                                                        <h5 className="font-medium text-gray-900 text-xs sm:text-sm truncate">{item.dish.name}</h5>
                                                                         {isSpecial && (
                                                                             <span className="bg-yellow-100 text-yellow-800 text-xs px-1 py-0.5 rounded-full shrink-0">
                                                                                 Especial
@@ -716,7 +717,7 @@ export default function OrderInterface({
                                                                     </div>
                                                                 </div>
 
-                                                                <div className="flex items-center gap-2 ml-3 shrink-0">
+                                                                <div className="flex items-center gap-2 shrink-0">
                                                                     <div className="flex items-center gap-1">
                                                                         <button
                                                                             onClick={() => updateQuantity(item.dish, item.quantity - 1)}
@@ -725,7 +726,7 @@ export default function OrderInterface({
                                                                         >
                                                                             <Minus className="w-3 h-3" />
                                                                         </button>
-                                                                        <span className="font-medium text-sm w-6 text-center">{item.quantity}</span>
+                                                                        <span className="font-medium text-xs sm:text-sm w-6 text-center">{item.quantity}</span>
                                                                         <button
                                                                             onClick={() => updateQuantity(item.dish, item.quantity + 1)}
                                                                             className="w-5 h-5 rounded-full bg-blue-200 flex items-center justify-center hover:bg-blue-300"
@@ -739,7 +740,7 @@ export default function OrderInterface({
                                                                         placeholder="Notas..."
                                                                         value={item.notes || ''}
                                                                         onChange={(e) => updateItemNotes(item.dish.id, e.target.value)}
-                                                                        className="px-2 py-1 border border-gray-300 rounded text-xs w-20"
+                                                                        className="px-2 py-1 border border-gray-300 rounded text-xs w-16 sm:w-20"
                                                                     />
 
                                                                     <button
@@ -769,13 +770,13 @@ export default function OrderInterface({
                                             <button
                                                 onClick={submitOrder}
                                                 disabled={isSubmitting || !tableId.trim()}
-                                                className="w-full bg-green-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-green-700 focus:ring-2 focus:ring-green-500 disabled:opacity-50"
+                                                className="w-full bg-green-600 text-white py-2 sm:py-3 px-4 rounded-lg font-medium hover:bg-green-700 focus:ring-2 focus:ring-green-500 disabled:opacity-50 text-sm sm:text-base"
                                             >
                                                 {isSubmitting ? 'Enviando...' : addingToOrderId ? (waiterDict.addToOrder || 'Agregar a Orden') : (waiterDict.submit || 'Enviar Orden')}
                                             </button>
                                         ) : (
                                             <div className="text-center py-4 text-gray-500">
-                                                <p className="text-sm">Agrega platos al carrito para crear una orden</p>
+                                                <p className="text-xs sm:text-sm">Agrega platos al carrito para crear una orden</p>
                                             </div>
                                         )}
                                         {orderItems.length > 0 && !tableId.trim() && (
@@ -787,9 +788,9 @@ export default function OrderInterface({
                                 </Card>
 
                                 {/* Configuración de la orden */}
-                                <Card className="relative overflow-hidden border-2 border-gray-200 bg-white/50 shadow-sm p-4 mb-6">
+                                <Card className="relative overflow-hidden border-2 border-gray-200 bg-white/50 shadow-sm p-3 sm:p-4 mb-6">
                                     <div className={`absolute top-4 right-4 w-12 h-10 bg-blue-200 opacity-15 r-blob`}></div>
-                                    <div className="flex flex-col lg:flex-row gap-4 relative z-10">
+                                    <div className="flex flex-col gap-3 sm:gap-4 relative z-10">
                                         <div className="relative flex-1">
                                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
                                             <input
@@ -797,21 +798,21 @@ export default function OrderInterface({
                                                 placeholder={waiterDict.search || 'Buscar platos...'}
                                                 value={searchTerm}
                                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
                                             />
                                         </div>
-                                        <div className="flex gap-2">
+                                        <div className="flex flex-col sm:flex-row gap-2">
                                             <input
                                                 type="text"
                                                 placeholder="Notas generales..."
                                                 value={orderNotes}
                                                 onChange={(e) => setOrderNotes(e.target.value)}
-                                                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 flex-1 min-w-0"
+                                                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 flex-1 min-w-0 text-sm"
                                             />
                                             <select
                                                 value={selectedCategory}
                                                 onChange={(e) => setSelectedCategory(e.target.value)}
-                                                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white"
+                                                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white text-sm"
                                             >
                                                 <option value="all">{waiterDict.all || 'Todas las categorías'}</option>
                                                 {categories.map(category => (
@@ -825,10 +826,10 @@ export default function OrderInterface({
                                 {/* Lista simple de platos - Solo selección */}
                                 <Card className="relative overflow-hidden border-2 border-gray-200 bg-white/50 shadow-sm mb-8">
                                     <div className={`absolute bottom-0 -right-4 w-20 h-20 bg-blue-200 opacity-10 r-blob`}></div>
-                                    <CardHeader className="p-4 border-b">
-                                        <h3 className="text-lg font-semibold text-gray-900">Seleccionar Platos</h3>
+                                    <CardHeader className="p-3 sm:p-4 border-b">
+                                        <h3 className="text-base sm:text-lg font-semibold text-gray-900">Seleccionar Platos</h3>
                                     </CardHeader>
-                                    <CardContent className="p-4">
+                                    <CardContent className="p-3 sm:p-4">
                                         <div className="space-y-2">
                                             {filteredCategories.flatMap(category => category.dishes).map(dish => {
                                                 const quantity = getQuantityForDish(dish);
@@ -840,38 +841,38 @@ export default function OrderInterface({
                                                 return (
                                                     <div
                                                         key={dish.id}
-                                                        className={`flex items-center justify-between p-3 rounded-lg border transition-colors cursor-pointer ${isSelected
+                                                        className={`flex items-center justify-between p-2 sm:p-3 rounded-lg border transition-colors cursor-pointer ${isSelected
                                                             ? 'bg-blue-50 border-blue-300'
                                                             : 'bg-white/70 border-gray-200 hover:bg-gray-50'
                                                             }`}
                                                         onClick={() => updateQuantity(dish, isSelected ? 0 : 1)}
                                                     >
                                                         <div className="flex-1 min-w-0">
-                                                            <div className="flex items-center gap-2">
-                                                                <h4 className="font-medium text-gray-900 truncate">{dish.name}</h4>
+                                                            <div className="flex items-center gap-1 sm:gap-2">
+                                                                <h4 className="font-medium text-gray-900 truncate text-sm sm:text-base">{dish.name}</h4>
                                                                 {isSpecial && (
-                                                                    <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full shrink-0">
+                                                                    <span className="bg-yellow-100 text-yellow-800 text-xs px-1 sm:px-2 py-0.5 sm:py-1 rounded-full shrink-0">
                                                                         Especial
                                                                     </span>
                                                                 )}
                                                                 {isSelected && (
-                                                                    <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full shrink-0">
+                                                                    <span className="bg-blue-100 text-blue-800 text-xs px-1 sm:px-2 py-0.5 sm:py-1 rounded-full shrink-0">
                                                                         Seleccionado
                                                                     </span>
                                                                 )}
                                                             </div>
-                                                            <p className="text-sm text-gray-600 truncate">{dish.description}</p>
+                                                            <p className="text-xs sm:text-sm text-gray-600 truncate">{dish.description}</p>
                                                         </div>
 
-                                                        <div className="flex items-center gap-3 ml-4 shrink-0">
+                                                        <div className="flex items-center gap-2 sm:gap-3 ml-2 sm:ml-4 shrink-0">
                                                             <div className="text-right">
                                                                 {hasPromotion ? (
                                                                     <>
-                                                                        <p className="text-sm font-bold text-green-600">${dish.promotionalPrice?.toFixed(2)}</p>
+                                                                        <p className="text-xs sm:text-sm font-bold text-green-600">${dish.promotionalPrice?.toFixed(2)}</p>
                                                                         <p className="text-xs text-gray-500 line-through">${dish.price.toFixed(2)}</p>
                                                                     </>
                                                                 ) : (
-                                                                    <p className="text-sm font-bold text-gray-900">${dish.price.toFixed(2)}</p>
+                                                                    <p className="text-xs sm:text-sm font-bold text-gray-900">${dish.price.toFixed(2)}</p>
                                                                 )}
                                                             </div>
                                                         </div>
@@ -890,28 +891,28 @@ export default function OrderInterface({
                 <Card className="bg-white rounded-lg shadow-sm mb-6">
                     <button
                         onClick={() => setIsTablesExpanded(!isTablesExpanded)}
-                        className="w-full p-4 flex items-center justify-between hover:bg-gray-50"
+                        className="w-full p-3 sm:p-4 flex items-center justify-between hover:bg-gray-50"
                     >
-                        <div className="flex items-center gap-3">
-                            <MapPin className="w-5 h-5 text-blue-600" />
-                            <h3 className="text-lg font-semibold text-gray-900">Mesas y Órdenes Finalizadas</h3>
+                        <div className="flex items-center gap-2 sm:gap-3">
+                            <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
+                            <h3 className="text-base sm:text-lg font-semibold text-gray-900">Mesas y Órdenes Finalizadas</h3>
                             {ordersByTable.length > 0 && (
-                                <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+                                <Badge variant="secondary" className="bg-blue-100 text-blue-800 text-xs sm:text-sm">
                                     {ordersByTable.length} mesa{ordersByTable.length !== 1 ? 's' : ''} con órdenes finalizadas
                                 </Badge>
                             )}
                         </div>
-                        {isTablesExpanded ? <ChevronUp className="w-5 h-5 text-gray-400" /> : <ChevronDown className="w-5 h-5 text-gray-400" />}
+                        {isTablesExpanded ? <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" /> : <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />}
                     </button>
 
                     {isTablesExpanded && (
                         <div className="border-t">
-                            <div className="p-4">
+                            <div className="p-3 sm:p-4">
                                 {ordersByTable.length === 0 ? (
-                                    <div className="text-center py-8 text-gray-500">
-                                        <MapPin className="w-12 h-12 mx-auto text-gray-300 mb-4" />
-                                        <h3 className="text-lg font-semibold text-gray-900 mb-2">No hay mesas con órdenes finalizadas</h3>
-                                        <p className="text-sm">Las mesas con órdenes pagadas o canceladas aparecerán aquí para liberarlas.</p>
+                                    <div className="text-center py-6 sm:py-8 text-gray-500">
+                                        <MapPin className="w-10 h-10 sm:w-12 sm:h-12 mx-auto text-gray-300 mb-3 sm:mb-4" />
+                                        <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">No hay mesas con órdenes finalizadas</h3>
+                                        <p className="text-xs sm:text-sm">Las mesas con órdenes pagadas o canceladas aparecerán aquí para liberarlas.</p>
                                     </div>
                                 ) : (
                                     <div className="space-y-4">
@@ -925,22 +926,22 @@ export default function OrderInterface({
 
                                                     <button
                                                         onClick={() => toggleTableExpanded(table.id)}
-                                                        className="w-full p-4 flex flex-col sm:flex-row sm:items-center justify-between hover:bg-blue-50/50 transition-colors gap-3"
+                                                        className="w-full p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between hover:bg-blue-50/50 transition-colors gap-3"
                                                     >
-                                                        <div className="flex items-center gap-3">
-                                                            <div className="bg-blue-500 text-white px-4 py-2 text-sm font-medium rounded-lg">
+                                                        <div className="flex items-center gap-2 sm:gap-3">
+                                                            <div className="bg-blue-500 text-white px-3 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-medium rounded-lg">
                                                                 Mesa {table.label}
                                                             </div>
-                                                            <Badge variant="outline" className="bg-blue-100 text-blue-800">
+                                                            <Badge variant="outline" className="bg-blue-100 text-blue-800 text-xs sm:text-sm">
                                                                 {orders.length} orden{orders.length !== 1 ? 'es' : ''}
                                                             </Badge>
                                                         </div>
-                                                        <div className="flex items-center gap-3">
+                                                        <div className="flex items-center gap-2 sm:gap-3">
                                                             <div className="text-right">
-                                                                <p className="text-sm text-gray-600">Total Finalizado</p>
-                                                                <p className="text-lg sm:text-2xl font-bold text-blue-600">${totalAmount.toFixed(2)}</p>
+                                                                <p className="text-xs sm:text-sm text-gray-600">Total Finalizado</p>
+                                                                <p className="text-base sm:text-lg lg:text-2xl font-bold text-blue-600">${totalAmount.toFixed(2)}</p>
                                                             </div>
-                                                            {isTableExpanded ? <ChevronUp className="w-5 h-5 text-blue-600" /> : <ChevronDown className="w-5 h-5 text-blue-600" />}
+                                                            {isTableExpanded ? <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" /> : <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />}
                                                         </div>
                                                     </button>
 
@@ -999,17 +1000,17 @@ export default function OrderInterface({
                                                                     <button
                                                                         onClick={() => handleMarkTableAsPaid(table.id)}
                                                                         disabled={isMarkingAsPaid === table.id}
-                                                                        className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 disabled:opacity-50 flex items-center justify-center gap-2 text-sm sm:text-base"
+                                                                        className="flex-1 bg-blue-600 text-white py-2 px-3 sm:px-4 rounded-lg font-medium hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 disabled:opacity-50 flex items-center justify-center gap-2 text-xs sm:text-sm"
                                                                     >
                                                                         {isMarkingAsPaid === table.id ? (
                                                                             <>
-                                                                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                                                                                Liberando...
+                                                                                <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                                                                <span className="hidden sm:inline">Liberando...</span>
                                                                             </>
                                                                         ) : (
                                                                             <>
-                                                                                <CheckCircle className="w-4 h-4" />
-                                                                                Liberar Mesa
+                                                                                <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4" />
+                                                                                <span className="hidden sm:inline">Liberar Mesa</span>
                                                                             </>
                                                                         )}
                                                                     </button>

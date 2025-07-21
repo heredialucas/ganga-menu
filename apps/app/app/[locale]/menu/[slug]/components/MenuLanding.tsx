@@ -17,7 +17,6 @@ import {
     EmptyState,
     MenuFooter,
     DecorativeElements,
-    SnowParticlesWrapper,
     OrderCart,
     getThemeColors,
     type Category,
@@ -230,10 +229,7 @@ export default function MenuLanding({
                 className="fixed inset-0 z-0 pointer-events-none"
             />
 
-            {/* Partículas de nieve animadas */}
-            <SnowParticlesWrapper
-                count={70}
-            />
+
 
             {/* Contenido principal */}
             <div className="relative z-10">

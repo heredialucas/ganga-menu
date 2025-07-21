@@ -2,7 +2,6 @@ import React from 'react';
 import { RestaurantConfigData } from '@repo/data-services/src/services/restaurantConfigService';
 import { Dictionary } from '@repo/internationalization';
 import DecorativeElements from './DecorativeElements';
-import { SnowParticlesWrapper } from './SnowParticlesWrapper';
 
 interface MenuFooterProps {
     restaurantConfig: RestaurantConfigData;
@@ -95,12 +94,7 @@ export default function MenuFooter({ restaurantConfig, dictionary }: MenuFooterP
                 <div className="absolute inset-0 bg-gradient-radial from-white/3 via-transparent to-transparent animate-pulse" style={{ animationDuration: '6s' }}></div>
             </div>
 
-            {/* Partículas de nieve en el footer */}
-            <div className="absolute inset-0 overflow-hidden">
-                <SnowParticlesWrapper
-                    count={25}
-                />
-            </div>
+
 
             {/* Elementos decorativos */}
             <DecorativeElements

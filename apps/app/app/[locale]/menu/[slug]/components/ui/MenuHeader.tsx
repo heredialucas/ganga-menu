@@ -5,7 +5,6 @@ import { RestaurantConfigData } from '@repo/data-services/src/services/restauran
 import { Dictionary } from '@repo/internationalization';
 import { generateWhatsAppLink } from './utils';
 import DecorativeElements from './DecorativeElements';
-import { SnowParticlesWrapper } from './SnowParticlesWrapper';
 
 interface MenuHeaderProps {
     restaurantConfig: RestaurantConfigData;
@@ -35,12 +34,7 @@ export default function MenuHeader({ restaurantConfig, dictionary, isTableSpecif
                 <div className="absolute inset-0 bg-gradient-radial from-white/5 via-transparent to-transparent animate-pulse" style={{ animationDuration: '4s' }}></div>
             </div>
 
-            {/* Partículas de nieve en el header */}
-            <div className="absolute inset-0 overflow-hidden">
-                <SnowParticlesWrapper
-                    count={30}
-                />
-            </div>
+
 
             {/* Elementos decorativos */}
             <DecorativeElements

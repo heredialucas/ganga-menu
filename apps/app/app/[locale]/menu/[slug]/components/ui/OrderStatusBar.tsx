@@ -75,6 +75,15 @@ export default function OrderStatusBar({
                             return prev;
                         }
                     });
+
+                    // Ocultar la barra si todas las órdenes están pagadas
+                    const updatedOrders = orders.map(order =>
+                        order.id === event.order.id ? { ...order, status: event.order.status, updatedAt: event.order.updatedAt } : order
+                    );
+                    const hasActiveOrders = updatedOrders.some(order => order.status !== 'PAID');
+                    if (!hasActiveOrders) {
+                        setIsVisible(false);
+                    }
                 }
             } else if (event.type === 'ORDER_DELETED') {
                 setOrders(prev => prev.filter(order => order.id !== event.orderId));

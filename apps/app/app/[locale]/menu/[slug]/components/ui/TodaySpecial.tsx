@@ -29,9 +29,10 @@ interface TodaySpecialProps {
     dictionary: Dictionary;
     restaurantName: string;
     restaurantPhone?: string | null;
+    isTableSpecificView?: boolean;
 }
 
-export default function TodaySpecial({ todaySpecial, dictionary, restaurantName, restaurantPhone }: TodaySpecialProps) {
+export default function TodaySpecial({ todaySpecial, dictionary, restaurantName, restaurantPhone, isTableSpecificView = false }: TodaySpecialProps) {
     const whatsappLink = restaurantPhone ? generateWhatsAppLinkForDish(restaurantPhone, todaySpecial.dish.name, restaurantName) : '';
 
     return (
@@ -119,8 +120,8 @@ export default function TodaySpecial({ todaySpecial, dictionary, restaurantName,
                                 </div>
                             </div>
 
-                            {/* Botón de WhatsApp con color temático */}
-                            {whatsappLink && (
+                            {/* Botón de WhatsApp con color temático - solo en vista general */}
+                            {whatsappLink && !isTableSpecificView && (
                                 <a
                                     href={whatsappLink}
                                     target="_blank"

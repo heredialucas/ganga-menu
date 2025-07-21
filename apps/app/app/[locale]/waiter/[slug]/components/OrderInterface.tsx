@@ -19,7 +19,8 @@ import {
     ChevronDown,
     ChevronUp,
     Wifi,
-    WifiOff
+    WifiOff,
+    X
 } from 'lucide-react';
 import { Card, CardHeader, CardContent, CardFooter } from '@repo/design-system/components/ui/card';
 import { Badge } from '@repo/design-system/components/ui/badge';
@@ -393,10 +394,10 @@ export default function OrderInterface({
         return false;
     });
 
-    // Agrupar órdenes por mesa (pagadas y canceladas)
+    // Agrupar órdenes por mesa (todas las órdenes de cada mesa)
     const ordersByTable = tables.map(table => {
         const tableOrders = submittedOrders.filter(order =>
-            order.table?.id === table.id && (order.status === 'PAID' || order.status === 'CANCELLED')
+            order.table?.id === table.id
         );
         return {
             table,
@@ -412,31 +413,21 @@ export default function OrderInterface({
             if (result.success && result.order) {
                 setSubmittedOrders(prev => prev.map(order => order.id === orderId ? { ...order, status: newStatus } : order));
 
-                // Sincronizar con WebSocket server
-                try {
-                    const response = await fetch(`${process.env.NEXT_PUBLIC_SOCKET_IO_URL || 'http://localhost:3001'}/sync-orders`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            restaurantSlug: restaurantConfig.slug,
-                            orders: [result.order]
-                        })
+                // Emitir evento al WebSocket para sincronizar con otras vistas
+                if (socket && socketConnected) {
+                    socket.emit('order_status_changed', {
+                        restaurantSlug: restaurantConfig.slug,
+                        order: result.order
                     });
-
-                    if (!response.ok) {
-                        console.warn('No se pudo sincronizar actualización con WebSocket server');
-                    }
-                } catch (error) {
-                    console.warn('Error sincronizando actualización con WebSocket:', error);
                 }
+
+                toast.success('Orden marcada como entregada correctamente');
             } else {
-                alert(result.error || 'Error al actualizar estado');
+                toast.error(result.error || 'Error al actualizar estado');
             }
         } catch (error) {
             console.error('Error updating order:', error);
-            alert('Error al actualizar estado');
+            toast.error('Error al actualizar estado');
         } finally {
             setIsUpdatingStatus(null);
         }
@@ -547,7 +538,7 @@ export default function OrderInterface({
             </header>
 
             {showOrderConfirmation && (
-                <div className="fixed top-4 right-4 bg-green-600 text-white p-4 rounded-lg shadow-lg z-50 flex items-center gap-2">
+                <div className="fixed bottom-4 right-4 bg-green-600 text-white p-4 rounded-lg shadow-lg z-50 flex items-center gap-2">
                     <CheckCircle className="w-5 h-5" />
                     <span>{waiterDict.orderSent || '¡Orden enviada a la cocina!'}</span>
                 </div>
@@ -571,7 +562,7 @@ export default function OrderInterface({
                             <div className="border-t">
                                 <div className="p-4 border-b bg-gray-50">
                                     <div className="flex gap-2 flex-wrap">
-                                        <FilterButton filter="all" label="Todas" count={submittedOrders.length} />
+                                        <FilterButton filter="all" label="Todas" count={submittedOrders.filter(o => o.status !== 'PAID' && o.status !== 'CANCELLED').length} />
                                         <FilterButton filter="active" label="Activas" count={submittedOrders.filter(o => o.status === 'ACTIVE').length} />
                                         <FilterButton filter="ready" label="Listas" count={submittedOrders.filter(o => o.status === 'READY').length} />
                                         <FilterButton filter="delivered" label="Entregadas" count={submittedOrders.filter(o => o.status === 'READY').length} />
@@ -696,7 +687,84 @@ export default function OrderInterface({
                                                 <div className="text-2xl font-bold text-green-600 py-1">${total.toFixed(2)}</div>
                                             </div>
                                         </div>
-                                        <div className="mb-4"><label className="block text-sm font-medium text-gray-700 mb-1">{waiterDict.orderNotes || 'Notas de la orden'}</label><textarea value={orderNotes} onChange={(e) => setOrderNotes(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" rows={2} placeholder="Notas especiales..."></textarea></div>
+
+                                        {/* Cantidades de platos seleccionados */}
+                                        {orderItems.length > 0 && (
+                                            <div className="mb-4">
+                                                <h4 className="text-sm font-medium text-gray-700 mb-3">Cantidades y Notas:</h4>
+                                                <div className="space-y-2 max-h-40 overflow-y-auto">
+                                                    {orderItems.map((item) => {
+                                                        const price = getCorrectPrice(item.dish);
+                                                        const isSpecial = isSpecialToday(item.dish);
+                                                        const hasPromotion = isSpecial && item.dish.promotionalPrice && item.dish.promotionalPrice > 0;
+                                                        const finalPrice = hasPromotion ? item.dish.promotionalPrice! : item.dish.price;
+
+                                                        return (
+                                                            <div key={item.dish.id} className="flex items-center justify-between p-2 bg-gray-50 rounded-lg border">
+                                                                <div className="flex-1 min-w-0">
+                                                                    <div className="flex items-center gap-2">
+                                                                        <h5 className="font-medium text-gray-900 text-sm truncate">{item.dish.name}</h5>
+                                                                        {isSpecial && (
+                                                                            <span className="bg-yellow-100 text-yellow-800 text-xs px-1 py-0.5 rounded-full shrink-0">
+                                                                                Especial
+                                                                            </span>
+                                                                        )}
+                                                                    </div>
+                                                                    <div className="flex items-center gap-2 mt-1">
+                                                                        <span className="text-xs text-gray-600">${finalPrice.toFixed(2)} c/u</span>
+                                                                        <span className="text-xs font-bold text-green-600">Total: ${(finalPrice * item.quantity).toFixed(2)}</span>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="flex items-center gap-2 ml-3 shrink-0">
+                                                                    <div className="flex items-center gap-1">
+                                                                        <button
+                                                                            onClick={() => updateQuantity(item.dish, item.quantity - 1)}
+                                                                            disabled={item.quantity <= 1}
+                                                                            className="w-5 h-5 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 disabled:opacity-50"
+                                                                        >
+                                                                            <Minus className="w-3 h-3" />
+                                                                        </button>
+                                                                        <span className="font-medium text-sm w-6 text-center">{item.quantity}</span>
+                                                                        <button
+                                                                            onClick={() => updateQuantity(item.dish, item.quantity + 1)}
+                                                                            className="w-5 h-5 rounded-full bg-blue-200 flex items-center justify-center hover:bg-blue-300"
+                                                                        >
+                                                                            <Plus className="w-3 h-3" />
+                                                                        </button>
+                                                                    </div>
+
+                                                                    <input
+                                                                        type="text"
+                                                                        placeholder="Notas..."
+                                                                        value={item.notes || ''}
+                                                                        onChange={(e) => updateItemNotes(item.dish.id, e.target.value)}
+                                                                        className="px-2 py-1 border border-gray-300 rounded text-xs w-20"
+                                                                    />
+
+                                                                    <button
+                                                                        onClick={() => updateQuantity(item.dish, 0)}
+                                                                        className="w-5 h-5 rounded-full bg-red-100 flex items-center justify-center hover:bg-red-200 text-red-600"
+                                                                    >
+                                                                        <X className="w-3 h-3" />
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {orderNotes.trim() && (
+                                            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <span className="text-sm font-medium text-blue-800">Notas generales:</span>
+                                                </div>
+                                                <p className="text-sm text-blue-700 italic">"{orderNotes}"</p>
+                                            </div>
+                                        )}
+
                                         {orderItems.length > 0 ? (
                                             <button
                                                 onClick={submitOrder}
@@ -718,47 +786,101 @@ export default function OrderInterface({
                                     </CardContent>
                                 </Card>
 
+                                {/* Configuración de la orden */}
                                 <Card className="relative overflow-hidden border-2 border-gray-200 bg-white/50 shadow-sm p-4 mb-6">
                                     <div className={`absolute top-4 right-4 w-12 h-10 bg-blue-200 opacity-15 r-blob`}></div>
-                                    <div className="flex flex-col sm:flex-row gap-4 relative z-10">
-                                        <div className="relative flex-1"><Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" /><input type="text" placeholder={waiterDict.search || 'Buscar platos...'} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" /></div>
-                                        <div className="relative"><Filter className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" /><select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)} className="w-full sm:w-auto pl-10 pr-8 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white"><option value="all">{waiterDict.all || 'Todos'}</option>{categories.map(category => <option key={category.id} value={category.id}>{category.name}</option>)}</select></div>
+                                    <div className="flex flex-col lg:flex-row gap-4 relative z-10">
+                                        <div className="relative flex-1">
+                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+                                            <input
+                                                type="text"
+                                                placeholder={waiterDict.search || 'Buscar platos...'}
+                                                value={searchTerm}
+                                                onChange={(e) => setSearchTerm(e.target.value)}
+                                                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                            />
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <input
+                                                type="text"
+                                                placeholder="Notas generales..."
+                                                value={orderNotes}
+                                                onChange={(e) => setOrderNotes(e.target.value)}
+                                                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 flex-1 min-w-0"
+                                            />
+                                            <select
+                                                value={selectedCategory}
+                                                onChange={(e) => setSelectedCategory(e.target.value)}
+                                                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white"
+                                            >
+                                                <option value="all">{waiterDict.all || 'Todas las categorías'}</option>
+                                                {categories.map(category => (
+                                                    <option key={category.id} value={category.id}>{category.name}</option>
+                                                ))}
+                                            </select>
+                                        </div>
                                     </div>
                                 </Card>
 
-                                <div className="space-y-6 mb-8">
-                                    {filteredCategories.map(category => (
-                                        <Card key={category.id} className="relative overflow-hidden border-2 border-gray-200 bg-white/50 shadow-sm">
-                                            <div className={`absolute bottom-0 -right-4 w-20 h-20 bg-blue-200 opacity-10 r-blob`}></div>
-                                            <CardHeader className="p-4 border-b"><h3 className="text-lg font-semibold text-gray-900">{category.name}</h3>{category.description && <p className="text-sm text-gray-600 mt-1">{category.description}</p>}</CardHeader>
-                                            <CardContent className="p-4"><div className="space-y-4">
-                                                {category.dishes.map(dish => {
-                                                    const quantity = getQuantityForDish(dish);
-                                                    const price = getCorrectPrice(dish);
-                                                    const isSpecial = isSpecialToday(dish);
-                                                    const hasPromotion = isSpecial && dish.promotionalPrice && dish.promotionalPrice > 0;
-                                                    return (
-                                                        <Card key={dish.id} className="border border-gray-200 rounded-lg p-4 bg-white/70 relative z-10">
-                                                            <div className="flex justify-between items-start mb-3">
-                                                                <div className="flex-1">
-                                                                    <div className="flex items-center gap-2 mb-1"><h4 className="font-medium text-gray-900">{dish.name}</h4>{isSpecial && <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">Especial</span>}</div>
-                                                                    <p className="text-sm text-gray-600 mb-2">{dish.description}</p>
-                                                                </div>
-                                                                <div className="text-right ml-4">
-                                                                    {hasPromotion ? (<><p className="text-lg font-bold text-green-600">${dish.promotionalPrice?.toFixed(2)}</p><p className="text-sm text-gray-500 line-through">${dish.price.toFixed(2)}</p></>) : (<p className="text-lg font-bold text-gray-900">${dish.price.toFixed(2)}</p>)}
-                                                                </div>
+                                {/* Lista simple de platos - Solo selección */}
+                                <Card className="relative overflow-hidden border-2 border-gray-200 bg-white/50 shadow-sm mb-8">
+                                    <div className={`absolute bottom-0 -right-4 w-20 h-20 bg-blue-200 opacity-10 r-blob`}></div>
+                                    <CardHeader className="p-4 border-b">
+                                        <h3 className="text-lg font-semibold text-gray-900">Seleccionar Platos</h3>
+                                    </CardHeader>
+                                    <CardContent className="p-4">
+                                        <div className="space-y-2">
+                                            {filteredCategories.flatMap(category => category.dishes).map(dish => {
+                                                const quantity = getQuantityForDish(dish);
+                                                const price = getCorrectPrice(dish);
+                                                const isSpecial = isSpecialToday(dish);
+                                                const hasPromotion = isSpecial && dish.promotionalPrice && dish.promotionalPrice > 0;
+                                                const isSelected = quantity > 0;
+
+                                                return (
+                                                    <div
+                                                        key={dish.id}
+                                                        className={`flex items-center justify-between p-3 rounded-lg border transition-colors cursor-pointer ${isSelected
+                                                            ? 'bg-blue-50 border-blue-300'
+                                                            : 'bg-white/70 border-gray-200 hover:bg-gray-50'
+                                                            }`}
+                                                        onClick={() => updateQuantity(dish, isSelected ? 0 : 1)}
+                                                    >
+                                                        <div className="flex-1 min-w-0">
+                                                            <div className="flex items-center gap-2">
+                                                                <h4 className="font-medium text-gray-900 truncate">{dish.name}</h4>
+                                                                {isSpecial && (
+                                                                    <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full shrink-0">
+                                                                        Especial
+                                                                    </span>
+                                                                )}
+                                                                {isSelected && (
+                                                                    <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full shrink-0">
+                                                                        Seleccionado
+                                                                    </span>
+                                                                )}
                                                             </div>
-                                                            <div className="flex items-center justify-between">
-                                                                <div className="flex items-center gap-3"><button onClick={() => updateQuantity(dish, quantity - 1)} disabled={quantity === 0} className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 disabled:opacity-50"><Minus className="w-4 h-4" /></button><span className="font-medium text-lg w-8 text-center">{quantity}</span><button onClick={() => updateQuantity(dish, quantity + 1)} className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center hover:bg-blue-200"><Plus className="w-4 h-4" /></button></div>
-                                                                {quantity > 0 && (<div className="flex items-center gap-3"><input type="text" placeholder="Notas..." value={orderItems.find(item => item.dish.id === dish.id)?.notes || ''} onChange={(e) => updateItemNotes(dish.id, e.target.value)} className="px-3 py-1 border border-gray-300 rounded text-sm w-32" /><span className="font-bold text-green-600">${(price * quantity).toFixed(2)}</span></div>)}
+                                                            <p className="text-sm text-gray-600 truncate">{dish.description}</p>
+                                                        </div>
+
+                                                        <div className="flex items-center gap-3 ml-4 shrink-0">
+                                                            <div className="text-right">
+                                                                {hasPromotion ? (
+                                                                    <>
+                                                                        <p className="text-sm font-bold text-green-600">${dish.promotionalPrice?.toFixed(2)}</p>
+                                                                        <p className="text-xs text-gray-500 line-through">${dish.price.toFixed(2)}</p>
+                                                                    </>
+                                                                ) : (
+                                                                    <p className="text-sm font-bold text-gray-900">${dish.price.toFixed(2)}</p>
+                                                                )}
                                                             </div>
-                                                        </Card>
-                                                    );
-                                                })}
-                                            </div></CardContent>
-                                        </Card>
-                                    ))}
-                                </div>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    </CardContent>
+                                </Card>
                             </div>
                         </div>
                     )}

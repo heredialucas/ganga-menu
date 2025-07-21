@@ -6,6 +6,7 @@ import { getAllDailySpecials } from '@repo/data-services/src/services/dailySpeci
 import { getOrdersByRestaurant } from '@repo/data-services';
 import { getRestaurantDesignByConfigId } from '@repo/data-services/src/services/restaurantDesignService';
 import WaiterInterface from './components/WaiterInterface';
+import { Toaster } from 'sonner';
 
 interface PageProps {
     params: Promise<{
@@ -38,16 +39,19 @@ export default async function WaiterPage({ params }: PageProps) {
     ]);
 
     return (
-        <WaiterInterface
-            locale={locale}
-            slug={slug}
-            restaurantConfig={restaurantConfig}
-            categories={categoriesWithDishes}
-            dailySpecials={dailySpecials}
-            dictionary={dictionary}
-            existingOrders={existingOrders}
-            tables={tables}
-        />
+        <>
+            <WaiterInterface
+                locale={locale}
+                slug={slug}
+                restaurantConfig={restaurantConfig}
+                categories={categoriesWithDishes}
+                dailySpecials={dailySpecials}
+                dictionary={dictionary}
+                existingOrders={existingOrders}
+                tables={tables}
+            />
+            <Toaster />
+        </>
     );
 }
 

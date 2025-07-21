@@ -98,7 +98,7 @@ export function OrdersDashboard({
 
             syncOrders();
         }
-    }, [socketConnected, restaurantConfig.slug]); // Removido orders.length para evitar bucles
+    }, [socketConnected, restaurantConfig.slug, orders.length]); // Agregado orders.length para sincronizar cuando cambien las órdenes
 
     // Filtrar órdenes por estado
     const filteredOrders = selectedStatus === 'ALL'

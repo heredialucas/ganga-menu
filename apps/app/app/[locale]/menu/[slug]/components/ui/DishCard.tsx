@@ -14,9 +14,10 @@ interface DishCardProps {
     specialDishIds: Set<string>;
     restaurantConfigId: string;
     onAddToOrder?: (dishId: string, quantity: number) => void;
+    isTableSpecificView?: boolean;
 }
 
-export default function DishCard({ dish, dictionary, restaurantName, restaurantPhone, specialDishIds, restaurantConfigId, onAddToOrder }: DishCardProps) {
+export default function DishCard({ dish, dictionary, restaurantName, restaurantPhone, specialDishIds, restaurantConfigId, onAddToOrder, isTableSpecificView = false }: DishCardProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [quantity, setQuantity] = useState(1);
     const whatsappLink = restaurantPhone ? generateWhatsAppLinkForDish(restaurantPhone, dish.name, restaurantName) : '';
@@ -88,35 +89,37 @@ export default function DishCard({ dish, dictionary, restaurantName, restaurantP
                         {dish.description}
                     </p>
 
-                    {/* Controles de cantidad */}
-                    <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center gap-2">
+                    {/* Controles de cantidad - solo en vista de mesa específica */}
+                    {isTableSpecificView && (
+                        <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={decreaseQuantity}
+                                    className="p-1 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+                                    disabled={quantity <= 1}
+                                >
+                                    <Minus className="w-3 h-3" />
+                                </button>
+                                <span className="text-sm font-medium min-w-[2rem] text-center">{quantity}</span>
+                                <button
+                                    onClick={increaseQuantity}
+                                    className="p-1 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+                                >
+                                    <Plus className="w-3 h-3" />
+                                </button>
+                            </div>
                             <button
-                                onClick={decreaseQuantity}
-                                className="p-1 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
-                                disabled={quantity <= 1}
+                                onClick={handleAddToOrder}
+                                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-300 shadow-md hover:shadow-lg`}
+                                style={{ backgroundColor: 'var(--theme-bg)', color: 'var(--theme-text)' }}
                             >
-                                <Minus className="w-3 h-3" />
-                            </button>
-                            <span className="text-sm font-medium min-w-[2rem] text-center">{quantity}</span>
-                            <button
-                                onClick={increaseQuantity}
-                                className="p-1 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
-                            >
-                                <Plus className="w-3 h-3" />
+                                Agregar
                             </button>
                         </div>
-                        <button
-                            onClick={handleAddToOrder}
-                            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-300 shadow-md hover:shadow-lg`}
-                            style={{ backgroundColor: 'var(--theme-bg)', color: 'var(--theme-text)' }}
-                        >
-                            Agregar
-                        </button>
-                    </div>
+                    )}
 
-                    {/* Botón de WhatsApp con colores temáticos */}
-                    {whatsappLink && (
+                    {/* Botón de WhatsApp con colores temáticos - solo en vista general */}
+                    {whatsappLink && !isTableSpecificView && (
                         <a
                             href={whatsappLink}
                             target="_blank"

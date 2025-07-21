@@ -33,7 +33,6 @@ import {
     CheckCircle,
     Truck,
     XCircle,
-    Eye,
     Trash2,
     Loader2
 } from 'lucide-react';
@@ -267,9 +266,7 @@ export function OrdersTable({ orders, onStatusUpdate, onDeleteOrder, dictionary,
                                                 </SelectContent>
                                             </Select>
 
-                                            <Button variant="outline" size="sm">
-                                                <Eye className="h-4 w-4" />
-                                            </Button>
+
 
                                             <Button
                                                 variant="outline"

@@ -25,9 +25,10 @@ interface CategorySectionProps {
     specialDishIds: Set<string>;
     restaurantConfigId: string;
     onAddToOrder?: (dishId: string, quantity: number) => void;
+    isTableSpecificView?: boolean;
 }
 
-export default function CategorySection({ category, dictionary, restaurantName, restaurantPhone, specialDishIds, restaurantConfigId, onAddToOrder }: CategorySectionProps) {
+export default function CategorySection({ category, dictionary, restaurantName, restaurantPhone, specialDishIds, restaurantConfigId, onAddToOrder, isTableSpecificView = false }: CategorySectionProps) {
     if (category.dishes.length === 0) return null;
 
     return (
@@ -82,6 +83,7 @@ export default function CategorySection({ category, dictionary, restaurantName, 
                                 specialDishIds={specialDishIds}
                                 restaurantConfigId={restaurantConfigId}
                                 onAddToOrder={onAddToOrder}
+                                isTableSpecificView={isTableSpecificView}
                             />
                         ))}
                     </div>

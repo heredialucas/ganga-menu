@@ -10,9 +10,10 @@ import { SnowParticlesWrapper } from './SnowParticlesWrapper';
 interface MenuHeaderProps {
     restaurantConfig: RestaurantConfigData;
     dictionary: Dictionary;
+    isTableSpecificView?: boolean;
 }
 
-export default function MenuHeader({ restaurantConfig, dictionary }: MenuHeaderProps) {
+export default function MenuHeader({ restaurantConfig, dictionary, isTableSpecificView = false }: MenuHeaderProps) {
     const whatsappLink = restaurantConfig.phone ? generateWhatsAppLink(restaurantConfig.phone) : '';
 
     return (
@@ -92,8 +93,8 @@ export default function MenuHeader({ restaurantConfig, dictionary }: MenuHeaderP
                             )}
                         </div>
 
-                        {/* Botón de WhatsApp con efectos mejorados */}
-                        {whatsappLink && (
+                        {/* Botón de WhatsApp con efectos mejorados - solo en vista general */}
+                        {whatsappLink && !isTableSpecificView && (
                             <a
                                 href={whatsappLink}
                                 target="_blank"

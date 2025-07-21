@@ -58,6 +58,8 @@ export default function MenuLanding({
     dictionary,
     table
 }: MenuLandingProps) {
+    // Determinar si es una vista de mesa específica
+    const isTableSpecificView = !!table;
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState<string>('all');
     const [showSpecialOnly, setShowSpecialOnly] = useState(false);
@@ -239,6 +241,7 @@ export default function MenuLanding({
                 <MenuHeader
                     restaurantConfig={restaurantConfig}
                     dictionary={dictionary}
+                    isTableSpecificView={isTableSpecificView}
                 />
 
                 {/* Filters */}
@@ -261,6 +264,7 @@ export default function MenuLanding({
                         dictionary={dictionary}
                         restaurantName={restaurantConfig.name}
                         restaurantPhone={restaurantConfig.phone}
+                        isTableSpecificView={isTableSpecificView}
                     />
                 )}
 
@@ -272,8 +276,8 @@ export default function MenuLanding({
                         variant="section"
                     />
 
-                    {/* Estado de órdenes en tiempo real */}
-                    {table && (
+                    {/* Estado de órdenes en tiempo real - solo en vista de mesa específica */}
+                    {isTableSpecificView && table && (
                         <OrderStatusBar
                             table={table}
                             restaurantSlug={slug}
@@ -307,6 +311,7 @@ export default function MenuLanding({
                                         specialDishIds={specialDishIds}
                                         restaurantConfigId={restaurantConfig.id}
                                         onAddToOrder={addToCart}
+                                        isTableSpecificView={isTableSpecificView}
                                     />
                                 </div>
                             ))}
@@ -320,42 +325,49 @@ export default function MenuLanding({
                     dictionary={dictionary}
                 />
 
-                {/* Carrito de compras */}
-                <OrderCart
-                    items={cartItems}
-                    onRemoveItem={removeFromCart}
-                    onUpdateQuantity={updateCartQuantity}
-                    onPlaceOrder={placeOrder}
-                    dictionary={dictionary}
-                    restaurantConfigId={restaurantConfig.id}
-                    table={table}
-                    todaySpecials={todaySpecials}
-                />
-
-                {/* Indicador de estado de conexión */}
-                {!isConnected && (
-                    <div className="fixed bottom-4 right-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-50">
-                        Sin conexión
-                    </div>
+                {/* Carrito de compras - solo en vista de mesa específica */}
+                {isTableSpecificView && (
+                    <OrderCart
+                        items={cartItems}
+                        onRemoveItem={removeFromCart}
+                        onUpdateQuantity={updateCartQuantity}
+                        onPlaceOrder={placeOrder}
+                        dictionary={dictionary}
+                        restaurantConfigId={restaurantConfig.id}
+                        table={table}
+                        todaySpecials={todaySpecials}
+                    />
                 )}
 
-                {/* Indicador de estado de orden */}
-                {orderStatus === 'loading' && (
-                    <div className="fixed bottom-4 left-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg z-50">
-                        Enviando pedido...
-                    </div>
-                )}
+                {/* Indicadores de estado - solo en vista de mesa específica */}
+                {isTableSpecificView && (
+                    <>
+                        {/* Indicador de estado de conexión */}
+                        {!isConnected && (
+                            <div className="fixed bottom-4 right-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-50">
+                                Sin conexión
+                            </div>
+                        )}
 
-                {orderStatus === 'success' && (
-                    <div className="fixed bottom-4 left-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50">
-                        ¡Pedido enviado con éxito!
-                    </div>
-                )}
+                        {/* Indicador de estado de orden */}
+                        {orderStatus === 'loading' && (
+                            <div className="fixed bottom-4 left-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg z-50">
+                                Enviando pedido...
+                            </div>
+                        )}
 
-                {orderStatus === 'error' && (
-                    <div className="fixed bottom-4 left-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-50">
-                        Error al enviar pedido
-                    </div>
+                        {orderStatus === 'success' && (
+                            <div className="fixed bottom-4 left-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50">
+                                ¡Pedido enviado con éxito!
+                            </div>
+                        )}
+
+                        {orderStatus === 'error' && (
+                            <div className="fixed bottom-4 left-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-50">
+                                Error al enviar pedido
+                            </div>
+                        )}
+                    </>
                 )}
             </div>
         </div>

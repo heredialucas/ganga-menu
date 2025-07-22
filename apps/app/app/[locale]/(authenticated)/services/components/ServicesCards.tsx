@@ -47,30 +47,33 @@ const ShareableLink = ({ link, linkName, onCopy }: ShareableLinkProps) => {
     };
 
     return (
-        <div className="space-y-3">
-            <div className="flex items-center space-x-2">
-                <div className="flex-grow p-2 bg-muted rounded-md font-mono text-sm text-muted-foreground truncate">
+        <div className="space-y-2 sm:space-y-3">
+            <div className="flex items-center gap-2">
+                <div className="flex-grow p-2 bg-muted rounded-md font-mono text-xs sm:text-sm text-muted-foreground truncate">
                     {link}
                 </div>
-                <Button variant="outline" size="icon" onClick={onCopy}>
+                <Button variant="outline" size="icon" onClick={onCopy} className="flex-shrink-0">
                     <Copy className="h-4 w-4" />
                 </Button>
             </div>
             {qrCodeDataUrl && (
-                <div className="p-4 bg-white rounded-lg border flex flex-col items-center gap-4">
-                    <img src={qrCodeDataUrl} alt={`QR Code for ${linkName}`} className="w-40 h-40 sm:w-48 sm:h-48" />
+                <div className="p-2 sm:p-4 bg-white rounded-lg border flex flex-col items-center gap-2 sm:gap-4">
+                    <img src={qrCodeDataUrl} alt={`QR Code for ${linkName}`} className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48" />
                 </div>
             )}
-            <div className="flex w-full items-center justify-center gap-2">
+            <div className="flex flex-col sm:flex-row w-full items-stretch sm:items-center gap-2">
                 {qrCodeDataUrl && (
                     <Button variant="outline" onClick={handleDownloadQR} className="flex-1">
                         <Download className="mr-2 h-4 w-4" />
-                        Descargar QR
+                        <span className="hidden sm:inline">Descargar QR</span>
+                        <span className="sm:hidden">Descargar</span>
                     </Button>
                 )}
                 <a href={link} target="_blank" rel="noopener noreferrer" className="flex-1">
                     <Button variant="secondary" className="w-full">
-                        Abrir <ExternalLink className="ml-2 h-4 w-4" />
+                        <span className="hidden sm:inline">Abrir</span>
+                        <span className="sm:hidden">Abrir</span>
+                        <ExternalLink className="ml-2 h-4 w-4" />
                     </Button>
                 </a>
             </div>
@@ -129,24 +132,24 @@ export function ServicesCards({ restaurantConfig, dictionary, locale }: Services
     };
 
     return (
-        <div className="grid gap-8 md:grid-cols-2">
+        <div className="grid gap-3 sm:gap-4 md:gap-6 lg:gap-8 grid-cols-1 md:grid-cols-2">
             {/* Card para Mozos */}
             <Card className="flex flex-col">
                 <CardHeader>
-                    <div className="flex items-center gap-4">
-                        <UtensilsCrossed className="h-8 w-8 text-blue-500" />
-                        <div>
-                            <CardTitle>Gestión de Mozos</CardTitle>
-                            <CardDescription>
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
+                        <UtensilsCrossed className="h-6 w-6 sm:h-8 sm:w-8 text-blue-500 flex-shrink-0" />
+                        <div className="text-center sm:text-left">
+                            <CardTitle className="text-lg sm:text-xl">Gestión de Mozos</CardTitle>
+                            <CardDescription className="text-sm sm:text-base">
                                 Modifica el código de acceso y comparte el enlace.
                             </CardDescription>
                         </div>
                     </div>
                 </CardHeader>
-                <CardContent className="flex-grow flex flex-col p-6">
+                <CardContent className="flex-grow flex flex-col p-3 sm:p-4 md:p-6">
                     <div>
-                        <label className="text-sm font-medium">Código de Acceso para Mozos</label>
-                        <p className="text-sm text-muted-foreground mb-2">
+                        <label className="text-sm sm:text-base font-medium">Código de Acceso para Mozos</label>
+                        <p className="text-xs sm:text-sm text-muted-foreground mb-2">
                             Este es el código que los mozos usarán para acceder.
                         </p>
                         <div className="flex flex-col sm:flex-row w-full items-stretch sm:items-center gap-2">
@@ -159,11 +162,12 @@ export function ServicesCards({ restaurantConfig, dictionary, locale }: Services
                             />
                             <Button type="button" onClick={handleUpdateWaiterCode} disabled={isPending} className="flex-shrink-0">
                                 <Save className="mr-2 h-4 w-4" />
-                                {isPending ? 'Guardando...' : 'Guardar'}
+                                <span className="hidden sm:inline">{isPending ? 'Guardando...' : 'Guardar'}</span>
+                                <span className="sm:hidden">{isPending ? '...' : 'OK'}</span>
                             </Button>
                         </div>
                     </div>
-                    <div className="mt-auto pt-6">
+                    <div className="mt-auto pt-6 sm:pt-8">
                         <label className="text-sm font-medium">Enlace de Acceso para Mozos</label>
                         <ShareableLink
                             link={waiterLink}
@@ -182,20 +186,20 @@ export function ServicesCards({ restaurantConfig, dictionary, locale }: Services
             {/* Card para Cocina */}
             <Card className="flex flex-col">
                 <CardHeader>
-                    <div className="flex items-center gap-4">
-                        <ChefHat className="h-8 w-8 text-orange-500" />
-                        <div>
-                            <CardTitle>Gestión de Cocina</CardTitle>
-                            <CardDescription>
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
+                        <ChefHat className="h-6 w-6 sm:h-8 sm:w-8 text-orange-500 flex-shrink-0" />
+                        <div className="text-center sm:text-left">
+                            <CardTitle className="text-lg sm:text-xl">Gestión de Cocina</CardTitle>
+                            <CardDescription className="text-sm sm:text-base">
                                 Modifica el código de acceso y comparte el enlace.
                             </CardDescription>
                         </div>
                     </div>
                 </CardHeader>
-                <CardContent className="flex-grow flex flex-col p-6">
+                <CardContent className="flex-grow flex flex-col p-3 sm:p-4 md:p-6">
                     <div>
-                        <label className="text-sm font-medium">Código de Acceso para Cocina</label>
-                        <p className="text-sm text-muted-foreground mb-2">
+                        <label className="text-sm sm:text-base font-medium">Código de Acceso para Cocina</label>
+                        <p className="text-xs sm:text-sm text-muted-foreground mb-2">
                             Este es el código que la cocina usará para acceder.
                         </p>
                         <div className="flex flex-col sm:flex-row w-full items-stretch sm:items-center gap-2">
@@ -208,12 +212,13 @@ export function ServicesCards({ restaurantConfig, dictionary, locale }: Services
                             />
                             <Button type="button" onClick={handleUpdateKitchenCode} disabled={isPending} className="flex-shrink-0">
                                 <Save className="mr-2 h-4 w-4" />
-                                {isPending ? 'Guardando...' : 'Guardar'}
+                                <span className="hidden sm:inline">{isPending ? 'Guardando...' : 'Guardar'}</span>
+                                <span className="sm:hidden">{isPending ? '...' : 'OK'}</span>
                             </Button>
                         </div>
                     </div>
-                    <div className="mt-auto pt-6">
-                        <label className="text-sm font-medium">Enlace de Acceso para Cocina</label>
+                    <div className="mt-auto pt-4 sm:pt-6">
+                        <label className="text-sm sm:text-base font-medium">Enlace de Acceso para Cocina</label>
                         <ShareableLink
                             link={kitchenLink}
                             linkName="Cocina"

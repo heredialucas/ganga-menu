@@ -54,40 +54,42 @@ export function CategoryManager({ categories }: CategoryManagerProps) {
 
     return (
         <>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-2">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 lg:gap-6 p-1 sm:p-2">
                 <div className="space-y-3">
-                    <h4 className="font-semibold">Nueva Categoría</h4>
-                    <form onSubmit={handleSubmit} className="flex items-start gap-2">
+                    <h4 className="font-semibold text-base sm:text-lg">Nueva Categoría</h4>
+                    <form onSubmit={handleSubmit} className="flex items-stretch gap-2">
                         <Input name="name" placeholder="Nombre de la categoría" required className="flex-1" />
-                        <Button type="submit" disabled={isPending}>
-                            <Plus className="h-4 w-4 mr-2" />
-                            Agregar
+                        <Button type="submit" disabled={isPending} className="px-3">
+                            <Plus className="h-4 w-4" />
+                            <span className="hidden sm:inline ml-2">Agregar</span>
                         </Button>
                     </form>
                 </div>
                 <div className="space-y-3">
-                    <h4 className="font-semibold">Categorías Existentes</h4>
-                    <div className="border rounded-md">
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Nombre</TableHead>
-                                    <TableHead className="text-right">Acción</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {categories.map(cat => (
-                                    <TableRow key={cat.id}>
-                                        <TableCell className="font-medium">{cat.name}</TableCell>
-                                        <TableCell className="text-right">
-                                            <Button variant="ghost" size="icon" onClick={() => setDeleteDialog({ open: true, category: cat })}>
-                                                <Trash2 className="h-4 w-4 text-red-500" />
-                                            </Button>
-                                        </TableCell>
+                    <h4 className="font-semibold text-base sm:text-lg">Categorías Existentes</h4>
+                    <div className="border rounded-md overflow-hidden">
+                        <div className="overflow-x-auto">
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead className="text-sm sm:text-base">Nombre</TableHead>
+                                        <TableHead className="text-right text-sm sm:text-base">Acción</TableHead>
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                                </TableHeader>
+                                <TableBody>
+                                    {categories.map(cat => (
+                                        <TableRow key={cat.id}>
+                                            <TableCell className="font-medium text-sm sm:text-base">{cat.name}</TableCell>
+                                            <TableCell className="text-right">
+                                                <Button variant="ghost" size="icon" onClick={() => setDeleteDialog({ open: true, category: cat })}>
+                                                    <Trash2 className="h-4 w-4 text-red-500" />
+                                                </Button>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </div>
                     </div>
                 </div>
             </div>

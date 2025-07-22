@@ -54,13 +54,15 @@ export function FeedbackWidget({ dictionary }: FeedbackWidgetProps) {
 
     return (
         <>
-            {/* Botón flotante */}
+            {/* Botón inline */}
             <Button
                 onClick={() => setIsOpen(true)}
-                className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 z-50 group"
-                size="icon"
+                variant="outline"
+                className="flex items-center gap-2"
             >
-                <MessageSquare className="w-6 h-6 group-hover:scale-110 transition-transform duration-300" />
+                <MessageSquare className="h-4 w-4" />
+                <span className="hidden sm:inline">Compartir enlaces</span>
+                <span className="sm:hidden">Para dar feedback</span>
             </Button>
 
             {/* Modal de feedback */}

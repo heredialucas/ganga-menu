@@ -37,14 +37,14 @@ export function OrdersStats({ stats, dictionary }: OrdersStatsProps) {
             bgColor: 'bg-yellow-50',
         },
         {
-            title: 'Listas/Entregadas',
+            title: 'Listas',
             value: stats.ready,
             icon: CheckCircle,
             color: 'text-green-600',
             bgColor: 'bg-green-50',
         },
         {
-            title: 'Canceladas',
+            title: 'Cancel',
             value: stats.cancelled,
             icon: XCircle,
             color: 'text-red-600',
@@ -53,21 +53,21 @@ export function OrdersStats({ stats, dictionary }: OrdersStatsProps) {
     ];
 
     return (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+        <div className="grid gap-2 sm:gap-3 md:gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
             {statCards.map((stat) => {
                 const Icon = stat.icon;
                 return (
                     <Card key={stat.title}>
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 sm:pb-2">
+                            <CardTitle className="text-xs sm:text-sm font-medium">
                                 {stat.title}
                             </CardTitle>
-                            <div className={`p-2 rounded-lg ${stat.bgColor}`}>
-                                <Icon className={`h-4 w-4 ${stat.color}`} />
+                            <div className={`p-1 sm:p-2 rounded-lg ${stat.bgColor}`}>
+                                <Icon className={`h-3 w-3 sm:h-4 sm:w-4 ${stat.color}`} />
                             </div>
                         </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold">{stat.value}</div>
+                        <CardContent className="p-2 sm:p-4">
+                            <div className="text-lg sm:text-xl md:text-2xl font-bold">{stat.value}</div>
                         </CardContent>
                     </Card>
                 );

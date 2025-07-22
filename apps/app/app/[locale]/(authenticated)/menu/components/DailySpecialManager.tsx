@@ -203,9 +203,9 @@ export function DailySpecialManager({ dailySpecials, dishes, upsertDailySpecial,
     ];
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 p-2">
-            <div className="lg:col-span-2 space-y-4">
-                <h4 className="font-semibold">Programar Promoción</h4>
+        <div className="grid grid-cols-1 xl:grid-cols-5 gap-3 sm:gap-4 lg:gap-6 p-1 sm:p-2">
+            <div className="xl:col-span-2 space-y-4">
+                <h4 className="font-semibold text-base sm:text-lg">Programar Promoción</h4>
                 <div className="space-y-2">
                     <label className="text-sm font-medium">Plato</label>
                     <Select value={selectedDishId} onValueChange={setSelectedDishId}>
@@ -230,13 +230,13 @@ export function DailySpecialManager({ dailySpecials, dishes, upsertDailySpecial,
 
                 <div className="flex items-center space-x-2">
                     <Switch id="recurring-switch" checked={isRecurring} onCheckedChange={setIsRecurring} />
-                    <Label htmlFor="recurring-switch">Repetir Promoción</Label>
+                    <Label htmlFor="recurring-switch" className="text-sm">Repetir Promoción</Label>
                 </div>
 
                 {isRecurring && (
-                    <Card className="p-4 space-y-4">
+                    <Card className="p-3 sm:p-4 space-y-3 sm:space-y-4">
                         <div className="space-y-2">
-                            <Label>Tipo de Repetición</Label>
+                            <Label className="text-sm">Tipo de Repetición</Label>
                             <Select value={recurrenceType} onValueChange={(v) => setRecurrenceType(v as RecurrenceTypeString)}>
                                 <SelectTrigger><SelectValue /></SelectTrigger>
                                 <SelectContent>
@@ -248,17 +248,17 @@ export function DailySpecialManager({ dailySpecials, dishes, upsertDailySpecial,
 
                         {recurrenceType === 'WEEKLY' && (
                             <div className="space-y-2">
-                                <Label>Días de la Semana</Label>
+                                <Label className="text-sm">Días de la Semana</Label>
                                 <ToggleGroup type="multiple" value={recurrenceDays} onValueChange={setRecurrenceDays} className="flex-wrap justify-start">
                                     {weekDays.map(day => (
-                                        <ToggleGroupItem key={day.value} value={day.value} aria-label={day.label}>{day.label}</ToggleGroupItem>
+                                        <ToggleGroupItem key={day.value} value={day.value} aria-label={day.label} className="text-xs sm:text-sm">{day.label}</ToggleGroupItem>
                                     ))}
                                 </ToggleGroup>
                             </div>
                         )}
 
                         <div className="space-y-2">
-                            <Label>Fecha de Fin de Repetición</Label>
+                            <Label className="text-sm">Fecha de Fin de Repetición</Label>
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <Button variant="outline" className={cn("w-full justify-start text-left font-normal", !recurrenceEndDate && "text-muted-foreground")}>
@@ -276,28 +276,29 @@ export function DailySpecialManager({ dailySpecials, dishes, upsertDailySpecial,
 
                 <Button onClick={handleAddSpecial} disabled={isPending} className="w-full">
                     <Star className="h-4 w-4 mr-2" />
-                    {isPending ? 'Añadiendo...' : 'Añadir Promoción'}
+                    <span className="hidden sm:inline">{isPending ? 'Añadiendo...' : 'Añadir Promoción'}</span>
+                    <span className="sm:hidden">{isPending ? 'Añadiendo...' : 'Añadir'}</span>
                 </Button>
                 {selectedDishForPreview && (
                     <div>
-                        <h4 className="font-semibold mb-2">Previsualización de la Promoción</h4>
+                        <h4 className="font-semibold mb-2 text-sm sm:text-base">Previsualización de la Promoción</h4>
                         <Card className="overflow-hidden">
-                            <div className="relative h-32 w-full">
+                            <div className="relative h-24 sm:h-32 w-full">
                                 {selectedDishForPreview.imageUrl ? (
                                     <Image src={selectedDishForPreview.imageUrl} alt={selectedDishForPreview.name} layout="fill" className="object-cover" />
                                 ) : (
                                     <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                                        <ImageIcon className="h-10 w-10 text-gray-300" />
+                                        <ImageIcon className="h-8 w-8 sm:h-10 sm:w-10 text-gray-300" />
                                     </div>
                                 )}
                             </div>
-                            <CardContent className="p-3">
-                                <h3 className="font-semibold text-base truncate">{selectedDishForPreview.name}</h3>
+                            <CardContent className="p-2 sm:p-3">
+                                <h3 className="font-semibold text-sm sm:text-base truncate">{selectedDishForPreview.name}</h3>
                                 <div className="flex items-baseline gap-2 mt-2">
-                                    <p className="font-bold text-lg text-red-500 line-through">
+                                    <p className="font-bold text-sm sm:text-lg text-red-500 line-through">
                                         ${selectedDishForPreview.price.toFixed(2)}
                                     </p>
-                                    <p className="font-bold text-xl text-green-600">
+                                    <p className="font-bold text-base sm:text-xl text-green-600">
                                         ${selectedDishForPreview.promotionalPrice?.toFixed(2) || '0.00'}
                                     </p>
                                 </div>
@@ -310,21 +311,23 @@ export function DailySpecialManager({ dailySpecials, dishes, upsertDailySpecial,
                 )}
             </div>
 
-            <div className="lg:col-span-3 space-y-4">
-                <h4 className="font-semibold">Promociones Activas</h4>
-                <DataTable
-                    className="space-y-4"
-                    containerClassName="max-h-[65vh] overflow-y-auto"
-                    columns={columns}
-                    data={dailySpecials}
-                    toolbar={(table) => (
-                        <TableToolbar
-                            table={table}
-                            onDeleteSelected={() => handleDeleteSelected(table)}
-                            isDeleting={isPending}
-                        />
-                    )}
-                />
+            <div className="xl:col-span-3 space-y-4">
+                <h4 className="font-semibold text-base sm:text-lg">Promociones Activas</h4>
+                <div className="overflow-x-auto">
+                    <DataTable
+                        className="space-y-4"
+                        containerClassName="max-h-[50vh] sm:max-h-[65vh] overflow-y-auto"
+                        columns={columns}
+                        data={dailySpecials}
+                        toolbar={(table) => (
+                            <TableToolbar
+                                table={table}
+                                onDeleteSelected={() => handleDeleteSelected(table)}
+                                isDeleting={isPending}
+                            />
+                        )}
+                    />
+                </div>
             </div>
         </div>
     );

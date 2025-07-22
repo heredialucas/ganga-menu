@@ -156,7 +156,7 @@ export function TableQRGenerator({ config, appUrl }: TableQRGeneratorProps) {
     if (!config) {
         return (
             <Card>
-                <CardContent className="p-6">
+                <CardContent className="p-1 sm:p-2 md:p-6">
                     <div className="text-center text-gray-500">
                         <QrCode className="w-12 h-12 mx-auto mb-4 text-gray-300" />
                         <p>Primero configura tu restaurante</p>
@@ -167,24 +167,24 @@ export function TableQRGenerator({ config, appUrl }: TableQRGeneratorProps) {
     }
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-3 sm:space-y-4 md:space-y-6">
             {/* Información explicativa */}
             <Card>
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                        <QrCode className="w-5 h-5" />
+                    <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+                        <QrCode className="w-4 h-4 sm:w-5 sm:h-5" />
                         Códigos QR por Mesa
                     </CardTitle>
-                    <CardDescription>
+                    <CardDescription className="text-sm sm:text-base">
                         Genera códigos QR específicos para cada mesa de tu restaurante.
                         Cada QR llevará a los clientes directamente al menú de esa mesa específica.
                     </CardDescription>
                 </CardHeader>
-                <CardContent>
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                        <div className="flex items-start gap-3">
-                            <Info className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                            <div className="text-sm text-blue-800">
+                <CardContent className="p-1 sm:p-2 md:p-6">
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 sm:p-4">
+                        <div className="flex items-start gap-2 sm:gap-3">
+                            <Info className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                            <div className="text-xs sm:text-sm text-blue-800">
                                 <p className="font-medium mb-2">¿Cómo funciona?</p>
                                 <ul className="space-y-1">
                                     <li>• <strong>Seguridad:</strong> Cada mesa tiene su propio QR único</li>
@@ -198,45 +198,45 @@ export function TableQRGenerator({ config, appUrl }: TableQRGeneratorProps) {
                 </CardContent>
             </Card>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
                 {/* Lista de mesas */}
                 <Card>
                     <CardHeader>
-                        <CardTitle>Mesas Disponibles</CardTitle>
-                        <CardDescription>
+                        <CardTitle className="text-base sm:text-lg">Mesas Disponibles</CardTitle>
+                        <CardDescription className="text-sm sm:text-base">
                             Selecciona una mesa para generar su código QR único
                         </CardDescription>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="p-1 sm:p-2 md:p-6">
                         {loading ? (
-                            <div className="text-center py-8">
-                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
-                                <p className="text-sm text-gray-500 mt-2">Cargando mesas...</p>
+                            <div className="text-center py-6 sm:py-8">
+                                <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-gray-900 mx-auto"></div>
+                                <p className="text-xs sm:text-sm text-gray-500 mt-2">Cargando mesas...</p>
                             </div>
                         ) : tables.length === 0 ? (
-                            <div className="text-center py-8 text-gray-500">
-                                <QrCode className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-                                <p>No hay mesas configuradas</p>
-                                <p className="text-sm">Configura las mesas en la pestaña "Diseño"</p>
+                            <div className="text-center py-6 sm:py-8 text-gray-500">
+                                <QrCode className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-4 text-gray-300" />
+                                <p className="text-sm sm:text-base">No hay mesas configuradas</p>
+                                <p className="text-xs sm:text-sm">Configura las mesas en la pestaña "Diseño"</p>
                             </div>
                         ) : (
-                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
                                 {tables.map((table) => (
                                     <button
                                         key={table.id}
                                         onClick={() => generateQRForTable(table)}
-                                        className={`p-4 rounded-lg border-2 transition-all ${selectedTable?.id === table.id
+                                        className={`p-2 sm:p-4 rounded-lg border-2 transition-all ${selectedTable?.id === table.id
                                             ? 'border-blue-500 bg-blue-50'
                                             : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                                             }`}
                                     >
                                         <div className="text-center">
-                                            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                                                <span className="text-sm font-semibold text-blue-600">
+                                            <div className="w-6 h-6 sm:w-8 sm:h-8 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-1 sm:mb-2">
+                                                <span className="text-xs sm:text-sm font-semibold text-blue-600">
                                                     {table.label}
                                                 </span>
                                             </div>
-                                            <p className="text-sm font-medium text-gray-700">
+                                            <p className="text-xs sm:text-sm font-medium text-gray-700">
                                                 Mesa {table.label}
                                             </p>
                                         </div>
@@ -250,34 +250,34 @@ export function TableQRGenerator({ config, appUrl }: TableQRGeneratorProps) {
                 {/* Preview del QR */}
                 <Card>
                     <CardHeader>
-                        <CardTitle>Código QR</CardTitle>
-                        <CardDescription>
+                        <CardTitle className="text-base sm:text-lg">Código QR</CardTitle>
+                        <CardDescription className="text-sm sm:text-base">
                             {selectedTable
                                 ? `QR para Mesa ${selectedTable.label}`
                                 : 'Selecciona una mesa para ver el QR'
                             }
                         </CardDescription>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="p-1 sm:p-2 md:p-6">
                         {selectedTable && qrCodeUrl ? (
-                            <div className="space-y-4">
+                            <div className="space-y-3 sm:space-y-4">
                                 {/* QR Code */}
                                 <div className="flex justify-center">
-                                    <div className="p-4 bg-white rounded-lg border">
+                                    <div className="p-2 sm:p-4 bg-white rounded-lg border">
                                         <img
                                             src={qrCodeUrl}
                                             alt={`QR Code Mesa ${selectedTable.label}`}
-                                            className="w-64 h-64"
+                                            className="w-48 h-48 sm:w-64 sm:h-64"
                                         />
                                     </div>
                                 </div>
 
                                 {/* Información de la mesa */}
                                 <div className="text-center space-y-2">
-                                    <Badge variant="secondary" className="text-lg px-4 py-2">
+                                    <Badge variant="secondary" className="text-sm sm:text-lg px-3 sm:px-4 py-1 sm:py-2">
                                         Mesa {selectedTable.label}
                                     </Badge>
-                                    <p className="text-sm text-gray-600">
+                                    <p className="text-xs sm:text-sm text-gray-600">
                                         {config.name}
                                     </p>
                                     <p className="text-xs text-gray-500 break-all">
@@ -291,35 +291,38 @@ export function TableQRGenerator({ config, appUrl }: TableQRGeneratorProps) {
                                         onClick={downloadQR}
                                         variant="outline"
                                         size="sm"
-                                        className="flex items-center gap-2"
+                                        className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
                                     >
-                                        <Download className="w-4 h-4" />
-                                        Descargar
+                                        <Download className="w-3 h-3 sm:w-4 sm:h-4" />
+                                        <span className="hidden sm:inline">Descargar</span>
+                                        <span className="sm:hidden">Desc</span>
                                     </Button>
                                     <Button
                                         onClick={printQR}
                                         variant="outline"
                                         size="sm"
-                                        className="flex items-center gap-2"
+                                        className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
                                     >
-                                        <Printer className="w-4 h-4" />
-                                        Imprimir
+                                        <Printer className="w-3 h-3 sm:w-4 sm:h-4" />
+                                        <span className="hidden sm:inline">Imprimir</span>
+                                        <span className="sm:hidden">Impr</span>
                                     </Button>
                                     <Button
                                         onClick={copyMenuUrl}
                                         variant="outline"
                                         size="sm"
-                                        className="flex items-center gap-2"
+                                        className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
                                     >
-                                        <Copy className="w-4 h-4" />
-                                        Copiar URL
+                                        <Copy className="w-3 h-3 sm:w-4 sm:h-4" />
+                                        <span className="hidden sm:inline">Copiar URL</span>
+                                        <span className="sm:hidden">Copiar</span>
                                     </Button>
                                 </div>
                             </div>
                         ) : (
-                            <div className="text-center py-12 text-gray-500">
-                                <QrCode className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                                <p>Selecciona una mesa para generar el código QR</p>
+                            <div className="text-center py-8 sm:py-12 text-gray-500">
+                                <QrCode className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 text-gray-300" />
+                                <p className="text-sm sm:text-base">Selecciona una mesa para generar el código QR</p>
                             </div>
                         )}
                     </CardContent>

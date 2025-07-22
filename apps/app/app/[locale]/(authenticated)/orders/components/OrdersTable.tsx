@@ -145,8 +145,8 @@ export function OrdersTable({ orders, onStatusUpdate, onDeleteOrder, dictionary,
         return (
             <>
                 <Card>
-                    <CardContent className="flex items-center justify-center h-32">
-                        <p className="text-muted-foreground">No hay órdenes para mostrar</p>
+                    <CardContent className="flex items-center justify-center h-24 sm:h-32 p-3 sm:p-6">
+                        <p className="text-sm sm:text-base text-muted-foreground">No hay órdenes para mostrar</p>
                     </CardContent>
                 </Card>
 
@@ -166,127 +166,128 @@ export function OrdersTable({ orders, onStatusUpdate, onDeleteOrder, dictionary,
     return (
         <>
             <Card>
-                <CardHeader>
-                    <CardTitle>Órdenes ({orders.length})</CardTitle>
+                <CardHeader className="p-3 sm:p-6">
+                    <CardTitle className="text-lg sm:text-xl">Órdenes ({orders.length})</CardTitle>
                 </CardHeader>
-                <CardContent>
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>ID</TableHead>
-                                <TableHead>Cliente</TableHead>
-                                <TableHead>Items</TableHead>
-                                <TableHead>Total</TableHead>
-                                <TableHead>Estado</TableHead>
-                                <TableHead>Fecha</TableHead>
-                                <TableHead>Acciones</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {orders.map((order) => (
-                                <TableRow key={order.id}>
-                                    <TableCell className="font-mono text-sm">
-                                        #{order.id.slice(-8)}
-                                    </TableCell>
-                                    <TableCell>
-                                        <div>
-                                            <div className="font-medium">
-                                                {order.waiterName || 'Cliente'}
-                                            </div>
-                                            {order.table && (
-                                                <div className="text-sm text-muted-foreground">
-                                                    Mesa: {order.table.label}
+                <CardContent className="p-0 sm:p-6">
+                    <div className="overflow-x-auto">
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead className="text-xs sm:text-sm">ID</TableHead>
+                                    <TableHead className="text-xs sm:text-sm">Cliente</TableHead>
+                                    <TableHead className="text-xs sm:text-sm hidden sm:table-cell">Items</TableHead>
+                                    <TableHead className="text-xs sm:text-sm">Total</TableHead>
+                                    <TableHead className="text-xs sm:text-sm">Estado</TableHead>
+                                    <TableHead className="text-xs sm:text-sm hidden md:table-cell">Fecha</TableHead>
+                                    <TableHead className="text-xs sm:text-sm">Acciones</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {orders.map((order) => (
+                                    <TableRow key={order.id}>
+                                        <TableCell className="font-mono text-xs sm:text-sm">
+                                            #{order.id.slice(-6)}
+                                        </TableCell>
+                                        <TableCell>
+                                            <div>
+                                                <div className="font-medium text-xs sm:text-sm">
+                                                    {order.waiterName || 'Cliente'}
                                                 </div>
-                                            )}
-                                        </div>
-                                    </TableCell>
-                                    <TableCell>
-                                        <div className="space-y-1">
-                                            {order.items?.map((item, index) => (
-                                                <div key={index} className="text-sm">
-                                                    {item.quantity}x {item.dish?.name || 'Plato no disponible'}
-                                                    {item.notes && (
-                                                        <span className="text-muted-foreground ml-1">
-                                                            ({item.notes})
-                                                        </span>
-                                                    )}
-                                                </div>
-                                            )) || (
-                                                    <div className="text-sm text-muted-foreground">
-                                                        Sin items
+                                                {order.table && (
+                                                    <div className="text-xs sm:text-sm text-muted-foreground">
+                                                        Mesa: {order.table.label}
                                                     </div>
                                                 )}
-                                        </div>
-                                    </TableCell>
-                                    <TableCell className="font-medium">
-                                        {order.total ? formatPrice(order.total) : 'N/A'}
-                                    </TableCell>
-                                    <TableCell>
-                                        <Badge
-                                            variant="secondary"
-                                            className={statusConfig[order.status as OrderStatus].color}
-                                        >
-                                            {getStatusIcon(order.status as OrderStatus)}
-                                            <span className="ml-1">
-                                                {statusConfig[order.status as OrderStatus].label}
-                                            </span>
-                                        </Badge>
-                                    </TableCell>
-                                    <TableCell className="text-sm text-muted-foreground">
-                                        {order.createdAt ? formatDate(new Date(order.createdAt).toISOString()) : 'N/A'}
-                                    </TableCell>
-                                    <TableCell>
-                                        <div className="flex items-center gap-2">
-                                            <Select
-                                                value={order.status}
-                                                onValueChange={(value: OrderStatus) =>
-                                                    onStatusUpdate(order.id, value)
-                                                }
-                                                disabled={updatingOrderId === order.id}
-                                            >
-                                                <SelectTrigger className="w-32">
-                                                    {updatingOrderId === order.id ? (
-                                                        <div className="flex items-center gap-2">
-                                                            <Loader2 className="h-4 w-4 animate-spin" />
-                                                            <span>Actualizando...</span>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell className="hidden sm:table-cell">
+                                            <div className="space-y-1">
+                                                {order.items?.map((item, index) => (
+                                                    <div key={index} className="text-xs sm:text-sm">
+                                                        {item.quantity}x {item.dish?.name || 'Plato no disponible'}
+                                                        {item.notes && (
+                                                            <span className="text-muted-foreground ml-1">
+                                                                ({item.notes})
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                )) || (
+                                                        <div className="text-xs sm:text-sm text-muted-foreground">
+                                                            Sin items
                                                         </div>
-                                                    ) : (
-                                                        <SelectValue />
                                                     )}
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    {Object.entries(statusConfig).map(([status, config]) => (
-                                                        <SelectItem key={status} value={status}>
-                                                            <div className="flex items-center gap-2">
-                                                                {getStatusIcon(status as OrderStatus)}
-                                                                {config.label}
-                                                            </div>
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
-
-
-
-                                            <Button
-                                                variant="outline"
-                                                size="sm"
-                                                onClick={() => handleDeleteClick(order)}
-                                                disabled={deletingOrderId === order.id}
-                                                className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                                            </div>
+                                        </TableCell>
+                                        <TableCell className="font-medium text-xs sm:text-sm">
+                                            {order.total ? formatPrice(order.total) : 'N/A'}
+                                        </TableCell>
+                                        <TableCell>
+                                            <Badge
+                                                variant="secondary"
+                                                className={`text-xs sm:text-sm ${statusConfig[order.status as OrderStatus].color}`}
                                             >
-                                                {deletingOrderId === order.id ? (
-                                                    <Loader2 className="h-4 w-4 animate-spin" />
-                                                ) : (
-                                                    <Trash2 className="h-4 w-4" />
-                                                )}
-                                            </Button>
-                                        </div>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
+                                                {getStatusIcon(order.status as OrderStatus)}
+                                                <span className="ml-1">
+                                                    {statusConfig[order.status as OrderStatus].label}
+                                                </span>
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell className="text-xs sm:text-sm text-muted-foreground hidden md:table-cell">
+                                            {order.createdAt ? formatDate(new Date(order.createdAt).toISOString()) : 'N/A'}
+                                        </TableCell>
+                                        <TableCell>
+                                            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-1 sm:gap-2">
+                                                <Select
+                                                    value={order.status}
+                                                    onValueChange={(value: OrderStatus) =>
+                                                        onStatusUpdate(order.id, value)
+                                                    }
+                                                    disabled={updatingOrderId === order.id}
+                                                >
+                                                    <SelectTrigger className="w-20 sm:w-32 text-xs sm:text-sm">
+                                                        {updatingOrderId === order.id ? (
+                                                            <div className="flex items-center gap-1 sm:gap-2">
+                                                                <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
+                                                                <span className="hidden sm:inline">Actualizando...</span>
+                                                                <span className="sm:hidden">...</span>
+                                                            </div>
+                                                        ) : (
+                                                            <SelectValue />
+                                                        )}
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {Object.entries(statusConfig).map(([status, config]) => (
+                                                            <SelectItem key={status} value={status}>
+                                                                <div className="flex items-center gap-2">
+                                                                    {getStatusIcon(status as OrderStatus)}
+                                                                    {config.label}
+                                                                </div>
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    onClick={() => handleDeleteClick(order)}
+                                                    disabled={deletingOrderId === order.id}
+                                                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                                                >
+                                                    {deletingOrderId === order.id ? (
+                                                        <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
+                                                    ) : (
+                                                        <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
+                                                    )}
+                                                </Button>
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </div>
                 </CardContent>
             </Card>
 

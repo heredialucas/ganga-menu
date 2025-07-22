@@ -186,14 +186,14 @@ export function OrdersDashboard({
     };
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-3 sm:space-y-4 md:space-y-6">
             {/* Header */}
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="text-center sm:text-left flex-1">
+                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">
                         {dictionary.app?.admin?.menu?.title || 'Gestión de Órdenes'}
                     </h1>
-                    <p className="text-muted-foreground">
+                    <p className="text-sm sm:text-base text-muted-foreground mt-2">
                         Monitorea y gestiona las órdenes de tu restaurante en tiempo real
                     </p>
                 </div>
@@ -201,14 +201,16 @@ export function OrdersDashboard({
                 {/* Estado de conexión */}
                 <div className="flex items-center gap-2">
                     {isConnected ? (
-                        <Badge variant="default" className="bg-green-500">
+                        <Badge variant="default" className="bg-green-500 text-xs sm:text-sm">
                             <Wifi className="w-3 h-3 mr-1" />
-                            Conectado
+                            <span className="hidden sm:inline">Conectado</span>
+                            <span className="sm:hidden">OK</span>
                         </Badge>
                     ) : (
-                        <Badge variant="destructive">
+                        <Badge variant="destructive" className="text-xs sm:text-sm">
                             <WifiOff className="w-3 h-3 mr-1" />
-                            Desconectado
+                            <span className="hidden sm:inline">Desconectado</span>
+                            <span className="sm:hidden">Off</span>
                         </Badge>
                     )}
                 </div>
@@ -225,14 +227,23 @@ export function OrdersDashboard({
             />
 
             {/* Tabs para diferentes vistas */}
-            <Tabs defaultValue="all" className="space-y-4">
-                <TabsList>
-                    <TabsTrigger value="all">Todas las Órdenes</TabsTrigger>
-                    <TabsTrigger value="active">Órdenes Activas</TabsTrigger>
-                    <TabsTrigger value="completed">Completadas</TabsTrigger>
+            <Tabs defaultValue="all" className="space-y-3 sm:space-y-4">
+                <TabsList className="grid w-full grid-cols-3 h-auto sm:h-10">
+                    <TabsTrigger value="all" className="gap-1 sm:gap-2 text-xs sm:text-sm py-2 sm:py-0">
+                        <span className="hidden sm:inline">Todas las Órdenes</span>
+                        <span className="sm:hidden">Todas</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="active" className="gap-1 sm:gap-2 text-xs sm:text-sm py-2 sm:py-0">
+                        <span className="hidden sm:inline">Órdenes Activas</span>
+                        <span className="sm:hidden">Activas</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="completed" className="gap-1 sm:gap-2 text-xs sm:text-sm py-2 sm:py-0">
+                        <span className="hidden sm:inline">Completadas</span>
+                        <span className="sm:hidden">Listas</span>
+                    </TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="all" className="space-y-4">
+                <TabsContent value="all" className="space-y-3 sm:space-y-4">
                     <OrdersTable
                         orders={filteredOrders}
                         onStatusUpdate={handleStatusUpdate}
@@ -243,7 +254,7 @@ export function OrdersDashboard({
                     />
                 </TabsContent>
 
-                <TabsContent value="active" className="space-y-4">
+                <TabsContent value="active" className="space-y-3 sm:space-y-4">
                     <OrdersTable
                         orders={orders.filter(o => o.status === 'ACTIVE')}
                         onStatusUpdate={handleStatusUpdate}
@@ -254,7 +265,7 @@ export function OrdersDashboard({
                     />
                 </TabsContent>
 
-                <TabsContent value="completed" className="space-y-4">
+                <TabsContent value="completed" className="space-y-3 sm:space-y-4">
                     <OrdersTable
                         orders={orders.filter(o => o.status === 'READY' || o.status === 'CANCELLED')}
                         onStatusUpdate={handleStatusUpdate}

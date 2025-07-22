@@ -18,19 +18,23 @@ export default async function OrdersPage({ params }: { params: Promise<{ locale:
 
     if (!restaurantConfig) {
         return (
-            <div className="flex items-center justify-center min-h-screen">
-                <div className="text-center">
-                    <p className="text-muted-foreground">Configuración de restaurante no encontrada</p>
+            <div className="space-y-3 sm:space-y-4 md:space-y-6 p-1 sm:p-2 md:p-6">
+                <div className="flex items-center justify-center min-h-[50vh]">
+                    <div className="text-center">
+                        <p className="text-sm sm:text-base text-muted-foreground">Configuración de restaurante no encontrada</p>
+                    </div>
                 </div>
             </div>
         );
     }
 
     return (
-        <OrdersDashboard
-            orders={orders}
-            restaurantConfig={restaurantConfig}
-            dictionary={dictionary}
-        />
+        <div className="space-y-3 sm:space-y-4 md:space-y-6 p-1 sm:p-2 md:p-6">
+            <OrdersDashboard
+                orders={orders}
+                restaurantConfig={restaurantConfig}
+                dictionary={dictionary}
+            />
+        </div>
     );
 } 

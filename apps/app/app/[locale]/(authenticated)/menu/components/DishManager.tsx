@@ -113,19 +113,24 @@ export function DishManager({ dishes, categories }: DishManagerProps) {
             <Card>
                 <CardHeader>
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                        <div className="flex-1">
-                            <CardTitle className="flex items-center gap-2"><UtensilsCrossed className="h-5 w-5" />Platos</CardTitle>
-                            <CardDescription>Crea y gestiona los platos de tu menú.</CardDescription>
+                        <div className="flex-1 text-center sm:text-left">
+                            <CardTitle className="flex items-center gap-2 justify-center sm:justify-start">
+                                <UtensilsCrossed className="h-5 w-5" />
+                                <span className="text-lg sm:text-xl">Platos</span>
+                            </CardTitle>
+                            <CardDescription className="text-sm sm:text-base">Crea y gestiona los platos de tu menú.</CardDescription>
                         </div>
                         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                             <DialogTrigger asChild>
                                 <Button onClick={() => handleOpenDialog(null)} className="w-full sm:w-auto">
-                                    <Plus className="h-4 w-4 mr-2" /> Nuevo Plato
+                                    <Plus className="h-4 w-4 mr-2" />
+                                    <span className="hidden sm:inline">Nuevo Plato</span>
+                                    <span className="sm:hidden">Nuevo</span>
                                 </Button>
                             </DialogTrigger>
-                            <DialogContent className="max-w-md sm:max-w-lg">
+                            <DialogContent className="max-w-[95vw] sm:max-w-md lg:max-w-lg">
                                 <DialogHeader>
-                                    <DialogTitle>{editingDish ? 'Editar Plato' : 'Crear Plato'}</DialogTitle>
+                                    <DialogTitle className="text-lg sm:text-xl">{editingDish ? 'Editar Plato' : 'Crear Plato'}</DialogTitle>
                                 </DialogHeader>
                                 <form onSubmit={handleSubmit} className="space-y-4">
                                     <div className="space-y-2">
@@ -153,7 +158,7 @@ export function DishManager({ dishes, categories }: DishManagerProps) {
                                         <Label htmlFor="description">Descripción</Label>
                                         <Textarea id="description" name="description" defaultValue={editingDish?.description || ''} />
                                     </div>
-                                    <div className="grid grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div className="space-y-2">
                                             <Label htmlFor="price">Precio</Label>
                                             <Input id="price" name="price" type="number" step="0.01" defaultValue={editingDish?.price} required />
@@ -181,9 +186,9 @@ export function DishManager({ dishes, categories }: DishManagerProps) {
                         </Dialog>
                     </div>
                 </CardHeader>
-                <CardContent>
-                    <ScrollArea className="h-[70vh] lg:h-auto">
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                <CardContent className="p-2 sm:p-3 md:p-6">
+                    <ScrollArea className="h-[60vh] sm:h-[70vh] lg:h-auto">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
                             {dishes.map((dish) => (
                                 <Card key={dish.id} className="overflow-hidden flex flex-col relative">
                                     <div className="absolute top-2 right-2 z-10 transition-opacity">
@@ -191,26 +196,28 @@ export function DishManager({ dishes, categories }: DishManagerProps) {
                                             <Trash2 className="h-4 w-4" />
                                         </Button>
                                     </div>
-                                    <div className="relative h-32 w-full">
+                                    <div className="relative h-24 sm:h-32 w-full">
                                         {dish.imageUrl ? (
                                             <Image src={dish.imageUrl} alt={dish.name} layout="fill" className="object-cover" />
                                         ) : (
                                             <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                                                <ImageIcon className="h-10 w-10 text-gray-300" />
+                                                <ImageIcon className="h-8 w-8 sm:h-10 sm:w-10 text-gray-300" />
                                             </div>
                                         )}
                                     </div>
-                                    <CardContent className="p-3 flex-1 flex flex-col">
+                                    <CardContent className="p-2 sm:p-3 flex-1 flex flex-col">
                                         <div className="flex-1">
                                             <p className="text-xs text-muted-foreground">{dish.category?.name || 'Sin categoría'}</p>
-                                            <h3 className="font-semibold text-base leading-tight truncate">{dish.name}</h3>
-                                            <p className="text-xs text-muted-foreground h-12 overflow-hidden my-1">{dish.description}</p>
+                                            <h3 className="font-semibold text-sm sm:text-base leading-tight truncate">{dish.name}</h3>
+                                            <p className="text-xs text-muted-foreground h-10 sm:h-12 overflow-hidden my-1">{dish.description}</p>
                                         </div>
                                         <div className="flex items-baseline gap-2">
-                                            <p className="font-bold text-lg">${dish.price.toFixed(2)}</p>
+                                            <p className="font-bold text-base sm:text-lg">${dish.price.toFixed(2)}</p>
                                         </div>
-                                        <Button variant="outline" size="sm" className="w-full mt-3" onClick={() => handleOpenDialog(dish)}>
-                                            <Edit className="h-4 w-4 mr-2" /> Editar
+                                        <Button variant="outline" size="sm" className="w-full mt-2 sm:mt-3" onClick={() => handleOpenDialog(dish)}>
+                                            <Edit className="h-4 w-4 mr-2" />
+                                            <span className="hidden sm:inline">Editar</span>
+                                            <span className="sm:hidden">Editar</span>
                                         </Button>
                                     </CardContent>
                                 </Card>

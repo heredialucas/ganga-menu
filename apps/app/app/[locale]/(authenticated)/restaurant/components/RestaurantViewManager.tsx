@@ -33,34 +33,37 @@ interface RestaurantViewManagerProps {
 export function RestaurantViewManager({ config, design, dictionary, appUrl }: RestaurantViewManagerProps) {
     return (
         <Tabs defaultValue="config" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="config" className="gap-2">
-                    <Settings className="h-4 w-4" />
-                    Configuración
+            <TabsList className="grid w-full grid-cols-3 h-auto sm:h-10">
+                <TabsTrigger value="config" className="gap-1 sm:gap-2 text-xs sm:text-sm py-2 sm:py-0">
+                    <Settings className="h-3 w-3 sm:h-4 sm:w-4" />
+                    <span className="hidden sm:inline">Configuración</span>
+                    <span className="sm:hidden">Config</span>
                 </TabsTrigger>
-                <TabsTrigger value="design" className="gap-2">
-                    <LayoutDashboard className="h-4 w-4" />
-                    Diseño
+                <TabsTrigger value="design" className="gap-1 sm:gap-2 text-xs sm:text-sm py-2 sm:py-0">
+                    <LayoutDashboard className="h-3 w-3 sm:h-4 sm:w-4" />
+                    <span className="hidden sm:inline">Diseño</span>
+                    <span className="sm:hidden">Diseño</span>
                 </TabsTrigger>
-                <TabsTrigger value="qr" className="gap-2">
-                    <QrCode className="h-4 w-4" />
-                    QR por Mesa
+                <TabsTrigger value="qr" className="gap-1 sm:gap-2 text-xs sm:text-sm py-2 sm:py-0">
+                    <QrCode className="h-3 w-3 sm:h-4 sm:w-4" />
+                    <span className="hidden sm:inline">QR por Mesa</span>
+                    <span className="sm:hidden">QR</span>
                 </TabsTrigger>
             </TabsList>
-            <TabsContent value="config" className="mt-6">
+            <TabsContent value="config" className="mt-4 sm:mt-6">
                 <RestaurantConfigForm
                     dictionary={dictionary}
                     config={config}
                     appUrl={appUrl}
                 />
             </TabsContent>
-            <TabsContent value="design" className="mt-6">
+            <TabsContent value="design" className="mt-4 sm:mt-6">
                 <RestaurantDesignView
                     config={config}
                     design={design}
                 />
             </TabsContent>
-            <TabsContent value="qr" className="mt-6">
+            <TabsContent value="qr" className="mt-4 sm:mt-6">
                 <TableQRGenerator
                     config={config}
                     appUrl={appUrl}

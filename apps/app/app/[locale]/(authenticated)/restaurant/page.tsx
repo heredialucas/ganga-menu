@@ -5,6 +5,7 @@ import { getDictionary } from '@repo/internationalization';
 import { RestaurantViewManager } from './components/RestaurantViewManager';
 import { getAppUrl } from '@/lib/utils';
 import { ShareLinksWidget } from '@/components/ShareLinksWidget';
+import { FeedbackWidget } from '@/components/FeedbackWidget';
 
 export default async function RestaurantPage({
     params
@@ -21,17 +22,20 @@ export default async function RestaurantPage({
         : null;
 
     return (
-        <div className="space-y-6">
-            <div className="flex flex-row items-start justify-between gap-4">
-                <div>
-                    <h1 className="text-xl font-bold tracking-tight sm:text-3xl">
+        <div className="space-y-3 sm:space-y-4 md:space-y-6 p-1 sm:p-2 md:p-6">
+            <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
+                <div className="text-center sm:text-left flex-1">
+                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">
                         Gestión del Restaurante
                     </h1>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm sm:text-base text-muted-foreground mt-2">
                         Define la configuración de tu restaurante y diseña la distribución de las mesas.
                     </p>
                 </div>
-                <ShareLinksWidget dictionary={dictionary} />
+                <div className="flex flex-row items-center gap-2">
+                    <ShareLinksWidget dictionary={dictionary} />
+                    <FeedbackWidget dictionary={dictionary} />
+                </div>
             </div>
 
             <RestaurantViewManager

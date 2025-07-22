@@ -67,68 +67,72 @@ export function ProfileSection({ currentUser, dictionary, canEdit }: ProfileSect
 
     return (
         <Card>
-            <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                    <User className="h-5 w-5" />
+            <CardHeader className="p-3 sm:p-6">
+                <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+                    <User className="h-4 w-4 sm:h-5 sm:w-5" />
                     Información Personal
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="text-sm sm:text-base">
                     Actualiza tu información personal y configuración de cuenta
                 </CardDescription>
             </CardHeader>
-            <CardContent>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                    <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2">
+            <CardContent className="p-3 sm:p-6">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
+                    <div className="grid gap-3 sm:gap-4 grid-cols-1 md:grid-cols-2">
                         <div className="space-y-2">
-                            <Label htmlFor="name">Nombre</Label>
+                            <Label htmlFor="name" className="text-sm sm:text-base">Nombre</Label>
                             <Input
                                 id="name"
                                 {...form.register('name')}
                                 disabled={isPending || !canEdit}
+                                className="text-sm sm:text-base"
                             />
                             {form.formState.errors.name && (
-                                <p className="text-sm text-red-500">{form.formState.errors.name.message}</p>
+                                <p className="text-xs sm:text-sm text-red-500">{form.formState.errors.name.message}</p>
                             )}
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="lastName">Apellido</Label>
+                            <Label htmlFor="lastName" className="text-sm sm:text-base">Apellido</Label>
                             <Input
                                 id="lastName"
                                 {...form.register('lastName')}
                                 disabled={isPending || !canEdit}
+                                className="text-sm sm:text-base"
                             />
                             {form.formState.errors.lastName && (
-                                <p className="text-sm text-red-500">{form.formState.errors.lastName.message}</p>
+                                <p className="text-xs sm:text-sm text-red-500">{form.formState.errors.lastName.message}</p>
                             )}
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="email">Email</Label>
+                            <Label htmlFor="email" className="text-sm sm:text-base">Email</Label>
                             <Input
                                 id="email"
                                 type="email"
                                 {...form.register('email')}
                                 disabled={isPending || !canEdit}
+                                className="text-sm sm:text-base"
                             />
                             {form.formState.errors.email && (
-                                <p className="text-sm text-red-500">{form.formState.errors.email.message}</p>
+                                <p className="text-xs sm:text-sm text-red-500">{form.formState.errors.email.message}</p>
                             )}
                         </div>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-4 border-t gap-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-3 sm:pt-4 border-t gap-3 sm:gap-4">
                         <div className="space-y-1">
-                            <p className="text-sm font-medium">Rol actual</p>
-                            <Badge variant="default" className="capitalize">
+                            <p className="text-sm sm:text-base font-medium">Rol actual</p>
+                            <Badge variant="default" className="capitalize text-xs sm:text-sm">
                                 {currentUser?.role === 'admin' ? 'Administrador' : 'Usuario'}
                             </Badge>
                         </div>
                         {canEdit && (
                             <Button
                                 type="submit"
-                                className="w-full sm:w-auto"
+                                className="w-full sm:w-auto text-sm sm:text-base"
                                 disabled={isPending}
                             >
-                                {isPending ? 'Guardando...' : 'Guardar Cambios'}
+                                <span className="hidden sm:inline">{isPending ? 'Guardando...' : 'Guardar Cambios'}</span>
+                                <span className="sm:hidden">{isPending ? 'Guardando...' : 'Guardar'}</span>
                             </Button>
                         )}
                     </div>

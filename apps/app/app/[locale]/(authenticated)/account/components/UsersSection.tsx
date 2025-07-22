@@ -172,42 +172,43 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
     return (
         <>
             <Card>
-                <CardHeader>
-                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                <CardHeader className="p-3 sm:p-6">
+                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4">
                         <div className="flex-1">
-                            <CardTitle className="flex items-center gap-2">
-                                <User className="h-5 w-5" />
+                            <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+                                <User className="h-4 w-4 sm:h-5 sm:w-5" />
                                 Usuarios del Sistema
                             </CardTitle>
-                            <CardDescription>
+                            <CardDescription className="text-sm sm:text-base">
                                 Gestiona los usuarios y sus permisos
                             </CardDescription>
                         </div>
                         <div className="flex shrink-0 gap-2">
-                            <Button className="w-full sm:w-auto" onClick={handleCreateUser}>
+                            <Button className="w-full sm:w-auto text-sm sm:text-base" onClick={handleCreateUser}>
                                 <Plus className="h-4 w-4 mr-2" />
-                                Nuevo Usuario
+                                <span className="hidden sm:inline">Nuevo Usuario</span>
+                                <span className="sm:hidden">Nuevo</span>
                             </Button>
                         </div>
                     </div>
                 </CardHeader>
-                <CardContent>
-                    <div className="space-y-4">
+                <CardContent className="p-3 sm:p-6">
+                    <div className="space-y-3 sm:space-y-4">
                         {users.map((user) => (
-                            <div key={user.id} className="flex items-center justify-between p-4 border rounded-lg">
-                                <div className="flex items-center gap-4">
+                            <div key={user.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 sm:p-4 border rounded-lg gap-3 sm:gap-4">
+                                <div className="flex items-center gap-3 sm:gap-4">
                                     <div className="flex flex-col">
-                                        <p className="font-semibold">{user.name} {user.lastName}</p>
-                                        <p className="text-sm text-muted-foreground flex items-center gap-1"><Mail className="h-3 w-3" />{user.email}</p>
-                                        <Badge variant="outline" className="capitalize mt-1 w-fit">{user.role}</Badge>
+                                        <p className="font-semibold text-sm sm:text-base">{user.name} {user.lastName}</p>
+                                        <p className="text-xs sm:text-sm text-muted-foreground flex items-center gap-1"><Mail className="h-3 w-3" />{user.email}</p>
+                                        <Badge variant="outline" className="capitalize mt-1 w-fit text-xs sm:text-sm">{user.role}</Badge>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                    <Button variant="ghost" size="icon" onClick={() => handleEditUser(user)}>
-                                        <Edit className="h-4 w-4" />
+                                <div className="flex items-center gap-1 sm:gap-2">
+                                    <Button variant="ghost" size="icon" onClick={() => handleEditUser(user)} className="h-8 w-8 sm:h-10 sm:w-10">
+                                        <Edit className="h-3 w-3 sm:h-4 sm:w-4" />
                                     </Button>
-                                    <Button variant="ghost" size="icon" onClick={() => setDeleteUserDialog({ open: true, user })} disabled={user.id === currentUser?.id}>
-                                        <Trash2 className="h-4 w-4 text-red-500" />
+                                    <Button variant="ghost" size="icon" onClick={() => setDeleteUserDialog({ open: true, user })} disabled={user.id === currentUser?.id} className="h-8 w-8 sm:h-10 sm:w-10">
+                                        <Trash2 className="h-3 w-3 sm:h-4 sm:w-4 text-red-500" />
                                     </Button>
                                 </div>
                             </div>
@@ -217,34 +218,34 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
             </Card>
 
             <Dialog open={isUserDialogOpen} onOpenChange={setIsUserDialogOpen}>
-                <DialogContent className="sm:max-w-[425px] md:max-w-2xl">
+                <DialogContent className="max-w-[95vw] sm:max-w-[425px] md:max-w-2xl">
                     <DialogHeader>
-                        <DialogTitle>{editingUser ? 'Editar Usuario' : 'Crear Usuario'}</DialogTitle>
-                        <DialogDescription>
+                        <DialogTitle className="text-lg sm:text-xl">{editingUser ? 'Editar Usuario' : 'Crear Usuario'}</DialogTitle>
+                        <DialogDescription className="text-sm sm:text-base">
                             {editingUser ? 'Actualiza los detalles del usuario.' : 'Crea un nuevo usuario y asigna sus permisos.'}
                         </DialogDescription>
                     </DialogHeader>
-                    <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="name" className="text-right">Nombre</Label>
-                            <Input id="name" value={userForm.name} onChange={e => setUserForm({ ...userForm, name: e.target.value })} className="col-span-3" />
+                    <div className="grid gap-3 sm:gap-4 py-3 sm:py-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-4 items-start sm:items-center gap-2 sm:gap-4">
+                            <Label htmlFor="name" className="text-left sm:text-right text-sm sm:text-base">Nombre</Label>
+                            <Input id="name" value={userForm.name} onChange={e => setUserForm({ ...userForm, name: e.target.value })} className="col-span-1 sm:col-span-3 text-sm sm:text-base" />
                         </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="lastName" className="text-right">Apellido</Label>
-                            <Input id="lastName" value={userForm.lastName} onChange={e => setUserForm({ ...userForm, lastName: e.target.value })} className="col-span-3" />
+                        <div className="grid grid-cols-1 sm:grid-cols-4 items-start sm:items-center gap-2 sm:gap-4">
+                            <Label htmlFor="lastName" className="text-left sm:text-right text-sm sm:text-base">Apellido</Label>
+                            <Input id="lastName" value={userForm.lastName} onChange={e => setUserForm({ ...userForm, lastName: e.target.value })} className="col-span-1 sm:col-span-3 text-sm sm:text-base" />
                         </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="email" className="text-right">Email</Label>
-                            <Input id="email" type="email" value={userForm.email} onChange={e => setUserForm({ ...userForm, email: e.target.value })} className="col-span-3" />
+                        <div className="grid grid-cols-1 sm:grid-cols-4 items-start sm:items-center gap-2 sm:gap-4">
+                            <Label htmlFor="email" className="text-left sm:text-right text-sm sm:text-base">Email</Label>
+                            <Input id="email" type="email" value={userForm.email} onChange={e => setUserForm({ ...userForm, email: e.target.value })} className="col-span-1 sm:col-span-3 text-sm sm:text-base" />
                         </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="password" className="text-right">Contraseña</Label>
-                            <Input id="password" type="password" placeholder={editingUser ? 'Dejar en blanco para no cambiar' : ''} value={userForm.password} onChange={e => setUserForm({ ...userForm, password: e.target.value })} className="col-span-3" />
+                        <div className="grid grid-cols-1 sm:grid-cols-4 items-start sm:items-center gap-2 sm:gap-4">
+                            <Label htmlFor="password" className="text-left sm:text-right text-sm sm:text-base">Contraseña</Label>
+                            <Input id="password" type="password" placeholder={editingUser ? 'Dejar en blanco para no cambiar' : ''} value={userForm.password} onChange={e => setUserForm({ ...userForm, password: e.target.value })} className="col-span-1 sm:col-span-3 text-sm sm:text-base" />
                         </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="role" className="text-right">Rol</Label>
+                        <div className="grid grid-cols-1 sm:grid-cols-4 items-start sm:items-center gap-2 sm:gap-4">
+                            <Label htmlFor="role" className="text-left sm:text-right text-sm sm:text-base">Rol</Label>
                             <Select value={userForm.role} onValueChange={(value) => handleRoleChange(value as UserRole)}>
-                                <SelectTrigger className="col-span-3">
+                                <SelectTrigger className="col-span-1 sm:col-span-3 text-sm sm:text-base">
                                     <SelectValue placeholder="Selecciona un rol" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -252,13 +253,13 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
                                 </SelectContent>
                             </Select>
                         </div>
-                        <div className="grid grid-cols-4 items-start gap-4 pt-4">
-                            <Label className="text-right pt-2">Permisos</Label>
-                            <ScrollArea className="col-span-3 h-48 rounded-md border p-4">
-                                <div className="space-y-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-4 items-start gap-2 sm:gap-4 pt-3 sm:pt-4">
+                            <Label className="text-left sm:text-right pt-2 text-sm sm:text-base">Permisos</Label>
+                            <ScrollArea className="col-span-1 sm:col-span-3 h-32 sm:h-48 rounded-md border p-2 sm:p-4">
+                                <div className="space-y-3 sm:space-y-4">
                                     {Object.entries(groupedPermissions).map(([group, permissions]) => (
                                         <div key={group}>
-                                            <h4 className="font-semibold capitalize mb-2">{group}</h4>
+                                            <h4 className="font-semibold capitalize mb-2 text-sm sm:text-base">{group}</h4>
                                             {permissions.map(permission => (
                                                 <div key={permission} className="flex items-center space-x-2">
                                                     <Switch
@@ -266,7 +267,7 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
                                                         checked={userForm.permissions.includes(permission)}
                                                         onCheckedChange={checked => handlePermissionChange(permission, checked)}
                                                     />
-                                                    <Label htmlFor={permission} className="font-normal">{permission.split(':')[1]?.replace(/_/g, ' ')}</Label>
+                                                    <Label htmlFor={permission} className="font-normal text-xs sm:text-sm">{permission.split(':')[1]?.replace(/_/g, ' ')}</Label>
                                                 </div>
                                             ))}
                                         </div>
@@ -276,25 +277,26 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
                         </div>
                     </div>
                     <DialogFooter>
-                        <Button variant="ghost" onClick={() => setIsUserDialogOpen(false)}>Cancelar</Button>
-                        <Button onClick={handleUserSubmit} disabled={isPending}>
-                            {isPending ? 'Guardando...' : (editingUser ? 'Guardar Cambios' : 'Crear Usuario')}
+                        <Button variant="ghost" onClick={() => setIsUserDialogOpen(false)} className="text-sm sm:text-base">Cancelar</Button>
+                        <Button onClick={handleUserSubmit} disabled={isPending} className="text-sm sm:text-base">
+                            <span className="hidden sm:inline">{isPending ? 'Guardando...' : (editingUser ? 'Guardar Cambios' : 'Crear Usuario')}</span>
+                            <span className="sm:hidden">{isPending ? 'Guardando...' : (editingUser ? 'Guardar' : 'Crear')}</span>
                         </Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
 
             <AlertDialog open={deleteUserDialog.open} onOpenChange={(open) => !open && setDeleteUserDialog({ open: false, user: null })}>
-                <AlertDialogContent>
+                <AlertDialogContent className="max-w-[95vw] sm:max-w-md">
                     <AlertDialogHeader>
-                        <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
-                        <AlertDialogDescription>
+                        <AlertDialogTitle className="text-lg sm:text-xl">¿Estás seguro?</AlertDialogTitle>
+                        <AlertDialogDescription className="text-sm sm:text-base">
                             Esta acción no se puede deshacer. Se eliminará permanentemente al usuario "{deleteUserDialog.user?.name} {deleteUserDialog.user?.lastName}".
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => handleDeleteUser(deleteUserDialog.user!)} disabled={isPending}>
+                        <AlertDialogCancel className="text-sm sm:text-base">Cancelar</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => handleDeleteUser(deleteUserDialog.user!)} disabled={isPending} className="text-sm sm:text-base">
                             {isPending ? "Eliminando..." : "Eliminar"}
                         </AlertDialogAction>
                     </AlertDialogFooter>

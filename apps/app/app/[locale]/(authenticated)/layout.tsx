@@ -8,7 +8,6 @@ import { UserHeaderServer } from './components/user-header/userHeaderServer';
 import { getRestaurantConfig } from '@repo/data-services/src/services/restaurantConfigService';
 import { RestaurantConfigProvider } from '@/store/restaurant-config-context';
 import { Toaster } from 'sonner';
-import { FeedbackWidget } from '@/components/FeedbackWidget';
 
 export default async function AuthenticatedLayout({
   children,
@@ -38,14 +37,13 @@ export default async function AuthenticatedLayout({
             <AdminSidebar dictionary={dictionary} menuItems={authorizedSidebarItems} />
 
             <main className="bg-gray-50 dark:bg-zinc-950 flex-1 md:py-6 min-h-screen pb-20 md:pb-0">
-              <div className="w-full p-4">
+              <div className="w-full p-1 sm:p-2 md:p-4">
                 {children}
               </div>
             </main>
           </div>
         </div>
         <Toaster />
-        <FeedbackWidget dictionary={dictionary} />
       </RestaurantConfigProvider>
     </SidebarProvider>
   );

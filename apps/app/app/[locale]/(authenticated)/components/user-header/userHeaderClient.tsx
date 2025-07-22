@@ -3,7 +3,7 @@
 import { ReactNode } from 'react';
 import { LogoutButton } from '../logout-button';
 import { Dictionary } from '@repo/internationalization';
-import { ModeToggle } from '@repo/design-system/components/mode-toggle';
+// import { ModeToggle } from '@repo/design-system/components/mode-toggle';
 import Link from 'next/link';
 import { Button } from '@repo/design-system/components/ui/button';
 import { env } from '@/env';
@@ -48,7 +48,7 @@ export function UserHeaderClient({ logo, title = 'Ganga-Menú', extraItems, dict
                             </Button>
                         </Link>
                     )}
-                    <ModeToggle />
+                    {/* <ModeToggle /> */}
                     {/* <LanguageSwitcher /> */}
                     {extraItems}
                     <LogoutButton userName={user?.name} dictionary={dictionary} locale={locale} />

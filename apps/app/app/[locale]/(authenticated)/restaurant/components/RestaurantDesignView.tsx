@@ -27,9 +27,10 @@ const initialState: SaveDesignResult = {
 function SubmitButton() {
     const { pending } = useFormStatus();
     return (
-        <Button type="submit" disabled={pending}>
-            {pending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4" />}
-            Guardar Diseño
+        <Button type="submit" disabled={pending} className="w-full sm:w-auto text-xs sm:text-sm">
+            {pending ? <Loader2 className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 animate-spin" /> : <Save className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />}
+            <span className="hidden sm:inline">Guardar Diseño</span>
+            <span className="sm:hidden">Guardar</span>
         </Button>
     );
 }
@@ -406,60 +407,70 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
     }
 
     return (
-        <div className="space-y-4">
-            <div className="flex flex-wrap gap-4 items-center p-2 border rounded-lg">
-                <Button type="button" variant={activeTool === 'select' ? 'secondary' : 'outline'} onClick={() => setActiveTool('select')}>
-                    <MousePointer className="mr-2 h-4" /> Seleccionar
+        <div className="space-y-2 sm:space-y-3 md:space-y-4">
+            <div className="flex flex-wrap gap-1 sm:gap-2 md:gap-4 items-center p-2 sm:p-3 border rounded-lg">
+                <Button type="button" variant={activeTool === 'select' ? 'secondary' : 'outline'} onClick={() => setActiveTool('select')} className="text-xs sm:text-sm">
+                    <MousePointer className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                    <span className="hidden sm:inline">Seleccionar</span>
+                    <span className="sm:hidden">Sel</span>
                 </Button>
-                <Button type="button" variant={activeTool === 'wall' ? 'secondary' : 'outline'} onClick={() => setActiveTool('wall')}>
-                    <Pen className="mr-2 h-4" /> Pared
+                <Button type="button" variant={activeTool === 'wall' ? 'secondary' : 'outline'} onClick={() => setActiveTool('wall')} className="text-xs sm:text-sm">
+                    <Pen className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                    <span className="hidden sm:inline">Pared</span>
+                    <span className="sm:hidden">Pared</span>
                 </Button>
                 <Popover>
                     <PopoverTrigger asChild>
-                        <Button type="button" variant="outline">
-                            <PlusCircle className="mr-2 h-4" /> Añadir Objeto
+                        <Button type="button" variant="outline" className="text-xs sm:text-sm">
+                            <PlusCircle className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                            <span className="hidden sm:inline">Añadir Objeto</span>
+                            <span className="sm:hidden">Añadir</span>
                         </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-2">
-                        <div className="flex gap-2">
-                            <Button type="button" variant="ghost" onClick={() => addElement('table', 'rectangle')} className="flex-col h-auto">
-                                <Square className="h-6" />
+                        <div className="grid grid-cols-2 sm:flex sm:gap-2">
+                            <Button type="button" variant="ghost" onClick={() => addElement('table', 'rectangle')} className="flex-col h-auto text-xs">
+                                <Square className="h-4 w-4 sm:h-6 sm:w-6" />
                                 <span className="text-xs">Mesa</span>
                             </Button>
-                            <Button type="button" variant="ghost" onClick={() => addElement('table', 'circle')} className="flex-col h-auto">
-                                <CircleIcon className="h-6" />
+                            <Button type="button" variant="ghost" onClick={() => addElement('table', 'circle')} className="flex-col h-auto text-xs">
+                                <CircleIcon className="h-4 w-4 sm:h-6 sm:w-6" />
                                 <span className="text-xs">Mesa Red.</span>
                             </Button>
-                            <Button type="button" variant="ghost" onClick={() => addElement('bar', 'rectangle')} className="flex-col h-auto">
-                                <MinusSquare className="h-6" />
+                            <Button type="button" variant="ghost" onClick={() => addElement('bar', 'rectangle')} className="flex-col h-auto text-xs">
+                                <MinusSquare className="h-4 w-4 sm:h-6 sm:w-6" />
                                 <span className="text-xs">Barra</span>
                             </Button>
-                            <Button type="button" variant="ghost" onClick={() => addElement('staircase', null)} className="flex-col h-auto">
-                                <ChevronsUp className="h-6" />
+                            <Button type="button" variant="ghost" onClick={() => addElement('staircase', null)} className="flex-col h-auto text-xs">
+                                <ChevronsUp className="h-4 w-4 sm:h-6 sm:w-6" />
                                 <span className="text-xs">Escalera</span>
                             </Button>
                         </div>
                     </PopoverContent>
                 </Popover>
-                <Button type="button" variant="outline" onClick={deleteSelected} disabled={!selectedId}>
-                    <Trash2 className="mr-2 h-4" /> Eliminar
+                <Button type="button" variant="outline" onClick={deleteSelected} disabled={!selectedId} className="text-xs sm:text-sm">
+                    <Trash2 className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                    <span className="hidden sm:inline">Eliminar</span>
+                    <span className="sm:hidden">Elim</span>
                 </Button>
                 <AlertDialog>
                     <AlertDialogTrigger asChild>
-                        <Button type="button" variant="outline" disabled={!tables.length && !elements.length}>
-                            <Trash2 className="mr-2 h-4" /> Limpiar
+                        <Button type="button" variant="outline" disabled={!tables.length && !elements.length} className="text-xs sm:text-sm">
+                            <Trash2 className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                            <span className="hidden sm:inline">Limpiar</span>
+                            <span className="sm:hidden">Limpiar</span>
                         </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                         <AlertDialogHeader>
-                            <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
-                            <AlertDialogDescription>
+                            <AlertDialogTitle className="text-base sm:text-lg">¿Estás seguro?</AlertDialogTitle>
+                            <AlertDialogDescription className="text-sm sm:text-base">
                                 Esta acción no se puede deshacer. Se eliminará todo el diseño.
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
-                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => { setElements([]); setTables([]); setSelectedId(null); }}>
+                            <AlertDialogCancel className="text-xs sm:text-sm">Cancelar</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => { setElements([]); setTables([]); setSelectedId(null); }} className="text-xs sm:text-sm">
                                 Confirmar
                             </AlertDialogAction>
                         </AlertDialogFooter>
@@ -517,7 +528,7 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
                 );
             })()}
 
-            <div ref={containerRef} className="bg-gray-50 border rounded-lg overflow-x-auto relative mt-4" style={{ cursor: activeTool === 'wall' ? 'crosshair' : 'default' }}>
+            <div ref={containerRef} className="bg-gray-50 border rounded-lg overflow-x-auto relative mt-3 sm:mt-4" style={{ cursor: activeTool === 'wall' ? 'crosshair' : 'default' }}>
                 <Stage
                     width={stageSize.width}
                     height={stageSize.height}
@@ -595,11 +606,13 @@ export function RestaurantDesignView({ config, design }: {
     return (
         <form action={formAction}>
             <Card>
-                <CardHeader><CardTitle>Diseño del Restaurante</CardTitle></CardHeader>
-                <CardContent>
+                <CardHeader>
+                    <CardTitle className="text-lg sm:text-xl">Diseño del Restaurante</CardTitle>
+                </CardHeader>
+                <CardContent className="p-1 sm:p-2 md:p-6">
                     {!config ? (
-                        <div className="text-center py-8">
-                            <p>Guarda la configuración para empezar.</p>
+                        <div className="text-center py-6 sm:py-8">
+                            <p className="text-sm sm:text-base">Guarda la configuración para empezar.</p>
                         </div>
                     ) : (
                         <div>
@@ -621,7 +634,7 @@ export function RestaurantDesignView({ config, design }: {
                     )}
                 </CardContent>
                 {config && (
-                    <CardFooter className="flex justify-end gap-4 items-center">
+                    <CardFooter className="flex justify-center sm:justify-end gap-2 sm:gap-4 items-center">
                         <SubmitButton />
                     </CardFooter>
                 )}

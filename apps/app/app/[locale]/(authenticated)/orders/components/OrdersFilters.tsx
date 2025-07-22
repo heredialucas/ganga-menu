@@ -59,7 +59,7 @@ export function OrdersFilters({ selectedStatus, onStatusChange, dictionary }: Or
     ];
 
     return (
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1 sm:gap-2">
             {statusFilters.map((filter) => {
                 const Icon = filter.icon;
                 const isActive = selectedStatus === filter.value;
@@ -70,13 +70,20 @@ export function OrdersFilters({ selectedStatus, onStatusChange, dictionary }: Or
                         variant="outline"
                         size="sm"
                         onClick={() => onStatusChange(filter.value)}
-                        className={`flex items-center gap-2 transition-colors ${isActive
+                        className={`flex items-center gap-1 sm:gap-2 transition-colors text-xs sm:text-sm ${isActive
                             ? filter.activeColor
                             : filter.color
                             }`}
                     >
-                        <Icon className="h-4 w-4" />
-                        {filter.label}
+                        <Icon className="h-3 w-3 sm:h-4 sm:w-4" />
+                        <span className="hidden sm:inline">{filter.label}</span>
+                        <span className="sm:hidden">
+                            {filter.value === 'ALL' ? 'Todas' :
+                                filter.value === 'ACTIVE' ? 'Activas' :
+                                    filter.value === 'READY' ? 'Lista' :
+                                        filter.value === 'CANCELLED' ? 'Cancel' :
+                                            filter.value === 'PAID' ? 'Paga' : 'Otro'}
+                        </span>
                     </Button>
                 );
             })}

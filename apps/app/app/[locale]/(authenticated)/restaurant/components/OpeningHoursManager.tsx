@@ -116,34 +116,34 @@ export function OpeningHoursManager({ initialHours }: OpeningHoursManagerProps) 
     const areAllOpen = daysOfWeek.every(day => hours[day].isOpen);
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-3 sm:space-y-4 md:space-y-6">
             <input type="hidden" name="hours" value={JSON.stringify(hours)} />
 
-            <div className="flex items-center justify-between p-2 border rounded-lg">
-                <Label>Aplicar a todos los días</Label>
-                <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-2 sm:p-3 border rounded-lg gap-2 sm:gap-0">
+                <Label className="text-sm sm:text-base">Aplicar a todos los días</Label>
+                <div className="flex items-center gap-2 w-full sm:w-auto">
                     <Switch
                         checked={areAllOpen}
                         onCheckedChange={handleToggleAll}
                         aria-label="Toggle all days"
                     />
-                    <Label>{areAllOpen ? 'Todos abiertos' : 'Marcar todos como abiertos'}</Label>
+                    <Label className="text-xs sm:text-sm">{areAllOpen ? 'Todos abiertos' : 'Marcar todos como abiertos'}</Label>
                 </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-2 sm:space-y-3 md:space-y-4">
                 {daysOfWeek.map(day => {
                     const dayHours = hours[day];
                     return (
-                        <div key={day} className="p-4 border rounded-lg space-y-4">
-                            <div className="flex items-center justify-between">
-                                <Label className="capitalize text-lg font-medium">{day}</Label>
-                                <div className="flex items-center gap-2">
+                        <div key={day} className="p-2 sm:p-3 md:p-4 border rounded-lg space-y-2 sm:space-y-3 md:space-y-4">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
+                                <Label className="capitalize text-base sm:text-lg font-medium">{day}</Label>
+                                <div className="flex items-center gap-2 w-full sm:w-auto">
                                     <Switch
                                         checked={dayHours.isOpen}
                                         onCheckedChange={(checked) => handleToggleDay(day, checked)}
                                     />
-                                    <Label>{dayHours.isOpen ? 'Abierto' : 'Cerrado'}</Label>
+                                    <Label className="text-xs sm:text-sm">{dayHours.isOpen ? 'Abierto' : 'Cerrado'}</Label>
                                 </div>
                             </div>
 

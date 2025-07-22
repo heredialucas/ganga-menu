@@ -73,59 +73,63 @@ export function PasswordSection({ currentUser, dictionary, canChange }: Password
 
     return (
         <Card>
-            <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                    <Shield className="h-5 w-5" />
+            <CardHeader className="p-3 sm:p-6">
+                <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+                    <Shield className="h-4 w-4 sm:h-5 sm:w-5" />
                     Seguridad
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="text-sm sm:text-base">
                     Gestiona tu contraseña y configuración de seguridad
                 </CardDescription>
             </CardHeader>
-            <CardContent>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <CardContent className="p-3 sm:p-6">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3 sm:space-y-4">
                     <div className="space-y-2">
-                        <Label htmlFor="current-password">Contraseña Actual</Label>
+                        <Label htmlFor="current-password" className="text-sm sm:text-base">Contraseña Actual</Label>
                         <Input
                             id="current-password"
                             type="password"
                             {...form.register('currentPassword')}
                             disabled={isPending}
+                            className="text-sm sm:text-base"
                         />
                         {form.formState.errors.currentPassword && (
-                            <p className="text-sm text-red-500">{form.formState.errors.currentPassword.message}</p>
+                            <p className="text-xs sm:text-sm text-red-500">{form.formState.errors.currentPassword.message}</p>
                         )}
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="new-password">Nueva Contraseña</Label>
+                        <Label htmlFor="new-password" className="text-sm sm:text-base">Nueva Contraseña</Label>
                         <Input
                             id="new-password"
                             type="password"
                             {...form.register('newPassword')}
                             disabled={isPending}
+                            className="text-sm sm:text-base"
                         />
                         {form.formState.errors.newPassword && (
-                            <p className="text-sm text-red-500">{form.formState.errors.newPassword.message}</p>
+                            <p className="text-xs sm:text-sm text-red-500">{form.formState.errors.newPassword.message}</p>
                         )}
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="confirm-password">Confirmar Nueva Contraseña</Label>
+                        <Label htmlFor="confirm-password" className="text-sm sm:text-base">Confirmar Nueva Contraseña</Label>
                         <Input
                             id="confirm-password"
                             type="password"
                             {...form.register('confirmPassword')}
                             disabled={isPending}
+                            className="text-sm sm:text-base"
                         />
                         {form.formState.errors.confirmPassword && (
-                            <p className="text-sm text-red-500">{form.formState.errors.confirmPassword.message}</p>
+                            <p className="text-xs sm:text-sm text-red-500">{form.formState.errors.confirmPassword.message}</p>
                         )}
                     </div>
                     <Button
                         type="submit"
-                        className="w-full"
+                        className="w-full text-sm sm:text-base"
                         disabled={isPending}
                     >
-                        {isPending ? "Actualizando..." : "Actualizar Contraseña"}
+                        <span className="hidden sm:inline">{isPending ? "Actualizando..." : "Actualizar Contraseña"}</span>
+                        <span className="sm:hidden">{isPending ? "Actualizando..." : "Actualizar"}</span>
                     </Button>
                 </form>
             </CardContent>

@@ -33,7 +33,7 @@ export default async function AccountPage({ params }: AccountPageProps) {
             <div className="space-y-3 sm:space-y-4 md:space-y-6 p-1 sm:p-2 md:p-6">
                 <div className="flex items-center justify-center min-h-[50vh]">
                     <div className="text-center">
-                        <p className="text-sm sm:text-base text-muted-foreground">Usuario no encontrado</p>
+                        <p className="text-sm sm:text-base text-muted-foreground">{dictionary.app?.account?.userNotFound || 'Usuario no encontrado'}</p>
                     </div>
                 </div>
             </div>
@@ -52,10 +52,10 @@ export default async function AccountPage({ params }: AccountPageProps) {
             <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
                 <div className="text-center sm:text-left flex-1">
                     <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">
-                        Gestión de Cuenta
+                        {dictionary.app?.account?.title || 'Gestión de Cuenta'}
                     </h1>
                     <p className="text-sm sm:text-base text-muted-foreground mt-2">
-                        Configuración y usuarios
+                        {dictionary.app?.account?.subtitle || 'Configuración y usuarios'}
                     </p>
                 </div>
                 <div className="flex flex-row items-center gap-2">
@@ -68,13 +68,13 @@ export default async function AccountPage({ params }: AccountPageProps) {
                 <div className="overflow-x-auto">
                     <TabsList className={`grid w-full ${canManageUsers ? 'grid-cols-2' : 'grid-cols-1'} h-auto sm:h-10 min-w-[300px] md:min-w-0`}>
                         <TabsTrigger value="profile" className="text-xs sm:text-sm py-2 sm:py-0">
-                            <span className="hidden sm:inline">Mi Perfil</span>
-                            <span className="sm:hidden">Perfil</span>
+                            <span className="hidden sm:inline">{dictionary.app?.account?.tabs?.profile?.desktop || 'Mi Perfil'}</span>
+                            <span className="sm:hidden">{dictionary.app?.account?.tabs?.profile?.mobile || 'Perfil'}</span>
                         </TabsTrigger>
                         {canManageUsers && (
                             <TabsTrigger value="users" className="text-xs sm:text-sm py-2 sm:py-0">
-                                <span className="hidden sm:inline">Gestión de Usuarios</span>
-                                <span className="sm:hidden">Usuarios</span>
+                                <span className="hidden sm:inline">{dictionary.app?.account?.tabs?.users?.desktop || 'Gestión de Usuarios'}</span>
+                                <span className="sm:hidden">{dictionary.app?.account?.tabs?.users?.mobile || 'Usuarios'}</span>
                             </TabsTrigger>
                         )}
                     </TabsList>

@@ -20,6 +20,7 @@ interface DeleteOrderDialogProps {
     orderId: string;
     orderInfo: string;
     isLoading?: boolean;
+    dictionary?: any;
 }
 
 export function DeleteOrderDialog({
@@ -28,7 +29,8 @@ export function DeleteOrderDialog({
     onConfirm,
     orderId,
     orderInfo,
-    isLoading = false
+    isLoading = false,
+    dictionary
 }: DeleteOrderDialogProps) {
     return (
         <AlertDialog open={isOpen} onOpenChange={onClose}>
@@ -36,20 +38,20 @@ export function DeleteOrderDialog({
                 <AlertDialogHeader>
                     <AlertDialogTitle className="flex items-center gap-2">
                         <AlertTriangle className="h-5 w-5 text-red-500" />
-                        Eliminar Orden
+                        {dictionary?.web?.orders?.deleteDialog?.title || 'Eliminar Orden'}
                     </AlertDialogTitle>
                     <AlertDialogDescription>
-                        ¿Estás seguro de que deseas eliminar esta orden? Esta acción no se puede deshacer.
+                        {dictionary?.web?.orders?.deleteDialog?.description || '¿Estás seguro de que deseas eliminar esta orden? Esta acción no se puede deshacer.'}
                         <br />
                         <br />
-                        <strong>Orden:</strong> #{orderId.slice(-8)}
+                        <strong>{dictionary?.web?.orders?.deleteDialog?.order || 'Orden'}:</strong> #{orderId.slice(-8)}
                         <br />
-                        <strong>Detalles:</strong> {orderInfo}
+                        <strong>{dictionary?.web?.orders?.deleteDialog?.details || 'Detalles'}:</strong> {orderInfo}
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel disabled={isLoading}>
-                        Cancelar
+                        {dictionary?.web?.orders?.deleteDialog?.cancel || 'Cancelar'}
                     </AlertDialogCancel>
                     <AlertDialogAction
                         onClick={onConfirm}
@@ -59,12 +61,12 @@ export function DeleteOrderDialog({
                         {isLoading ? (
                             <div className="flex items-center gap-2">
                                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                                Eliminando...
+                                {dictionary?.web?.orders?.deleteDialog?.deleting || 'Eliminando...'}
                             </div>
                         ) : (
                             <div className="flex items-center gap-2">
                                 <Trash2 className="h-4 w-4" />
-                                Eliminar
+                                {dictionary?.web?.orders?.deleteDialog?.delete || 'Eliminar'}
                             </div>
                         )}
                     </AlertDialogAction>

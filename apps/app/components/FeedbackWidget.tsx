@@ -31,14 +31,14 @@ export function FeedbackWidget({ dictionary }: FeedbackWidgetProps) {
             const result = await sendFeedback(formData.name, formData.message);
 
             if (result.success) {
-                toast.success('¡Gracias por tu feedback!');
+                toast.success(dictionary.app?.feedback?.success || '¡Gracias por tu feedback!');
                 setFormData({ name: '', message: '' });
                 setIsOpen(false);
             } else {
-                throw new Error(result.error || 'Error al enviar feedback');
+                throw new Error(result.error || dictionary.app?.feedback?.error || 'Error al enviar feedback');
             }
         } catch (error) {
-            toast.error('Error al enviar feedback. Inténtalo de nuevo.');
+            toast.error(dictionary.app?.feedback?.error || 'Error al enviar feedback. Inténtalo de nuevo.');
         } finally {
             setIsSubmitting(false);
         }
@@ -61,8 +61,8 @@ export function FeedbackWidget({ dictionary }: FeedbackWidgetProps) {
                 className="flex items-center gap-2"
             >
                 <MessageSquare className="h-4 w-4" />
-                <span className="hidden sm:inline">Dar feedback</span>
-                <span className="sm:hidden">Para dar feedback</span>
+                <span className="hidden sm:inline">{dictionary.app?.feedback?.buttonDesktop || 'Dar feedback'}</span>
+                <span className="sm:hidden">{dictionary.app?.feedback?.buttonMobile || 'Para dar feedback'}</span>
             </Button>
 
             {/* Modal de feedback */}
@@ -71,25 +71,25 @@ export function FeedbackWidget({ dictionary }: FeedbackWidgetProps) {
                     <DialogHeader>
                         <DialogTitle className="flex items-center gap-2">
                             <MessageSquare className="w-5 h-5 text-green-600" />
-                            ¡Ayúdanos a crecer!
+                            {dictionary.app?.feedback?.modalTitle || '¡Ayúdanos a crecer!'}
                         </DialogTitle>
                     </DialogHeader>
 
                     <p className="text-sm text-gray-600 mb-4">
-                        Tu opinión es muy importante para nosotros. Contanos qué pensas y ayudanos a mejorar Ganga-Menú.
+                        {dictionary.app?.feedback?.modalDescription || 'Tu opinión es muy importante para nosotros. Contanos qué pensas y ayudanos a mejorar Ganga-Menú.'}
                     </p>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="space-y-2">
                             <Label htmlFor="name">
-                                Nombre
+                                {dictionary.app?.feedback?.name || 'Nombre'}
                             </Label>
                             <Input
                                 id="name"
                                 name="name"
                                 value={formData.name}
                                 onChange={handleChange}
-                                placeholder="Tu nombre"
+                                placeholder={dictionary.app?.feedback?.namePlaceholder || 'Tu nombre'}
                                 required
                             />
                         </div>

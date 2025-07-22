@@ -14,13 +14,13 @@ function formatHoursAsJSX(hours: string, dictionary: Dictionary): React.ReactEle
         const parsed = JSON.parse(hours);
         if (parsed && typeof parsed === 'object') {
             const DAYS = [
-                { key: 'monday', label: 'Lunes' },
-                { key: 'tuesday', label: 'Martes' },
-                { key: 'wednesday', label: 'Miércoles' },
-                { key: 'thursday', label: 'Jueves' },
-                { key: 'friday', label: 'Viernes' },
-                { key: 'saturday', label: 'Sábado' },
-                { key: 'sunday', label: 'Domingo' }
+                { key: 'monday', label: dictionary.app?.restaurant?.openingHours?.days?.monday || 'Lunes' },
+                { key: 'tuesday', label: dictionary.app?.restaurant?.openingHours?.days?.tuesday || 'Martes' },
+                { key: 'wednesday', label: dictionary.app?.restaurant?.openingHours?.days?.wednesday || 'Miércoles' },
+                { key: 'thursday', label: dictionary.app?.restaurant?.openingHours?.days?.thursday || 'Jueves' },
+                { key: 'friday', label: dictionary.app?.restaurant?.openingHours?.days?.friday || 'Viernes' },
+                { key: 'saturday', label: dictionary.app?.restaurant?.openingHours?.days?.saturday || 'Sábado' },
+                { key: 'sunday', label: dictionary.app?.restaurant?.openingHours?.days?.sunday || 'Domingo' }
             ];
 
             const openDays = DAYS.filter(({ key }) => {

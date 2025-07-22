@@ -50,28 +50,28 @@ interface OrdersTableProps {
     deletingOrderId?: string | null;
 }
 
-const statusConfig = {
+const statusConfig = (dictionary: Dictionary) => ({
     ACTIVE: {
-        label: 'Activa',
+        label: dictionary.web?.orders?.table?.status?.active || 'Activa',
         icon: Clock,
         color: 'bg-yellow-100 text-yellow-800',
     },
     READY: {
-        label: 'Lista/Entregada',
+        label: dictionary.web?.orders?.table?.status?.ready || 'Lista/Entregada',
         icon: CheckCircle,
         color: 'bg-green-100 text-green-800',
     },
     CANCELLED: {
-        label: 'Cancelada',
+        label: dictionary.web?.orders?.table?.status?.cancelled || 'Cancelada',
         icon: XCircle,
         color: 'bg-red-100 text-red-800',
     },
     PAID: {
-        label: 'Pagada',
+        label: dictionary.web?.orders?.table?.status?.paid || 'Pagada',
         icon: CheckCircle,
         color: 'bg-blue-100 text-blue-800',
     },
-};
+});
 
 export function OrdersTable({ orders, onStatusUpdate, onDeleteOrder, dictionary, updatingOrderId, deletingOrderId }: OrdersTableProps) {
     const [deleteDialog, setDeleteDialog] = useState<{
@@ -103,7 +103,7 @@ export function OrdersTable({ orders, onStatusUpdate, onDeleteOrder, dictionary,
     };
 
     const getStatusIcon = (status: OrderStatus) => {
-        const config = statusConfig[status];
+        const config = statusConfig(dictionary)[status];
         const Icon = config.icon;
         return <Icon className="h-4 w-4" />;
     };
@@ -128,14 +128,14 @@ export function OrdersTable({ orders, onStatusUpdate, onDeleteOrder, dictionary,
                 if (onDeleteOrder) {
                     onDeleteOrder(deleteDialog.orderId);
                 }
-                toast.success("Orden eliminada exitosamente");
+                toast.success(dictionary.web?.orders?.toast?.orderDeleted || "Orden eliminada exitosamente");
             } else {
-                toast.error(result.error || "Error al eliminar la orden");
+                toast.error(result.error || (dictionary.web?.orders?.toast?.deleteError || "Error al eliminar la orden"));
             }
 
             setDeleteDialog({ isOpen: false, orderId: '', orderInfo: '' });
         } catch (error) {
-            toast.error("Error inesperado al eliminar la orden");
+            toast.error(dictionary.web?.orders?.toast?.unexpectedError || "Error inesperado al eliminar la orden");
         } finally {
             setIsDeleting(false);
         }
@@ -146,7 +146,7 @@ export function OrdersTable({ orders, onStatusUpdate, onDeleteOrder, dictionary,
             <>
                 <Card>
                     <CardContent className="flex items-center justify-center h-24 sm:h-32 p-3 sm:p-6">
-                        <p className="text-sm sm:text-base text-muted-foreground">No hay órdenes para mostrar</p>
+                        <p className="text-sm sm:text-base text-muted-foreground">{dictionary.web?.orders?.table?.noOrders || 'No hay órdenes para mostrar'}</p>
                     </CardContent>
                 </Card>
 
@@ -158,6 +158,7 @@ export function OrdersTable({ orders, onStatusUpdate, onDeleteOrder, dictionary,
                     orderId={deleteDialog.orderId}
                     orderInfo={deleteDialog.orderInfo}
                     isLoading={isDeleting}
+                    dictionary={dictionary}
                 />
             </>
         );
@@ -167,20 +168,20 @@ export function OrdersTable({ orders, onStatusUpdate, onDeleteOrder, dictionary,
         <>
             <Card>
                 <CardHeader className="p-3 sm:p-6">
-                    <CardTitle className="text-lg sm:text-xl">Órdenes ({orders.length})</CardTitle>
+                    <CardTitle className="text-lg sm:text-xl">{dictionary.web?.orders?.table?.title || 'Órdenes'} ({orders.length})</CardTitle>
                 </CardHeader>
                 <CardContent className="p-0 sm:p-6">
                     <div className="overflow-x-auto">
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead className="text-xs sm:text-sm">ID</TableHead>
-                                    <TableHead className="text-xs sm:text-sm">Cliente</TableHead>
-                                    <TableHead className="text-xs sm:text-sm hidden sm:table-cell">Items</TableHead>
-                                    <TableHead className="text-xs sm:text-sm">Total</TableHead>
-                                    <TableHead className="text-xs sm:text-sm">Estado</TableHead>
-                                    <TableHead className="text-xs sm:text-sm hidden md:table-cell">Fecha</TableHead>
-                                    <TableHead className="text-xs sm:text-sm">Acciones</TableHead>
+                                    <TableHead className="text-xs sm:text-sm">{dictionary.web?.orders?.table?.headers?.id || 'ID'}</TableHead>
+                                    <TableHead className="text-xs sm:text-sm">{dictionary.web?.orders?.table?.headers?.customer || 'Cliente'}</TableHead>
+                                    <TableHead className="text-xs sm:text-sm hidden sm:table-cell">{dictionary.web?.orders?.table?.headers?.items || 'Items'}</TableHead>
+                                    <TableHead className="text-xs sm:text-sm">{dictionary.web?.orders?.table?.headers?.total || 'Total'}</TableHead>
+                                    <TableHead className="text-xs sm:text-sm">{dictionary.web?.orders?.table?.headers?.status || 'Estado'}</TableHead>
+                                    <TableHead className="text-xs sm:text-sm hidden md:table-cell">{dictionary.web?.orders?.table?.headers?.date || 'Fecha'}</TableHead>
+                                    <TableHead className="text-xs sm:text-sm">{dictionary.web?.orders?.table?.headers?.actions || 'Acciones'}</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -192,11 +193,11 @@ export function OrdersTable({ orders, onStatusUpdate, onDeleteOrder, dictionary,
                                         <TableCell>
                                             <div>
                                                 <div className="font-medium text-xs sm:text-sm">
-                                                    {order.waiterName || 'Cliente'}
+                                                    {order.waiterName || (dictionary.web?.orders?.table?.customer || 'Cliente')}
                                                 </div>
                                                 {order.table && (
                                                     <div className="text-xs sm:text-sm text-muted-foreground">
-                                                        Mesa: {order.table.label}
+                                                        {dictionary.web?.orders?.table?.table || 'Mesa'}: {order.table.label}
                                                     </div>
                                                 )}
                                             </div>
@@ -205,7 +206,7 @@ export function OrdersTable({ orders, onStatusUpdate, onDeleteOrder, dictionary,
                                             <div className="space-y-1">
                                                 {order.items?.map((item, index) => (
                                                     <div key={index} className="text-xs sm:text-sm">
-                                                        {item.quantity}x {item.dish?.name || 'Plato no disponible'}
+                                                        {item.quantity}x {item.dish?.name || (dictionary.web?.orders?.table?.dishNotAvailable || 'Plato no disponible')}
                                                         {item.notes && (
                                                             <span className="text-muted-foreground ml-1">
                                                                 ({item.notes})
@@ -214,7 +215,7 @@ export function OrdersTable({ orders, onStatusUpdate, onDeleteOrder, dictionary,
                                                     </div>
                                                 )) || (
                                                         <div className="text-xs sm:text-sm text-muted-foreground">
-                                                            Sin items
+                                                            {dictionary.web?.orders?.table?.noItems || 'Sin items'}
                                                         </div>
                                                     )}
                                             </div>
@@ -225,11 +226,11 @@ export function OrdersTable({ orders, onStatusUpdate, onDeleteOrder, dictionary,
                                         <TableCell>
                                             <Badge
                                                 variant="secondary"
-                                                className={`text-xs sm:text-sm ${statusConfig[order.status as OrderStatus].color}`}
+                                                className={`text-xs sm:text-sm ${statusConfig(dictionary)[order.status as OrderStatus].color}`}
                                             >
                                                 {getStatusIcon(order.status as OrderStatus)}
                                                 <span className="ml-1">
-                                                    {statusConfig[order.status as OrderStatus].label}
+                                                    {statusConfig(dictionary)[order.status as OrderStatus].label}
                                                 </span>
                                             </Badge>
                                         </TableCell>
@@ -249,15 +250,15 @@ export function OrdersTable({ orders, onStatusUpdate, onDeleteOrder, dictionary,
                                                         {updatingOrderId === order.id ? (
                                                             <div className="flex items-center gap-1 sm:gap-2">
                                                                 <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
-                                                                <span className="hidden sm:inline">Actualizando...</span>
-                                                                <span className="sm:hidden">...</span>
+                                                                <span className="hidden sm:inline">{dictionary.web?.orders?.table?.updating || 'Actualizando...'}</span>
+                                                                <span className="sm:hidden">{dictionary.web?.orders?.table?.updatingShort || '...'}</span>
                                                             </div>
                                                         ) : (
                                                             <SelectValue />
                                                         )}
                                                     </SelectTrigger>
                                                     <SelectContent>
-                                                        {Object.entries(statusConfig).map(([status, config]) => (
+                                                        {Object.entries(statusConfig(dictionary)).map(([status, config]) => (
                                                             <SelectItem key={status} value={status}>
                                                                 <div className="flex items-center gap-2">
                                                                     {getStatusIcon(status as OrderStatus)}
@@ -299,6 +300,7 @@ export function OrdersTable({ orders, onStatusUpdate, onDeleteOrder, dictionary,
                 orderId={deleteDialog.orderId}
                 orderInfo={deleteDialog.orderInfo}
                 isLoading={isDeleting}
+                dictionary={dictionary}
             />
         </>
     );

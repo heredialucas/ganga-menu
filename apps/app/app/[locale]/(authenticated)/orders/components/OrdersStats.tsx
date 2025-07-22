@@ -23,28 +23,28 @@ interface OrdersStatsProps {
 export function OrdersStats({ stats, dictionary }: OrdersStatsProps) {
     const statCards = [
         {
-            title: 'Total',
+            title: dictionary.web?.orders?.stats?.total || 'Total',
             value: stats.total,
             icon: ShoppingCart,
             color: 'text-blue-600',
             bgColor: 'bg-blue-50',
         },
         {
-            title: 'Activas',
+            title: dictionary.web?.orders?.stats?.active || 'Activas',
             value: stats.active,
             icon: Clock,
             color: 'text-yellow-600',
             bgColor: 'bg-yellow-50',
         },
         {
-            title: 'Listas',
+            title: dictionary.web?.orders?.stats?.ready || 'Listas',
             value: stats.ready,
             icon: CheckCircle,
             color: 'text-green-600',
             bgColor: 'bg-green-50',
         },
         {
-            title: 'Cancel',
+            title: dictionary.web?.orders?.stats?.cancelled || 'Cancel',
             value: stats.cancelled,
             icon: XCircle,
             color: 'text-red-600',

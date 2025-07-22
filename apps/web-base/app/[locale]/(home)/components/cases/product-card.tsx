@@ -40,7 +40,7 @@ export const ProductCard = ({ project, dictionary, size, onClick }: ProjectCardP
 
     return (
         <div
-            className="relative overflow-hidden rounded-xl bg-card/50 backdrop-blur-sm border border-border hover:border-border/80 transition-all duration-300 h-full cursor-pointer"
+            className="relative overflow-hidden rounded-lg sm:rounded-xl bg-card/50 backdrop-blur-sm border border-border hover:border-border/80 transition-all duration-300 h-full cursor-pointer"
             onClick={handleClick}
         >
             <div className={`relative ${aspectRatioClass}`}>
@@ -52,15 +52,16 @@ export const ProductCard = ({ project, dictionary, size, onClick }: ProjectCardP
                         width={800}
                         height={600}
                         priority
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-background/70 to-transparent z-10"></div>
             </div>
 
-            <div className="absolute bottom-0 left-0 right-0 p-4 z-20">
-                <div className="flex items-center gap-2 mb-2">
+            <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-3 lg:p-4 z-20">
+                <div className="flex items-center gap-1.5 sm:gap-2 mb-1 sm:mb-2">
                     <div
-                        className={`w-2 h-2 rounded-full ${project.status === "finished"
+                        className={`w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full ${project.status === "finished"
                             ? "bg-success animate-pulse"
                             : "bg-blue-400 animate-pulse"
                             }`}
@@ -72,12 +73,18 @@ export const ProductCard = ({ project, dictionary, size, onClick }: ProjectCardP
                     </span>
                 </div>
 
-                <h3 className={`font-semibold mb-2 text-foreground ${size === 'large' ? 'text-xl' : size === 'medium' ? 'text-lg' : 'text-sm'
+                <h3 className={`font-semibold mb-1 sm:mb-2 text-foreground ${size === 'large'
+                        ? 'text-sm sm:text-lg lg:text-xl'
+                        : size === 'medium'
+                            ? 'text-xs sm:text-base lg:text-lg'
+                            : 'text-xs sm:text-sm'
                     }`}>
                     {project.title}
                 </h3>
 
-                <p className={`text-muted-foreground ${size === 'small' ? 'text-xs line-clamp-1' : 'text-sm line-clamp-2'
+                <p className={`text-muted-foreground ${size === 'small'
+                        ? 'text-xs line-clamp-1'
+                        : 'text-xs sm:text-sm line-clamp-2'
                     }`}>
                     {project.description}
                 </p>

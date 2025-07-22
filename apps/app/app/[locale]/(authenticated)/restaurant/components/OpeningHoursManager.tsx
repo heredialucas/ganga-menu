@@ -6,8 +6,9 @@ import { Label } from '@repo/design-system/components/ui/label';
 import { Switch } from '@repo/design-system/components/ui/switch';
 import { Input } from '@repo/design-system/components/ui/input';
 import { PlusCircle, Trash2 } from 'lucide-react';
+import type { Dictionary } from '@repo/internationalization';
 
-const daysOfWeek = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'];
+const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 
 type TimeSlot = {
     id: string;
@@ -24,6 +25,7 @@ type OpeningHours = Record<string, DayHours>;
 
 interface OpeningHoursManagerProps {
     initialHours?: string; // JSON string
+    dictionary: Dictionary;
 }
 
 function parseInitialHours(initialHoursString?: string): OpeningHours {
@@ -64,7 +66,7 @@ function parseInitialHours(initialHoursString?: string): OpeningHours {
     }
 }
 
-export function OpeningHoursManager({ initialHours }: OpeningHoursManagerProps) {
+export function OpeningHoursManager({ initialHours, dictionary }: OpeningHoursManagerProps) {
     const [hours, setHours] = useState<OpeningHours>(() => parseInitialHours(initialHours));
 
     const handleToggleDay = (day: string, isOpen: boolean) => {
@@ -120,14 +122,14 @@ export function OpeningHoursManager({ initialHours }: OpeningHoursManagerProps) 
             <input type="hidden" name="hours" value={JSON.stringify(hours)} />
 
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-2 sm:p-3 border rounded-lg gap-2 sm:gap-0">
-                <Label className="text-sm sm:text-base">Aplicar a todos los días</Label>
+                <Label className="text-sm sm:text-base">{(dictionary as any).app?.restaurant?.openingHours?.applyToAll || 'Aplicar a todos los días'}</Label>
                 <div className="flex items-center gap-2 w-full sm:w-auto">
                     <Switch
                         checked={areAllOpen}
                         onCheckedChange={handleToggleAll}
                         aria-label="Toggle all days"
                     />
-                    <Label className="text-xs sm:text-sm">{areAllOpen ? 'Todos abiertos' : 'Marcar todos como abiertos'}</Label>
+                    <Label className="text-xs sm:text-sm">{areAllOpen ? ((dictionary as any).app?.restaurant?.openingHours?.allOpen || 'Todos abiertos') : ((dictionary as any).app?.restaurant?.openingHours?.markAllOpen || 'Marcar todos como abiertos')}</Label>
                 </div>
             </div>
 
@@ -137,13 +139,15 @@ export function OpeningHoursManager({ initialHours }: OpeningHoursManagerProps) 
                     return (
                         <div key={day} className="p-2 sm:p-3 md:p-4 border rounded-lg space-y-2 sm:space-y-3 md:space-y-4">
                             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
-                                <Label className="capitalize text-base sm:text-lg font-medium">{day}</Label>
+                                <Label className="capitalize text-base sm:text-lg font-medium">
+                                    {(dictionary as any).app?.restaurant?.openingHours?.days?.[day] || day}
+                                </Label>
                                 <div className="flex items-center gap-2 w-full sm:w-auto">
                                     <Switch
                                         checked={dayHours.isOpen}
                                         onCheckedChange={(checked) => handleToggleDay(day, checked)}
                                     />
-                                    <Label className="text-xs sm:text-sm">{dayHours.isOpen ? 'Abierto' : 'Cerrado'}</Label>
+                                    <Label className="text-xs sm:text-sm">{dayHours.isOpen ? ((dictionary as any).app?.restaurant?.openingHours?.open || 'Abierto') : ((dictionary as any).app?.restaurant?.openingHours?.closed || 'Cerrado')}</Label>
                                 </div>
                             </div>
 
@@ -180,7 +184,7 @@ export function OpeningHoursManager({ initialHours }: OpeningHoursManagerProps) 
                                         onClick={() => handleAddSlot(day)}
                                     >
                                         <PlusCircle className="mr-2 h-4 w-4" />
-                                        Añadir turno
+                                        {(dictionary as any).app?.restaurant?.openingHours?.addShift || 'Añadir turno'}
                                     </Button>
                                 </div>
                             )}

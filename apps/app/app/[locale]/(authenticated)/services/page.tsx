@@ -30,10 +30,10 @@ export default async function ServicesPage({
                 <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
                     <div className="text-center sm:text-left flex-1">
                         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">
-                            Servicios
+                            {dictionary.web?.services?.title || 'Servicios'}
                         </h1>
                         <p className="text-sm sm:text-base text-muted-foreground mt-2">
-                            Herramientas para la gestión de tu restaurante.
+                            {dictionary.web?.services?.subtitleAlt || 'Herramientas para la gestión de tu restaurante.'}
                         </p>
                     </div>
                     <div className="flex flex-row items-center gap-2">
@@ -42,12 +42,12 @@ export default async function ServicesPage({
                     </div>
                 </div>
                 <div className="border rounded-lg p-3 sm:p-4 md:p-6 text-center">
-                    <h2 className="text-lg sm:text-xl font-semibold mb-2">Configuración Requerida</h2>
+                    <h2 className="text-lg sm:text-xl font-semibold mb-2">{dictionary.web?.services?.setup?.title || 'Configuración Requerida'}</h2>
                     <p className="text-sm sm:text-base text-muted-foreground mb-4">
-                        Para usar los servicios de mozos y cocina, primero debes configurar tu restaurante.
+                        {dictionary.web?.services?.setup?.description || 'Para usar los servicios de mozos y cocina, primero debes configurar tu restaurante.'}
                     </p>
                     <Link href={`/${locale}/restaurant`} className="text-blue-500 hover:underline">
-                        Ir a la configuración del restaurante
+                        {dictionary.web?.services?.setup?.link || 'Ir a la configuración del restaurante'}
                     </Link>
                 </div>
             </div>
@@ -60,10 +60,10 @@ export default async function ServicesPage({
             <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
                 <div className="text-center sm:text-left flex-1">
                     <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">
-                        Servicios
+                        {dictionary.web?.services?.title || 'Servicios'}
                     </h1>
                     <p className="text-sm sm:text-base text-muted-foreground mt-2">
-                        Accesos directos para el personal de tu restaurante.
+                        {dictionary.web?.services?.subtitle || 'Accesos directos para el personal de tu restaurante.'}
                     </p>
                 </div>
                 <div className="flex flex-row items-center gap-2">

@@ -58,9 +58,12 @@ export default async function WaiterPage({ params }: PageProps) {
 // Generar metadatos dinámicos
 export async function generateMetadata({ params }: PageProps) {
     const paramsData = await params;
-    const { slug } = paramsData;
+    const { locale, slug } = paramsData;
 
-    const restaurantConfig = await getRestaurantConfigBySlug(slug);
+    const [dictionary, restaurantConfig] = await Promise.all([
+        getDictionary(locale),
+        getRestaurantConfigBySlug(slug)
+    ]);
 
     if (!restaurantConfig) {
         return {

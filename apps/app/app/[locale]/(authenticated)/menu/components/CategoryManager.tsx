@@ -10,12 +10,14 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { createCategory, deleteCategory } from '@repo/data-services/src/services/categoryService';
 import { getCurrentUser } from '@repo/data-services/src/services/authService';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@repo/design-system/components/ui/table';
+import type { Dictionary } from '@repo/internationalization';
 
 interface CategoryManagerProps {
     categories: Category[];
+    dictionary: Dictionary;
 }
 
-export function CategoryManager({ categories }: CategoryManagerProps) {
+export function CategoryManager({ categories, dictionary }: CategoryManagerProps) {
     const { toast } = useToast();
     const [isPending, startTransition] = useTransition();
     const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; category: Category | null }>({ open: false, category: null });
@@ -29,10 +31,10 @@ export function CategoryManager({ categories }: CategoryManagerProps) {
         startTransition(async () => {
             try {
                 const user = await getCurrentUser();
-                if (!user) throw new Error("Usuario no autenticado.");
+                if (!user) throw new Error(dictionary.app?.menu?.categories?.toast?.notAuthenticated || "Usuario no autenticado.");
 
                 await createCategory({ name }, user.id);
-                toast({ title: "Éxito", description: "Categoría creada." });
+                toast({ title: "Éxito", description: dictionary.app?.menu?.categories?.toast?.success || "Categoría creada." });
                 form.reset();
             } catch (error: any) {
                 toast({ title: "Error", description: error.message, variant: "destructive" });
@@ -44,9 +46,9 @@ export function CategoryManager({ categories }: CategoryManagerProps) {
         startTransition(async () => {
             try {
                 await deleteCategory(category.id);
-                toast({ title: "Éxito", description: "Categoría eliminada." });
+                toast({ title: "Éxito", description: dictionary.app?.menu?.categories?.toast?.deleteSuccess || "Categoría eliminada." });
             } catch (error: any) {
-                toast({ title: "Error", description: error.message, variant: "destructive" });
+                toast({ title: "Error", description: dictionary.app?.menu?.categories?.toast?.deleteError || error.message, variant: "destructive" });
             }
             setDeleteDialog({ open: false, category: null });
         });
@@ -56,24 +58,24 @@ export function CategoryManager({ categories }: CategoryManagerProps) {
         <>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 lg:gap-6 p-1 sm:p-2">
                 <div className="space-y-3">
-                    <h4 className="font-semibold text-base sm:text-lg">Nueva Categoría</h4>
+                    <h4 className="font-semibold text-base sm:text-lg">{dictionary.app?.menu?.categories?.newCategory || 'Nueva Categoría'}</h4>
                     <form onSubmit={handleSubmit} className="flex items-stretch gap-2">
-                        <Input name="name" placeholder="Nombre de la categoría" required className="flex-1" />
+                        <Input name="name" placeholder={dictionary.app?.menu?.categories?.namePlaceholder || 'Nombre de la categoría'} required className="flex-1" />
                         <Button type="submit" disabled={isPending} className="px-3">
                             <Plus className="h-4 w-4" />
-                            <span className="hidden sm:inline ml-2">Agregar</span>
+                            <span className="hidden sm:inline ml-2">{dictionary.app?.menu?.categories?.add?.desktop || 'Agregar'}</span>
                         </Button>
                     </form>
                 </div>
                 <div className="space-y-3">
-                    <h4 className="font-semibold text-base sm:text-lg">Categorías Existentes</h4>
+                    <h4 className="font-semibold text-base sm:text-lg">{dictionary.app?.menu?.categories?.existingCategories || 'Categorías Existentes'}</h4>
                     <div className="border rounded-md overflow-hidden">
                         <div className="overflow-x-auto">
                             <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead className="text-sm sm:text-base">Nombre</TableHead>
-                                        <TableHead className="text-right text-sm sm:text-base">Acción</TableHead>
+                                        <TableHead className="text-sm sm:text-base">{dictionary.app?.menu?.categories?.name || 'Nombre'}</TableHead>
+                                        <TableHead className="text-right text-sm sm:text-base">{dictionary.app?.menu?.categories?.action || 'Acción'}</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -96,15 +98,15 @@ export function CategoryManager({ categories }: CategoryManagerProps) {
             <AlertDialog open={deleteDialog.open} onOpenChange={(open) => !open && setDeleteDialog({ open: false, category: null })}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
+                        <AlertDialogTitle>{dictionary.app?.menu?.categories?.deleteConfirmation || '¿Estás seguro?'}</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Esta acción no se puede deshacer. Se eliminará la categoría "{deleteDialog.category?.name}".
+                            {dictionary.app?.menu?.categories?.deleteDescription || 'Esta acción no se puede deshacer. Se eliminará la categoría'} "{deleteDialog.category?.name}".
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                        <AlertDialogCancel>{dictionary.app?.menu?.categories?.cancel || 'Cancelar'}</AlertDialogCancel>
                         <AlertDialogAction onClick={() => handleDelete(deleteDialog.category!)} disabled={isPending}>
-                            {isPending ? 'Eliminando...' : 'Eliminar'}
+                            {isPending ? (dictionary.app?.menu?.categories?.deleting || 'Eliminando...') : (dictionary.app?.menu?.categories?.delete || 'Eliminar')}
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>

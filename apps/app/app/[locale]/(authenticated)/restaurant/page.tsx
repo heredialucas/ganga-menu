@@ -26,10 +26,10 @@ export default async function RestaurantPage({
             <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
                 <div className="text-center sm:text-left flex-1">
                     <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">
-                        Gestión del Restaurante
+                        {(dictionary as any).app?.restaurant?.title || 'Gestión del Restaurante'}
                     </h1>
                     <p className="text-sm sm:text-base text-muted-foreground mt-2">
-                        Define la configuración de tu restaurante y diseña la distribución de las mesas.
+                        {(dictionary as any).app?.restaurant?.subtitle || 'Define la configuración de tu restaurante y diseña la distribución de las mesas.'}
                     </p>
                 </div>
                 <div className="flex flex-row items-center gap-2">

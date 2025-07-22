@@ -1,153 +1,5 @@
 {
   "app": {
-    "sidebar": {
-      "account": "Cuenta",
-      "menu": "Menú",
-      "orders": "Órdenes",
-      "services": "Servicios",
-      "restaurant": "Restaurante"
-    },
-    "share": {
-      "title": "Compartir Enlaces",
-      "description": "Comparte estos enlaces para dar acceso a las diferentes vistas de tu restaurante.",
-      "open": "Abrir diálogo para compartir",
-      "links_button": "Enlaces",
-      "menu": "Enlace al Menú Público",
-      "kitchen": "Enlace a la Vista de Cocina",
-      "waiter": "Enlace a la Vista de Mozos"
-    },
-    "admin": {
-      "title": "Ganga-Menú",
-      "navigation": {
-        "dashboard": "Inicio",
-        "users": "Usuarios",
-        "settings": "Configuración",
-        "logout": "Cerrar Sesión",
-        "loggingOut": "Cerrando sesión..."
-      },
-      "menu": {
-        "title": "Gestión de Menú",
-        "categories": {
-          "title": "Categorías",
-          "new": "Nueva Categoría",
-          "noCategories": "No se encontraron categorías. ¡Crea tu primera categoría!",
-          "edit": "Editar",
-          "delete": "Eliminar",
-          "deleteConfirmation": "¿Estás seguro de que deseas eliminar esta categoría?",
-          "form": {
-            "editTitle": "Editar Categoría",
-            "createTitle": "Crear Nueva Categoría",
-            "name": "Nombre",
-            "description": "Descripción",
-            "active": "Activa",
-            "cancel": "Cancelar",
-            "create": "Crear",
-            "update": "Actualizar",
-            "saving": "Guardando..."
-          }
-        },
-        "dishes": {
-          "title": "Platos",
-          "new": "Nuevo Plato",
-          "noDishes": "No se encontraron platos. ¡Crea tu primer plato!",
-          "edit": "Editar",
-          "delete": "Eliminar",
-          "deleteConfirmation": "¿Estás seguro de que deseas eliminar este plato?",
-          "status": {
-            "active": "Activo",
-            "inactive": "Inactivo"
-          },
-          "form": {
-            "editTitle": "Editar Plato",
-            "createTitle": "Crear Nuevo Plato",
-            "name": "Nombre",
-            "description": "Descripción",
-            "price": "Precio",
-            "category": "Categoría",
-            "status": "Estado",
-            "cancel": "Cancelar",
-            "create": "Crear",
-            "update": "Actualizar",
-            "saving": "Guardando..."
-          }
-        },
-        "dailySpecials": {
-          "title": "Platos del Día",
-          "new": "Nuevo Plato del Día",
-          "noSpecials": "No se encontraron platos del día.",
-          "edit": "Editar",
-          "delete": "Eliminar",
-          "deleteConfirmation": "¿Estás seguro de que deseas eliminar este plato del día?",
-          "form": {
-            "editTitle": "Editar Plato del Día",
-            "createTitle": "Crear Nuevo Plato del Día",
-            "date": "Fecha",
-            "dish": "Plato",
-            "active": "Activo",
-            "cancel": "Cancelar",
-            "create": "Crear",
-            "update": "Actualizar",
-            "saving": "Guardando..."
-          }
-        },
-        "restaurant": {
-          "title": "Diseño del Restaurante",
-          "subtitle": "Diseña la distribución de tu restaurante y coloca las mesas",
-          "toolbar": {
-            "addTable": "Agregar Mesa",
-            "addBar": "Agregar Barra",
-            "addDecoration": "Agregar Decoración",
-            "save": "Guardar Diseño",
-            "clear": "Limpiar Todo",
-            "undo": "Deshacer",
-            "redo": "Rehacer"
-          },
-          "tables": {
-            "round": "Mesa Redonda",
-            "square": "Mesa Cuadrada",
-            "rectangle": "Mesa Rectangular"
-          },
-          "properties": {
-            "title": "Propiedades",
-            "name": "Nombre",
-            "capacity": "Capacidad",
-            "shape": "Forma",
-            "width": "Ancho",
-            "height": "Alto",
-            "color": "Color"
-          },
-          "messages": {
-            "designSaved": "Diseño guardado exitosamente",
-            "errorSaving": "Error al guardar el diseño",
-            "selectElement": "Selecciona un elemento para editar sus propiedades",
-            "noElements": "No hay elementos en el diseño. ¡Comienza agregando una mesa!"
-          }
-        }
-      }
-    },
-    "client": {
-      "title": "Portal del Cliente",
-      "navigation": {
-        "dashboard": "Tablero",
-        "profile": "Perfil",
-        "orders": "Pedidos",
-        "settings": "Configuración",
-        "logout": "Cerrar Sesión",
-        "loggingOut": "Cerrando sesión..."
-      }
-    },
-    "pharmacy": {
-      "title": "Gestión de Farmacia",
-      "navigation": {
-        "dashboard": "Tablero",
-        "clients": "Clientes",
-        "inventory": "Inventario",
-        "orders": "Pedidos",
-        "settings": "Configuración",
-        "logout": "Cerrar Sesión",
-        "loggingOut": "Cerrando sesión..."
-      }
-    },
     "auth": {
       "signIn": {
         "title": "Iniciar sesión",
@@ -182,47 +34,618 @@
       "layout": {
         "title": "Herramientas internas para Ganga-Menú",
         "description": "Herramientas internas para Ganga-Menú que te ayudarán a gestionar tus menús digitales."
+      },
+      "logout": "Cerrar sesión",
+      "loggingOut": "Cerrando sesión..."
+    },
+    "sidebar": {
+      "account": "Cuenta",
+      "menu": "Menú",
+      "orders": "Órdenes",
+      "services": "Servicios",
+      "restaurant": "Restaurante"
+    },
+    "share": {
+      "title": "Compartir Enlaces",
+      "description": "Comparte estos enlaces para dar acceso a las diferentes vistas de tu restaurante.",
+      "open": "Abrir diálogo para compartir",
+      "links_button": "Enlaces",
+      "menu": "Enlace al Menú Público",
+      "kitchen": "Enlace a la Vista de Cocina",
+      "waiter": "Enlace a la Vista de Mozos"
+    },
+    "feedback": {
+      "buttonDesktop": "Dar feedback",
+      "buttonMobile": "Para dar feedback",
+      "modalTitle": "¡Ayúdanos a crecer!",
+      "modalDescription": "Tu opinión es muy importante para nosotros. Contanos qué pensas y ayudanos a mejorar Ganga-Menú.",
+      "title": "Enviar Feedback",
+      "name": "Nombre",
+      "email": "Email",
+      "message": "Mensaje",
+      "namePlaceholder": "Tu nombre",
+      "emailPlaceholder": "tu@email.com",
+      "messagePlaceholder": "Cuéntanos qué piensas...",
+      "cancel": "Cancelar",
+      "send": "Enviar",
+      "sending": "Enviando...",
+      "success": "¡Gracias por tu feedback!",
+      "error": "Error al enviar feedback. Inténtalo de nuevo."
+    },
+    "account": {
+      "title": "Gestión de Cuenta",
+      "subtitle": "Configuración y usuarios",
+      "userNotFound": "Usuario no encontrado",
+      "tabs": {
+        "profile": {
+          "desktop": "Mi Perfil",
+          "mobile": "Perfil"
+        },
+        "users": {
+          "desktop": "Gestión de Usuarios",
+          "mobile": "Usuarios"
+        }
+      },
+      "profile": {
+        "title": "Información Personal",
+        "description": "Actualiza tu información personal y configuración de cuenta",
+        "name": "Nombre",
+        "lastName": "Apellido",
+        "email": "Email",
+        "currentRole": "Rol actual",
+        "admin": "Administrador",
+        "user": "Usuario",
+        "saveChanges": {
+          "desktop": "Guardar Cambios",
+          "mobile": "Guardar"
+        },
+        "saving": "Guardando...",
+        "validation": {
+          "nameRequired": "El nombre es requerido",
+          "lastNameRequired": "El apellido es requerido",
+          "emailInvalid": "Email inválido"
+        },
+        "toast": {
+          "updating": "Actualizando perfil...",
+          "success": "Perfil actualizado exitosamente.",
+          "error": "Error al actualizar perfil"
+        }
+      },
+      "password": {
+        "title": "Seguridad",
+        "description": "Gestiona tu contraseña y configuración de seguridad",
+        "currentPassword": "Contraseña Actual",
+        "newPassword": "Nueva Contraseña",
+        "confirmPassword": "Confirmar Nueva Contraseña",
+        "updatePassword": {
+          "desktop": "Actualizar Contraseña",
+          "mobile": "Actualizar"
+        },
+        "updating": "Actualizando...",
+        "validation": {
+          "currentPasswordRequired": "La contraseña actual es requerida",
+          "newPasswordMin": "La nueva contraseña debe tener al menos 6 caracteres",
+          "passwordsDoNotMatch": "Las contraseñas no coinciden"
+        },
+        "toast": {
+          "updating": "Actualizando contraseña...",
+          "success": "Contraseña actualizada exitosamente.",
+          "error": "Error al actualizar contraseña"
+        }
+      },
+      "users": {
+        "title": "Usuarios del Sistema",
+        "description": "Gestiona los usuarios y sus permisos",
+        "newUser": {
+          "desktop": "Nuevo Usuario",
+          "mobile": "Nuevo"
+        },
+        "editUser": "Editar Usuario",
+        "createUser": "Crear Usuario",
+        "editUserDescription": "Actualiza los detalles del usuario.",
+        "createUserDescription": "Crea un nuevo usuario y asigna sus permisos.",
+        "password": "Contraseña",
+        "passwordPlaceholder": "Dejar en blanco para no cambiar",
+        "role": "Rol",
+        "rolePlaceholder": "Selecciona un rol",
+        "restaurantManager": "Encargado de restaurante",
+        "permissionsLabel": "Permisos",
+        "permissions": "Permisos",
+        "cancel": "Cancelar",
+        "saveChanges": {
+          "desktop": "Guardar Cambios",
+          "mobile": "Guardar"
+        },
+        "create": {
+          "desktop": "Crear Usuario",
+          "mobile": "Crear"
+        },
+        "saving": "Guardando...",
+        "deleteUser": "Eliminar Usuario",
+        "deleteConfirmation": "¿Estás seguro?",
+        "deleteDescription": "Esta acción no se puede deshacer. Se eliminará permanentemente al usuario",
+        "deleting": "Eliminando...",
+        "validation": {
+          "nameRequired": "Nombre, apellido y email son requeridos",
+          "passwordRequired": "La contraseña es requerida para nuevos usuarios",
+          "passwordMin": "La contraseña debe tener al menos 6 caracteres"
+        },
+        "permissionGroups": {
+          "dishes": "Platos",
+          "categories": "Categorías",
+          "dailySpecials": "Especiales del Día",
+          "restaurant": "Restaurante",
+          "orders": "Órdenes",
+          "kitchen": "Cocina",
+          "waiter": "Mozo",
+          "menu": "Menú",
+          "account": "Cuenta",
+          "admin": "Administración"
+        },
+        "permissions": {
+          "dishesView": "Ver platos",
+          "dishesCreate": "Crear platos",
+          "dishesEdit": "Editar platos",
+          "dishesDelete": "Eliminar platos",
+          "dishesManageStatus": "Gestionar estado de platos",
+          "categoriesView": "Ver categorías",
+          "categoriesCreate": "Crear categorías",
+          "categoriesEdit": "Editar categorías",
+          "categoriesDelete": "Eliminar categorías",
+          "categoriesManageOrder": "Gestionar orden de categorías",
+          "dailySpecialsView": "Ver especiales del día",
+          "dailySpecialsCreate": "Crear especiales del día",
+          "dailySpecialsEdit": "Editar especiales del día",
+          "dailySpecialsDelete": "Eliminar especiales del día",
+          "restaurantViewConfig": "Ver configuración del restaurante",
+          "restaurantEditConfig": "Editar configuración del restaurante",
+          "restaurantManageSettings": "Gestionar configuración del restaurante",
+          "restaurantViewDesign": "Ver diseño del restaurante",
+          "restaurantEditDesign": "Editar diseño del restaurante",
+          "ordersView": "Ver órdenes",
+          "ordersCreate": "Crear órdenes",
+          "ordersEdit": "Editar órdenes",
+          "ordersDelete": "Eliminar órdenes",
+          "ordersManageStatus": "Gestionar estado de órdenes",
+          "kitchenViewOrders": "Ver órdenes de cocina",
+          "kitchenUpdateStatus": "Actualizar estado de cocina",
+          "waiterViewOrders": "Ver órdenes de mozo",
+          "waiterCreateOrders": "Crear órdenes de mozo",
+          "waiterViewMenu": "Ver menú de mozo",
+          "menuViewPublic": "Ver menú público",
+          "accountViewOwn": "Ver cuenta propia",
+          "accountEditOwn": "Editar cuenta propia",
+          "accountChangePassword": "Cambiar contraseña",
+          "adminFullAccess": "Acceso completo",
+          "adminManageUsers": "Gestionar usuarios",
+          "adminSystemSettings": "Configuración del sistema"
+        },
+        "toast": {
+          "updating": "Actualizando usuario...",
+          "creating": "Creando usuario...",
+          "deleting": "Eliminando usuario...",
+          "updated": "Usuario actualizado correctamente.",
+          "created": "Usuario creado correctamente.",
+          "deleted": "Usuario eliminado correctamente."
+        }
       }
     },
-    "header": {
-      "upgradeToPro": "Pasar a Profesional"
+    "menu": {
+      "title": "Gestión del Menú",
+      "subtitle": "Crea y edita tus platos. Usa los desplegables para configuraciones avanzadas.",
+      "userNotAuthenticated": "Usuario no autenticado.",
+      "categories": {
+        "title": "Gestor de Categorías",
+        "newCategory": "Nueva Categoría",
+        "existingCategories": "Categorías Existentes",
+        "name": "Nombre",
+        "action": "Acción",
+        "add": {
+          "desktop": "Agregar",
+          "mobile": "Agregar"
+        },
+        "namePlaceholder": "Nombre de la categoría",
+        "deleteConfirmation": "¿Estás seguro?",
+        "deleteDescription": "Esta acción no se puede deshacer. Se eliminará la categoría",
+        "cancel": "Cancelar",
+        "delete": "Eliminar",
+        "deleting": "Eliminando...",
+        "toast": {
+          "success": "Categoría creada.",
+          "error": "Error al crear categoría",
+          "deleteSuccess": "Categoría eliminada.",
+          "deleteError": "Error al eliminar categoría",
+          "notAuthenticated": "Usuario no autenticado."
+        }
+      },
+      "dishes": {
+        "title": "Platos",
+        "description": "Crea y gestiona los platos de tu menú.",
+        "newDish": {
+          "desktop": "Nuevo Plato",
+          "mobile": "Nuevo"
+        },
+        "editDish": "Editar Plato",
+        "createDish": "Crear Plato",
+        "image": "Imagen",
+        "imagePlaceholder": "Haz clic para subir una imagen",
+        "name": "Nombre",
+        "description": "Descripción",
+        "price": "Precio",
+        "promotionalPrice": "Precio Promocional",
+        "category": "Categoría",
+        "categoryPlaceholder": "Selecciona una categoría",
+        "noCategory": "Sin categoría",
+        "edit": {
+          "desktop": "Editar",
+          "mobile": "Editar"
+        },
+        "cancel": "Cancelar",
+        "save": "Guardar",
+        "saving": "Guardando...",
+        "deleteConfirmation": "¿Estás seguro?",
+        "deleteDescription": "Esta acción no se puede deshacer. Se eliminará permanentemente el plato",
+        "delete": "Eliminar",
+        "deleting": "Eliminando...",
+        "toast": {
+          "saving": "Guardando plato...",
+          "updated": "Plato actualizado correctamente.",
+          "created": "Plato creado correctamente.",
+          "deleting": "Eliminando plato...",
+          "deleted": "Plato eliminado correctamente.",
+          "notAuthenticated": "Usuario no autenticado"
+        }
+      },
+      "dailySpecials": {
+        "title": "Programador de Especiales del Día",
+        "schedulePromotion": "Programar Promoción",
+        "dish": "Plato",
+        "dishPlaceholder": "Selecciona un plato",
+        "date": "Fecha",
+        "startDate": "Fecha de Inicio",
+        "datePlaceholder": "Selecciona una fecha",
+        "repeatPromotion": "Repetir Promoción",
+        "recurrenceType": "Tipo de Repetición",
+        "weekly": "Semanal",
+        "monthly": "Mensual",
+        "weekDays": "Días de la Semana",
+        "endDate": "Fecha de Fin de Repetición",
+        "addPromotion": {
+          "desktop": "Añadir Promoción",
+          "mobile": "Añadir"
+        },
+        "adding": "Añadiendo...",
+        "promotionPreview": "Previsualización de la Promoción",
+        "promotionalPriceNote": "El precio promocional se debe establecer en el plato.",
+        "activePromotions": "Promociones Activas",
+        "deletePromotion": "Eliminar Promoción",
+        "deletingPromotion": "Eliminando promoción...",
+        "promotionDeleted": "Promoción eliminada con éxito.",
+        "deletePromotions": "Eliminar Promociones",
+        "deletingPromotions": "Eliminando promociones...",
+        "promotionsDeleted": "promociones eliminadas con éxito.",
+        "validation": {
+          "selectDishAndDate": "Por favor, selecciona un plato y una fecha de inicio.",
+          "completeRecurrenceFields": "Para promociones recurrentes, completa todos los campos de repetición."
+        },
+        "toast": {
+          "adding": "Añadiendo promoción(es)...",
+          "error": "No se pudo añadir la promoción.",
+          "deleting": "Eliminando promociones...",
+          "deleteError": "No se pudieron eliminar las promociones."
+        }
+      },
+      "access": {
+        "title": "Acceso de Clientes",
+        "description": "Configura cómo tus clientes accederán al menú digital. Este enlace y QR son los que debes compartir.",
+        "configureRestaurant": "Primero configura tu restaurante",
+        "customLink": "Enlace Personalizado (URL)",
+        "slugPlaceholder": "tu-restaurante",
+        "copyLink": {
+          "desktop": "Copiar Enlace",
+          "mobile": "Copiar"
+        },
+        "preview": {
+          "desktop": "Vista previa",
+          "mobile": "Vista"
+        },
+        "themeColor": "Color Principal del Sitio",
+        "themeColorNote": "Este será el color predominante en la página que ven tus clientes.",
+        "qrCode": "Código QR del Menú",
+        "downloadQR": {
+          "desktop": "Descargar QR",
+          "mobile": "Descargar"
+        },
+        "qrNote": "Tus clientes pueden escanear este código para ver el menú.",
+        "toast": {
+          "linkCopied": "Enlace del menú copiado al portapapeles.",
+          "qrDownloaded": "QR descargado correctamente"
+        }
+      }
+    },
+    "restaurant": {
+      "title": "Gestión del Restaurante",
+      "subtitle": "Define la configuración de tu restaurante y diseña la distribución de las mesas.",
+      "userNotAuthenticated": "Usuario no autenticado.",
+      "config": {
+        "title": "Configuración del Restaurante",
+        "description": "Configura los datos básicos de tu restaurante",
+        "name": "Nombre del Restaurante",
+        "namePlaceholder": "Ingresa el nombre de tu restaurante",
+        "description": "Descripción",
+        "descriptionPlaceholder": "Describe tu restaurante",
+        "address": "Dirección",
+        "addressPlaceholder": "Ingresa la dirección completa",
+        "phone": "Teléfono",
+        "phonePlaceholder": "Ingresa el número de teléfono",
+        "email": "Email",
+        "emailPlaceholder": "Ingresa el email de contacto",
+        "website": "Sitio Web",
+        "websitePlaceholder": "https://tu-restaurante.com",
+        "logo": "Logo del Restaurante",
+        "logoPlaceholder": "Sube el logo de tu restaurante",
+        "banner": "Banner del Restaurante",
+        "bannerPlaceholder": "Sube una imagen de banner",
+        "uploadImage": "Subir imagen",
+        "uploadImageMobile": "Subir",
+        "noLogo": "No hay logo",
+        "save": "Guardar Configuración",
+        "saving": "Guardando...",
+        "cancel": "Cancelar",
+        "contactInfo": {
+          "title": "Información de Contacto",
+          "description": "Información de contacto para que tus clientes puedan ubicarte y comunicarse contigo."
+        },
+        "toast": {
+          "saving": "Guardando configuración...",
+          "success": "Configuración guardada exitosamente.",
+          "error": "Error al guardar la configuración.",
+          "unexpectedError": "Ocurrió un error inesperado.",
+          "notAuthenticated": "Usuario no autenticado"
+        }
+      },
+      "openingHours": {
+        "title": "Horarios de Apertura",
+        "description": "Configura los horarios de apertura de tu restaurante",
+        "day": "Día",
+        "open": "Abierto",
+        "closed": "Cerrado",
+        "openingTime": "Hora de Apertura",
+        "closingTime": "Hora de Cierre",
+        "saveHours": "Guardar Horarios",
+        "savingHours": "Guardando horarios...",
+        "applyToAll": "Aplicar a todos los días",
+        "allOpen": "Todos abiertos",
+        "markAllOpen": "Marcar todos como abiertos",
+        "addShift": "Añadir turno",
+        "days": {
+          "monday": "Lunes",
+          "tuesday": "Martes", 
+          "wednesday": "Miércoles",
+          "thursday": "Jueves",
+          "friday": "Viernes",
+          "saturday": "Sábado",
+          "sunday": "Domingo"
+        },
+        "toast": {
+          "saving": "Guardando horarios...",
+          "success": "Horarios guardados exitosamente.",
+          "error": "Error al guardar los horarios.",
+          "notAuthenticated": "Usuario no autenticado"
+        }
+      },
+      "design": {
+        "title": "Diseño del Restaurante",
+        "description": "Diseña la distribución de las mesas en tu restaurante",
+        "tables": "Mesas",
+        "addTable": "Agregar Mesa",
+        "tableNumber": "Número de Mesa",
+        "tableNumberPlaceholder": "Ej: Mesa 1",
+        "tableCapacity": "Capacidad",
+        "tableCapacityPlaceholder": "Número de personas",
+        "tableShape": "Forma de Mesa",
+        "tableShapeRound": "Redonda",
+        "tableShapeSquare": "Cuadrada",
+        "tableShapeRectangle": "Rectangular",
+        "tablePosition": "Posición",
+        "tablePositionX": "Posición X",
+        "tablePositionY": "Posición Y",
+        "tableColor": "Color de Mesa",
+        "tableStatus": "Estado de Mesa",
+        "tableStatusAvailable": "Disponible",
+        "tableStatusOccupied": "Ocupada",
+        "tableStatusReserved": "Reservada",
+        "tableStatusMaintenance": "Mantenimiento",
+        "deleteTable": "Eliminar Mesa",
+        "deleteTableConfirmation": "¿Estás seguro de que quieres eliminar esta mesa?",
+        "saveDesign": "Guardar Diseño",
+        "savingDesign": "Guardando diseño...",
+        "resetDesign": "Limpiar",
+        "resetDesignConfirmation": "¿Estás seguro?",
+        "resetDesignDescription": "Esta acción no se puede deshacer. Se eliminará todo el diseño.",
+        "confirmReset": "Confirmar",
+        "deleteElement": "Eliminar",
+        "deleteButton": "Eliminar",
+        "loading": "Cargando diseñador...",
+        "tools": {
+          "select": {
+            "desktop": "Seleccionar",
+            "mobile": "Sel"
+          },
+          "wall": {
+            "desktop": "Pared",
+            "mobile": "Pared"
+          },
+          "addObject": {
+            "desktop": "Añadir Objeto",
+            "mobile": "Añadir"
+          },
+          "table": "Mesa",
+          "roundTable": "Mesa Red.",
+          "bar": "Barra",
+          "staircase": "Escalera"
+        },
+        "toast": {
+          "saving": "Guardando diseño...",
+          "success": "Diseño guardado exitosamente.",
+          "error": "Error al guardar el diseño.",
+          "deleting": "Eliminando mesa...",
+          "deleted": "Mesa eliminada exitosamente.",
+          "deleteError": "Error al eliminar la mesa.",
+          "resetting": "Restableciendo diseño...",
+          "reset": "Diseño restablecido exitosamente.",
+          "resetError": "Error al restablecer el diseño.",
+          "notAuthenticated": "Usuario no autenticado"
+        }
+      },
+      "qr": {
+        "title": "Generador de Códigos QR",
+        "description": "Genera códigos QR para las mesas de tu restaurante",
+        "tableQR": "Código QR de Mesa",
+        "downloadQR": "Descargar QR",
+        "downloadAllQR": "Descargar Todos los QR",
+        "generatingQR": "Generando QR...",
+        "print": {
+          "desktop": "Imprimir",
+          "mobile": "Impr"
+        },
+        "copyURL": {
+          "desktop": "Copiar URL",
+          "mobile": "Copiar"
+        },
+        "selectTable": "Selecciona una mesa para ver el QR",
+        "selectTableToGenerate": "Selecciona una mesa para generar el código QR",
+        "tableForQR": "QR para Mesa",
+        "table": "Mesa",
+        "noTablesConfigured": "No hay mesas configuradas",
+        "configureTablesInDesign": "Configura las mesas en la pestaña \"Diseño\"",
+        "printInstructions": "Escanea este código QR para ver el menú y hacer tu pedido",
+        "howItWorks": {
+          "title": "¿Cómo funciona?",
+          "security": "Seguridad: Cada mesa tiene su propio QR único",
+          "simplicity": "Simplicidad: Los clientes no necesitan seleccionar mesa",
+          "organization": "Organización: Los pedidos se asocian automáticamente a la mesa correcta",
+          "experience": "Experiencia: Proceso más rápido y sin errores"
+        },
+        "tablesAvailable": "Mesas Disponibles",
+        "selectTableForQR": "Selecciona una mesa para generar su código QR único",
+        "loadingTables": "Cargando mesas...",
+        "toast": {
+          "downloaded": "QR descargado exitosamente.",
+          "downloadError": "Error al descargar el QR.",
+          "downloadingAll": "Descargando todos los QR...",
+          "allDownloaded": "Todos los QR descargados exitosamente.",
+          "downloadAllError": "Error al descargar todos los QR."
+        }
+      },
+      "view": {
+        "configTab": "Configuración",
+        "designTab": "Diseño",
+        "hoursTab": "Horarios",
+        "qrTab": "Códigos QR",
+        "noConfig": "No hay configuración de restaurante",
+        "noDesign": "No hay diseño de restaurante",
+        "createConfig": "Crear Configuración",
+        "createDesign": "Crear Diseño"
+      }
+    },
+    "waiter": {
+      "title": "Sistema de Órdenes",
+      "auth": {
+        "title": "Acceso de Mozos",
+        "code": "Código de Acceso",
+        "enter": "Ingresar",
+        "invalidCode": "Código incorrecto",
+        "placeholder": "Ingresa el código"
+      },
+      "order": {
+        "title": "Tomar Orden",
+        "orderInfo": "Información de la Orden",
+        "table": "Mesa",
+        "waiterName": "Nombre del Mozo",
+        "addDish": "Agregar Plato",
+        "quantity": "Cantidad",
+        "notes": "Notas",
+        "total": "Total",
+        "submit": "Enviar Orden",
+        "success": "Orden enviada exitosamente",
+        "error": "Error al enviar la orden",
+        "empty": "Agrega platos a la orden",
+        "selectTable": "Selecciona una mesa",
+        "dishAdded": "Plato agregado a la orden",
+        "remove": "Quitar",
+        "orderNotes": "Notas de la orden",
+        "categories": "Categorías",
+        "all": "Todos",
+        "search": "Buscar platos...",
+        "price": "Precio",
+        "cart": "Carrito",
+        "items": "artículos",
+        "orderSent": "¡Orden enviada a la cocina!",
+        "submittedOrders": "Historial de Órdenes",
+        "addToOrder": "Agregar a Orden",
+        "statusPending": "Pendiente",
+        "statusInProgress": "En preparación",
+        "statusReady": "Listo",
+        "statusDelivered": "Entregado",
+        "statusCancelled": "Cancelado",
+        "filterAll": "Todas",
+        "filterPending": "Pendientes",
+        "filterReady": "Listos",
+        "filterDelivered": "Entregados",
+        "noOrdersFound": "No se encontraron órdenes",
+        "addDishes": "Agregar platos",
+        "markDelivered": "Marcar Entregado",
+        "updating": "Actualizando...",
+        "releaseTable": "Liberar Mesa",
+        "releaseTableMobile": "Liberar",
+        "releasingTable": "Liberando...",
+        "releasingTableMobile": "..."
+      }
+    },
+    "kitchen": {
+      "title": "Panel de Cocina",
+      "auth": {
+        "title": "Acceso de Cocina",
+        "code": "Código de Acceso",
+        "enter": "Ingresar",
+        "invalidCode": "Código incorrecto",
+        "placeholder": "Ingresa el código",
+        "codeRequired": "Código requerido",
+        "verifying": "Verificando..."
+      },
+      "interface": {
+        "title": "Panel de Cocina",
+        "filters": "Filtros",
+        "noOrders": "No hay órdenes para mostrar",
+        "noOrdersDescription": "Cuando lleguen nuevas órdenes, aparecerán aquí.",
+        "activeOrders": "Órdenes activas",
+        "table": "Mesa",
+        "counter": "Mostrador",
+        "timeElapsed": "hace",
+        "dishNotAvailable": "Plato no disponible",
+        "connection": {
+          "connected": "Conectado",
+          "disconnected": "Desconectado"
+        },
+        "filters": {
+          "all": "Todas",
+          "inProgress": "En Proceso",
+          "ready": "Listos"
+        },
+        "status": {
+          "active": "Activa",
+          "ready": "Lista/Entregada",
+          "cancelled": "Cancelada",
+          "completed": "Completado"
+        }
+      }
     }
   },
   "web": {
     "global": {
-      "primaryCta": "Contáctanos",
+      "primaryCta": "Contactanos",
       "secondaryCta": "Comenzar ahora"
-    },
-    "menu": {
-      "title": "Nuestro Menú",
-      "todaySpecial": "Plato del Día",
-      "featuredDish": "Plato Destacado",
-      "specialDescription": "Descubre nuestro plato especial del día, preparado con ingredientes frescos y la mejor calidad.",
-      "todayOnly": "Solo por hoy",
-      "comingSoon": "Próximamente... Estamos preparando nuestro menú.",
-      "address": "Dirección",
-      "phone": "Teléfono",
-      "hours": "Horarios",
-      "contact": "Contacto",
-      "searchPlaceholder": "Buscar platos...",
-      "allCategories": "Todas las categorías",
-      "specialsOnly": "Solo platos del día",
-      "filters": "Filtros",
-      "noResults": "No se encontraron platos con los filtros aplicados.",
-      "clearFilters": "Limpiar filtros",
-      "currency": "$",
-      "closed": "Cerrado",
-      "categories": {
-        "noDishes": "No hay platos disponibles en esta categoría"
-      },
-      "dish": {
-        "outOfStock": "Agotado",
-        "available": "Disponible"
-      },
-      "footer": {
-        "poweredBy": "Menú digital creado con",
-        "businessInfo": "Información del negocio"
-      }
     },
     "header": {
       "home": "Inicio",
@@ -246,13 +669,14 @@
         "getStarted": "Comenzar Ahora",
         "learnMore": "Conocer Más",
         "viewPricing": "Ver Precios",
+        "tryFree": "Ver Demo Gratis",
         "gallery": {
           "menu": "Menús Digitales",
-          "menuDesc": "Crea menús hermosos y profesionales",
+          "menuDesc": "Hermosos e interactivos",
           "waiters": "Sistema para Mozos",
-          "waitersDesc": "Gestiona pedidos eficientemente",
+          "waitersDesc": "Gestión eficiente",
           "kitchen": "Panel de Cocina",
-          "kitchenDesc": "Controla el estado de cada pedido"
+          "kitchenDesc": "Control en tiempo real"
         }
       },
       "cases": {
@@ -263,6 +687,11 @@
         "projectStatus": {
           "finished": "Completado",
           "inProgress": "En progreso"
+        },
+        "modal": {
+          "description": "Descripción",
+          "technologies": "Tecnologías",
+          "features": "Características"
         }
       },
       "features": {
@@ -358,7 +787,7 @@
       "faq": {
         "title": "Preguntas Frecuentes",
         "description": "Respuestas a las dudas más comunes sobre nuestra plataforma integrada para restaurantes",
-        "cta": "¿Aún tienes preguntas? Contáctanos",
+        "cta": "¿Aún tienes preguntas? Contactanos",
         "needMore": "¿Necesitas más información?",
         "contactDescription": "Si no encontraste la respuesta a tu pregunta, nuestro equipo está listo para ayudarte a transformar tu restaurante.",
         "items": [
@@ -399,7 +828,19 @@
             "Conoce cómo optimizar tu operación",
             "Calcula tu ROI personalizado"
           ]
-        }
+        },
+        "features": {
+          "digitalMenus": "Menús Digitales",
+          "digitalMenusDesc": "Hermosos e interactivos",
+          "orderManagement": "Gestión de Pedidos",
+          "orderManagementDesc": "Para mozos eficientes",
+          "kitchenPanel": "Panel de Cocina",
+          "kitchenPanelDesc": "Control en tiempo real",
+          "optimization": "Optimización",
+          "optimizationDesc": "Reduce tiempos de espera"
+        },
+        "platformDescription": "Plataforma completa e integrada",
+        "revolutionDescription": "Revoluciona tu operación con nuestra solución integral: menús digitales hermosos, sistema de pedidos para mozos y panel de control para cocina. Todo sincronizado en tiempo real."
       },
       "newsletter": {
         "title": "Mantente Informado",
@@ -433,7 +874,7 @@
       "popular": "MÁS POPULAR",
       "tryIt": "Comenzar Gratis",
       "buyNow": "Contratar Ahora",
-      "contactUs": "Contáctanos",
+      "contactUs": "Contactanos",
       "free": "Gratis",
       "forever": "para siempre",
       "contactForPrice": "Consultar",
@@ -465,7 +906,7 @@
         },
         {
           "name": "Empresarial",
-          "description": "Soluciones a medida para diseños únicos, cadenas de restaurantes o necesidades específicas. Contáctanos para una cotización.",
+          "description": "Soluciones a medida para diseños únicos, cadenas de restaurantes o necesidades específicas. Contactanos para una cotización.",
           "price": "contact",
           "features": [
             "Todo lo del plan Profesional",
@@ -484,6 +925,10 @@
         "tableManagement": "Gestión de mesas y mozos",
         "analytics": "Panel de análisis avanzado",
         "multiLocation": "Soporte para múltiples ubicaciones"
+      },
+      "trust": {
+        "description": "Más de 500 restaurantes ya están transformando su operación con Ganga-Menú",
+        "rating": "4.9/5 • Sin compromiso • Cancela cuando quieras"
       }
     },
     "blog": {
@@ -494,7 +939,7 @@
     },
     "contact": {
       "meta": {
-        "title": "Contáctanos",
+        "title": "Contactanos",
         "description": "Contacta con nuestro equipo para saber más sobre cómo Ganga-Menú puede ayudarte a digitalizar el menú de tu restaurante."
       },
       "hero": {
@@ -525,7 +970,7 @@
         }
       },
       "form": {
-        "title": "Contáctanos",
+        "title": "Contactanos",
         "subtitle": "Respondemos en 24 horas",
         "subtitleInfo": "Digitalizando restaurantes juntos",
         "name_placeholder": "Nombre completo",
@@ -537,79 +982,287 @@
         "error_message": "Error al enviar el mensaje. Por favor, inténtalo de nuevo más tarde."
       }
     },
-    "feedback": {
-      "title": "Enviar Feedback",
-      "name": "Nombre",
-      "email": "Email",
-      "message": "Mensaje",
-      "namePlaceholder": "Tu nombre",
-      "emailPlaceholder": "tu@email.com",
-      "messagePlaceholder": "Cuéntanos qué piensas...",
-      "cancel": "Cancelar",
-      "send": "Enviar",
-      "sending": "Enviando...",
-      "success": "¡Gracias por tu feedback!",
-      "error": "Error al enviar feedback. Inténtalo de nuevo."
+    "services": {
+      "title": "Servicios",
+      "subtitle": "Accesos directos para el personal de tu restaurante.",
+      "subtitleAlt": "Herramientas para la gestión de tu restaurante.",
+      "waiter": {
+        "title": "Gestión de Mozos",
+        "description": "Modifica el código de acceso y comparte el enlace.",
+        "accessCode": "Código de Acceso para Mozos",
+        "accessCodeDescription": "Este es el código que los mozos usarán para acceder.",
+        "accessLink": "Enlace de Acceso para Mozos",
+        "placeholder": "4+ dígitos",
+        "save": "Guardar",
+        "saving": "Guardando...",
+        "savingShort": "...",
+        "saveShort": "OK",
+        "footer": "Recuerda guardar los cambios del código antes de compartir el enlace."
+      },
+      "kitchen": {
+        "title": "Gestión de Cocina",
+        "description": "Modifica el código de acceso y comparte el enlace.",
+        "accessCode": "Código de Acceso para Cocina",
+        "accessCodeDescription": "Este es el código que la cocina usará para acceder.",
+        "accessLink": "Enlace de Acceso para Cocina",
+        "placeholder": "4+ dígitos",
+        "save": "Guardar",
+        "saving": "Guardando...",
+        "savingShort": "...",
+        "saveShort": "OK",
+        "footer": "El acceso a la cocina es directo y no requiere código."
+      },
+      "shared": {
+        "downloadQR": "Descargar QR",
+        "downloadQRShort": "Descargar",
+        "open": "Abrir",
+        "openShort": "Abrir",
+        "copySuccess": "Enlace para {name} copiado al portapapeles.",
+        "savingCode": "Guardando nuevo código...",
+        "codeSaved": "Código actualizado exitosamente",
+        "codeError": "Error al actualizar el código"
+      },
+      "setup": {
+        "title": "Configuración Requerida",
+        "description": "Para usar los servicios de mozos y cocina, primero debes configurar tu restaurante.",
+        "link": "Ir a la configuración del restaurante"
+      }
+    },
+    "orders": {
+      "title": "Gestión de Órdenes",
+      "subtitle": "Monitorea y gestiona las órdenes de tu restaurante en tiempo real",
+      "connection": {
+        "connected": "Conectado",
+        "connectedShort": "OK",
+        "disconnected": "Desconectado",
+        "disconnectedShort": "Off"
+      },
+      "stats": {
+        "total": "Total",
+        "active": "Activas",
+        "ready": "Listas",
+        "cancelled": "Cancel",
+        "paid": "Pagadas"
+      },
+      "filters": {
+        "all": "Todas",
+        "active": "Activas",
+        "ready": "Listas/Entregadas",
+        "cancelled": "Canceladas",
+        "paid": "Pagadas",
+        "allShort": "Todas",
+        "activeShort": "Activas",
+        "readyShort": "Lista",
+        "cancelledShort": "Cancel",
+        "paidShort": "Paga"
+      },
+      "tabs": {
+        "allOrders": {
+          "desktop": "Todas las Órdenes",
+          "mobile": "Todas"
+        },
+        "activeOrders": {
+          "desktop": "Órdenes Activas",
+          "mobile": "Activas"
+        },
+        "completed": {
+          "desktop": "Completadas",
+          "mobile": "Listas"
+        }
+      },
+      "table": {
+        "title": "Órdenes",
+        "noOrders": "No hay órdenes para mostrar",
+        "headers": {
+          "id": "ID",
+          "customer": "Cliente",
+          "items": "Items",
+          "total": "Total",
+          "status": "Estado",
+          "date": "Fecha",
+          "actions": "Acciones"
+        },
+        "status": {
+          "active": "Activa",
+          "ready": "Lista/Entregada",
+          "cancelled": "Cancelada",
+          "paid": "Pagada"
+        },
+        "customer": "Cliente",
+        "table": "Mesa",
+        "noItems": "Sin items",
+        "dishNotAvailable": "Plato no disponible",
+        "updating": "Actualizando...",
+        "updatingShort": "..."
+      },
+      "deleteDialog": {
+        "title": "Eliminar Orden",
+        "description": "¿Estás seguro de que deseas eliminar esta orden? Esta acción no se puede deshacer.",
+        "order": "Orden",
+        "details": "Detalles",
+        "cancel": "Cancelar",
+        "delete": "Eliminar",
+        "deleting": "Eliminando..."
+      },
+      "toast": {
+        "updatingStatus": "Actualizando estado de la orden...",
+        "statusUpdated": "Estado actualizado correctamente",
+        "statusError": "Error al actualizar estado",
+        "deletingOrder": "Eliminando orden...",
+        "orderDeleted": "Orden eliminada correctamente",
+        "deleteError": "Error al eliminar la orden",
+        "unexpectedError": "Error inesperado al eliminar la orden"
+      },
+      "setup": {
+        "notFound": "Configuración de restaurante no encontrada"
+      }
     },
     "waiter": {
-      "title": "Sistema de Órdenes",
       "auth": {
         "title": "Acceso de Mozos",
         "code": "Código de Acceso",
-        "enter": "Ingresar",
+        "codeRequired": "Código requerido",
         "invalidCode": "Código incorrecto",
-        "placeholder": "Ingresa el código"
+        "placeholder": "Ingresa el código",
+        "enter": "Ingresar",
+        "verifying": "Verificando..."
       },
       "order": {
         "title": "Tomar Orden",
-        "orderInfo": "Información de la Orden",
-        "table": "Mesa",
-        "waiterName": "Nombre del Mozo",
-        "addDish": "Agregar Plato",
-        "quantity": "Cantidad",
-        "notes": "Notas",
-        "total": "Total",
-        "submit": "Enviar Orden",
-        "success": "Orden enviada exitosamente",
-        "error": "Error al enviar la orden",
-        "empty": "Agrega platos a la orden",
-        "selectTable": "Selecciona una mesa",
-        "dishAdded": "Plato agregado a la orden",
-        "remove": "Quitar",
-        "orderNotes": "Notas de la orden",
-        "categories": "Categorías",
-        "all": "Todos",
-        "search": "Buscar platos...",
-        "price": "Precio",
-        "cart": "Carrito",
-        "items": "artículos",
         "orderSent": "¡Orden enviada a la cocina!",
-        "submittedOrders": "Historial de Órdenes",
-        "addToOrder": "Agregar a Orden",
-        "statusPending": "Pendiente",
-        "statusInProgress": "En preparación",
-        "statusReady": "Listo",
-        "statusDelivered": "Entregado",
-        "statusCancelled": "Cancelado",
-        "filterAll": "Todas",
-        "filterPending": "Pendientes",
-        "filterReady": "Listos",
-        "filterDelivered": "Entregados",
+        "submittedOrders": "Órdenes",
         "noOrdersFound": "No se encontraron órdenes",
         "addDishes": "Agregar platos",
         "markDelivered": "Marcar Entregado",
-        "updating": "Actualizando..."
+        "updating": "Actualizando...",
+        "addToOrder": "Nueva Orden",
+        "orderInfo": "Nueva Orden",
+        "table": "Mesa",
+        "waiterName": "Nombre Mozo",
+        "total": "Total",
+        "search": "Buscar platos...",
+        "all": "Todas las categorías",
+        "submit": "Enviar Orden",
+        "error": "Error al enviar la orden",
+        "cancel": "Cancelar",
+        "selectDishes": "Seleccionar Platos",
+        "addToCart": "Agregar platos al carrito para crear una orden",
+        "selectTable": "Selecciona una mesa para continuar",
+        "special": "Especial",
+        "selected": "Seleccionado",
+        "notes": "Notas...",
+        "generalNotes": "Notas generales:",
+        "tablesAndOrders": "Mesas y Órdenes Finalizadas",
+        "tablesWithOrders": "mesa con órdenes finalizadas",
+        "tablesWithOrdersPlural": "mesas con órdenes finalizadas",
+        "noTablesWithOrders": "No hay mesas con órdenes finalizadas",
+        "noTablesWithOrdersDesc": "Las mesas con órdenes pagadas o canceladas aparecerán aquí para liberarlas.",
+        "releaseTable": "Liberar Mesa",
+        "releaseTableMobile": "Liberar",
+        "releasingTable": "Liberando...",
+        "releasingTableMobile": "...",
+        "order": "Orden",
+        "orders": "ordenes",
+        "orderPlural": "órdenes",
+        "totalFinalized": "Total Finalizado",
+        "paid": "Pagada",
+        "cancelled": "Cancelada",
+        "confirmPayment": "Confirmar pago de mesa",
+        "confirmPaymentDesc": "¿Estás seguro de que quieres marcar toda la mesa como pagada? Esta acción marcará todas las órdenes activas y listas de esta mesa como pagadas.",
+        "confirmPaymentButton": "Confirmar Pago",
+        "marking": "Marcando...",
+        "systemOrders": "Sistema de Órdenes",
+        "timeElapsed": "hace",
+        "by": "Por:",
+        "counter": "Mostrador",
+        "optional": "Opcional",
+        "quantitiesAndNotes": "Cantidades y Notas:",
+        "perUnit": "c/u",
+        "totalLabel": "Total:",
+        "generalNotesPlaceholder": "Notas generales...",
+        "verifying": "Verificando...",
+        "active": "Activa",
+        "readyDelivered": "Lista/Entregada"
       }
     },
-    "kitchen": {
-      "title": "Panel de Cocina",
-      "auth": {
-        "title": "Acceso de Cocina",
-        "code": "Código de Acceso",
-        "enter": "Ingresar",
-        "invalidCode": "Código incorrecto",
-        "placeholder": "Ingresa el código",
-        "codeRequired": "Código requerido"
+    "menu": {
+      "title": "Nuestro Menú",
+      "todaySpecial": "Plato del Día",
+      "featuredDish": "Plato Destacado",
+      "specialDescription": "Descubre nuestro plato especial del día, preparado con ingredientes frescos y la mejor calidad.",
+      "todayOnly": "Solo por hoy",
+      "comingSoon": "Próximamente... Estamos preparando nuestro menú.",
+      "address": "Dirección",
+      "phone": "Teléfono",
+      "hours": "Horarios",
+      "contact": "Contacto",
+      "searchPlaceholder": "Buscar platos...",
+      "allCategories": "Todas las categorías",
+      "specialsOnly": "Solo platos del día",
+      "filters": "Filtros",
+      "noResults": "No se encontraron platos con los filtros aplicados.",
+      "clearFilters": "Limpiar filtros",
+      "currency": "$",
+      "closed": "Cerrado",
+      "categories": {
+        "noDishes": "No hay platos disponibles en esta categoría"
+      },
+      "dish": {
+        "outOfStock": "Agotado",
+        "available": "Disponible"
+      },
+      "footer": {
+        "poweredBy": "Menú digital creado con",
+        "businessInfo": "Información del negocio"
+      }
+    },
+    "legal": {
+      "terms": {
+        "title": "Términos y Condiciones",
+        "lastUpdate": "Última actualización:",
+        "date": "24 de octubre de 2024",
+        "sections": {
+          "acceptance": "Aceptación de los Términos",
+          "serviceDescription": "Descripción del Servicio",
+          "registration": "Registro y Cuentas de Usuario",
+          "billing": "Planes y Facturación",
+          "acceptableUse": "Uso Aceptable",
+          "intellectualProperty": "Propiedad Intelectual",
+          "availability": "Disponibilidad del Servicio",
+          "liability": "Limitación de Responsabilidad",
+          "termination": "Terminación",
+          "privacy": "Privacidad y Protección de Datos",
+          "governingLaw": "Ley Aplicable",
+          "contact": "Contacto",
+          "general": "Disposiciones Generales"
+        },
+        "content": {
+          "acceptance": "Al acceder y utilizar Ganga-Menú, aceptas estos términos y condiciones en su totalidad. Si no estás de acuerdo con alguna parte de estos términos, no debes utilizar nuestros servicios.",
+          "serviceDescription": "Ganga-Menú es una plataforma integral de gestión para restaurantes que incluye:",
+          "serviceFeatures": [
+            "Creación y gestión de menús digitales interactivos",
+            "Sistema de gestión de pedidos para personal de servicio",
+            "Panel de control de cocina en tiempo real",
+            "Herramientas de análisis y reportes",
+            "Gestión de mesas y reservas",
+            "Integración con sistemas de pago"
+          ]
+        }
+      },
+      "privacy": {
+        "title": "Política de Privacidad",
+        "lastUpdate": "Última actualización:",
+        "date": "24 de octubre de 2024",
+        "sections": {
+          "information": "Información que Recopilamos",
+          "usage": "Cómo Usamos tu Información",
+          "sharing": "Compartir Información",
+          "security": "Seguridad de Datos",
+          "cookies": "Cookies y Seguimiento",
+          "rights": "Tus Derechos",
+          "changes": "Cambios a Esta Política",
+          "contact": "Contactanos"
+        }
       }
     }
   }

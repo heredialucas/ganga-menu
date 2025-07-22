@@ -13,6 +13,7 @@ import { useParams, usePathname, useRouter } from 'next/navigation';
 const languages = [
   { label: '🇬🇧 English', value: 'en' },
   { label: '🇪🇸 Español', value: 'es' },
+  { label: '🇩🇪 Deutsch', value: 'de' },
 ];
 
 export const LanguageSwitcher = () => {

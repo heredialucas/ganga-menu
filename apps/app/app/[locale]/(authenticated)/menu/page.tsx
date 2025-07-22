@@ -25,7 +25,7 @@ export default async function MenuPage({ params }: { params: Promise<{ locale: s
     const restaurantConfig = await getRestaurantConfig(user?.id);
 
     if (!user) {
-        return <p className="p-4 text-center">Usuario no autenticado.</p>;
+        return <p className="p-4 text-center">{dictionary.app?.menu?.userNotAuthenticated || 'Usuario no autenticado.'}</p>;
     }
     const userId = user.id;
 
@@ -49,10 +49,10 @@ export default async function MenuPage({ params }: { params: Promise<{ locale: s
             <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
                 <div className="text-center sm:text-left flex-1">
                     <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">
-                        Gestión del Menú
+                        {dictionary.app?.menu?.title || 'Gestión del Menú'}
                     </h1>
                     <p className="text-sm sm:text-base text-muted-foreground mt-2">
-                        Crea y edita tus platos. Usa los desplegables para configuraciones avanzadas.
+                        {dictionary.app?.menu?.subtitle || 'Crea y edita tus platos. Usa los desplegables para configuraciones avanzadas.'}
                     </p>
                 </div>
                 <div className="flex flex-row items-center gap-2">
@@ -61,22 +61,22 @@ export default async function MenuPage({ params }: { params: Promise<{ locale: s
                 </div>
             </div>
 
-            <DishManager dishes={dishes} categories={categories} />
-            <MenuAccessWidget config={restaurantConfig} appUrl={getAppUrl()} />
+            <DishManager dishes={dishes} categories={categories} dictionary={dictionary} />
+            <MenuAccessWidget config={restaurantConfig} appUrl={getAppUrl()} dictionary={dictionary} />
 
             <Accordion type="multiple" className="w-full space-y-3 sm:space-y-4">
                 <AccordionItem value="categories" className="border rounded-lg px-3 sm:px-4">
                     <AccordionTrigger className="text-left">
-                        <h3 className="font-semibold text-base sm:text-lg">Gestor de Categorías</h3>
+                        <h3 className="font-semibold text-base sm:text-lg">{dictionary.app?.menu?.categories?.title || 'Gestor de Categorías'}</h3>
                     </AccordionTrigger>
                     <AccordionContent>
-                        <CategoryManager categories={categories} />
+                        <CategoryManager categories={categories} dictionary={dictionary} />
                     </AccordionContent>
                 </AccordionItem>
 
                 <AccordionItem value="specials" className="border rounded-lg px-3 sm:px-4">
                     <AccordionTrigger className="text-left">
-                        <h3 className="font-semibold text-base sm:text-lg">Programador de Especiales del Día</h3>
+                        <h3 className="font-semibold text-base sm:text-lg">{dictionary.app?.menu?.dailySpecials?.title || 'Programador de Especiales del Día'}</h3>
                     </AccordionTrigger>
                     <AccordionContent>
                         <DailySpecialManager
@@ -84,6 +84,7 @@ export default async function MenuPage({ params }: { params: Promise<{ locale: s
                             dishes={dishes}
                             upsertDailySpecial={upsertDailySpecial}
                             deleteDailySpecials={deleteDailySpecials}
+                            dictionary={dictionary}
                         />
                     </AccordionContent>
                 </AccordionItem>

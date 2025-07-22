@@ -15,8 +15,8 @@ export const generateMetadata = async ({
     const dictionary = await getDictionary(locale);
 
     return createMetadata({
-        title: 'Términos y Condiciones - Ganga-Menú',
-        description: 'Términos y condiciones de uso de la plataforma Ganga-Menú. Conoce nuestras políticas de servicio.'
+        title: `${dictionary.web.legal.terms.title} - Ganga-Menú`,
+        description: `${dictionary.web.legal.terms.title} of the Ganga-Menú platform. Learn about our service policies.`
     });
 };
 
@@ -25,48 +25,45 @@ const Terms = async ({ params }: TermsProps) => {
     const dictionary = await getDictionary(locale);
 
     return (
-        <div className="w-full py-20 lg:py-32 bg-gray-50">
-            <div className="container mx-auto max-w-4xl">
-                <div className="bg-white rounded-xl shadow-lg p-8 lg:p-12">
-                    <h1 className="text-3xl md:text-4xl font-black text-[#0d4b3d] mb-8 text-center">
-                        Términos y Condiciones
+        <div className="w-full py-12 sm:py-16 lg:py-20 xl:py-32 bg-gray-50">
+            <div className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+                <div className="bg-white rounded-lg sm:rounded-xl shadow-lg p-6 sm:p-8 lg:p-12">
+                    <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-[#0d4b3d] mb-6 sm:mb-8 text-center">
+                        {dictionary.web.legal.terms.title}
                     </h1>
 
-                    <div className="prose prose-lg max-w-none">
-                        <p className="text-gray-600 mb-8 text-center">
-                            <strong>Última actualización:</strong> 24 de octubre de 2024
+                    <div className="prose prose-sm sm:prose-base lg:prose-lg max-w-none">
+                        <p className="text-gray-600 mb-6 sm:mb-8 text-center text-sm sm:text-base">
+                            <strong>{dictionary.web.legal.terms.lastUpdate}</strong> {dictionary.web.legal.terms.date}
                         </p>
 
-                        <div className="space-y-8">
+                        <div className="space-y-6 sm:space-y-8">
                             <section>
-                                <h2 className="text-2xl font-bold text-[#0d4b3d] mb-4">1. Aceptación de los Términos</h2>
-                                <div className="space-y-4 text-gray-700">
-                                    <p>Al acceder y utilizar Ganga-Menú, aceptas estos términos y condiciones en su totalidad. Si no estás de acuerdo con alguna parte de estos términos, no debes utilizar nuestros servicios.</p>
+                                <h2 className="text-xl sm:text-2xl font-bold text-[#0d4b3d] mb-3 sm:mb-4">1. {dictionary.web.legal.terms.sections.acceptance}</h2>
+                                <div className="space-y-3 sm:space-y-4 text-gray-700 text-sm sm:text-base">
+                                    <p>{dictionary.web.legal.terms.content.acceptance}</p>
                                     <p>Nos reservamos el derecho de modificar estos términos en cualquier momento. Los cambios entrarán en vigor inmediatamente después de su publicación en nuestro sitio web.</p>
                                 </div>
                             </section>
 
                             <section>
-                                <h2 className="text-2xl font-bold text-[#0d4b3d] mb-4">2. Descripción del Servicio</h2>
-                                <div className="space-y-4 text-gray-700">
-                                    <p>Ganga-Menú es una plataforma integral de gestión para restaurantes que incluye:</p>
-                                    <ul className="list-disc pl-6 space-y-2">
-                                        <li>Creación y gestión de menús digitales interactivos</li>
-                                        <li>Sistema de gestión de pedidos para personal de servicio</li>
-                                        <li>Panel de control de cocina en tiempo real</li>
-                                        <li>Herramientas de análisis y reportes</li>
-                                        <li>Gestión de mesas y reservas</li>
-                                        <li>Integración con sistemas de pago</li>
+                                <h2 className="text-xl sm:text-2xl font-bold text-[#0d4b3d] mb-3 sm:mb-4">2. {dictionary.web.legal.terms.sections.serviceDescription}</h2>
+                                <div className="space-y-3 sm:space-y-4 text-gray-700 text-sm sm:text-base">
+                                    <p>{dictionary.web.legal.terms.content.serviceDescription}</p>
+                                    <ul className="list-disc pl-4 sm:pl-6 space-y-1 sm:space-y-2">
+                                        {dictionary.web.legal.terms.content.serviceFeatures.map((feature, index) => (
+                                            <li key={index}>{feature}</li>
+                                        ))}
                                     </ul>
                                 </div>
                             </section>
 
                             <section>
-                                <h2 className="text-2xl font-bold text-[#0d4b3d] mb-4">3. Registro y Cuentas de Usuario</h2>
-                                <div className="space-y-4 text-gray-700">
+                                <h2 className="text-xl sm:text-2xl font-bold text-[#0d4b3d] mb-3 sm:mb-4">3. Registro y Cuentas de Usuario</h2>
+                                <div className="space-y-3 sm:space-y-4 text-gray-700 text-sm sm:text-base">
                                     <h3 className="text-lg font-semibold">Elegibilidad</h3>
                                     <p>Para utilizar nuestros servicios, debes:</p>
-                                    <ul className="list-disc pl-6 space-y-2">
+                                    <ul className="list-disc pl-4 sm:pl-6 space-y-1 sm:space-y-2">
                                         <li>Ser mayor de 18 años o tener autorización legal</li>
                                         <li>Proporcionar información veraz y actualizada</li>
                                         <li>Ser propietario o estar autorizado para gestionar el restaurante</li>
@@ -74,7 +71,7 @@ const Terms = async ({ params }: TermsProps) => {
                                     </ul>
 
                                     <h3 className="text-lg font-semibold">Responsabilidades del Usuario</h3>
-                                    <ul className="list-disc pl-6 space-y-2">
+                                    <ul className="list-disc pl-4 sm:pl-6 space-y-1 sm:space-y-2">
                                         <li>Mantener la confidencialidad de las credenciales de acceso</li>
                                         <li>Notificar inmediatamente cualquier uso no autorizado</li>
                                         <li>Ser responsable de todas las actividades en tu cuenta</li>
@@ -84,17 +81,17 @@ const Terms = async ({ params }: TermsProps) => {
                             </section>
 
                             <section>
-                                <h2 className="text-2xl font-bold text-[#0d4b3d] mb-4">4. Planes y Facturación</h2>
-                                <div className="space-y-4 text-gray-700">
+                                <h2 className="text-xl sm:text-2xl font-bold text-[#0d4b3d] mb-3 sm:mb-4">4. Planes y Facturación</h2>
+                                <div className="space-y-3 sm:space-y-4 text-gray-700 text-sm sm:text-base">
                                     <h3 className="text-lg font-semibold">Plan Gratuito</h3>
-                                    <ul className="list-disc pl-6 space-y-2">
+                                    <ul className="list-disc pl-4 sm:pl-6 space-y-1 sm:space-y-2">
                                         <li>Acceso limitado a funcionalidades básicas</li>
                                         <li>Sin costo mensual</li>
                                         <li>Limitaciones en número de usuarios y funciones</li>
                                     </ul>
 
                                     <h3 className="text-lg font-semibold">Planes de Pago</h3>
-                                    <ul className="list-disc pl-6 space-y-2">
+                                    <ul className="list-disc pl-4 sm:pl-6 space-y-1 sm:space-y-2">
                                         <li>Facturación mensual o anual</li>
                                         <li>Renovación automática salvo cancelación</li>
                                         <li>Cambios de plan efectivos en el siguiente período de facturación</li>
@@ -104,10 +101,10 @@ const Terms = async ({ params }: TermsProps) => {
                             </section>
 
                             <section>
-                                <h2 className="text-2xl font-bold text-[#0d4b3d] mb-4">5. Uso Aceptable</h2>
-                                <div className="space-y-4 text-gray-700">
+                                <h2 className="text-xl sm:text-2xl font-bold text-[#0d4b3d] mb-3 sm:mb-4">5. Uso Aceptable</h2>
+                                <div className="space-y-3 sm:space-y-4 text-gray-700 text-sm sm:text-base">
                                     <h3 className="text-lg font-semibold">Está Permitido:</h3>
-                                    <ul className="list-disc pl-6 space-y-2">
+                                    <ul className="list-disc pl-4 sm:pl-6 space-y-1 sm:space-y-2">
                                         <li>Usar la plataforma para gestión legítima de restaurantes</li>
                                         <li>Subir contenido propio (menús, imágenes, descripciones)</li>
                                         <li>Configurar y personalizar tu experiencia</li>
@@ -115,7 +112,7 @@ const Terms = async ({ params }: TermsProps) => {
                                     </ul>
 
                                     <h3 className="text-lg font-semibold">Está Prohibido:</h3>
-                                    <ul className="list-disc pl-6 space-y-2">
+                                    <ul className="list-disc pl-4 sm:pl-6 space-y-1 sm:space-y-2">
                                         <li>Usar la plataforma para actividades ilegales</li>
                                         <li>Intentar acceder a datos de otros usuarios</li>
                                         <li>Realizar ingeniería inversa del software</li>
@@ -127,8 +124,8 @@ const Terms = async ({ params }: TermsProps) => {
                             </section>
 
                             <section>
-                                <h2 className="text-2xl font-bold text-[#0d4b3d] mb-4">6. Propiedad Intelectual</h2>
-                                <div className="space-y-4 text-gray-700">
+                                <h2 className="text-xl sm:text-2xl font-bold text-[#0d4b3d] mb-3 sm:mb-4">6. Propiedad Intelectual</h2>
+                                <div className="space-y-3 sm:space-y-4 text-gray-700 text-sm sm:text-base">
                                     <h3 className="text-lg font-semibold">Nuestros Derechos</h3>
                                     <p>Ganga-Menú y todo su contenido (software, diseño, logos, textos) son propiedad nuestra o de nuestros licenciantes y están protegidos por derechos de autor, marcas registradas y otras leyes de propiedad intelectual.</p>
 
@@ -138,10 +135,10 @@ const Terms = async ({ params }: TermsProps) => {
                             </section>
 
                             <section>
-                                <h2 className="text-2xl font-bold text-[#0d4b3d] mb-4">7. Disponibilidad del Servicio</h2>
-                                <div className="space-y-4 text-gray-700">
+                                <h2 className="text-xl sm:text-2xl font-bold text-[#0d4b3d] mb-3 sm:mb-4">7. Disponibilidad del Servicio</h2>
+                                <div className="space-y-3 sm:space-y-4 text-gray-700 text-sm sm:text-base">
                                     <p>Nos esforzamos por mantener nuestros servicios disponibles las 24 horas del día, pero no podemos garantizar disponibilidad del 100%. Podemos experimentar:</p>
-                                    <ul className="list-disc pl-6 space-y-2">
+                                    <ul className="list-disc pl-4 sm:pl-6 space-y-1 sm:space-y-2">
                                         <li>Mantenimiento programado (con aviso previo)</li>
                                         <li>Interrupciones técnicas no planificadas</li>
                                         <li>Actualizaciones de seguridad</li>
@@ -151,10 +148,10 @@ const Terms = async ({ params }: TermsProps) => {
                             </section>
 
                             <section>
-                                <h2 className="text-2xl font-bold text-[#0d4b3d] mb-4">8. Limitación de Responsabilidad</h2>
-                                <div className="space-y-4 text-gray-700">
+                                <h2 className="text-xl sm:text-2xl font-bold text-[#0d4b3d] mb-3 sm:mb-4">8. Limitación de Responsabilidad</h2>
+                                <div className="space-y-3 sm:space-y-4 text-gray-700 text-sm sm:text-base">
                                     <p>En la máxima medida permitida por la ley:</p>
-                                    <ul className="list-disc pl-6 space-y-2">
+                                    <ul className="list-disc pl-4 sm:pl-6 space-y-1 sm:space-y-2">
                                         <li>Ganga-Menú se proporciona "tal como está"</li>
                                         <li>No garantizamos que el servicio será ininterrumpido o libre de errores</li>
                                         <li>No somos responsables por pérdidas indirectas o consecuenciales</li>
@@ -165,14 +162,14 @@ const Terms = async ({ params }: TermsProps) => {
                             </section>
 
                             <section>
-                                <h2 className="text-2xl font-bold text-[#0d4b3d] mb-4">9. Terminación</h2>
-                                <div className="space-y-4 text-gray-700">
+                                <h2 className="text-xl sm:text-2xl font-bold text-[#0d4b3d] mb-3 sm:mb-4">9. Terminación</h2>
+                                <div className="space-y-3 sm:space-y-4 text-gray-700 text-sm sm:text-base">
                                     <h3 className="text-lg font-semibold">Terminación por tu Parte</h3>
                                     <p>Puedes cancelar tu cuenta en cualquier momento desde la configuración de tu cuenta o contactándonos. La cancelación será efectiva al final del período de facturación actual.</p>
 
                                     <h3 className="text-lg font-semibold">Terminación por Nuestra Parte</h3>
                                     <p>Podemos suspender o terminar tu cuenta si:</p>
-                                    <ul className="list-disc pl-6 space-y-2">
+                                    <ul className="list-disc pl-4 sm:pl-6 space-y-1 sm:space-y-2">
                                         <li>Violas estos términos de servicio</li>
                                         <li>No pagas las tarifas adeudadas</li>
                                         <li>Participas en actividades fraudulentas o ilegales</li>
@@ -182,24 +179,24 @@ const Terms = async ({ params }: TermsProps) => {
                             </section>
 
                             <section>
-                                <h2 className="text-2xl font-bold text-[#0d4b3d] mb-4">10. Privacidad y Protección de Datos</h2>
-                                <div className="space-y-4 text-gray-700">
+                                <h2 className="text-xl sm:text-2xl font-bold text-[#0d4b3d] mb-3 sm:mb-4">10. Privacidad y Protección de Datos</h2>
+                                <div className="space-y-3 sm:space-y-4 text-gray-700 text-sm sm:text-base">
                                     <p>El manejo de tu información personal se rige por nuestra Política de Privacidad, que forma parte integral de estos términos. Te recomendamos leerla cuidadosamente.</p>
                                 </div>
                             </section>
 
                             <section>
-                                <h2 className="text-2xl font-bold text-[#0d4b3d] mb-4">11. Ley Aplicable</h2>
-                                <div className="space-y-4 text-gray-700">
+                                <h2 className="text-xl sm:text-2xl font-bold text-[#0d4b3d] mb-3 sm:mb-4">11. Ley Aplicable</h2>
+                                <div className="space-y-3 sm:space-y-4 text-gray-700 text-sm sm:text-base">
                                     <p>Estos términos se rigen por las leyes de [Jurisdicción] sin tener en cuenta sus principios de conflicto de leyes. Cualquier disputa se resolverá en los tribunales competentes de [Jurisdicción].</p>
                                 </div>
                             </section>
 
                             <section>
-                                <h2 className="text-2xl font-bold text-[#0d4b3d] mb-4">12. Contacto</h2>
-                                <div className="space-y-4 text-gray-700">
+                                <h2 className="text-xl sm:text-2xl font-bold text-[#0d4b3d] mb-3 sm:mb-4">12. Contacto</h2>
+                                <div className="space-y-3 sm:space-y-4 text-gray-700 text-sm sm:text-base">
                                     <p>Para preguntas sobre estos términos y condiciones, contáctanos:</p>
-                                    <ul className="list-none space-y-2">
+                                    <ul className="list-none space-y-1 sm:space-y-2">
                                         <li><strong>Email:</strong> legal@ganga-menu.com</li>
                                         <li><strong>Dirección:</strong> [Dirección de la empresa]</li>
                                         <li><strong>Teléfono:</strong> [Número de teléfono]</li>
@@ -208,9 +205,9 @@ const Terms = async ({ params }: TermsProps) => {
                             </section>
 
                             <section>
-                                <h2 className="text-2xl font-bold text-[#0d4b3d] mb-4">13. Disposiciones Generales</h2>
-                                <div className="space-y-4 text-gray-700">
-                                    <ul className="list-disc pl-6 space-y-2">
+                                <h2 className="text-xl sm:text-2xl font-bold text-[#0d4b3d] mb-3 sm:mb-4">13. Disposiciones Generales</h2>
+                                <div className="space-y-3 sm:space-y-4 text-gray-700 text-sm sm:text-base">
+                                    <ul className="list-disc pl-4 sm:pl-6 space-y-1 sm:space-y-2">
                                         <li><strong>Integridad:</strong> Estos términos constituyen el acuerdo completo entre las partes</li>
                                         <li><strong>Divisibilidad:</strong> Si alguna disposición es inválida, el resto permanece en vigor</li>
                                         <li><strong>Renuncia:</strong> La falta de ejercicio de un derecho no constituye renuncia</li>

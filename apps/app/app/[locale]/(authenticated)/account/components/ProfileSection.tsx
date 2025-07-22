@@ -58,8 +58,8 @@ export function ProfileSection({ currentUser, dictionary, canEdit }: ProfileSect
 
         startTransition(() => {
             toast.promise(promise(), {
-                loading: 'Actualizando perfil...',
-                success: (data) => `${data.message || 'Perfil actualizado exitosamente.'}`,
+                loading: dictionary.app?.account?.profile?.toast?.updating || 'Actualizando perfil...',
+                success: (data) => `${data.message || (dictionary.app?.account?.profile?.toast?.success || 'Perfil actualizado exitosamente.')}`,
                 error: (err) => err.message,
             });
         });
@@ -70,17 +70,17 @@ export function ProfileSection({ currentUser, dictionary, canEdit }: ProfileSect
             <CardHeader className="p-3 sm:p-6">
                 <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
                     <User className="h-4 w-4 sm:h-5 sm:w-5" />
-                    Información Personal
+                    {dictionary.app?.account?.profile?.title || 'Información Personal'}
                 </CardTitle>
                 <CardDescription className="text-sm sm:text-base">
-                    Actualiza tu información personal y configuración de cuenta
+                    {dictionary.app?.account?.profile?.description || 'Actualiza tu información personal y configuración de cuenta'}
                 </CardDescription>
             </CardHeader>
             <CardContent className="p-3 sm:p-6">
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
                     <div className="grid gap-3 sm:gap-4 grid-cols-1 md:grid-cols-2">
                         <div className="space-y-2">
-                            <Label htmlFor="name" className="text-sm sm:text-base">Nombre</Label>
+                            <Label htmlFor="name" className="text-sm sm:text-base">{dictionary.app?.account?.profile?.name || 'Nombre'}</Label>
                             <Input
                                 id="name"
                                 {...form.register('name')}
@@ -92,7 +92,7 @@ export function ProfileSection({ currentUser, dictionary, canEdit }: ProfileSect
                             )}
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="lastName" className="text-sm sm:text-base">Apellido</Label>
+                            <Label htmlFor="lastName" className="text-sm sm:text-base">{dictionary.app?.account?.profile?.lastName || 'Apellido'}</Label>
                             <Input
                                 id="lastName"
                                 {...form.register('lastName')}
@@ -104,7 +104,7 @@ export function ProfileSection({ currentUser, dictionary, canEdit }: ProfileSect
                             )}
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="email" className="text-sm sm:text-base">Email</Label>
+                            <Label htmlFor="email" className="text-sm sm:text-base">{dictionary.app?.account?.profile?.email || 'Email'}</Label>
                             <Input
                                 id="email"
                                 type="email"
@@ -120,9 +120,9 @@ export function ProfileSection({ currentUser, dictionary, canEdit }: ProfileSect
 
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-3 sm:pt-4 border-t gap-3 sm:gap-4">
                         <div className="space-y-1">
-                            <p className="text-sm sm:text-base font-medium">Rol actual</p>
+                            <p className="text-sm sm:text-base font-medium">{dictionary.app?.account?.profile?.currentRole || 'Rol actual'}</p>
                             <Badge variant="default" className="capitalize text-xs sm:text-sm">
-                                {currentUser?.role === 'admin' ? 'Administrador' : 'Usuario'}
+                                {currentUser?.role === 'admin' ? (dictionary.app?.account?.profile?.admin || 'Administrador') : (dictionary.app?.account?.profile?.user || 'Usuario')}
                             </Badge>
                         </div>
                         {canEdit && (
@@ -131,8 +131,8 @@ export function ProfileSection({ currentUser, dictionary, canEdit }: ProfileSect
                                 className="w-full sm:w-auto text-sm sm:text-base"
                                 disabled={isPending}
                             >
-                                <span className="hidden sm:inline">{isPending ? 'Guardando...' : 'Guardar Cambios'}</span>
-                                <span className="sm:hidden">{isPending ? 'Guardando...' : 'Guardar'}</span>
+                                <span className="hidden sm:inline">{isPending ? (dictionary.app?.account?.profile?.saving || 'Guardando...') : (dictionary.app?.account?.profile?.saveChanges?.desktop || 'Guardar Cambios')}</span>
+                                <span className="sm:hidden">{isPending ? (dictionary.app?.account?.profile?.saving || 'Guardando...') : (dictionary.app?.account?.profile?.saveChanges?.mobile || 'Guardar')}</span>
                             </Button>
                         )}
                     </div>

@@ -23,7 +23,7 @@ const RootLayout = async ({ children, params }: RootLayoutProperties) => {
 
   return (
     <html
-      lang="en"
+      lang={locale}
       className={cn(fonts, 'scroll-smooth')}
       suppressHydrationWarning
     >
@@ -32,7 +32,7 @@ const RootLayout = async ({ children, params }: RootLayoutProperties) => {
           <SnowParticlesWrapper />
           <Header dictionary={dictionary} locale={locale} />
           {children}
-          <Footer />
+          <Footer dictionary={dictionary} />
         </DesignSystemProvider>
         <Toolbar />
       </body>

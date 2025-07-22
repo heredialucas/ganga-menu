@@ -21,7 +21,7 @@ export default async function OrdersPage({ params }: { params: Promise<{ locale:
             <div className="space-y-3 sm:space-y-4 md:space-y-6 p-1 sm:p-2 md:p-6">
                 <div className="flex items-center justify-center min-h-[50vh]">
                     <div className="text-center">
-                        <p className="text-sm sm:text-base text-muted-foreground">Configuración de restaurante no encontrada</p>
+                        <p className="text-sm sm:text-base text-muted-foreground">{dictionary.web?.orders?.setup?.notFound || 'Configuración de restaurante no encontrada'}</p>
                     </div>
                 </div>
             </div>

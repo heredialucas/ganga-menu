@@ -8,9 +8,10 @@ import Image from 'next/image';
 interface ImageUploadProps {
     name: string;
     initialUrl?: string | null;
+    dictionary?: any;
 }
 
-export function ImageUpload({ name, initialUrl }: ImageUploadProps) {
+export function ImageUpload({ name, initialUrl, dictionary }: ImageUploadProps) {
     const [preview, setPreview] = useState<string | null>(initialUrl || null);
     const [urlValue, setUrlValue] = useState(initialUrl || ''); // For the hidden input
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -44,7 +45,7 @@ export function ImageUpload({ name, initialUrl }: ImageUploadProps) {
                 ) : (
                     <div className="text-gray-400 flex flex-col items-center">
                         <ImageIcon className="h-10 w-10 sm:h-12 sm:w-12 lg:h-16 lg:w-16" />
-                        <p className="mt-2 text-xs sm:text-sm">No hay logo</p>
+                        <p className="mt-2 text-xs sm:text-sm">{dictionary?.app?.restaurant?.config?.noLogo || 'No hay logo'}</p>
                     </div>
                 )}
             </div>
@@ -57,8 +58,8 @@ export function ImageUpload({ name, initialUrl }: ImageUploadProps) {
                     className="w-full sm:w-auto text-xs sm:text-sm"
                 >
                     <UploadCloud className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-                    <span className="hidden sm:inline">Subir imagen</span>
-                    <span className="sm:hidden">Subir</span>
+                    <span className="hidden sm:inline">{dictionary?.app?.restaurant?.config?.uploadImage || 'Subir imagen'}</span>
+                    <span className="sm:hidden">{dictionary?.app?.restaurant?.config?.uploadImageMobile || 'Subir'}</span>
                 </Button>
                 <input
                     type="file"

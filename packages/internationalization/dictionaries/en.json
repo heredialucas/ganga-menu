@@ -1,137 +1,5 @@
 {
   "app": {
-    "admin": {
-      "title": "Admin Dashboard",
-      "navigation": {
-        "dashboard": "Dashboard",
-        "users": "Users",
-        "settings": "Settings",
-        "logout": "Logout",
-        "loggingOut": "Logging out..."
-      },
-      "menu": {
-        "title": "Menu Management",
-        "categories": {
-          "title": "Categories",
-          "new": "New Category",
-          "noCategories": "No categories found. Create your first category!",
-          "edit": "Edit",
-          "delete": "Delete",
-          "deleteConfirmation": "Are you sure you want to delete this category?",
-          "form": {
-            "editTitle": "Edit Category",
-            "createTitle": "Create New Category",
-            "name": "Name",
-            "description": "Description",
-            "active": "Active",
-            "cancel": "Cancel",
-            "create": "Create",
-            "update": "Update",
-            "saving": "Saving..."
-          }
-        },
-        "dishes": {
-          "title": "Dishes",
-          "new": "New Dish",
-          "noDishes": "No dishes found. Create your first dish!",
-          "edit": "Edit",
-          "delete": "Delete",
-          "deleteConfirmation": "Are you sure you want to delete this dish?",
-          "status": {
-            "active": "Active",
-            "inactive": "Inactive"
-          },
-          "form": {
-            "editTitle": "Edit Dish",
-            "createTitle": "Create New Dish",
-            "name": "Name",
-            "description": "Description",
-            "price": "Price",
-            "category": "Category",
-            "status": "Status",
-            "cancel": "Cancel",
-            "create": "Create",
-            "update": "Update",
-            "saving": "Saving..."
-          }
-        },
-        "dailySpecials": {
-          "title": "Daily Specials",
-          "new": "New Daily Special",
-          "noSpecials": "No daily specials found.",
-          "edit": "Edit",
-          "delete": "Delete",
-          "deleteConfirmation": "Are you sure you want to delete this daily special?",
-          "form": {
-            "editTitle": "Edit Daily Special",
-            "createTitle": "Create New Daily Special",
-            "date": "Date",
-            "dish": "Dish",
-            "active": "Active",
-            "cancel": "Cancel",
-            "create": "Create",
-            "update": "Update",
-            "saving": "Saving..."
-          }
-        },
-        "restaurant": {
-          "title": "Restaurant Design",
-          "subtitle": "Design your restaurant layout and place tables",
-          "toolbar": {
-            "addTable": "Add Table",
-            "addBar": "Add Bar",
-            "addDecoration": "Add Decoration",
-            "save": "Save Design",
-            "clear": "Clear All",
-            "undo": "Undo",
-            "redo": "Redo"
-          },
-          "tables": {
-            "round": "Round Table",
-            "square": "Square Table",
-            "rectangle": "Rectangle Table"
-          },
-          "properties": {
-            "title": "Properties",
-            "name": "Name",
-            "capacity": "Capacity",
-            "shape": "Shape",
-            "width": "Width",
-            "height": "Height",
-            "color": "Color"
-          },
-          "messages": {
-            "designSaved": "Design saved successfully",
-            "errorSaving": "Error saving design",
-            "selectElement": "Select an element to edit its properties",
-            "noElements": "No elements in the design. Start by adding a table!"
-          }
-        }
-      }
-    },
-    "client": {
-      "title": "Client Portal",
-      "navigation": {
-        "dashboard": "Dashboard",
-        "profile": "Profile",
-        "orders": "Orders",
-        "settings": "Settings",
-        "logout": "Logout",
-        "loggingOut": "Logging out..."
-      }
-    },
-    "pharmacy": {
-      "title": "Pharmacy Management",
-      "navigation": {
-        "dashboard": "Dashboard",
-        "clients": "Clients",
-        "inventory": "Inventory",
-        "orders": "Orders",
-        "settings": "Settings",
-        "logout": "Logout",
-        "loggingOut": "Logging out..."
-      }
-    },
     "auth": {
       "signIn": {
         "title": "Sign in",
@@ -166,14 +34,16 @@
       "layout": {
         "title": "Internal tools for Ganga-Menú",
         "description": "Internal tools for Ganga-Menú to help you manage your digital menus."
-      }
+      },
+      "logout": "Sign out",
+      "loggingOut": "Signing out..."
     },
     "sidebar": {
-      "dashboard": "Dashboard",
-      "menu": "Menu",
-      "restaurant": "Restaurant",
       "account": "Account",
-      "services": "Services"
+      "menu": "Menu",
+      "orders": "Orders",
+      "services": "Services",
+      "restaurant": "Restaurant"
     },
     "share": {
       "title": "Share Links",
@@ -185,6 +55,10 @@
       "waiter": "Link to Waiter View"
     },
     "feedback": {
+      "buttonDesktop": "Give feedback",
+      "buttonMobile": "For feedback",
+      "modalTitle": "Help us grow!",
+      "modalDescription": "Your opinion is very important to us. Tell us what you think and help us improve Ganga-Menú.",
       "title": "Send Feedback",
       "name": "Name",
       "email": "Email",
@@ -197,6 +71,548 @@
       "sending": "Sending...",
       "success": "Thank you for your feedback!",
       "error": "Error sending feedback. Please try again."
+    },
+    "account": {
+      "title": "Account Management",
+      "subtitle": "Configuration and users",
+      "userNotFound": "User not found",
+      "tabs": {
+        "profile": {
+          "desktop": "My Profile",
+          "mobile": "Profile"
+        },
+        "users": {
+          "desktop": "User Management",
+          "mobile": "Users"
+        }
+      },
+      "profile": {
+        "title": "Personal Information",
+        "description": "Update your personal information and account settings",
+        "name": "Name",
+        "lastName": "Last Name",
+        "email": "Email",
+        "currentRole": "Current role",
+        "admin": "Administrator",
+        "user": "User",
+        "saveChanges": {
+          "desktop": "Save Changes",
+          "mobile": "Save"
+        },
+        "saving": "Saving...",
+        "validation": {
+          "nameRequired": "Name is required",
+          "lastNameRequired": "Last name is required",
+          "emailInvalid": "Invalid email"
+        },
+        "toast": {
+          "updating": "Updating profile...",
+          "success": "Profile updated successfully.",
+          "error": "Error updating profile"
+        }
+      },
+      "password": {
+        "title": "Security",
+        "description": "Manage your password and security settings",
+        "currentPassword": "Current Password",
+        "newPassword": "New Password",
+        "confirmPassword": "Confirm New Password",
+        "updatePassword": {
+          "desktop": "Update Password",
+          "mobile": "Update"
+        },
+        "updating": "Updating...",
+        "validation": {
+          "currentPasswordRequired": "Current password is required",
+          "newPasswordMin": "New password must have at least 6 characters",
+          "passwordsDoNotMatch": "Passwords do not match"
+        },
+        "toast": {
+          "updating": "Updating password...",
+          "success": "Password updated successfully.",
+          "error": "Error updating password"
+        }
+      },
+      "users": {
+        "title": "System Users",
+        "description": "Manage users and their permissions",
+        "newUser": {
+          "desktop": "New User",
+          "mobile": "New"
+        },
+        "editUser": "Edit User",
+        "createUser": "Create User",
+        "editUserDescription": "Update user details.",
+        "createUserDescription": "Create a new user and assign their permissions.",
+        "password": "Password",
+        "passwordPlaceholder": "Leave blank to not change",
+        "role": "Role",
+        "rolePlaceholder": "Select a role",
+        "restaurantManager": "Restaurant Manager",
+        "permissionsLabel": "Permissions",
+        "permissions": "Permissions",
+        "cancel": "Cancel",
+        "saveChanges": {
+          "desktop": "Save Changes",
+          "mobile": "Save"
+        },
+        "create": {
+          "desktop": "Create User",
+          "mobile": "Create"
+        },
+        "saving": "Saving...",
+        "deleteUser": "Delete User",
+        "deleteConfirmation": "Are you sure?",
+        "deleteDescription": "This action cannot be undone. The user will be permanently deleted",
+        "deleting": "Deleting...",
+        "validation": {
+          "nameRequired": "Name, last name and email are required",
+          "passwordRequired": "Password is required for new users",
+          "passwordMin": "Password must have at least 6 characters"
+        },
+        "permissionGroups": {
+          "dishes": "Dishes",
+          "categories": "Categories",
+          "dailySpecials": "Daily Specials",
+          "restaurant": "Restaurant",
+          "orders": "Orders",
+          "kitchen": "Kitchen",
+          "waiter": "Waiter",
+          "menu": "Menu",
+          "account": "Account",
+          "admin": "Administration"
+        },
+        "permissions": {
+          "dishesView": "View dishes",
+          "dishesCreate": "Create dishes",
+          "dishesEdit": "Edit dishes",
+          "dishesDelete": "Delete dishes",
+          "dishesManageStatus": "Manage dish status",
+          "categoriesView": "View categories",
+          "categoriesCreate": "Create categories",
+          "categoriesEdit": "Edit categories",
+          "categoriesDelete": "Delete categories",
+          "categoriesManageOrder": "Manage category order",
+          "dailySpecialsView": "View daily specials",
+          "dailySpecialsCreate": "Create daily specials",
+          "dailySpecialsEdit": "Edit daily specials",
+          "dailySpecialsDelete": "Delete daily specials",
+          "restaurantViewConfig": "View restaurant configuration",
+          "restaurantEditConfig": "Edit restaurant configuration",
+          "restaurantManageSettings": "Manage restaurant settings",
+          "restaurantViewDesign": "View restaurant design",
+          "restaurantEditDesign": "Edit restaurant design",
+          "ordersView": "View orders",
+          "ordersCreate": "Create orders",
+          "ordersEdit": "Edit orders",
+          "ordersDelete": "Delete orders",
+          "ordersManageStatus": "Manage order status",
+          "kitchenViewOrders": "View kitchen orders",
+          "kitchenUpdateStatus": "Update kitchen status",
+          "waiterViewOrders": "View waiter orders",
+          "waiterCreateOrders": "Create waiter orders",
+          "waiterViewMenu": "View waiter menu",
+          "menuViewPublic": "View public menu",
+          "accountViewOwn": "View own account",
+          "accountEditOwn": "Edit own account",
+          "accountChangePassword": "Change password",
+          "adminFullAccess": "Full access",
+          "adminManageUsers": "Manage users",
+          "adminSystemSettings": "System settings"
+        },
+        "toast": {
+          "updating": "Updating user...",
+          "creating": "Creating user...",
+          "deleting": "Deleting user...",
+          "updated": "User updated successfully.",
+          "created": "User created successfully.",
+          "deleted": "User deleted successfully."
+        }
+      }
+    },
+    "menu": {
+      "title": "Menu Management",
+      "subtitle": "Create and edit your dishes. Use the dropdowns for advanced configurations.",
+      "userNotAuthenticated": "User not authenticated.",
+      "categories": {
+        "title": "Category Manager",
+        "newCategory": "New Category",
+        "existingCategories": "Existing Categories",
+        "name": "Name",
+        "action": "Action",
+        "add": {
+          "desktop": "Add",
+          "mobile": "Add"
+        },
+        "namePlaceholder": "Category name",
+        "deleteConfirmation": "Are you sure?",
+        "deleteDescription": "This action cannot be undone. The category will be deleted",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "deleting": "Deleting...",
+        "toast": {
+          "success": "Category created.",
+          "error": "Error creating category",
+          "deleteSuccess": "Category deleted.",
+          "deleteError": "Error deleting category",
+          "notAuthenticated": "User not authenticated."
+        }
+      },
+      "dishes": {
+        "title": "Dishes",
+        "description": "Create and manage your menu dishes.",
+        "newDish": {
+          "desktop": "New Dish",
+          "mobile": "New"
+        },
+        "editDish": "Edit Dish",
+        "createDish": "Create Dish",
+        "image": "Image",
+        "imagePlaceholder": "Click to upload an image",
+        "name": "Name",
+        "description": "Description",
+        "price": "Price",
+        "promotionalPrice": "Promotional Price",
+        "category": "Category",
+        "categoryPlaceholder": "Select a category",
+        "noCategory": "No category",
+        "edit": {
+          "desktop": "Edit",
+          "mobile": "Edit"
+        },
+        "cancel": "Cancel",
+        "save": "Save",
+        "saving": "Saving...",
+        "deleteConfirmation": "Are you sure?",
+        "deleteDescription": "This action cannot be undone. The dish will be permanently deleted",
+        "delete": "Delete",
+        "deleting": "Deleting...",
+        "toast": {
+          "saving": "Saving dish...",
+          "updated": "Dish updated successfully.",
+          "created": "Dish created successfully.",
+          "deleting": "Deleting dish...",
+          "deleted": "Dish deleted successfully.",
+          "notAuthenticated": "User not authenticated"
+        }
+      },
+      "dailySpecials": {
+        "title": "Daily Specials Scheduler",
+        "schedulePromotion": "Schedule Promotion",
+        "dish": "Dish",
+        "dishPlaceholder": "Select a dish",
+        "date": "Date",
+        "startDate": "Start Date",
+        "datePlaceholder": "Select a date",
+        "repeatPromotion": "Repeat Promotion",
+        "recurrenceType": "Recurrence Type",
+        "weekly": "Weekly",
+        "monthly": "Monthly",
+        "weekDays": "Week Days",
+        "endDate": "End Date",
+        "addPromotion": {
+          "desktop": "Add Promotion",
+          "mobile": "Add"
+        },
+        "adding": "Adding...",
+        "promotionPreview": "Promotion Preview",
+        "promotionalPriceNote": "The promotional price must be set in the dish.",
+        "activePromotions": "Active Promotions",
+        "deletePromotion": "Delete Promotion",
+        "deletingPromotion": "Deleting promotion...",
+        "promotionDeleted": "Promotion deleted successfully.",
+        "deletePromotions": "Delete Promotions",
+        "deletingPromotions": "Deleting promotions...",
+        "promotionsDeleted": "promotions deleted successfully.",
+        "validation": {
+          "selectDishAndDate": "Please select a dish and start date.",
+          "completeRecurrenceFields": "For recurring promotions, complete all recurrence fields."
+        },
+        "toast": {
+          "adding": "Adding promotion(s)...",
+          "error": "Could not add promotion.",
+          "deleting": "Deleting promotions...",
+          "deleteError": "Could not delete promotions."
+        }
+      },
+      "access": {
+        "title": "Customer Access",
+        "description": "Configure how your customers will access the digital menu. This link and QR are what you should share.",
+        "configureRestaurant": "First configure your restaurant",
+        "customLink": "Custom Link (URL)",
+        "slugPlaceholder": "your-restaurant",
+        "copyLink": {
+          "desktop": "Copy Link",
+          "mobile": "Copy"
+        },
+        "preview": {
+          "desktop": "Preview",
+          "mobile": "Preview"
+        },
+        "themeColor": "Site Primary Color",
+        "themeColorNote": "This will be the predominant color on the page your customers see.",
+        "qrCode": "Menu QR Code",
+        "downloadQR": {
+          "desktop": "Download QR",
+          "mobile": "Download"
+        },
+        "qrNote": "Your customers can scan this code to view the menu.",
+        "toast": {
+          "linkCopied": "Menu link copied to clipboard.",
+          "qrDownloaded": "QR downloaded successfully"
+        }
+      }
+    },
+    "restaurant": {
+      "title": "Restaurant Management",
+      "subtitle": "Define your restaurant configuration and design the table layout.",
+      "userNotAuthenticated": "User not authenticated.",
+      "config": {
+        "title": "Restaurant Configuration",
+        "description": "Configure your restaurant's basic data",
+        "name": "Restaurant Name",
+        "namePlaceholder": "Enter your restaurant name",
+        "description": "Description",
+        "descriptionPlaceholder": "Describe your restaurant",
+        "address": "Address",
+        "addressPlaceholder": "Enter complete address",
+        "phone": "Phone",
+        "phonePlaceholder": "Enter phone number",
+        "email": "Email",
+        "emailPlaceholder": "Enter contact email",
+        "website": "Website",
+        "websitePlaceholder": "https://your-restaurant.com",
+        "logo": "Restaurant Logo",
+        "logoPlaceholder": "Upload your restaurant logo",
+        "banner": "Restaurant Banner",
+        "bannerPlaceholder": "Upload a banner image",
+        "uploadImage": "Upload image",
+        "uploadImageMobile": "Upload",
+        "noLogo": "No logo",
+        "save": "Save Configuration",
+        "saving": "Saving...",
+        "cancel": "Cancel",
+        "contactInfo": {
+          "title": "Contact Information",
+          "description": "Contact information so your customers can locate and communicate with you."
+        },
+        "toast": {
+          "saving": "Saving configuration...",
+          "success": "Configuration saved successfully.",
+          "error": "Error saving configuration.",
+          "unexpectedError": "An unexpected error occurred.",
+          "notAuthenticated": "User not authenticated"
+        }
+      },
+      "openingHours": {
+        "title": "Opening Hours",
+        "description": "Configure your restaurant's opening hours",
+        "day": "Day",
+        "open": "Open",
+        "closed": "Closed",
+        "openingTime": "Opening Time",
+        "closingTime": "Closing Time",
+        "saveHours": "Save Hours",
+        "savingHours": "Saving hours...",
+        "applyToAll": "Apply to all days",
+        "allOpen": "All open",
+        "markAllOpen": "Mark all as open",
+        "addShift": "Add shift",
+        "days": {
+          "monday": "Monday",
+          "tuesday": "Tuesday",
+          "wednesday": "Wednesday", 
+          "thursday": "Thursday",
+          "friday": "Friday",
+          "saturday": "Saturday",
+          "sunday": "Sunday"
+        },
+        "toast": {
+          "saving": "Saving hours...",
+          "success": "Hours saved successfully.",
+          "error": "Error saving hours.",
+          "notAuthenticated": "User not authenticated"
+        }
+      },
+      "design": {
+        "title": "Restaurant Design",
+        "description": "Design the table layout in your restaurant",
+        "tables": "Tables",
+        "addTable": "Add Table",
+        "tableNumber": "Table Number",
+        "tableNumberPlaceholder": "Ex: Table 1",
+        "tableCapacity": "Capacity",
+        "tableCapacityPlaceholder": "Number of people",
+        "tableShape": "Table Shape",
+        "tableShapeRound": "Round",
+        "tableShapeSquare": "Square",
+        "tableShapeRectangle": "Rectangle",
+        "tablePosition": "Position",
+        "tablePositionX": "Position X",
+        "tablePositionY": "Position Y",
+        "tableColor": "Table Color",
+        "tableStatus": "Table Status",
+        "tableStatusAvailable": "Available",
+        "tableStatusOccupied": "Occupied",
+        "tableStatusReserved": "Reserved",
+        "tableStatusMaintenance": "Maintenance",
+        "deleteTable": "Delete Table",
+        "deleteTableConfirmation": "Are you sure you want to delete this table?",
+        "saveDesign": "Save Design",
+        "savingDesign": "Saving design...",
+        "resetDesign": "Clear",
+        "resetDesignConfirmation": "Are you sure?",
+        "resetDesignDescription": "This action cannot be undone. All design will be removed.",
+        "confirmReset": "Confirm",
+        "deleteElement": "Delete",
+        "deleteButton": "Delete",
+        "loading": "Loading designer...",
+        "tools": {
+          "select": {
+            "desktop": "Select",
+            "mobile": "Sel"
+          },
+          "wall": {
+            "desktop": "Wall",
+            "mobile": "Wall"
+          },
+          "addObject": {
+            "desktop": "Add Object",
+            "mobile": "Add"
+          },
+          "table": "Table",
+          "roundTable": "Round Table",
+          "bar": "Bar",
+          "staircase": "Staircase"
+        },
+        "toast": {
+          "saving": "Saving design...",
+          "success": "Design saved successfully.",
+          "error": "Error saving design.",
+          "deleting": "Deleting table...",
+          "deleted": "Table deleted successfully.",
+          "deleteError": "Error deleting table.",
+          "resetting": "Resetting design...",
+          "reset": "Design reset successfully.",
+          "resetError": "Error resetting design.",
+          "notAuthenticated": "User not authenticated"
+        }
+      },
+      "qr": {
+        "title": "QR Code Generator",
+        "description": "Generate QR codes for your restaurant tables",
+        "tableQR": "Table QR Code",
+        "downloadQR": "Download QR",
+        "downloadAllQR": "Download All QR",
+        "generatingQR": "Generating QR...",
+        "print": {
+          "desktop": "Print",
+          "mobile": "Print"
+        },
+        "copyURL": {
+          "desktop": "Copy URL",
+          "mobile": "Copy"
+        },
+        "selectTable": "Select a table to see the QR",
+        "selectTableToGenerate": "Select a table to generate the QR code",
+        "tableForQR": "QR for Table",
+        "table": "Table",
+        "noTablesConfigured": "No tables configured",
+        "configureTablesInDesign": "Configure tables in the \"Design\" tab",
+        "printInstructions": "Scan this QR code to view the menu and place your order",
+        "howItWorks": {
+          "title": "How does it work?",
+          "security": "Security: Each table has its own unique QR",
+          "simplicity": "Simplicity: Customers don't need to select a table",
+          "organization": "Organization: Orders are automatically associated with the correct table",
+          "experience": "Experience: Faster process with no errors"
+        },
+        "tablesAvailable": "Available Tables",
+        "selectTableForQR": "Select a table to generate its unique QR code",
+        "loadingTables": "Loading tables...",
+        "toast": {
+          "downloaded": "QR downloaded successfully.",
+          "downloadError": "Error downloading QR.",
+          "downloadingAll": "Downloading all QR...",
+          "allDownloaded": "All QR downloaded successfully.",
+          "downloadAllError": "Error downloading all QR."
+        }
+      },
+      "view": {
+        "configTab": "Configuration",
+        "designTab": "Design",
+        "hoursTab": "Hours",
+        "qrTab": "QR Codes",
+        "noConfig": "No restaurant configuration",
+        "noDesign": "No restaurant design",
+        "createConfig": "Create Configuration",
+        "createDesign": "Create Design"
+      }
+    },
+    "waiter": {
+      "title": "Order System",
+      "auth": {
+        "title": "Waiter Access",
+        "code": "Access Code",
+        "enter": "Enter",
+        "invalidCode": "Incorrect code",
+        "placeholder": "Enter the code"
+      },
+      "order": {
+        "title": "Take Order",
+        "orderInfo": "Order Information",
+        "table": "Table",
+        "waiterName": "Waiter Name",
+        "addDish": "Add Dish",
+        "quantity": "Quantity",
+        "notes": "Notes",
+        "total": "Total",
+        "submit": "Send Order",
+        "success": "Order sent successfully",
+        "error": "Error sending order",
+        "empty": "Add dishes to order",
+        "selectTable": "Select a table",
+        "dishAdded": "Dish added to order",
+        "remove": "Remove",
+        "orderNotes": "Order notes",
+        "categories": "Categories",
+        "all": "All",
+        "search": "Search dishes...",
+        "price": "Price",
+        "cart": "Cart",
+        "items": "items",
+        "orderSent": "Order sent to kitchen!",
+        "submittedOrders": "Order History",
+        "addToOrder": "Add to Order",
+        "statusPending": "Pending",
+        "statusInProgress": "In preparation",
+        "statusReady": "Ready",
+        "statusDelivered": "Delivered",
+        "statusCancelled": "Cancelled",
+        "filterAll": "All",
+        "filterPending": "Pending",
+        "filterReady": "Ready",
+        "filterDelivered": "Delivered",
+        "noOrdersFound": "No orders found",
+        "addDishes": "Add dishes",
+        "markDelivered": "Mark Delivered",
+        "updating": "Updating...",
+        "releaseTable": "Release Table",
+        "releaseTableMobile": "Release",
+        "releasingTable": "Releasing...",
+        "releasingTableMobile": "..."
+      }
+    },
+    "kitchen": {
+      "title": "Kitchen Panel",
+      "auth": {
+        "title": "Kitchen Access",
+        "code": "Access Code",
+        "enter": "Enter",
+        "invalidCode": "Incorrect code",
+        "placeholder": "Enter the code",
+        "codeRequired": "Code required"
+      }
     }
   },
   "web": {
@@ -204,27 +620,658 @@
       "primaryCta": "Contact us",
       "secondaryCta": "Get started now"
     },
+    "header": {
+      "home": "Home",
+      "features": "Platform",
+      "pricing": "Pricing", 
+      "about": "About",
+      "contact": "Contact",
+      "logIn": "Sign In",
+      "getStarted": "Try Free Now!",
+      "tryFree": "Start Free",
+      "navigation": "Navigation"
+    },
+    "home": {
+      "meta": {
+        "title": "Ganga-Menú - Digital menus for restaurants",
+        "description": "The platform that helps restaurants create and manage their digital menus easily and professionally."
+      },
+      "hero": {
+        "title": "Complete Management for Your Restaurant",
+        "subtitle": "From interactive digital menus to complete order management. Waiters take orders easily and the kitchen controls each preparation in real time. Everything in one integrated platform.",
+        "getStarted": "Start Now",
+        "learnMore": "Learn More",
+        "viewPricing": "View Pricing",
+        "tryFree": "Try Free Demo",
+        "gallery": {
+          "menu": "Digital Menus",
+          "menuDesc": "Beautiful and interactive",
+          "waiters": "Waiter System",
+          "waitersDesc": "Efficient management",
+          "kitchen": "Kitchen Panel",
+          "kitchenDesc": "Real-time control"
+        }
+      },
+      "cases": {
+        "title": "Positive Environmental Impact",
+        "subtitle": "Discover how Gangañam is helping to reduce food waste in our community.",
+        "quote": "Every meal saved is a step towards a more sustainable world",
+        "projectsTitle": "Achievements",
+        "projectStatus": {
+          "finished": "Completed",
+          "inProgress": "In progress"
+        },
+        "modal": {
+          "description": "Description",
+          "technologies": "Technologies",
+          "features": "Features"
+        }
+      },
+      "features": {
+        "title": "Complete Solution for Your Restaurant",
+        "description": "An integrated platform that connects digital menus, order management, waiters and kitchen in one efficient system",
+        "items": [
+          {
+            "title": "Interactive Digital Menus",
+            "description": "Create beautiful and interactive digital menus with high-quality images, detailed descriptions and real-time updates."
+          },
+          {
+            "title": "Smart Order Management",
+            "description": "Waiters take orders directly from tablets or mobile devices. Everything syncs automatically with the kitchen for perfect flow."
+          },
+          {
+            "title": "Real-Time Kitchen Panel",
+            "description": "The kitchen receives orders instantly and can update preparation status: pending, in progress, ready to serve."
+          },
+          {
+            "title": "Waiter System",
+            "description": "Intuitive interface for waiters to manage tables, take orders, add special notes and maintain total control of service."
+          },
+          {
+            "title": "Centralized Administration",
+            "description": "Complete administration panel to manage menus, categories, prices, tables, staff and analyze restaurant performance."
+          },
+          {
+            "title": "Optimized Customer Experience",
+            "description": "Customers can see updated menus, know wait times and enjoy a modern and efficient dining experience."
+          }
+        ]
+      },
+      "stats": {
+        "title": "HOW THE INTEGRATED PLATFORM WORKS",
+        "description": "Implement the complete solution in your restaurant and transform the dining experience",
+        "process": [
+          {
+            "title": "Configure Your Restaurant",
+            "description": "Register your establishment, create the digital menu and configure tables and areas of your restaurant."
+          },
+          {
+            "title": "Train Your Staff",
+            "description": "Waiters access with unique codes to take orders from mobile devices or tablets intuitively."
+          },
+          {
+            "title": "Real-Time Kitchen",
+            "description": "The kitchen receives orders instantly and updates status: in preparation, ready to serve."
+          },
+          {
+            "title": "Optimized Service",
+            "description": "Improve efficiency, reduce wait times and provide an exceptional experience to your customers."
+          }
+        ]
+      },
+      "testimonials": {
+        "title": "What Our Restaurants Say",
+        "description": "Real experiences from restaurants that transformed their operation with our integrated platform",
+        "items": [
+          {
+            "title": "Revolutionized our complete operation",
+            "description": "From digital menus to kitchen order management, everything works in sync. Waiters take orders faster, the kitchen has better control and our customers are more satisfied. We increased efficiency by 40%.",
+            "author": {
+              "name": "Maria Rodriguez",
+              "location": "Restaurant La Tradición, Madrid"
+            }
+          },
+          {
+            "title": "Waiters and kitchen work in perfect harmony",
+            "description": "What impresses us most is how orders arrive instantly to the kitchen and we can update the status in real time. Waiters know exactly when each dish is ready. We significantly reduced wait times.",
+            "author": {
+              "name": "Carlos Mendoza",
+              "location": "Bistró Central, Barcelona"
+            }
+          },
+          {
+            "title": "An investment that pays for itself",
+            "description": "The integrated platform allowed us to optimize staff and serve more tables with the same number of waiters. Customers see updated menus and staff is less stressed. Positive ROI in less than 3 months.",
+            "author": {
+              "name": "Ana Jiménez",
+              "location": "Taverna del Puerto, Valencia"
+            }
+          },
+          {
+            "title": "Technology that really works",
+            "description": "We implemented the complete system: digital menus, order management and kitchen panel. Everything is intuitive, staff adapted quickly and our customers notice the difference in service quality.",
+            "author": {
+              "name": "Roberto Silva",
+              "location": "Casa Silva, Sevilla"
+            }
+          }
+        ]
+      },
+      "faq": {
+        "title": "Frequently Asked Questions",
+        "description": "Answers to the most common questions about our integrated platform for restaurants",
+        "cta": "Still have questions? Contact us",
+        "needMore": "Need more information?",
+        "contactDescription": "If you didn't find the answer to your question, our team is ready to help you transform your restaurant.",
+        "items": [
+          {
+            "question": "How does the integrated platform work?",
+            "answer": "Our platform connects digital menus, order management and kitchen control in one system. Customers see the menu, waiters take orders from mobile devices, and the kitchen receives everything instantly with real-time status control."
+          },
+          {
+            "question": "What exactly does the system include?",
+            "answer": "Includes: customizable digital menus, waiter order system with table management, kitchen panel to control preparation status, complete admin panel and real-time synchronization between all areas."
+          },
+          {
+            "question": "Is it difficult to train staff?",
+            "answer": "No, the system is designed to be intuitive. Waiters adapt quickly to the order system and the kitchen learns to use the control panel in minutes. We offer training included in implementation."
+          },
+          {
+            "question": "Does it work in any type of restaurant?",
+            "answer": "Yes, from small cafes to large restaurants. The system adapts to any type of establishment: restaurants, bars, pizzerias, food trucks, etc. We configure tables and flows according to your specific needs."
+          },
+          {
+            "question": "What if I don't have internet or the connection is cut?",
+            "answer": "The system works with internet connection, but has basic offline mode that allows you to continue taking orders. Once the connection is restored, everything syncs automatically."
+          },
+          {
+            "question": "Can I start using the system immediately?",
+            "answer": "Yes! You can start using Ganga-Menú from day zero. Create your account, configure your basic menu and start receiving orders in minutes. Advanced features can be activated gradually according to your needs."
+          }
+        ]
+      },
+      "cta": {
+        "title": "Ready to Transform Your Restaurant?",
+        "description": "Join restaurants that revolutionized their operation with our integrated platform: digital menus, order management and kitchen control",
+        "calendly": {
+          "title": "Schedule a demo",
+          "subtitle": "30 minutes · Free",
+          "benefits": [
+            "See the complete platform in action",
+            "Learn how to optimize your operation",
+            "Calculate your personalized ROI"
+          ]
+        },
+        "features": {
+          "digitalMenus": "Digital Menus",
+          "digitalMenusDesc": "Beautiful and interactive",
+          "orderManagement": "Order Management",
+          "orderManagementDesc": "For efficient waiters",
+          "kitchenPanel": "Kitchen Panel",
+          "kitchenPanelDesc": "Real-time control",
+          "optimization": "Optimization",
+          "optimizationDesc": "Reduce wait times"
+        },
+        "platformDescription": "Complete and integrated platform",
+        "revolutionDescription": "Revolutionize your operation with our comprehensive solution: beautiful digital menus, waiter order system and kitchen control panel. Everything synchronized in real time."
+      },
+      "newsletter": {
+        "title": "Stay Informed",
+        "description": "Subscribe to receive news, tips and special offers about digital menus for your restaurant",
+        "placeholder": "Your email address",
+        "subscribe": "Subscribe",
+        "subscribing": "Subscribing...",
+        "success": "Thank you for subscribing! You'll receive news about how to improve your digital presence.",
+        "error": "Something went wrong. Please try again.",
+        "validation": "Please enter a valid email address.",
+        "privacy": "We promise not to send spam, only relevant content about gastronomic digitalization"
+      },
+      "footer": {
+        "companyDescription": "Integrated platform that connects digital menus, order management, waiters and kitchen in a synchronized system to revolutionize your restaurant operation.",
+        "navigation": "Navigation",
+        "features": "Features",
+        "menuCreation": "Interactive Digital Menus",
+        "orderManagement": "Order Management", 
+        "kitchenControl": "Kitchen Panel",
+        "contact": "Contact",
+        "getStarted": "Get Started",
+        "rights": "All rights reserved",
+        "privacy": "Privacy Policy",
+        "terms": "Terms and Conditions"
+      }
+    },
+    "pricing": {
+      "title": "Start Free and Scale Your Restaurant!",
+      "description": "Start at no cost and unlock premium features as you grow. Everything essential included from day one.",
+      "monthly": "month",
+      "popular": "MOST POPULAR",
+      "tryIt": "Start Free",
+      "buyNow": "Get Started Now",
+      "contactUs": "Contact Us",
+      "free": "Free",
+      "forever": "forever",
+      "contactForPrice": "Contact",
+      "plans": [
+        {
+          "name": "Free",
+          "description": "Perfect to get started. Includes everything essential to digitalize your restaurant from day one",
+          "price": "0",
+          "features": [
+            "Unlimited digital menu",
+            "Up to 3 simultaneous waiters",
+            "Basic kitchen panel",
+            "Up to 10 tables",
+            "Email support"
+          ]
+        },
+        {
+          "name": "Professional",
+          "description": "For restaurants looking to completely optimize their operation with analytics and advanced features",
+          "price": "15",
+          "features": [
+            "Everything from Free plan",
+            "Unlimited waiters",
+            "Unlimited tables",
+            "Advanced analytics",
+            "Complete customization",
+            "24/7 priority support"
+          ]
+        },
+        {
+          "name": "Enterprise",
+          "description": "Custom solutions for unique designs, restaurant chains or specific needs. Contact us for a quote.",
+          "price": "contact",
+          "features": [
+            "Everything from Professional plan",
+            "Multiple locations",
+            "Custom API",
+            "POS integration",
+            "Dedicated manager",
+            "Enterprise reports"
+          ]
+        }
+      ],
+      "features": {
+        "digitalMenus": "Interactive digital menus",
+        "orderManagement": "Order management system",
+        "kitchenPanel": "Kitchen control panel",
+        "tableManagement": "Table and waiter management",
+        "analytics": "Advanced analytics panel",
+        "multiLocation": "Multi-location support"
+      },
+      "trust": {
+        "description": "More than 500 restaurants are already transforming their operation with Ganga-Menú",
+        "rating": "4.9/5 • No commitment • Cancel anytime"
+      }
+    },
+    "blog": {
+      "meta": {
+        "title": "Blog about Sustainable Food",
+        "description": "Tips, recipes and articles about how to reduce food waste and promote more sustainable consumption."
+      }
+    },
+    "contact": {
+      "meta": {
+        "title": "Contact Us",
+        "description": "Contact our team to learn more about how Ganga-Menú can help you digitalize your restaurant menu."
+      },
+      "hero": {
+        "title": "We're here to help you",
+        "description": "Our team is available to answer your questions and guide you through the process of creating your digital menu.",
+        "cta": "Send message",
+        "benefits": [
+          {
+            "title": "Quick response",
+            "description": "Our team is ready to help you understand how Ganga-Menú works and how you can create your digital menu today."
+          },
+          {
+            "title": "Restaurant support",
+            "description": "If you have a restaurant, we offer personalized help to configure your digital menu and optimize your customers' experience."
+          },
+          {
+            "title": "Gastronomic community",
+            "description": "By joining Ganga-Menú, you become part of a community of restaurants committed to excellence in digital presentation."
+          }
+        ],
+        "form": {
+          "title": "Let's talk about your project",
+          "firstName": "First Name",
+          "lastName": "Last Name",
+          "date": "Preferred date",
+          "resume": "Attach relevant files",
+          "cta": "Send"
+        }
+      },
+      "form": {
+        "title": "Contact Us",
+        "subtitle": "We respond in 24 hours",
+        "subtitleInfo": "Digitalizing restaurants together",
+        "name_placeholder": "Full name",
+        "email_placeholder": "Email address",
+        "message_placeholder": "Tell us about your restaurant and how we can help you",
+        "sending": "Sending...",
+        "send_button": "Send message",
+        "success_message": "Your message has been sent successfully!",
+        "error_message": "Error sending message. Please try again later."
+      }
+    },
+    "services": {
+      "title": "Services",
+      "subtitle": "Direct access for your restaurant staff.",
+      "subtitleAlt": "Tools for managing your restaurant.",
+      "waiter": {
+        "title": "Waiter Management",
+        "description": "Modify the access code and share the link.",
+        "accessCode": "Waiter Access Code",
+        "accessCodeDescription": "This is the code that waiters will use to access.",
+        "accessLink": "Waiter Access Link",
+        "placeholder": "4+ digits",
+        "save": "Save",
+        "saving": "Saving...",
+        "savingShort": "...",
+        "saveShort": "OK",
+        "footer": "Remember to save the code changes before sharing the link."
+      },
+      "kitchen": {
+        "title": "Kitchen Management",
+        "description": "Modify the access code and share the link.",
+        "accessCode": "Kitchen Access Code",
+        "accessCodeDescription": "This is the code that the kitchen will use to access.",
+        "accessLink": "Kitchen Access Link",
+        "placeholder": "4+ digits",
+        "save": "Save",
+        "saving": "Saving...",
+        "savingShort": "...",
+        "saveShort": "OK",
+        "footer": "Kitchen access is direct and does not require a code.",
+        "auth": {
+          "title": "Kitchen Access",
+          "code": "Access Code",
+          "enter": "Enter",
+          "invalidCode": "Invalid code",
+          "placeholder": "Enter the code",
+          "codeRequired": "Code required",
+          "verifying": "Verifying..."
+        },
+        "interface": {
+          "title": "Kitchen Panel",
+          "filters": "Filters",
+          "noOrders": "No orders to display",
+          "noOrdersDescription": "When new orders arrive, they will appear here.",
+          "activeOrders": "Active orders",
+          "table": "Table",
+          "counter": "Counter",
+          "timeElapsed": "ago",
+          "dishNotAvailable": "Dish not available",
+          "connection": {
+            "connected": "Connected",
+            "disconnected": "Disconnected"
+          },
+          "filters": {
+            "all": "All",
+            "inProgress": "In Progress",
+            "ready": "Ready"
+          },
+          "status": {
+            "active": "Active",
+            "ready": "Ready/Delivered",
+            "cancelled": "Cancelled",
+            "completed": "Completed"
+          }
+        }
+      },
+      "shared": {
+        "downloadQR": "Download QR",
+        "downloadQRShort": "Download",
+        "open": "Open",
+        "openShort": "Open",
+        "copySuccess": "Link for {name} copied to clipboard.",
+        "savingCode": "Saving new code...",
+        "codeSaved": "Code updated successfully",
+        "codeError": "Error updating code"
+      },
+      "setup": {
+        "title": "Configuration Required",
+        "description": "To use waiter and kitchen services, you must first configure your restaurant.",
+        "link": "Go to restaurant configuration"
+      }
+    },
+    "orders": {
+      "title": "Order Management",
+      "subtitle": "Monitor and manage your restaurant orders in real time",
+      "connection": {
+        "connected": "Connected",
+        "connectedShort": "OK",
+        "disconnected": "Disconnected",
+        "disconnectedShort": "Off"
+      },
+      "stats": {
+        "total": "Total",
+        "active": "Active",
+        "ready": "Ready",
+        "cancelled": "Cancelled",
+        "paid": "Paid"
+      },
+      "filters": {
+        "all": "All",
+        "active": "Active",
+        "ready": "Ready/Delivered",
+        "cancelled": "Cancelled",
+        "paid": "Paid",
+        "allShort": "All",
+        "activeShort": "Active",
+        "readyShort": "Ready",
+        "cancelledShort": "Cancel",
+        "paidShort": "Paid"
+      },
+      "tabs": {
+        "allOrders": {
+          "desktop": "All Orders",
+          "mobile": "All"
+        },
+        "activeOrders": {
+          "desktop": "Active Orders",
+          "mobile": "Active"
+        },
+        "completed": {
+          "desktop": "Completed",
+          "mobile": "Ready"
+        }
+      },
+      "table": {
+        "title": "Orders",
+        "noOrders": "No orders to display",
+        "headers": {
+          "id": "ID",
+          "customer": "Customer",
+          "items": "Items",
+          "total": "Total",
+          "status": "Status",
+          "date": "Date",
+          "actions": "Actions"
+        },
+        "status": {
+          "active": "Active",
+          "ready": "Ready/Delivered",
+          "cancelled": "Cancelled",
+          "paid": "Paid"
+        },
+        "customer": "Customer",
+        "table": "Table",
+        "noItems": "No items",
+        "dishNotAvailable": "Dish not available",
+        "updating": "Updating...",
+        "updatingShort": "..."
+      },
+      "deleteDialog": {
+        "title": "Delete Order",
+        "description": "Are you sure you want to delete this order? This action cannot be undone.",
+        "order": "Order",
+        "details": "Details",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "deleting": "Deleting..."
+      },
+      "toast": {
+        "updatingStatus": "Updating order status...",
+        "statusUpdated": "Status updated successfully",
+        "statusError": "Error updating status",
+        "deletingOrder": "Deleting order...",
+        "orderDeleted": "Order deleted successfully",
+        "deleteError": "Error deleting order",
+        "unexpectedError": "Unexpected error deleting order"
+      },
+      "setup": {
+        "notFound": "Restaurant configuration not found"
+      }
+    },
+    "waiter": {
+      "auth": {
+        "title": "Waiter Access",
+        "code": "Access Code",
+        "codeRequired": "Code required",
+        "invalidCode": "Invalid code",
+        "placeholder": "Enter the code",
+        "enter": "Enter",
+        "verifying": "Verifying..."
+      },
+      "order": {
+        "title": "Take Order",
+        "orderSent": "Order sent to kitchen!",
+        "submittedOrders": "Orders",
+        "noOrdersFound": "No orders found",
+        "addDishes": "Add dishes",
+        "markDelivered": "Mark Delivered",
+        "updating": "Updating...",
+        "addToOrder": "New Order",
+        "orderInfo": "New Order",
+        "table": "Table",
+        "waiterName": "Waiter Name",
+        "total": "Total",
+        "search": "Search dishes...",
+        "all": "All categories",
+        "submit": "Send Order",
+        "error": "Error sending order",
+        "cancel": "Cancel",
+        "selectDishes": "Select Dishes",
+        "addToCart": "Add dishes to cart to create an order",
+        "selectTable": "Select a table to continue",
+        "special": "Special",
+        "selected": "Selected",
+        "notes": "Notes...",
+        "generalNotes": "General notes:",
+        "tablesAndOrders": "Tables and Finalized Orders",
+        "tablesWithOrders": "table with finalized orders",
+        "tablesWithOrdersPlural": "tables with finalized orders",
+        "noTablesWithOrders": "No tables with finalized orders",
+        "noTablesWithOrdersDesc": "Tables with paid or cancelled orders will appear here to be released.",
+        "releaseTable": "Release Table",
+        "releaseTableMobile": "Release",
+        "releasingTable": "Releasing...",
+        "releasingTableMobile": "...",
+        "order": "Order",
+        "orders": "orders",
+        "orderPlural": "orders",
+        "totalFinalized": "Total Finalized",
+        "paid": "Paid",
+        "cancelled": "Cancelled",
+        "confirmPayment": "Confirm table payment",
+        "confirmPaymentDesc": "Are you sure you want to mark the entire table as paid? This action will mark all active and ready orders from this table as paid.",
+        "confirmPaymentButton": "Confirm Payment",
+        "marking": "Marking...",
+        "systemOrders": "Order System",
+        "timeElapsed": "ago",
+        "by": "By:",
+        "counter": "Counter",
+        "optional": "Optional",
+        "quantitiesAndNotes": "Quantities and Notes:",
+        "perUnit": "each",
+        "totalLabel": "Total:",
+        "generalNotesPlaceholder": "General notes...",
+        "verifying": "Verifying...",
+        "active": "Active",
+        "readyDelivered": "Ready/Delivered"
+      }
+    },
     "menu": {
       "title": "Our Menu",
       "todaySpecial": "Today's Special",
+      "featuredDish": "Featured Dish",
       "specialDescription": "Discover our special dish of the day, prepared with fresh ingredients and the best quality.",
       "todayOnly": "Today only",
+      "comingSoon": "Coming soon... We are preparing our menu.",
       "address": "Address",
+      "phone": "Phone",
       "hours": "Hours",
       "contact": "Contact",
       "searchPlaceholder": "Search dishes...",
       "allCategories": "All categories",
       "specialsOnly": "Specials only",
+      "filters": "Filters",
       "noResults": "No dishes found with the applied filters.",
       "clearFilters": "Clear filters",
+      "currency": "$",
       "closed": "Closed",
       "categories": {
         "noDishes": "No dishes available in this category"
       },
-      "footer": {
-        "poweredBy": "Digital menu created with"
+      "dish": {
+        "outOfStock": "Out of stock",
+        "available": "Available"
       },
-      "comingSoon": "Coming soon... We are preparing our menu."
+      "footer": {
+        "poweredBy": "Digital menu created with",
+        "businessInfo": "Business information"
+      }
+    },
+    "legal": {
+      "terms": {
+        "title": "Terms and Conditions",
+        "lastUpdate": "Last update:",
+        "date": "October 24, 2024",
+        "sections": {
+          "acceptance": "Acceptance of Terms",
+          "serviceDescription": "Service Description",
+          "registration": "Registration and User Accounts",
+          "billing": "Plans and Billing",
+          "acceptableUse": "Acceptable Use",
+          "intellectualProperty": "Intellectual Property",
+          "availability": "Service Availability",
+          "liability": "Limitation of Liability",
+          "termination": "Termination",
+          "privacy": "Privacy and Data Protection",
+          "governingLaw": "Governing Law",
+          "contact": "Contact",
+          "general": "General Provisions"
+        },
+        "content": {
+          "acceptance": "By accessing and using Ganga-Menú, you accept these terms and conditions in full. If you do not agree with any part of these terms, you should not use our services.",
+          "serviceDescription": "Ganga-Menú is a comprehensive management platform for restaurants that includes:",
+          "serviceFeatures": [
+            "Creation and management of interactive digital menus",
+            "Order management system for service staff",
+            "Real-time kitchen control panel",
+            "Analytics and reporting tools",
+            "Table and reservation management",
+            "Payment system integration"
+          ]
+        }
+      },
+      "privacy": {
+        "title": "Privacy Policy",
+        "lastUpdate": "Last update:",
+        "date": "October 24, 2024",
+        "sections": {
+          "information": "Information We Collect",
+          "usage": "How We Use Your Information",
+          "sharing": "Information Sharing",
+          "security": "Data Security",
+          "cookies": "Cookies and Tracking",
+          "rights": "Your Rights",
+          "changes": "Changes to This Policy",
+          "contact": "Contact Us"
+        }
+      }
     }
   }
 }

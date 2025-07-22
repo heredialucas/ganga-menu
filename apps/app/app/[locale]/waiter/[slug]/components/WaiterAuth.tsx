@@ -24,7 +24,7 @@ export default function WaiterAuth({
         if (!code?.trim()) {
             return {
                 success: false,
-                error: (dictionary as any).waiter?.auth?.codeRequired || 'Código requerido'
+                error: dictionary.web?.waiter?.auth?.codeRequired || 'Código requerido'
             };
         }
 
@@ -36,7 +36,7 @@ export default function WaiterAuth({
         } else {
             return {
                 success: false,
-                error: (dictionary as any).waiter?.auth?.invalidCode || 'Código incorrecto'
+                error: dictionary.web?.waiter?.auth?.invalidCode || 'Código incorrecto'
             };
         }
     }
@@ -52,7 +52,7 @@ export default function WaiterAuth({
                         <ChefHat className="w-8 h-8 text-white" />
                     </div>
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                        {(dictionary as any).waiter?.auth?.title || 'Acceso de Mozos'}
+                        {dictionary.web?.waiter?.auth?.title || 'Acceso de Mozos'}
                     </h1>
                     <p className="text-gray-600">
                         {restaurantName}
@@ -64,7 +64,7 @@ export default function WaiterAuth({
                     <form action={formAction} className="space-y-6">
                         <div>
                             <label htmlFor="code" className="block text-sm font-medium text-gray-700 mb-2">
-                                {(dictionary as any).waiter?.auth?.code || 'Código de Acceso'}
+                                {dictionary.web?.waiter?.auth?.code || 'Código de Acceso'}
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -75,7 +75,7 @@ export default function WaiterAuth({
                                     id="code"
                                     name="code"
                                     className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center text-lg font-mono"
-                                    placeholder={(dictionary as any).waiter?.auth?.placeholder || 'Ingresa el código'}
+                                    placeholder={dictionary.web?.waiter?.auth?.placeholder || 'Ingresa el código'}
                                     required
                                     autoComplete="off"
                                     disabled={pending}
@@ -102,7 +102,7 @@ export default function WaiterAuth({
                             ) : (
                                 <>
                                     <Lock className="w-4 h-4" />
-                                    {(dictionary as any).waiter?.auth?.enter || 'Ingresar'}
+                                    {dictionary.web?.waiter?.auth?.enter || 'Ingresar'}
                                 </>
                             )}
                         </button>
@@ -112,7 +112,7 @@ export default function WaiterAuth({
                 {/* Footer */}
                 <div className="text-center mt-8">
                     <p className="text-sm text-gray-500">
-                        Sistema de Órdenes · {restaurantName}
+                        {dictionary.web?.waiter?.order?.systemOrders || 'Sistema de Órdenes'} · {restaurantName}
                     </p>
                 </div>
             </div>

@@ -23,6 +23,7 @@ import { DataTableColumnHeader } from '@repo/design-system/components/ui/data-ta
 import { Switch } from '@repo/design-system/components/ui/switch';
 import { Label } from '@repo/design-system/components/ui/label';
 import { ToggleGroup, ToggleGroupItem } from '@repo/design-system/components/ui/toggle-group';
+import type { Dictionary } from '@repo/internationalization';
 
 type RecurrenceTypeString = 'WEEKLY' | 'MONTHLY';
 
@@ -35,6 +36,7 @@ interface DailySpecialManagerProps {
     dishes: Dish[];
     upsertDailySpecial: (data: any) => Promise<any>;
     deleteDailySpecials: (ids: string[]) => Promise<any>;
+    dictionary: Dictionary;
 }
 
 // Helper para formatear fechas sin dependencias externas
@@ -45,7 +47,8 @@ const formatDate = (date: Date) => {
 }
 
 const getColumns = (
-    onDelete: (dishId: string, date: Date) => Promise<void>
+    onDelete: (dishId: string, date: Date) => Promise<void>,
+    dictionary: Dictionary
 ): ColumnDef<DailySpecialWithDish>[] => [
         {
             id: "select",
@@ -71,11 +74,11 @@ const getColumns = (
         },
         {
             accessorKey: "dish.name",
-            header: ({ column }: HeaderContext<DailySpecialWithDish, unknown>) => <DataTableColumnHeader column={column} title="Plato" />,
+            header: ({ column }: HeaderContext<DailySpecialWithDish, unknown>) => <DataTableColumnHeader column={column} title={dictionary.app?.menu?.dailySpecials?.dish || "Plato"} />,
         },
         {
             accessorKey: "date",
-            header: ({ column }: HeaderContext<DailySpecialWithDish, unknown>) => <DataTableColumnHeader column={column} title="Fecha" />,
+            header: ({ column }: HeaderContext<DailySpecialWithDish, unknown>) => <DataTableColumnHeader column={column} title={dictionary.app?.menu?.dailySpecials?.date || "Fecha"} />,
             cell: ({ row }: CellContext<DailySpecialWithDish, unknown>) => <span>{formatDate(row.original.date)}</span>,
         },
         {
@@ -86,9 +89,9 @@ const getColumns = (
                 const handleDelete = () => {
                     startTransition(async () => {
                         toast.promise(onDelete(row.original.dishId, row.original.date), {
-                            loading: 'Eliminando promoción...',
-                            success: 'Promoción eliminada con éxito.',
-                            error: 'No se pudo eliminar la promoción.',
+                            loading: dictionary.app?.menu?.dailySpecials?.deletingPromotion || 'Eliminando promoción...',
+                            success: dictionary.app?.menu?.dailySpecials?.promotionDeleted || 'Promoción eliminada con éxito.',
+                            error: dictionary.app?.menu?.dailySpecials?.toast?.deleteError || 'No se pudo eliminar la promoción.',
                         });
                     });
                 };
@@ -104,7 +107,7 @@ const getColumns = (
         },
     ];
 
-function TableToolbar({ table, onDeleteSelected, isDeleting }: { table: TanstackTable<DailySpecialWithDish>, onDeleteSelected: () => void, isDeleting: boolean }) {
+function TableToolbar({ table, onDeleteSelected, isDeleting, dictionary }: { table: TanstackTable<DailySpecialWithDish>, onDeleteSelected: () => void, isDeleting: boolean, dictionary: Dictionary }) {
     const selectedRowCount = table.getFilteredSelectedRowModel().rows.length;
 
     return (
@@ -115,14 +118,14 @@ function TableToolbar({ table, onDeleteSelected, isDeleting }: { table: Tanstack
             {selectedRowCount > 0 && (
                 <Button variant="destructive" onClick={onDeleteSelected} disabled={isDeleting}>
                     <Trash2 className="mr-2 h-4 w-4" />
-                    {isDeleting ? `Eliminando ${selectedRowCount}...` : `Eliminar (${selectedRowCount})`}
+                    {isDeleting ? `${dictionary.app?.menu?.dailySpecials?.deletingPromotions || 'Eliminando'} ${selectedRowCount}...` : `${dictionary.app?.menu?.dailySpecials?.deletePromotions || 'Eliminar'} (${selectedRowCount})`}
                 </Button>
             )}
         </div>
     );
 }
 
-export function DailySpecialManager({ dailySpecials, dishes, upsertDailySpecial, deleteDailySpecials }: DailySpecialManagerProps) {
+export function DailySpecialManager({ dailySpecials, dishes, upsertDailySpecial, deleteDailySpecials, dictionary }: DailySpecialManagerProps) {
     const [date, setDate] = useState<Date | undefined>(new Date());
     const [selectedDishId, setSelectedDishId] = useState<string>('');
     const [isPending, startTransition] = useTransition();
@@ -137,27 +140,27 @@ export function DailySpecialManager({ dailySpecials, dishes, upsertDailySpecial,
         const selectedIds = table.getFilteredSelectedRowModel().rows.map(row => row.original.id);
         startTransition(async () => {
             toast.promise(deleteDailySpecials(selectedIds), {
-                loading: `Eliminando ${selectedIds.length} promociones...`,
+                loading: `${dictionary.app?.menu?.dailySpecials?.deletingPromotions || 'Eliminando'} ${selectedIds.length} ${dictionary.app?.menu?.dailySpecials?.toast?.deleting || 'promociones...'}`,
                 success: () => {
                     table.resetRowSelection();
-                    return `${selectedIds.length} promociones eliminadas con éxito.`;
+                    return `${selectedIds.length} ${dictionary.app?.menu?.dailySpecials?.promotionsDeleted || 'promociones eliminadas con éxito.'}`;
                 },
-                error: 'No se pudieron eliminar las promociones.',
+                error: dictionary.app?.menu?.dailySpecials?.toast?.deleteError || 'No se pudieron eliminar las promociones.',
             });
         });
     };
 
     const columns = useMemo(() => getColumns(async (dishId, date) => {
         await upsertDailySpecial({ dishId, date });
-    }), [upsertDailySpecial]);
+    }, dictionary), [upsertDailySpecial, dictionary]);
 
     const handleAddSpecial = () => {
         if (!selectedDishId || !date) {
-            toast.error("Por favor, selecciona un plato y una fecha de inicio.");
+            toast.error(dictionary.app?.menu?.dailySpecials?.validation?.selectDishAndDate || "Por favor, selecciona un plato y una fecha de inicio.");
             return;
         }
         if (isRecurring && (!recurrenceEndDate || (recurrenceType === 'WEEKLY' && recurrenceDays.length === 0))) {
-            toast.error("Para promociones recurrentes, completa todos los campos de repetición.");
+            toast.error(dictionary.app?.menu?.dailySpecials?.validation?.completeRecurrenceFields || "Para promociones recurrentes, completa todos los campos de repetición.");
             return;
         }
 
@@ -174,7 +177,7 @@ export function DailySpecialManager({ dailySpecials, dishes, upsertDailySpecial,
             const promise = upsertDailySpecial(specialData);
 
             toast.promise(promise, {
-                loading: 'Añadiendo promoción(es)...',
+                loading: dictionary.app?.menu?.dailySpecials?.toast?.adding || 'Añadiendo promoción(es)...',
                 success: (result) => {
                     // Resetear el formulario
                     setSelectedDishId('');
@@ -185,7 +188,7 @@ export function DailySpecialManager({ dailySpecials, dishes, upsertDailySpecial,
                     setRecurrenceEndDate(undefined);
                     return result.message;
                 },
-                error: (err: any) => err.message || 'No se pudo añadir la promoción.',
+                error: (err: any) => err.message || (dictionary.app?.menu?.dailySpecials?.toast?.error || 'No se pudo añadir la promoción.'),
             });
         });
     };
@@ -193,35 +196,35 @@ export function DailySpecialManager({ dailySpecials, dishes, upsertDailySpecial,
     const selectedDishForPreview = useMemo(() => dishes.find(d => d.id === selectedDishId) || null, [selectedDishId, dishes]);
 
     const weekDays = [
-        { value: '1', label: 'L' },
-        { value: '2', label: 'M' },
-        { value: '3', label: 'X' },
-        { value: '4', label: 'J' },
-        { value: '5', label: 'V' },
-        { value: '6', label: 'S' },
-        { value: '0', label: 'D' },
+        { value: '1', label: dictionary.app?.restaurant?.openingHours?.days?.monday?.charAt(0) || 'L' },
+        { value: '2', label: dictionary.app?.restaurant?.openingHours?.days?.tuesday?.charAt(0) || 'M' },
+        { value: '3', label: dictionary.app?.restaurant?.openingHours?.days?.wednesday?.charAt(0) || 'X' },
+        { value: '4', label: dictionary.app?.restaurant?.openingHours?.days?.thursday?.charAt(0) || 'J' },
+        { value: '5', label: dictionary.app?.restaurant?.openingHours?.days?.friday?.charAt(0) || 'V' },
+        { value: '6', label: dictionary.app?.restaurant?.openingHours?.days?.saturday?.charAt(0) || 'S' },
+        { value: '0', label: dictionary.app?.restaurant?.openingHours?.days?.sunday?.charAt(0) || 'D' },
     ];
 
     return (
         <div className="grid grid-cols-1 xl:grid-cols-5 gap-3 sm:gap-4 lg:gap-6 p-1 sm:p-2">
             <div className="xl:col-span-2 space-y-4">
-                <h4 className="font-semibold text-base sm:text-lg">Programar Promoción</h4>
+                <h4 className="font-semibold text-base sm:text-lg">{dictionary.app?.menu?.dailySpecials?.schedulePromotion || 'Programar Promoción'}</h4>
                 <div className="space-y-2">
-                    <label className="text-sm font-medium">Plato</label>
+                    <label className="text-sm font-medium">{dictionary.app?.menu?.dailySpecials?.dish || 'Plato'}</label>
                     <Select value={selectedDishId} onValueChange={setSelectedDishId}>
-                        <SelectTrigger><SelectValue placeholder="Selecciona un plato" /></SelectTrigger>
+                        <SelectTrigger><SelectValue placeholder={dictionary.app?.menu?.dailySpecials?.dishPlaceholder || 'Selecciona un plato'} /></SelectTrigger>
                         <SelectContent>
                             {dishes.map(dish => <SelectItem key={dish.id} value={dish.id}>{dish.name}</SelectItem>)}
                         </SelectContent>
                     </Select>
                 </div>
                 <div className="space-y-2">
-                    <Label className="text-sm font-medium">{isRecurring ? 'Fecha de Inicio' : 'Fecha'}</Label>
+                    <Label className="text-sm font-medium">{isRecurring ? (dictionary.app?.menu?.dailySpecials?.startDate || 'Fecha de Inicio') : (dictionary.app?.menu?.dailySpecials?.date || 'Fecha')}</Label>
                     <Popover>
                         <PopoverTrigger asChild>
                             <Button variant="outline" className={cn("w-full justify-start text-left font-normal", !date && "text-muted-foreground")}>
                                 <CalendarIcon className="mr-2 h-4 w-4" />
-                                {date ? formatDate(date) : <span>Selecciona una fecha</span>}
+                                {date ? formatDate(date) : <span>{dictionary.app?.menu?.dailySpecials?.datePlaceholder || 'Selecciona una fecha'}</span>}
                             </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0"><Calendar mode="single" selected={date} onSelect={setDate} initialFocus /></PopoverContent>
@@ -230,25 +233,25 @@ export function DailySpecialManager({ dailySpecials, dishes, upsertDailySpecial,
 
                 <div className="flex items-center space-x-2">
                     <Switch id="recurring-switch" checked={isRecurring} onCheckedChange={setIsRecurring} />
-                    <Label htmlFor="recurring-switch" className="text-sm">Repetir Promoción</Label>
+                    <Label htmlFor="recurring-switch" className="text-sm">{dictionary.app?.menu?.dailySpecials?.repeatPromotion || 'Repetir Promoción'}</Label>
                 </div>
 
                 {isRecurring && (
                     <Card className="p-3 sm:p-4 space-y-3 sm:space-y-4">
                         <div className="space-y-2">
-                            <Label className="text-sm">Tipo de Repetición</Label>
+                            <Label className="text-sm">{dictionary.app?.menu?.dailySpecials?.recurrenceType || 'Tipo de Repetición'}</Label>
                             <Select value={recurrenceType} onValueChange={(v) => setRecurrenceType(v as RecurrenceTypeString)}>
                                 <SelectTrigger><SelectValue /></SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="WEEKLY">Semanal</SelectItem>
-                                    <SelectItem value="MONTHLY">Mensual</SelectItem>
+                                    <SelectItem value="WEEKLY">{dictionary.app?.menu?.dailySpecials?.weekly || 'Semanal'}</SelectItem>
+                                    <SelectItem value="MONTHLY">{dictionary.app?.menu?.dailySpecials?.monthly || 'Mensual'}</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
 
                         {recurrenceType === 'WEEKLY' && (
                             <div className="space-y-2">
-                                <Label className="text-sm">Días de la Semana</Label>
+                                <Label className="text-sm">{dictionary.app?.menu?.dailySpecials?.weekDays || 'Días de la Semana'}</Label>
                                 <ToggleGroup type="multiple" value={recurrenceDays} onValueChange={setRecurrenceDays} className="flex-wrap justify-start">
                                     {weekDays.map(day => (
                                         <ToggleGroupItem key={day.value} value={day.value} aria-label={day.label} className="text-xs sm:text-sm">{day.label}</ToggleGroupItem>
@@ -258,12 +261,12 @@ export function DailySpecialManager({ dailySpecials, dishes, upsertDailySpecial,
                         )}
 
                         <div className="space-y-2">
-                            <Label className="text-sm">Fecha de Fin de Repetición</Label>
+                            <Label className="text-sm">{dictionary.app?.menu?.dailySpecials?.endDate || 'Fecha de Fin de Repetición'}</Label>
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <Button variant="outline" className={cn("w-full justify-start text-left font-normal", !recurrenceEndDate && "text-muted-foreground")}>
                                         <CalendarIcon className="mr-2 h-4 w-4" />
-                                        {recurrenceEndDate ? formatDate(recurrenceEndDate) : <span>Selecciona una fecha</span>}
+                                        {recurrenceEndDate ? formatDate(recurrenceEndDate) : <span>{dictionary.app?.menu?.dailySpecials?.datePlaceholder || 'Selecciona una fecha'}</span>}
                                     </Button>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-auto p-0">
@@ -276,12 +279,12 @@ export function DailySpecialManager({ dailySpecials, dishes, upsertDailySpecial,
 
                 <Button onClick={handleAddSpecial} disabled={isPending} className="w-full">
                     <Star className="h-4 w-4 mr-2" />
-                    <span className="hidden sm:inline">{isPending ? 'Añadiendo...' : 'Añadir Promoción'}</span>
-                    <span className="sm:hidden">{isPending ? 'Añadiendo...' : 'Añadir'}</span>
+                    <span className="hidden sm:inline">{isPending ? (dictionary.app?.menu?.dailySpecials?.adding || 'Añadiendo...') : (dictionary.app?.menu?.dailySpecials?.addPromotion?.desktop || 'Añadir Promoción')}</span>
+                    <span className="sm:hidden">{isPending ? (dictionary.app?.menu?.dailySpecials?.adding || 'Añadiendo...') : (dictionary.app?.menu?.dailySpecials?.addPromotion?.mobile || 'Añadir')}</span>
                 </Button>
                 {selectedDishForPreview && (
                     <div>
-                        <h4 className="font-semibold mb-2 text-sm sm:text-base">Previsualización de la Promoción</h4>
+                        <h4 className="font-semibold mb-2 text-sm sm:text-base">{dictionary.app?.menu?.dailySpecials?.promotionPreview || 'Previsualización de la Promoción'}</h4>
                         <Card className="overflow-hidden">
                             <div className="relative h-24 sm:h-32 w-full">
                                 {selectedDishForPreview.imageUrl ? (
@@ -303,7 +306,7 @@ export function DailySpecialManager({ dailySpecials, dishes, upsertDailySpecial,
                                     </p>
                                 </div>
                                 <p className="text-xs text-muted-foreground mt-1">
-                                    El precio promocional se debe establecer en el plato.
+                                    {dictionary.app?.menu?.dailySpecials?.promotionalPriceNote || 'El precio promocional se debe establecer en el plato.'}
                                 </p>
                             </CardContent>
                         </Card>
@@ -312,7 +315,7 @@ export function DailySpecialManager({ dailySpecials, dishes, upsertDailySpecial,
             </div>
 
             <div className="xl:col-span-3 space-y-4">
-                <h4 className="font-semibold text-base sm:text-lg">Promociones Activas</h4>
+                <h4 className="font-semibold text-base sm:text-lg">{dictionary.app?.menu?.dailySpecials?.activePromotions || 'Promociones Activas'}</h4>
                 <div className="overflow-x-auto">
                     <DataTable
                         className="space-y-4"
@@ -324,6 +327,7 @@ export function DailySpecialManager({ dailySpecials, dishes, upsertDailySpecial,
                                 table={table}
                                 onDeleteSelected={() => handleDeleteSelected(table)}
                                 isDeleting={isPending}
+                                dictionary={dictionary}
                             />
                         )}
                     />

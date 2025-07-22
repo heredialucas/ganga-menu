@@ -18,13 +18,15 @@ export default function KitchenAuth({
     dictionary,
     onAuthenticated
 }: KitchenAuthProps) {
+
+
     async function handleKitchenAuth(prevState: any, formData: FormData) {
         const code = formData.get('code') as string;
 
         if (!code?.trim()) {
             return {
                 success: false,
-                error: (dictionary as any).kitchen?.auth?.codeRequired || 'Código requerido'
+                error: dictionary.web?.services?.kitchen?.auth?.codeRequired || 'Código requerido'
             };
         }
 
@@ -36,7 +38,7 @@ export default function KitchenAuth({
         } else {
             return {
                 success: false,
-                error: (dictionary as any).kitchen?.auth?.invalidCode || 'Código incorrecto'
+                error: dictionary.web?.services?.kitchen?.auth?.invalidCode || 'Código incorrecto'
             };
         }
     }
@@ -52,7 +54,7 @@ export default function KitchenAuth({
                         <ChefHat className="w-8 h-8 text-white" />
                     </div>
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                        {(dictionary as any).kitchen?.auth?.title || 'Acceso de Cocina'}
+                        {dictionary.web?.services?.kitchen?.auth?.title || 'Acceso de Cocina'}
                     </h1>
                     <p className="text-gray-600">
                         {restaurantName}
@@ -64,7 +66,7 @@ export default function KitchenAuth({
                     <form action={formAction} className="space-y-6">
                         <div>
                             <label htmlFor="code" className="block text-sm font-medium text-gray-700 mb-2">
-                                {(dictionary as any).kitchen?.auth?.code || 'Código de Acceso'}
+                                {dictionary.web?.services?.kitchen?.auth?.code || 'Código de Acceso'}
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -75,7 +77,7 @@ export default function KitchenAuth({
                                     id="code"
                                     name="code"
                                     className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-center text-lg font-mono"
-                                    placeholder={(dictionary as any).kitchen?.auth?.placeholder || 'Ingresa el código'}
+                                    placeholder={dictionary.web?.services?.kitchen?.auth?.placeholder || 'Ingresa el código'}
                                     required
                                     autoComplete="off"
                                     disabled={pending}
@@ -97,12 +99,12 @@ export default function KitchenAuth({
                             {pending ? (
                                 <>
                                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                    Verificando...
+                                    {dictionary.web?.services?.kitchen?.auth?.verifying || 'Verificando...'}
                                 </>
                             ) : (
                                 <>
                                     <Lock className="w-4 h-4" />
-                                    {(dictionary as any).kitchen?.auth?.enter || 'Ingresar'}
+                                    {dictionary.web?.services?.kitchen?.auth?.enter || 'Ingresar'}
                                 </>
                             )}
                         </button>
@@ -112,7 +114,7 @@ export default function KitchenAuth({
                 {/* Footer */}
                 <div className="text-center mt-8">
                     <p className="text-sm text-gray-500">
-                        Panel de Cocina · {restaurantName}
+                        {dictionary.web?.services?.kitchen?.title || 'Panel de Cocina'} · {restaurantName}
                     </p>
                 </div>
             </div>

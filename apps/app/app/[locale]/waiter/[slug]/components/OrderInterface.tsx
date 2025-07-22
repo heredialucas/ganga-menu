@@ -142,7 +142,7 @@ export default function OrderInterface({
     const [showPaymentDialog, setShowPaymentDialog] = useState(false);
     const [pendingTableId, setPendingTableId] = useState<string | null>(null);
 
-    const waiterDict = (dictionary as any).waiter?.order || {};
+    const waiterDict = dictionary.web?.waiter?.order || {};
 
     // Estado para sincronizar con el componente padre
     const [pendingOrdersUpdate, setPendingOrdersUpdate] = useState<SubmittedOrder[] | null>(null);
@@ -212,22 +212,22 @@ export default function OrderInterface({
             case 'ACTIVE':
                 return {
                     bg: 'bg-yellow-50', blob: 'bg-yellow-200', accent: 'bg-yellow-500',
-                    text: 'Activa', borderColor: 'border-yellow-200'
+                    text: waiterDict.active || 'Activa', borderColor: 'border-yellow-200'
                 };
             case 'READY':
                 return {
                     bg: 'bg-green-50', blob: 'bg-green-200', accent: 'bg-green-500',
-                    text: 'Lista/Entregada', borderColor: 'border-green-200'
+                    text: waiterDict.readyDelivered || 'Lista/Entregada', borderColor: 'border-green-200'
                 };
             case 'CANCELLED':
                 return {
                     bg: 'bg-red-50', blob: 'bg-red-200', accent: 'bg-red-700',
-                    text: 'Cancelada', borderColor: 'border-red-300'
+                    text: waiterDict.cancelled || 'Cancelada', borderColor: 'border-red-300'
                 };
             case 'PAID':
                 return {
                     bg: 'bg-blue-50', blob: 'bg-blue-200', accent: 'bg-blue-500',
-                    text: 'Pagada', borderColor: 'border-blue-200'
+                    text: waiterDict.paid || 'Pagada', borderColor: 'border-blue-200'
                 };
             default:
                 return {
@@ -375,7 +375,7 @@ export default function OrderInterface({
             setTableId(order.table.id);
             setWaiterName(order.waiterName || '');
             setAddingToOrderId(orderId);
-            setOrderNotes(`Nueva orden para ${order.table.label}`);
+            setOrderNotes(`${waiterDict.addToOrder || 'Nueva orden'} para ${order.table.label}`);
             // Abrir el acordeón de "Tomar Orden" para que el mozo pueda agregar nuevos platos
             setIsTakingOrderExpanded(true);
         }
@@ -421,13 +421,13 @@ export default function OrderInterface({
                     });
                 }
 
-                toast.success('Orden marcada como entregada correctamente');
+                toast.success(waiterDict.markDelivered || 'Orden marcada como entregada correctamente');
             } else {
-                toast.error(result.error || 'Error al actualizar estado');
+                toast.error(result.error || (waiterDict.updating || 'Error al actualizar estado'));
             }
         } catch (error) {
             console.error('Error updating order:', error);
-            toast.error('Error al actualizar estado');
+            toast.error(waiterDict.updating || 'Error al actualizar estado');
         } finally {
             setIsUpdatingStatus(null);
         }
@@ -455,13 +455,13 @@ export default function OrderInterface({
                     }
                 });
 
-                toast.success(result.message || 'Mesa marcada como pagada correctamente');
+                toast.success(result.message || (waiterDict.releaseTable || 'Mesa marcada como pagada correctamente'));
             } else {
-                toast.error(result.error || 'Error al marcar mesa como pagada');
+                toast.error(result.error || (waiterDict.releaseTable || 'Error al marcar mesa como pagada'));
             }
         } catch (error) {
             console.error('Error marking table as paid:', error);
-            toast.error('Error al marcar mesa como pagada');
+            toast.error(waiterDict.releaseTable || 'Error al marcar mesa como pagada');
         } finally {
             setIsMarkingAsPaid(null);
             setShowPaymentDialog(false);
@@ -525,12 +525,12 @@ export default function OrderInterface({
                             {isConnected ? (
                                 <Badge variant="default" className="bg-green-500 text-xs sm:text-sm">
                                     <Wifi className="w-3 h-3 mr-1" />
-                                    <span className="hidden sm:inline">Conectado</span>
+                                    <span className="hidden sm:inline">{dictionary.web?.orders?.connection?.connected || 'Conectado'}</span>
                                 </Badge>
                             ) : (
                                 <Badge variant="destructive" className="text-xs sm:text-sm">
                                     <WifiOff className="w-3 h-3 mr-1" />
-                                    <span className="hidden sm:inline">Desconectado</span>
+                                    <span className="hidden sm:inline">{dictionary.web?.orders?.connection?.disconnected || 'Desconectado'}</span>
                                 </Badge>
                             )}
                         </div>
@@ -563,10 +563,10 @@ export default function OrderInterface({
                             <div className="border-t">
                                 <div className="p-3 sm:p-4 border-b bg-gray-50">
                                     <div className="flex gap-1 sm:gap-2 flex-wrap">
-                                        <FilterButton filter="all" label="Todas" count={submittedOrders.filter(o => o.status !== 'PAID' && o.status !== 'CANCELLED').length} />
-                                        <FilterButton filter="active" label="Activas" count={submittedOrders.filter(o => o.status === 'ACTIVE').length} />
-                                        <FilterButton filter="ready" label="Listas" count={submittedOrders.filter(o => o.status === 'READY').length} />
-                                        <FilterButton filter="delivered" label="Entregadas" count={submittedOrders.filter(o => o.status === 'READY').length} />
+                                        <FilterButton filter="all" label={dictionary.web?.orders?.filters?.all || "Todas"} count={submittedOrders.filter(o => o.status !== 'PAID' && o.status !== 'CANCELLED').length} />
+                                        <FilterButton filter="active" label={dictionary.web?.orders?.filters?.active || "Activas"} count={submittedOrders.filter(o => o.status === 'ACTIVE').length} />
+                                        <FilterButton filter="ready" label={dictionary.web?.orders?.filters?.ready || "Listas"} count={submittedOrders.filter(o => o.status === 'READY').length} />
+                                        <FilterButton filter="delivered" label={dictionary.web?.orders?.filters?.ready || "Entregadas"} count={submittedOrders.filter(o => o.status === 'READY').length} />
 
                                     </div>
                                 </div>
@@ -586,10 +586,10 @@ export default function OrderInterface({
                                                             <span className="text-xs sm:text-sm font-mono bg-white px-2 py-1 rounded-full border">#{order.id.substring(0, 5)}</span>
                                                         </div>
                                                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-0 mt-2">
-                                                            <h3 className="font-bold text-lg sm:text-xl text-gray-800">Mesa {order.table?.label || 'Mostrador'}</h3>
-                                                            <span className="text-xs sm:text-sm text-gray-500">hace {getTimeElapsedString(order.createdAt)}</span>
+                                                            <h3 className="font-bold text-lg sm:text-xl text-gray-800">{waiterDict.table || 'Mesa'} {order.table?.label || (waiterDict.counter || 'Mostrador')}</h3>
+                                                            <span className="text-xs sm:text-sm text-gray-500">{waiterDict.timeElapsed || 'hace'} {getTimeElapsedString(order.createdAt)}</span>
                                                         </div>
-                                                        {order.waiterName && <p className="text-xs text-gray-600 mt-1">Por: {order.waiterName}</p>}
+                                                        {order.waiterName && <p className="text-xs text-gray-600 mt-1">{waiterDict.by || 'Por:'} {order.waiterName}</p>}
                                                     </CardHeader>
                                                     <CardContent className="relative z-10">
                                                         <div className="space-y-2">
@@ -597,7 +597,7 @@ export default function OrderInterface({
                                                                 <div key={item.id || `item-${index}`} className="flex justify-between items-start text-xs sm:text-sm">
                                                                     <div className="flex-1 min-w-0">
                                                                         <span className="font-medium text-gray-800">
-                                                                            {item.quantity}x {item.dish?.name || 'Plato no disponible'}
+                                                                            {item.quantity}x {item.dish?.name || (dictionary.web?.orders?.table?.dishNotAvailable || 'Plato no disponible')}
                                                                         </span>
                                                                         {item.notes && <p className="text-xs text-gray-600 mt-1 italic">"{item.notes}"</p>}
                                                                     </div>
@@ -607,7 +607,7 @@ export default function OrderInterface({
                                                         </div>
                                                     </CardContent>
                                                     <CardFooter className="relative z-10 flex-col items-start gap-3 pt-4 border-t">
-                                                        <div className="w-full flex justify-between items-center"><p className="text-base sm:text-lg font-bold text-green-700">Total: ${(order.total || 0).toFixed(2)}</p></div>
+                                                        <div className="w-full flex justify-between items-center"><p className="text-base sm:text-lg font-bold text-green-700">{waiterDict.total || 'Total'}: ${(order.total || 0).toFixed(2)}</p></div>
                                                         <div className="w-full flex flex-col sm:flex-row gap-2 pt-2 border-t">
                                                             {(order.status === 'ACTIVE' || order.status === 'READY') && (
                                                                 <button onClick={() => addToExistingOrder(order.id)} className="flex-1 text-xs bg-blue-100 text-blue-700 px-2 sm:px-3 py-2 rounded hover:bg-blue-200 font-medium">+ {waiterDict.addDishes || 'Agregar platos'}</button>
@@ -621,7 +621,7 @@ export default function OrderInterface({
                                                                     disabled={isMarkingAsPaid === order.table!.id}
                                                                     className="flex-1 text-xs bg-purple-100 text-purple-700 px-2 sm:px-3 py-2 rounded hover:bg-purple-200 font-medium disabled:opacity-50"
                                                                 >
-                                                                    {isMarkingAsPaid === order.table!.id ? 'Marcando...' : <span className="hidden sm:inline">Marcar toda la mesa como pagada</span>}
+                                                                    {isMarkingAsPaid === order.table!.id ? (waiterDict.marking || 'Marcando...') : <span className="hidden sm:inline">{waiterDict.releaseTable || 'Marcar toda la mesa como pagada'}</span>}
                                                                 </button>
                                                             )}
                                                         </div>
@@ -644,7 +644,7 @@ export default function OrderInterface({
                     >
                         <div className="flex items-center gap-2 sm:gap-3">
                             <ChefHat className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
-                            <h3 className="text-base sm:text-lg font-semibold text-gray-900">Tomar Orden</h3>
+                            <h3 className="text-base sm:text-lg font-semibold text-gray-900">{waiterDict.title || 'Tomar Orden'}</h3>
                         </div>
                         {isTakingOrderExpanded ? <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" /> : <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />}
                     </button>
@@ -670,18 +670,18 @@ export default function OrderInterface({
                                                     }}
                                                     className="text-xs sm:text-sm text-gray-500 hover:text-gray-700 self-start sm:self-center"
                                                 >
-                                                    Cancelar
+                                                    {waiterDict.cancel || 'Cancelar'}
                                                 </button>
                                             )}
                                         </div>
                                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-4">
                                             <div>
                                                 <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">{waiterDict.table || 'Mesa'} *</label>
-                                                <div className="relative"><MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" /><select value={tableId} onChange={(e) => setTableId(e.target.value)} className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm" required disabled={!!addingToOrderId}>{tables.map(table => <option key={table.id} value={table.id}>{table.label}</option>)}</select></div>
+                                                <div className="relative"><MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" /><select value={tableId} onChange={(e) => setTableId(e.target.value)} className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm" required disabled={!!addingToOrderId}>{tables.map(table => <option key={table.id} value={table.id}>{waiterDict.table || 'Mesa'} {table.label}</option>)}</select></div>
                                             </div>
                                             <div>
                                                 <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">{waiterDict.waiterName || 'Nombre Mozo'}</label>
-                                                <div className="relative"><User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" /><input type="text" value={waiterName} onChange={(e) => setWaiterName(e.target.value)} className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm" placeholder="Opcional" /></div>
+                                                <div className="relative"><User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" /><input type="text" value={waiterName} onChange={(e) => setWaiterName(e.target.value)} className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm" placeholder={waiterDict.optional || "Opcional"} /></div>
                                             </div>
                                             <div className="sm:col-span-2 lg:col-span-1">
                                                 <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">{waiterDict.total || 'Total'}</label>
@@ -692,7 +692,7 @@ export default function OrderInterface({
                                         {/* Cantidades de platos seleccionados */}
                                         {orderItems.length > 0 && (
                                             <div className="mb-4">
-                                                <h4 className="text-xs sm:text-sm font-medium text-gray-700 mb-3">Cantidades y Notas:</h4>
+                                                <h4 className="text-xs sm:text-sm font-medium text-gray-700 mb-3">{waiterDict.quantitiesAndNotes || 'Cantidades y Notas:'}</h4>
                                                 <div className="space-y-2 max-h-40 overflow-y-auto">
                                                     {orderItems.map((item) => {
                                                         const price = getCorrectPrice(item.dish);
@@ -707,13 +707,13 @@ export default function OrderInterface({
                                                                         <h5 className="font-medium text-gray-900 text-xs sm:text-sm truncate">{item.dish.name}</h5>
                                                                         {isSpecial && (
                                                                             <span className="bg-yellow-100 text-yellow-800 text-xs px-1 py-0.5 rounded-full shrink-0">
-                                                                                Especial
+                                                                                {waiterDict.special || 'Especial'}
                                                                             </span>
                                                                         )}
                                                                     </div>
                                                                     <div className="flex items-center gap-2 mt-1">
-                                                                        <span className="text-xs text-gray-600">${finalPrice.toFixed(2)} c/u</span>
-                                                                        <span className="text-xs font-bold text-green-600">Total: ${(finalPrice * item.quantity).toFixed(2)}</span>
+                                                                        <span className="text-xs text-gray-600">${finalPrice.toFixed(2)} {waiterDict.perUnit || 'c/u'}</span>
+                                                                        <span className="text-xs font-bold text-green-600">{waiterDict.totalLabel || 'Total:'} ${(finalPrice * item.quantity).toFixed(2)}</span>
                                                                     </div>
                                                                 </div>
 
@@ -737,7 +737,7 @@ export default function OrderInterface({
 
                                                                     <input
                                                                         type="text"
-                                                                        placeholder="Notas..."
+                                                                        placeholder={waiterDict.notes || "Notas..."}
                                                                         value={item.notes || ''}
                                                                         onChange={(e) => updateItemNotes(item.dish.id, e.target.value)}
                                                                         className="px-2 py-1 border border-gray-300 rounded text-xs w-16 sm:w-20"
@@ -760,7 +760,7 @@ export default function OrderInterface({
                                         {orderNotes.trim() && (
                                             <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                                                 <div className="flex items-center gap-2 mb-1">
-                                                    <span className="text-sm font-medium text-blue-800">Notas generales:</span>
+                                                    <span className="text-sm font-medium text-blue-800">{waiterDict.generalNotes || 'Notas generales:'}</span>
                                                 </div>
                                                 <p className="text-sm text-blue-700 italic">"{orderNotes}"</p>
                                             </div>
@@ -772,16 +772,16 @@ export default function OrderInterface({
                                                 disabled={isSubmitting || !tableId.trim()}
                                                 className="w-full bg-green-600 text-white py-2 sm:py-3 px-4 rounded-lg font-medium hover:bg-green-700 focus:ring-2 focus:ring-green-500 disabled:opacity-50 text-sm sm:text-base"
                                             >
-                                                {isSubmitting ? 'Enviando...' : addingToOrderId ? (waiterDict.addToOrder || 'Agregar a Orden') : (waiterDict.submit || 'Enviar Orden')}
+                                                {isSubmitting ? (waiterDict.marking || 'Marcando...') : addingToOrderId ? (waiterDict.addToOrder || 'Agregar a Orden') : (waiterDict.submit || 'Enviar Orden')}
                                             </button>
                                         ) : (
                                             <div className="text-center py-4 text-gray-500">
-                                                <p className="text-xs sm:text-sm">Agrega platos al carrito para crear una orden</p>
+                                                <p className="text-xs sm:text-sm">{waiterDict.addToCart || 'Agrega platos al carrito para crear una orden'}</p>
                                             </div>
                                         )}
                                         {orderItems.length > 0 && !tableId.trim() && (
                                             <div className="text-center py-2 text-red-500">
-                                                <p className="text-sm">Selecciona una mesa para continuar</p>
+                                                <p className="text-sm">{waiterDict.selectTable || 'Selecciona una mesa para continuar'}</p>
                                             </div>
                                         )}
                                     </CardContent>
@@ -804,7 +804,7 @@ export default function OrderInterface({
                                         <div className="flex flex-col sm:flex-row gap-2">
                                             <input
                                                 type="text"
-                                                placeholder="Notas generales..."
+                                                placeholder={waiterDict.generalNotesPlaceholder || "Notas generales..."}
                                                 value={orderNotes}
                                                 onChange={(e) => setOrderNotes(e.target.value)}
                                                 className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 flex-1 min-w-0 text-sm"
@@ -827,7 +827,7 @@ export default function OrderInterface({
                                 <Card className="relative overflow-hidden border-2 border-gray-200 bg-white/50 shadow-sm mb-8">
                                     <div className={`absolute bottom-0 -right-4 w-20 h-20 bg-blue-200 opacity-10 r-blob`}></div>
                                     <CardHeader className="p-3 sm:p-4 border-b">
-                                        <h3 className="text-base sm:text-lg font-semibold text-gray-900">Seleccionar Platos</h3>
+                                        <h3 className="text-base sm:text-lg font-semibold text-gray-900">{waiterDict.selectDishes || 'Seleccionar Platos'}</h3>
                                     </CardHeader>
                                     <CardContent className="p-3 sm:p-4">
                                         <div className="space-y-2">
@@ -852,12 +852,12 @@ export default function OrderInterface({
                                                                 <h4 className="font-medium text-gray-900 truncate text-sm sm:text-base">{dish.name}</h4>
                                                                 {isSpecial && (
                                                                     <span className="bg-yellow-100 text-yellow-800 text-xs px-1 sm:px-2 py-0.5 sm:py-1 rounded-full shrink-0">
-                                                                        Especial
+                                                                        {waiterDict.special || 'Especial'}
                                                                     </span>
                                                                 )}
                                                                 {isSelected && (
                                                                     <span className="bg-blue-100 text-blue-800 text-xs px-1 sm:px-2 py-0.5 sm:py-1 rounded-full shrink-0">
-                                                                        Seleccionado
+                                                                        {waiterDict.selected || 'Seleccionado'}
                                                                     </span>
                                                                 )}
                                                             </div>
@@ -895,10 +895,10 @@ export default function OrderInterface({
                     >
                         <div className="flex items-center gap-2 sm:gap-3">
                             <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
-                            <h3 className="text-base sm:text-lg font-semibold text-gray-900">Mesas y Órdenes Finalizadas</h3>
+                            <h3 className="text-base sm:text-lg font-semibold text-gray-900">{waiterDict.tablesAndOrders || 'Mesas y Órdenes Finalizadas'}</h3>
                             {ordersByTable.length > 0 && (
                                 <Badge variant="secondary" className="bg-blue-100 text-blue-800 text-xs sm:text-sm">
-                                    {ordersByTable.length} mesa{ordersByTable.length !== 1 ? 's' : ''} con órdenes finalizadas
+                                    {ordersByTable.length} {ordersByTable.length === 1 ? (waiterDict.tablesWithOrders || 'mesa con órdenes finalizadas') : (waiterDict.tablesWithOrdersPlural || 'mesas con órdenes finalizadas')}
                                 </Badge>
                             )}
                         </div>
@@ -911,8 +911,8 @@ export default function OrderInterface({
                                 {ordersByTable.length === 0 ? (
                                     <div className="text-center py-6 sm:py-8 text-gray-500">
                                         <MapPin className="w-10 h-10 sm:w-12 sm:h-12 mx-auto text-gray-300 mb-3 sm:mb-4" />
-                                        <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">No hay mesas con órdenes finalizadas</h3>
-                                        <p className="text-xs sm:text-sm">Las mesas con órdenes pagadas o canceladas aparecerán aquí para liberarlas.</p>
+                                        <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">{waiterDict.noTablesWithOrders || 'No hay mesas con órdenes finalizadas'}</h3>
+                                        <p className="text-xs sm:text-sm">{waiterDict.noTablesWithOrdersDesc || 'Las mesas con órdenes pagadas o canceladas aparecerán aquí para liberarlas.'}</p>
                                     </div>
                                 ) : (
                                     <div className="space-y-4">
@@ -930,15 +930,15 @@ export default function OrderInterface({
                                                     >
                                                         <div className="flex items-center gap-2 sm:gap-3">
                                                             <div className="bg-blue-500 text-white px-3 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-medium rounded-lg">
-                                                                Mesa {table.label}
+                                                                {waiterDict.table || 'Mesa'} {table.label}
                                                             </div>
                                                             <Badge variant="outline" className="bg-blue-100 text-blue-800 text-xs sm:text-sm">
-                                                                {orders.length} orden{orders.length !== 1 ? 'es' : ''}
+                                                                {orders.length} {orders.length === 1 ? (waiterDict.order || 'orden') : (waiterDict.orderPlural || 'órdenes')}
                                                             </Badge>
                                                         </div>
                                                         <div className="flex items-center gap-2 sm:gap-3">
                                                             <div className="text-right">
-                                                                <p className="text-xs sm:text-sm text-gray-600">Total Finalizado</p>
+                                                                <p className="text-xs sm:text-sm text-gray-600">{waiterDict.totalFinalized || 'Total Finalizado'}</p>
                                                                 <p className="text-base sm:text-lg lg:text-2xl font-bold text-blue-600">${totalAmount.toFixed(2)}</p>
                                                             </div>
                                                             {isTableExpanded ? <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" /> : <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />}
@@ -960,15 +960,15 @@ export default function OrderInterface({
                                                                                         <span className={`text-sm font-mono px-2 py-1 rounded ${isPaid ? 'bg-blue-100' : 'bg-red-100'}`}>
                                                                                             #{order.id.substring(0, 6)}
                                                                                         </span>
-                                                                                        <span className="text-sm text-gray-600">hace {getTimeElapsedString(order.createdAt)}</span>
+                                                                                        <span className="text-sm text-gray-600">{waiterDict.timeElapsed || 'hace'} {getTimeElapsedString(order.createdAt)}</span>
                                                                                         {isPaid && (
                                                                                             <Badge variant="outline" className="bg-green-100 text-green-800 text-xs">
-                                                                                                Pagada
+                                                                                                {waiterDict.paid || 'Pagada'}
                                                                                             </Badge>
                                                                                         )}
                                                                                         {isCancelled && (
                                                                                             <Badge variant="outline" className="bg-red-100 text-red-800 text-xs">
-                                                                                                Cancelada
+                                                                                                {waiterDict.cancelled || 'Cancelada'}
                                                                                             </Badge>
                                                                                         )}
                                                                                     </div>
@@ -979,7 +979,7 @@ export default function OrderInterface({
                                                                                     {order.items.map((item, index) => (
                                                                                         <div key={item.id || `item-${index}`} className="flex justify-between items-center text-sm">
                                                                                             <span className="text-gray-700">
-                                                                                                {item.quantity}x {item.dish?.name || 'Plato no disponible'}
+                                                                                                {item.quantity}x {item.dish?.name || (dictionary.web?.orders?.table?.dishNotAvailable || 'Plato no disponible')}
                                                                                             </span>
                                                                                             <span className="text-gray-600 font-mono">${(item.price * item.quantity).toFixed(2)}</span>
                                                                                         </div>
@@ -1005,14 +1005,14 @@ export default function OrderInterface({
                                                                         {isMarkingAsPaid === table.id ? (
                                                                             <>
                                                                                 <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                                                                                <span className="hidden sm:inline">Liberando...</span>
-                                                                                <span className="sm:hidden">...</span>
+                                                                                <span className="hidden sm:inline">{waiterDict.releasingTable || 'Liberando...'}</span>
+                                                                                <span className="sm:hidden">{waiterDict.releasingTableMobile || '...'}</span>
                                                                             </>
                                                                         ) : (
                                                                             <>
                                                                                 <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4" />
-                                                                                <span className="hidden sm:inline">Liberar Mesa</span>
-                                                                                <span className="sm:hidden">Liberar</span>
+                                                                                <span className="hidden sm:inline">{waiterDict.releaseTable || 'Liberar Mesa'}</span>
+                                                                                <span className="sm:hidden">{waiterDict.releaseTableMobile || 'Liberar'}</span>
                                                                             </>
                                                                         )}
                                                                     </button>
@@ -1034,10 +1034,9 @@ export default function OrderInterface({
                 <Dialog open={showPaymentDialog} onOpenChange={setShowPaymentDialog}>
                     <DialogContent className="sm:max-w-md">
                         <DialogHeader>
-                            <DialogTitle>Confirmar pago de mesa</DialogTitle>
+                            <DialogTitle>{waiterDict.confirmPayment || 'Confirmar pago de mesa'}</DialogTitle>
                             <DialogDescription>
-                                ¿Estás seguro de que quieres marcar toda la mesa como pagada?
-                                Esta acción marcará todas las órdenes activas y listas de esta mesa como pagadas.
+                                {waiterDict.confirmPaymentDesc || '¿Estás seguro de que quieres marcar toda la mesa como pagada? Esta acción marcará todas las órdenes activas y listas de esta mesa como pagadas.'}
                             </DialogDescription>
                         </DialogHeader>
                         <DialogFooter className="flex flex-col sm:flex-row gap-2">
@@ -1049,7 +1048,7 @@ export default function OrderInterface({
                                 }}
                                 className="w-full sm:w-auto"
                             >
-                                Cancelar
+                                {waiterDict.cancel || 'Cancelar'}
                             </Button>
                             <Button
                                 onClick={confirmMarkTableAsPaid}
@@ -1059,10 +1058,10 @@ export default function OrderInterface({
                                 {isMarkingAsPaid === pendingTableId ? (
                                     <>
                                         <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                                        Marcando...
+                                        {waiterDict.marking || 'Marcando...'}
                                     </>
                                 ) : (
-                                    'Confirmar Pago'
+                                    waiterDict.confirmPaymentButton || 'Confirmar Pago'
                                 )}
                             </Button>
                         </DialogFooter>

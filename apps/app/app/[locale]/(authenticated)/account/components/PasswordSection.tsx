@@ -60,8 +60,8 @@ export function PasswordSection({ currentUser, dictionary, canChange }: Password
 
         startTransition(() => {
             toast.promise(promise(), {
-                loading: 'Actualizando contraseña...',
-                success: (data) => `${data.message || 'Contraseña actualizada exitosamente.'}`,
+                loading: dictionary.app?.account?.password?.toast?.updating || 'Actualizando contraseña...',
+                success: (data) => `${data.message || (dictionary.app?.account?.password?.toast?.success || 'Contraseña actualizada exitosamente.')}`,
                 error: (err) => err.message,
             });
         });
@@ -76,16 +76,16 @@ export function PasswordSection({ currentUser, dictionary, canChange }: Password
             <CardHeader className="p-3 sm:p-6">
                 <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
                     <Shield className="h-4 w-4 sm:h-5 sm:w-5" />
-                    Seguridad
+                    {dictionary.app?.account?.password?.title || 'Seguridad'}
                 </CardTitle>
                 <CardDescription className="text-sm sm:text-base">
-                    Gestiona tu contraseña y configuración de seguridad
+                    {dictionary.app?.account?.password?.description || 'Gestiona tu contraseña y configuración de seguridad'}
                 </CardDescription>
             </CardHeader>
             <CardContent className="p-3 sm:p-6">
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3 sm:space-y-4">
                     <div className="space-y-2">
-                        <Label htmlFor="current-password" className="text-sm sm:text-base">Contraseña Actual</Label>
+                        <Label htmlFor="current-password" className="text-sm sm:text-base">{dictionary.app?.account?.password?.currentPassword || 'Contraseña Actual'}</Label>
                         <Input
                             id="current-password"
                             type="password"
@@ -98,7 +98,7 @@ export function PasswordSection({ currentUser, dictionary, canChange }: Password
                         )}
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="new-password" className="text-sm sm:text-base">Nueva Contraseña</Label>
+                        <Label htmlFor="new-password" className="text-sm sm:text-base">{dictionary.app?.account?.password?.newPassword || 'Nueva Contraseña'}</Label>
                         <Input
                             id="new-password"
                             type="password"
@@ -111,7 +111,7 @@ export function PasswordSection({ currentUser, dictionary, canChange }: Password
                         )}
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="confirm-password" className="text-sm sm:text-base">Confirmar Nueva Contraseña</Label>
+                        <Label htmlFor="confirm-password" className="text-sm sm:text-base">{dictionary.app?.account?.password?.confirmPassword || 'Confirmar Nueva Contraseña'}</Label>
                         <Input
                             id="confirm-password"
                             type="password"
@@ -128,8 +128,8 @@ export function PasswordSection({ currentUser, dictionary, canChange }: Password
                         className="w-full text-sm sm:text-base"
                         disabled={isPending}
                     >
-                        <span className="hidden sm:inline">{isPending ? "Actualizando..." : "Actualizar Contraseña"}</span>
-                        <span className="sm:hidden">{isPending ? "Actualizando..." : "Actualizar"}</span>
+                        <span className="hidden sm:inline">{isPending ? (dictionary.app?.account?.password?.updating || "Actualizando...") : (dictionary.app?.account?.password?.updatePassword?.desktop || "Actualizar Contraseña")}</span>
+                        <span className="sm:hidden">{isPending ? (dictionary.app?.account?.password?.updating || "Actualizando...") : (dictionary.app?.account?.password?.updatePassword?.mobile || "Actualizar")}</span>
                     </Button>
                 </form>
             </CardContent>

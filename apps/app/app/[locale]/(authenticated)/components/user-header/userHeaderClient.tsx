@@ -7,6 +7,7 @@ import { Dictionary } from '@repo/internationalization';
 import Link from 'next/link';
 import { Button } from '@repo/design-system/components/ui/button';
 import { env } from '@/env';
+import { LanguageSwitcher } from '../language-switcher';
 
 type User = {
     id: string;
@@ -49,7 +50,7 @@ export function UserHeaderClient({ logo, title = 'Ganga-Menú', extraItems, dict
                         </Link>
                     )}
                     {/* <ModeToggle /> */}
-                    {/* <LanguageSwitcher /> */}
+                    <LanguageSwitcher />
                     {extraItems}
                     <LogoutButton userName={user?.name} dictionary={dictionary} locale={locale} />
                 </div>

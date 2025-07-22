@@ -37,6 +37,87 @@ const groupPermissions = (permissions: Permission[]) => {
     }, {} as Record<string, Permission[]>);
 };
 
+// Función para traducir los nombres de los grupos de permisos
+const translatePermissionGroup = (group: string, dictionary: Dictionary): string => {
+    const groupTranslations: Record<string, string> = {
+        'dishes': dictionary.app?.account?.users?.permissionGroups?.dishes || 'Platos',
+        'categories': dictionary.app?.account?.users?.permissionGroups?.categories || 'Categorías',
+        'daily_specials': dictionary.app?.account?.users?.permissionGroups?.dailySpecials || 'Especiales del Día',
+        'restaurant': dictionary.app?.account?.users?.permissionGroups?.restaurant || 'Restaurante',
+        'orders': dictionary.app?.account?.users?.permissionGroups?.orders || 'Órdenes',
+        'kitchen': dictionary.app?.account?.users?.permissionGroups?.kitchen || 'Cocina',
+        'waiter': dictionary.app?.account?.users?.permissionGroups?.waiter || 'Mozo',
+        'menu': dictionary.app?.account?.users?.permissionGroups?.menu || 'Menú',
+        'account': dictionary.app?.account?.users?.permissionGroups?.account || 'Cuenta',
+        'admin': dictionary.app?.account?.users?.permissionGroups?.admin || 'Administración'
+    };
+
+    return groupTranslations[group] || group;
+};
+
+// Función para traducir los nombres de los permisos
+const translatePermission = (permission: string, dictionary: Dictionary): string => {
+    const permissionTranslations: Record<string, string> = {
+        // Dishes
+        'dishes:view': dictionary.app?.account?.users?.permissions?.dishesView || 'Ver platos',
+        'dishes:create': dictionary.app?.account?.users?.permissions?.dishesCreate || 'Crear platos',
+        'dishes:edit': dictionary.app?.account?.users?.permissions?.dishesEdit || 'Editar platos',
+        'dishes:delete': dictionary.app?.account?.users?.permissions?.dishesDelete || 'Eliminar platos',
+        'dishes:manage_status': dictionary.app?.account?.users?.permissions?.dishesManageStatus || 'Gestionar estado de platos',
+
+        // Categories
+        'categories:view': dictionary.app?.account?.users?.permissions?.categoriesView || 'Ver categorías',
+        'categories:create': dictionary.app?.account?.users?.permissions?.categoriesCreate || 'Crear categorías',
+        'categories:edit': dictionary.app?.account?.users?.permissions?.categoriesEdit || 'Editar categorías',
+        'categories:delete': dictionary.app?.account?.users?.permissions?.categoriesDelete || 'Eliminar categorías',
+        'categories:manage_order': dictionary.app?.account?.users?.permissions?.categoriesManageOrder || 'Gestionar orden de categorías',
+
+        // Daily Specials
+        'daily_specials:view': dictionary.app?.account?.users?.permissions?.dailySpecialsView || 'Ver especiales del día',
+        'daily_specials:create': dictionary.app?.account?.users?.permissions?.dailySpecialsCreate || 'Crear especiales del día',
+        'daily_specials:edit': dictionary.app?.account?.users?.permissions?.dailySpecialsEdit || 'Editar especiales del día',
+        'daily_specials:delete': dictionary.app?.account?.users?.permissions?.dailySpecialsDelete || 'Eliminar especiales del día',
+
+        // Restaurant
+        'restaurant:view_config': dictionary.app?.account?.users?.permissions?.restaurantViewConfig || 'Ver configuración del restaurante',
+        'restaurant:edit_config': dictionary.app?.account?.users?.permissions?.restaurantEditConfig || 'Editar configuración del restaurante',
+        'restaurant:manage_settings': dictionary.app?.account?.users?.permissions?.restaurantManageSettings || 'Gestionar configuración del restaurante',
+        'restaurant:view_design': dictionary.app?.account?.users?.permissions?.restaurantViewDesign || 'Ver diseño del restaurante',
+        'restaurant:edit_design': dictionary.app?.account?.users?.permissions?.restaurantEditDesign || 'Editar diseño del restaurante',
+
+        // Orders
+        'orders:view': dictionary.app?.account?.users?.permissions?.ordersView || 'Ver órdenes',
+        'orders:create': dictionary.app?.account?.users?.permissions?.ordersCreate || 'Crear órdenes',
+        'orders:edit': dictionary.app?.account?.users?.permissions?.ordersEdit || 'Editar órdenes',
+        'orders:delete': dictionary.app?.account?.users?.permissions?.ordersDelete || 'Eliminar órdenes',
+        'orders:manage_status': dictionary.app?.account?.users?.permissions?.ordersManageStatus || 'Gestionar estado de órdenes',
+
+        // Kitchen
+        'kitchen:view_orders': dictionary.app?.account?.users?.permissions?.kitchenViewOrders || 'Ver órdenes de cocina',
+        'kitchen:update_status': dictionary.app?.account?.users?.permissions?.kitchenUpdateStatus || 'Actualizar estado de cocina',
+
+        // Waiter
+        'waiter:view_orders': dictionary.app?.account?.users?.permissions?.waiterViewOrders || 'Ver órdenes de mozo',
+        'waiter:create_orders': dictionary.app?.account?.users?.permissions?.waiterCreateOrders || 'Crear órdenes de mozo',
+        'waiter:view_menu': dictionary.app?.account?.users?.permissions?.waiterViewMenu || 'Ver menú de mozo',
+
+        // Menu
+        'menu:view_public': dictionary.app?.account?.users?.permissions?.menuViewPublic || 'Ver menú público',
+
+        // Account
+        'account:view_own': dictionary.app?.account?.users?.permissions?.accountViewOwn || 'Ver cuenta propia',
+        'account:edit_own': dictionary.app?.account?.users?.permissions?.accountEditOwn || 'Editar cuenta propia',
+        'account:change_password': dictionary.app?.account?.users?.permissions?.accountChangePassword || 'Cambiar contraseña',
+
+        // Admin
+        'admin:full_access': dictionary.app?.account?.users?.permissions?.adminFullAccess || 'Acceso completo',
+        'admin:manage_users': dictionary.app?.account?.users?.permissions?.adminManageUsers || 'Gestionar usuarios',
+        'admin:system_settings': dictionary.app?.account?.users?.permissions?.adminSystemSettings || 'Configuración del sistema'
+    };
+
+    return permissionTranslations[permission] || permission.split(':')[1]?.replace(/_/g, ' ') || permission;
+};
+
 export function UsersSection({ users, currentUser, dictionary, allPermissions }: UsersSectionProps) {
     const [isUserDialogOpen, setIsUserDialogOpen] = useState(false);
     const [editingUser, setEditingUser] = useState<UserData | null>(null);
@@ -103,15 +184,15 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
 
     const handleUserSubmit = () => {
         if (!userForm.name || !userForm.lastName || !userForm.email) {
-            toast.error("Nombre, apellido y email son requeridos");
+            toast.error(dictionary.app?.account?.users?.validation?.nameRequired || "Nombre, apellido y email son requeridos");
             return;
         }
         if (!editingUser && !userForm.password) {
-            toast.error("La contraseña es requerida para nuevos usuarios");
+            toast.error(dictionary.app?.account?.users?.validation?.passwordRequired || "La contraseña es requerida para nuevos usuarios");
             return;
         }
         if (userForm.password && userForm.password.length < 6) {
-            toast.error("La contraseña debe tener al menos 6 caracteres");
+            toast.error(dictionary.app?.account?.users?.validation?.passwordMin || "La contraseña debe tener al menos 6 caracteres");
             return;
         }
 
@@ -136,10 +217,10 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
 
         startTransition(() => {
             toast.promise(promise(), {
-                loading: editingUser ? 'Actualizando usuario...' : 'Creando usuario...',
+                loading: editingUser ? (dictionary.app?.account?.users?.toast?.updating || 'Actualizando usuario...') : (dictionary.app?.account?.users?.toast?.creating || 'Creando usuario...'),
                 success: (data) => {
                     setIsUserDialogOpen(false);
-                    return `${data.message || `Usuario ${editingUser ? 'actualizado' : 'creado'} correctamente.`}`;
+                    return `${data.message || (editingUser ? (dictionary.app?.account?.users?.toast?.updated || 'Usuario actualizado correctamente.') : (dictionary.app?.account?.users?.toast?.created || 'Usuario creado correctamente.'))}`;
                 },
                 error: (err) => err.message,
             });
@@ -157,10 +238,10 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
 
         startTransition(() => {
             toast.promise(promise(), {
-                loading: 'Eliminando usuario...',
+                loading: dictionary.app?.account?.users?.toast?.deleting || 'Eliminando usuario...',
                 success: (data) => {
                     setDeleteUserDialog({ open: false, user: null });
-                    return `${data.message || 'Usuario eliminado correctamente.'}`;
+                    return `${data.message || (dictionary.app?.account?.users?.toast?.deleted || 'Usuario eliminado correctamente.')}`;
                 },
                 error: (err) => err.message,
             });
@@ -177,17 +258,17 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
                         <div className="flex-1">
                             <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
                                 <User className="h-4 w-4 sm:h-5 sm:w-5" />
-                                Usuarios del Sistema
+                                {dictionary.app?.account?.users?.title || 'Usuarios del Sistema'}
                             </CardTitle>
                             <CardDescription className="text-sm sm:text-base">
-                                Gestiona los usuarios y sus permisos
+                                {dictionary.app?.account?.users?.description || 'Gestiona los usuarios y sus permisos'}
                             </CardDescription>
                         </div>
                         <div className="flex shrink-0 gap-2">
                             <Button className="w-full sm:w-auto text-sm sm:text-base" onClick={handleCreateUser}>
                                 <Plus className="h-4 w-4 mr-2" />
-                                <span className="hidden sm:inline">Nuevo Usuario</span>
-                                <span className="sm:hidden">Nuevo</span>
+                                <span className="hidden sm:inline">{dictionary.app?.account?.users?.newUser?.desktop || 'Nuevo Usuario'}</span>
+                                <span className="sm:hidden">{dictionary.app?.account?.users?.newUser?.mobile || 'Nuevo'}</span>
                             </Button>
                         </div>
                     </div>
@@ -220,46 +301,46 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
             <Dialog open={isUserDialogOpen} onOpenChange={setIsUserDialogOpen}>
                 <DialogContent className="max-w-[95vw] sm:max-w-[425px] md:max-w-2xl">
                     <DialogHeader>
-                        <DialogTitle className="text-lg sm:text-xl">{editingUser ? 'Editar Usuario' : 'Crear Usuario'}</DialogTitle>
+                        <DialogTitle className="text-lg sm:text-xl">{editingUser ? (dictionary.app?.account?.users?.editUser || 'Editar Usuario') : (dictionary.app?.account?.users?.createUser || 'Crear Usuario')}</DialogTitle>
                         <DialogDescription className="text-sm sm:text-base">
-                            {editingUser ? 'Actualiza los detalles del usuario.' : 'Crea un nuevo usuario y asigna sus permisos.'}
+                            {editingUser ? (dictionary.app?.account?.users?.editUserDescription || 'Actualiza los detalles del usuario.') : (dictionary.app?.account?.users?.createUserDescription || 'Crea un nuevo usuario y asigna sus permisos.')}
                         </DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-3 sm:gap-4 py-3 sm:py-4">
                         <div className="grid grid-cols-1 sm:grid-cols-4 items-start sm:items-center gap-2 sm:gap-4">
-                            <Label htmlFor="name" className="text-left sm:text-right text-sm sm:text-base">Nombre</Label>
+                            <Label htmlFor="name" className="text-left sm:text-right text-sm sm:text-base">{dictionary.app?.account?.profile?.name || 'Nombre'}</Label>
                             <Input id="name" value={userForm.name} onChange={e => setUserForm({ ...userForm, name: e.target.value })} className="col-span-1 sm:col-span-3 text-sm sm:text-base" />
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-4 items-start sm:items-center gap-2 sm:gap-4">
-                            <Label htmlFor="lastName" className="text-left sm:text-right text-sm sm:text-base">Apellido</Label>
+                            <Label htmlFor="lastName" className="text-left sm:text-right text-sm sm:text-base">{dictionary.app?.account?.profile?.lastName || 'Apellido'}</Label>
                             <Input id="lastName" value={userForm.lastName} onChange={e => setUserForm({ ...userForm, lastName: e.target.value })} className="col-span-1 sm:col-span-3 text-sm sm:text-base" />
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-4 items-start sm:items-center gap-2 sm:gap-4">
-                            <Label htmlFor="email" className="text-left sm:text-right text-sm sm:text-base">Email</Label>
+                            <Label htmlFor="email" className="text-left sm:text-right text-sm sm:text-base">{dictionary.app?.account?.profile?.email || 'Email'}</Label>
                             <Input id="email" type="email" value={userForm.email} onChange={e => setUserForm({ ...userForm, email: e.target.value })} className="col-span-1 sm:col-span-3 text-sm sm:text-base" />
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-4 items-start sm:items-center gap-2 sm:gap-4">
-                            <Label htmlFor="password" className="text-left sm:text-right text-sm sm:text-base">Contraseña</Label>
-                            <Input id="password" type="password" placeholder={editingUser ? 'Dejar en blanco para no cambiar' : ''} value={userForm.password} onChange={e => setUserForm({ ...userForm, password: e.target.value })} className="col-span-1 sm:col-span-3 text-sm sm:text-base" />
+                            <Label htmlFor="password" className="text-left sm:text-right text-sm sm:text-base">{dictionary.app?.account?.users?.password || 'Contraseña'}</Label>
+                            <Input id="password" type="password" placeholder={editingUser ? (dictionary.app?.account?.users?.passwordPlaceholder || 'Dejar en blanco para no cambiar') : ''} value={userForm.password} onChange={e => setUserForm({ ...userForm, password: e.target.value })} className="col-span-1 sm:col-span-3 text-sm sm:text-base" />
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-4 items-start sm:items-center gap-2 sm:gap-4">
-                            <Label htmlFor="role" className="text-left sm:text-right text-sm sm:text-base">Rol</Label>
+                            <Label htmlFor="role" className="text-left sm:text-right text-sm sm:text-base">{dictionary.app?.account?.users?.role || 'Rol'}</Label>
                             <Select value={userForm.role} onValueChange={(value) => handleRoleChange(value as UserRole)}>
                                 <SelectTrigger className="col-span-1 sm:col-span-3 text-sm sm:text-base">
-                                    <SelectValue placeholder="Selecciona un rol" />
+                                    <SelectValue placeholder={dictionary.app?.account?.users?.rolePlaceholder || 'Selecciona un rol'} />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="user">Encargado de restaurante</SelectItem>
+                                    <SelectItem value="user">{dictionary.app?.account?.users?.restaurantManager || 'Encargado de restaurante'}</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-4 items-start gap-2 sm:gap-4 pt-3 sm:pt-4">
-                            <Label className="text-left sm:text-right pt-2 text-sm sm:text-base">Permisos</Label>
+                            <Label className="text-left sm:text-right pt-2 text-sm sm:text-base">{dictionary.app?.account?.users?.permissionsLabel || 'Permisos'}</Label>
                             <ScrollArea className="col-span-1 sm:col-span-3 h-32 sm:h-48 rounded-md border p-2 sm:p-4">
                                 <div className="space-y-3 sm:space-y-4">
                                     {Object.entries(groupedPermissions).map(([group, permissions]) => (
                                         <div key={group}>
-                                            <h4 className="font-semibold capitalize mb-2 text-sm sm:text-base">{group}</h4>
+                                            <h4 className="font-semibold capitalize mb-2 text-sm sm:text-base">{translatePermissionGroup(group, dictionary)}</h4>
                                             {permissions.map(permission => (
                                                 <div key={permission} className="flex items-center space-x-2">
                                                     <Switch
@@ -267,7 +348,7 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
                                                         checked={userForm.permissions.includes(permission)}
                                                         onCheckedChange={checked => handlePermissionChange(permission, checked)}
                                                     />
-                                                    <Label htmlFor={permission} className="font-normal text-xs sm:text-sm">{permission.split(':')[1]?.replace(/_/g, ' ')}</Label>
+                                                    <Label htmlFor={permission} className="font-normal text-xs sm:text-sm">{translatePermission(permission, dictionary)}</Label>
                                                 </div>
                                             ))}
                                         </div>
@@ -277,10 +358,10 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
                         </div>
                     </div>
                     <DialogFooter>
-                        <Button variant="ghost" onClick={() => setIsUserDialogOpen(false)} className="text-sm sm:text-base">Cancelar</Button>
+                        <Button variant="ghost" onClick={() => setIsUserDialogOpen(false)} className="text-sm sm:text-base">{dictionary.app?.account?.users?.cancel || 'Cancelar'}</Button>
                         <Button onClick={handleUserSubmit} disabled={isPending} className="text-sm sm:text-base">
-                            <span className="hidden sm:inline">{isPending ? 'Guardando...' : (editingUser ? 'Guardar Cambios' : 'Crear Usuario')}</span>
-                            <span className="sm:hidden">{isPending ? 'Guardando...' : (editingUser ? 'Guardar' : 'Crear')}</span>
+                            <span className="hidden sm:inline">{isPending ? (dictionary.app?.account?.users?.saving || 'Guardando...') : (editingUser ? (dictionary.app?.account?.users?.saveChanges?.desktop || 'Guardar Cambios') : (dictionary.app?.account?.users?.create?.desktop || 'Crear Usuario'))}</span>
+                            <span className="sm:hidden">{isPending ? (dictionary.app?.account?.users?.saving || 'Guardando...') : (editingUser ? (dictionary.app?.account?.users?.saveChanges?.mobile || 'Guardar') : (dictionary.app?.account?.users?.create?.mobile || 'Crear'))}</span>
                         </Button>
                     </DialogFooter>
                 </DialogContent>
@@ -289,15 +370,15 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
             <AlertDialog open={deleteUserDialog.open} onOpenChange={(open) => !open && setDeleteUserDialog({ open: false, user: null })}>
                 <AlertDialogContent className="max-w-[95vw] sm:max-w-md">
                     <AlertDialogHeader>
-                        <AlertDialogTitle className="text-lg sm:text-xl">¿Estás seguro?</AlertDialogTitle>
+                        <AlertDialogTitle className="text-lg sm:text-xl">{dictionary.app?.account?.users?.deleteConfirmation || '¿Estás seguro?'}</AlertDialogTitle>
                         <AlertDialogDescription className="text-sm sm:text-base">
-                            Esta acción no se puede deshacer. Se eliminará permanentemente al usuario "{deleteUserDialog.user?.name} {deleteUserDialog.user?.lastName}".
+                            {dictionary.app?.account?.users?.deleteDescription || 'Esta acción no se puede deshacer. Se eliminará permanentemente al usuario'} "{deleteUserDialog.user?.name} {deleteUserDialog.user?.lastName}".
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel className="text-sm sm:text-base">Cancelar</AlertDialogCancel>
+                        <AlertDialogCancel className="text-sm sm:text-base">{dictionary.app?.account?.users?.cancel || 'Cancelar'}</AlertDialogCancel>
                         <AlertDialogAction onClick={() => handleDeleteUser(deleteUserDialog.user!)} disabled={isPending} className="text-sm sm:text-base">
-                            {isPending ? "Eliminando..." : "Eliminar"}
+                            {isPending ? (dictionary.app?.account?.users?.deleting || "Eliminando...") : (dictionary.app?.account?.users?.deleteUser || "Eliminar")}
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>

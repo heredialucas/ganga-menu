@@ -17,6 +17,7 @@ import Image from 'next/image';
 import { createDish, updateDish, deleteDish } from '@repo/data-services/src/services/dishService';
 import { uploadR2Image } from '@repo/data-services/src/services/uploadR2Image';
 import { getCurrentUser } from '@repo/data-services/src/services/authService';
+import type { Dictionary } from '@repo/internationalization';
 
 interface DishWithCategory extends Dish {
     category: Category | null;
@@ -25,9 +26,10 @@ interface DishWithCategory extends Dish {
 interface DishManagerProps {
     dishes: DishWithCategory[];
     categories: Category[];
+    dictionary: Dictionary;
 }
 
-export function DishManager({ dishes, categories }: DishManagerProps) {
+export function DishManager({ dishes, categories, dictionary }: DishManagerProps) {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [editingDish, setEditingDish] = useState<DishWithCategory | null>(null);
     const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; dish: DishWithCategory | null }>({ open: false, dish: null });
@@ -78,17 +80,17 @@ export function DishManager({ dishes, categories }: DishManagerProps) {
                 await updateDish(editingDish.id, dishData);
             } else {
                 const user = await getCurrentUser();
-                if (!user) throw new Error("Usuario no autenticado");
+                if (!user) throw new Error(dictionary.app?.menu?.dishes?.toast?.notAuthenticated || "Usuario no autenticado");
                 await createDish(dishData, user.id);
             }
         };
 
         startTransition(async () => {
             toast.promise(promise(), {
-                loading: 'Guardando plato...',
+                loading: dictionary.app?.menu?.dishes?.toast?.saving || 'Guardando plato...',
                 success: (data) => {
                     setIsDialogOpen(false);
-                    return `Plato ${editingDish ? 'actualizado' : 'creado'} correctamente.`;
+                    return editingDish ? (dictionary.app?.menu?.dishes?.toast?.updated || 'Plato actualizado correctamente.') : (dictionary.app?.menu?.dishes?.toast?.created || 'Plato creado correctamente.');
                 },
                 error: (err) => err.message,
             });
@@ -98,10 +100,10 @@ export function DishManager({ dishes, categories }: DishManagerProps) {
     const handleDelete = (dish: DishWithCategory) => {
         startTransition(async () => {
             toast.promise(deleteDish(dish.id), {
-                loading: 'Eliminando plato...',
+                loading: dictionary.app?.menu?.dishes?.toast?.deleting || 'Eliminando plato...',
                 success: () => {
                     setDeleteDialog({ open: false, dish: null });
-                    return 'Plato eliminado correctamente.';
+                    return dictionary.app?.menu?.dishes?.toast?.deleted || 'Plato eliminado correctamente.';
                 },
                 error: (err) => err.message,
             });
@@ -116,25 +118,25 @@ export function DishManager({ dishes, categories }: DishManagerProps) {
                         <div className="flex-1 text-center sm:text-left">
                             <CardTitle className="flex items-center gap-2 justify-center sm:justify-start">
                                 <UtensilsCrossed className="h-5 w-5" />
-                                <span className="text-lg sm:text-xl">Platos</span>
+                                <span className="text-lg sm:text-xl">{dictionary.app?.menu?.dishes?.title || 'Platos'}</span>
                             </CardTitle>
-                            <CardDescription className="text-sm sm:text-base">Crea y gestiona los platos de tu menú.</CardDescription>
+                            <CardDescription className="text-sm sm:text-base">{dictionary.app?.menu?.dishes?.description || 'Crea y gestiona los platos de tu menú.'}</CardDescription>
                         </div>
                         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                             <DialogTrigger asChild>
                                 <Button onClick={() => handleOpenDialog(null)} className="w-full sm:w-auto">
                                     <Plus className="h-4 w-4 mr-2" />
-                                    <span className="hidden sm:inline">Nuevo Plato</span>
-                                    <span className="sm:hidden">Nuevo</span>
+                                    <span className="hidden sm:inline">{dictionary.app?.menu?.dishes?.newDish?.desktop || 'Nuevo Plato'}</span>
+                                    <span className="sm:hidden">{dictionary.app?.menu?.dishes?.newDish?.mobile || 'Nuevo'}</span>
                                 </Button>
                             </DialogTrigger>
                             <DialogContent className="max-w-[95vw] sm:max-w-md lg:max-w-lg">
                                 <DialogHeader>
-                                    <DialogTitle className="text-lg sm:text-xl">{editingDish ? 'Editar Plato' : 'Crear Plato'}</DialogTitle>
+                                    <DialogTitle className="text-lg sm:text-xl">{editingDish ? (dictionary.app?.menu?.dishes?.editDish || 'Editar Plato') : (dictionary.app?.menu?.dishes?.createDish || 'Crear Plato')}</DialogTitle>
                                 </DialogHeader>
                                 <form onSubmit={handleSubmit} className="space-y-4">
                                     <div className="space-y-2">
-                                        <Label htmlFor="image-upload">Imagen</Label>
+                                        <Label htmlFor="image-upload">{dictionary.app?.menu?.dishes?.image || 'Imagen'}</Label>
                                         <Input id="image" name="image" type="file" onChange={handleFileChange} ref={fileInputRef} className="hidden" />
                                         <div
                                             className="w-full h-32 bg-gray-100 dark:bg-zinc-800 rounded-md flex flex-col items-center justify-center border-2 border-dashed cursor-pointer"
@@ -145,41 +147,41 @@ export function DishManager({ dishes, categories }: DishManagerProps) {
                                             ) : (
                                                 <div className="text-center text-muted-foreground">
                                                     <ImageIcon className="h-8 w-8 mx-auto" />
-                                                    <p className="text-sm mt-1">Haz clic para subir una imagen</p>
+                                                    <p className="text-sm mt-1">{dictionary.app?.menu?.dishes?.imagePlaceholder || 'Haz clic para subir una imagen'}</p>
                                                 </div>
                                             )}
                                         </div>
                                     </div>
                                     <div className="space-y-2">
-                                        <Label htmlFor="name">Nombre</Label>
+                                        <Label htmlFor="name">{dictionary.app?.menu?.dishes?.name || 'Nombre'}</Label>
                                         <Input id="name" name="name" defaultValue={editingDish?.name} required />
                                     </div>
                                     <div className="space-y-2">
-                                        <Label htmlFor="description">Descripción</Label>
+                                        <Label htmlFor="description">{dictionary.app?.menu?.dishes?.description || 'Descripción'}</Label>
                                         <Textarea id="description" name="description" defaultValue={editingDish?.description || ''} />
                                     </div>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div className="space-y-2">
-                                            <Label htmlFor="price">Precio</Label>
+                                            <Label htmlFor="price">{dictionary.app?.menu?.dishes?.price || 'Precio'}</Label>
                                             <Input id="price" name="price" type="number" step="0.01" defaultValue={editingDish?.price} required />
                                         </div>
                                         <div className="space-y-2">
-                                            <Label htmlFor="promotionalPrice">Precio Promocional</Label>
+                                            <Label htmlFor="promotionalPrice">{dictionary.app?.menu?.dishes?.promotionalPrice || 'Precio Promocional'}</Label>
                                             <Input id="promotionalPrice" name="promotionalPrice" type="number" step="0.01" defaultValue={editingDish?.promotionalPrice || ''} />
                                         </div>
                                     </div>
                                     <div className="space-y-2">
-                                        <Label htmlFor="categoryId">Categoría</Label>
+                                        <Label htmlFor="categoryId">{dictionary.app?.menu?.dishes?.category || 'Categoría'}</Label>
                                         <Select name="categoryId" defaultValue={editingDish?.categoryId || ''}>
-                                            <SelectTrigger><SelectValue placeholder="Selecciona una categoría" /></SelectTrigger>
+                                            <SelectTrigger><SelectValue placeholder={dictionary.app?.menu?.dishes?.categoryPlaceholder || 'Selecciona una categoría'} /></SelectTrigger>
                                             <SelectContent>
                                                 {categories.map(cat => <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>)}
                                             </SelectContent>
                                         </Select>
                                     </div>
                                     <DialogFooter>
-                                        <Button type="button" variant="ghost" onClick={() => setIsDialogOpen(false)}>Cancelar</Button>
-                                        <Button type="submit" disabled={isPending}>{isPending ? 'Guardando...' : 'Guardar'}</Button>
+                                        <Button type="button" variant="ghost" onClick={() => setIsDialogOpen(false)}>{dictionary.app?.menu?.dishes?.cancel || 'Cancelar'}</Button>
+                                        <Button type="submit" disabled={isPending}>{isPending ? (dictionary.app?.menu?.dishes?.saving || 'Guardando...') : (dictionary.app?.menu?.dishes?.save || 'Guardar')}</Button>
                                     </DialogFooter>
                                 </form>
                             </DialogContent>
@@ -207,7 +209,7 @@ export function DishManager({ dishes, categories }: DishManagerProps) {
                                     </div>
                                     <CardContent className="p-2 sm:p-3 flex-1 flex flex-col">
                                         <div className="flex-1">
-                                            <p className="text-xs text-muted-foreground">{dish.category?.name || 'Sin categoría'}</p>
+                                            <p className="text-xs text-muted-foreground">{dish.category?.name || (dictionary.app?.menu?.dishes?.noCategory || 'Sin categoría')}</p>
                                             <h3 className="font-semibold text-sm sm:text-base leading-tight truncate">{dish.name}</h3>
                                             <p className="text-xs text-muted-foreground h-10 sm:h-12 overflow-hidden my-1">{dish.description}</p>
                                         </div>
@@ -216,8 +218,8 @@ export function DishManager({ dishes, categories }: DishManagerProps) {
                                         </div>
                                         <Button variant="outline" size="sm" className="w-full mt-2 sm:mt-3" onClick={() => handleOpenDialog(dish)}>
                                             <Edit className="h-4 w-4 mr-2" />
-                                            <span className="hidden sm:inline">Editar</span>
-                                            <span className="sm:hidden">Editar</span>
+                                            <span className="hidden sm:inline">{dictionary.app?.menu?.dishes?.edit?.desktop || 'Editar'}</span>
+                                            <span className="sm:hidden">{dictionary.app?.menu?.dishes?.edit?.mobile || 'Editar'}</span>
                                         </Button>
                                     </CardContent>
                                 </Card>
@@ -230,15 +232,15 @@ export function DishManager({ dishes, categories }: DishManagerProps) {
             <AlertDialog open={deleteDialog.open} onOpenChange={(open) => !open && setDeleteDialog({ open: false, dish: null })}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
+                        <AlertDialogTitle>{dictionary.app?.menu?.dishes?.deleteConfirmation || '¿Estás seguro?'}</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Esta acción no se puede deshacer. Se eliminará permanentemente el plato "{deleteDialog.dish?.name}".
+                            {dictionary.app?.menu?.dishes?.deleteDescription || 'Esta acción no se puede deshacer. Se eliminará permanentemente el plato'} "{deleteDialog.dish?.name}".
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                        <AlertDialogCancel>{dictionary.app?.menu?.dishes?.cancel || 'Cancelar'}</AlertDialogCancel>
                         <AlertDialogAction onClick={() => handleDelete(deleteDialog.dish!)} disabled={isPending}>
-                            {isPending ? 'Eliminando...' : 'Eliminar'}
+                            {isPending ? (dictionary.app?.menu?.dishes?.deleting || 'Eliminando...') : (dictionary.app?.menu?.dishes?.delete || 'Eliminar')}
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>

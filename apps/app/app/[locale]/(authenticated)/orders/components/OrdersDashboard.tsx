@@ -118,7 +118,7 @@ export function OrdersDashboard({
 
         try {
             // Mostrar toast de loading
-            const loadingToast = toast.loading('Actualizando estado de la orden...');
+            const loadingToast = toast.loading(dictionary.web?.orders?.toast?.updatingStatus || 'Actualizando estado de la orden...');
 
             // Actualizar en la base de datos
             const result = await updateOrderStatusAction(orderId, newStatus);
@@ -133,18 +133,18 @@ export function OrdersDashboard({
                 updateOrderStatus(orderId, newStatus);
 
                 // Mostrar toast de éxito
-                toast.success('Estado actualizado correctamente', {
+                toast.success(dictionary.web?.orders?.toast?.statusUpdated || 'Estado actualizado correctamente', {
                     id: loadingToast
                 });
             } else {
                 console.error('Error al actualizar estado:', result.error);
-                toast.error(result.error || 'Error al actualizar estado', {
+                toast.error(result.error || (dictionary.web?.orders?.toast?.statusError || 'Error al actualizar estado'), {
                     id: loadingToast
                 });
             }
         } catch (error) {
             console.error('Error actualizando estado:', error);
-            toast.error('Error al actualizar estado');
+            toast.error(dictionary.web?.orders?.toast?.statusError || 'Error al actualizar estado');
         } finally {
             setUpdatingOrderId(null);
         }
@@ -155,7 +155,7 @@ export function OrdersDashboard({
 
         try {
             // Mostrar toast de loading
-            const loadingToast = toast.loading('Eliminando orden...');
+            const loadingToast = toast.loading(dictionary.web?.orders?.toast?.deletingOrder || 'Eliminando orden...');
 
             // Eliminar de la base de datos
             const result = await deleteOrderAction(orderId);
@@ -168,18 +168,18 @@ export function OrdersDashboard({
                 deleteOrder(orderId);
 
                 // Mostrar toast de éxito
-                toast.success('Orden eliminada correctamente', {
+                toast.success(dictionary.web?.orders?.toast?.orderDeleted || 'Orden eliminada correctamente', {
                     id: loadingToast
                 });
             } else {
                 console.error('Error al eliminar orden:', result.error);
-                toast.error(result.error || 'Error al eliminar la orden', {
+                toast.error(result.error || (dictionary.web?.orders?.toast?.deleteError || 'Error al eliminar la orden'), {
                     id: loadingToast
                 });
             }
         } catch (error) {
             console.error('Error eliminando orden:', error);
-            toast.error('Error al eliminar la orden');
+            toast.error(dictionary.web?.orders?.toast?.deleteError || 'Error al eliminar la orden');
         } finally {
             setDeletingOrderId(null);
         }
@@ -191,10 +191,10 @@ export function OrdersDashboard({
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div className="text-center sm:text-left flex-1">
                     <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">
-                        {dictionary.app?.admin?.menu?.title || 'Gestión de Órdenes'}
+                        {dictionary.web?.orders?.title || 'Gestión de Órdenes'}
                     </h1>
                     <p className="text-sm sm:text-base text-muted-foreground mt-2">
-                        Monitorea y gestiona las órdenes de tu restaurante en tiempo real
+                        {dictionary.web?.orders?.subtitle || 'Monitorea y gestiona las órdenes de tu restaurante en tiempo real'}
                     </p>
                 </div>
 
@@ -203,14 +203,14 @@ export function OrdersDashboard({
                     {isConnected ? (
                         <Badge variant="default" className="bg-green-500 text-xs sm:text-sm">
                             <Wifi className="w-3 h-3 mr-1" />
-                            <span className="hidden sm:inline">Conectado</span>
-                            <span className="sm:hidden">OK</span>
+                            <span className="hidden sm:inline">{dictionary.web?.orders?.connection?.connected || 'Conectado'}</span>
+                            <span className="sm:hidden">{dictionary.web?.orders?.connection?.connectedShort || 'OK'}</span>
                         </Badge>
                     ) : (
                         <Badge variant="destructive" className="text-xs sm:text-sm">
                             <WifiOff className="w-3 h-3 mr-1" />
-                            <span className="hidden sm:inline">Desconectado</span>
-                            <span className="sm:hidden">Off</span>
+                            <span className="hidden sm:inline">{dictionary.web?.orders?.connection?.disconnected || 'Desconectado'}</span>
+                            <span className="sm:hidden">{dictionary.web?.orders?.connection?.disconnectedShort || 'Off'}</span>
                         </Badge>
                     )}
                 </div>
@@ -230,16 +230,16 @@ export function OrdersDashboard({
             <Tabs defaultValue="all" className="space-y-3 sm:space-y-4">
                 <TabsList className="grid w-full grid-cols-3 h-auto sm:h-10">
                     <TabsTrigger value="all" className="gap-1 sm:gap-2 text-xs sm:text-sm py-2 sm:py-0">
-                        <span className="hidden sm:inline">Todas las Órdenes</span>
-                        <span className="sm:hidden">Todas</span>
+                        <span className="hidden sm:inline">{dictionary.web?.orders?.tabs?.allOrders?.desktop || 'Todas las Órdenes'}</span>
+                        <span className="sm:hidden">{dictionary.web?.orders?.tabs?.allOrders?.mobile || 'Todas'}</span>
                     </TabsTrigger>
                     <TabsTrigger value="active" className="gap-1 sm:gap-2 text-xs sm:text-sm py-2 sm:py-0">
-                        <span className="hidden sm:inline">Órdenes Activas</span>
-                        <span className="sm:hidden">Activas</span>
+                        <span className="hidden sm:inline">{dictionary.web?.orders?.tabs?.activeOrders?.desktop || 'Órdenes Activas'}</span>
+                        <span className="sm:hidden">{dictionary.web?.orders?.tabs?.activeOrders?.mobile || 'Activas'}</span>
                     </TabsTrigger>
                     <TabsTrigger value="completed" className="gap-1 sm:gap-2 text-xs sm:text-sm py-2 sm:py-0">
-                        <span className="hidden sm:inline">Completadas</span>
-                        <span className="sm:hidden">Listas</span>
+                        <span className="hidden sm:inline">{dictionary.web?.orders?.tabs?.completed?.desktop || 'Completadas'}</span>
+                        <span className="sm:hidden">{dictionary.web?.orders?.tabs?.completed?.mobile || 'Listas'}</span>
                     </TabsTrigger>
                 </TabsList>
 

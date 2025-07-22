@@ -15,6 +15,7 @@ import { PlusCircle, Save, Square, Circle as CircleIcon, MinusSquare, Pen, Trash
 import { saveRestaurantDesign } from '@repo/data-services/src/services/restaurantDesignService';
 import type { RestaurantConfigData } from '@repo/data-services/src/services/restaurantConfigService';
 import type { RestaurantDesignData, RestaurantTableData as BaseRestaurantTableData, RestaurantElement, SaveDesignResult } from '@repo/data-services/src/services/restaurantDesignService';
+import type { Dictionary } from '@repo/internationalization';
 
 type RestaurantTableData = BaseRestaurantTableData & { type: 'table' };
 
@@ -24,13 +25,13 @@ const initialState: SaveDesignResult = {
     tables: undefined,
 };
 
-function SubmitButton() {
+function SubmitButton({ dictionary }: { dictionary: Dictionary }) {
     const { pending } = useFormStatus();
     return (
         <Button type="submit" disabled={pending} className="w-full sm:w-auto text-xs sm:text-sm">
             {pending ? <Loader2 className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 animate-spin" /> : <Save className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />}
-            <span className="hidden sm:inline">Guardar Diseño</span>
-            <span className="sm:hidden">Guardar</span>
+            <span className="hidden sm:inline">{(dictionary as any).app?.restaurant?.design?.saveDesign || 'Guardar Diseño'}</span>
+            <span className="sm:hidden">{(dictionary as any).app?.restaurant?.design?.savingDesign || 'Guardando...'}</span>
         </Button>
     );
 }
@@ -220,13 +221,14 @@ const KonvaElement: FC<ElementProps> = ({ element, isSelected, onSelect, onChang
     );
 };
 
-function DesignCanvas({ config, design, tables, setTables, elements, setElements }: {
+function DesignCanvas({ config, design, tables, setTables, elements, setElements, dictionary }: {
     config: RestaurantConfigData;
     design: RestaurantDesignData | null;
     tables: RestaurantTableData[];
     setTables: React.Dispatch<React.SetStateAction<RestaurantTableData[]>>;
     elements: RestaurantElement[];
     setElements: React.Dispatch<React.SetStateAction<RestaurantElement[]>>;
+    dictionary: Dictionary;
 }) {
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const [activeTool, setActiveTool] = useState<'select' | 'wall'>('select');
@@ -403,7 +405,7 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
     };
 
     if (!konvaReady) {
-        return <div className="h-96 bg-gray-50 border rounded-lg flex items-center justify-center">Cargando diseñador...</div>;
+        return <div className="h-96 bg-gray-50 border rounded-lg flex items-center justify-center">{(dictionary as any).app?.restaurant?.design?.loading || 'Cargando diseñador...'}</div>;
     }
 
     return (
@@ -411,67 +413,67 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
             <div className="flex flex-wrap gap-1 sm:gap-2 md:gap-4 items-center p-2 sm:p-3 border rounded-lg">
                 <Button type="button" variant={activeTool === 'select' ? 'secondary' : 'outline'} onClick={() => setActiveTool('select')} className="text-xs sm:text-sm">
                     <MousePointer className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-                    <span className="hidden sm:inline">Seleccionar</span>
-                    <span className="sm:hidden">Sel</span>
+                    <span className="hidden sm:inline">{(dictionary as any).app?.restaurant?.design?.tools?.select?.desktop || 'Seleccionar'}</span>
+                    <span className="sm:hidden">{(dictionary as any).app?.restaurant?.design?.tools?.select?.mobile || 'Sel'}</span>
                 </Button>
                 <Button type="button" variant={activeTool === 'wall' ? 'secondary' : 'outline'} onClick={() => setActiveTool('wall')} className="text-xs sm:text-sm">
                     <Pen className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-                    <span className="hidden sm:inline">Pared</span>
-                    <span className="sm:hidden">Pared</span>
+                    <span className="hidden sm:inline">{(dictionary as any).app?.restaurant?.design?.tools?.wall?.desktop || 'Pared'}</span>
+                    <span className="sm:hidden">{(dictionary as any).app?.restaurant?.design?.tools?.wall?.mobile || 'Pared'}</span>
                 </Button>
                 <Popover>
                     <PopoverTrigger asChild>
                         <Button type="button" variant="outline" className="text-xs sm:text-sm">
                             <PlusCircle className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-                            <span className="hidden sm:inline">Añadir Objeto</span>
-                            <span className="sm:hidden">Añadir</span>
+                            <span className="hidden sm:inline">{(dictionary as any).app?.restaurant?.design?.tools?.addObject?.desktop || 'Añadir Objeto'}</span>
+                            <span className="sm:hidden">{(dictionary as any).app?.restaurant?.design?.tools?.addObject?.mobile || 'Añadir'}</span>
                         </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-2">
                         <div className="grid grid-cols-2 sm:flex sm:gap-2">
                             <Button type="button" variant="ghost" onClick={() => addElement('table', 'rectangle')} className="flex-col h-auto text-xs">
                                 <Square className="h-4 w-4 sm:h-6 sm:w-6" />
-                                <span className="text-xs">Mesa</span>
+                                <span className="text-xs">{(dictionary as any).app?.restaurant?.design?.tools?.table || 'Mesa'}</span>
                             </Button>
                             <Button type="button" variant="ghost" onClick={() => addElement('table', 'circle')} className="flex-col h-auto text-xs">
                                 <CircleIcon className="h-4 w-4 sm:h-6 sm:w-6" />
-                                <span className="text-xs">Mesa Red.</span>
+                                <span className="text-xs">{(dictionary as any).app?.restaurant?.design?.tools?.roundTable || 'Mesa Red.'}</span>
                             </Button>
                             <Button type="button" variant="ghost" onClick={() => addElement('bar', 'rectangle')} className="flex-col h-auto text-xs">
                                 <MinusSquare className="h-4 w-4 sm:h-6 sm:w-6" />
-                                <span className="text-xs">Barra</span>
+                                <span className="text-xs">{(dictionary as any).app?.restaurant?.design?.tools?.bar || 'Barra'}</span>
                             </Button>
                             <Button type="button" variant="ghost" onClick={() => addElement('staircase', null)} className="flex-col h-auto text-xs">
                                 <ChevronsUp className="h-4 w-4 sm:h-6 sm:w-6" />
-                                <span className="text-xs">Escalera</span>
+                                <span className="text-xs">{(dictionary as any).app?.restaurant?.design?.tools?.staircase || 'Escalera'}</span>
                             </Button>
                         </div>
                     </PopoverContent>
                 </Popover>
-                <Button type="button" variant="outline" onClick={deleteSelected} disabled={!selectedId} className="text-xs sm:text-sm">
+                <Button type="button" variant="outline" onClick={deleteSelected} disabled={!selectedId} className="text-xs sm:text-sm min-w-[80px] sm:min-w-[100px]">
                     <Trash2 className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-                    <span className="hidden sm:inline">Eliminar</span>
-                    <span className="sm:hidden">Elim</span>
+                    <span className="hidden sm:inline">{(dictionary as any).app?.restaurant?.design?.deleteButton || 'Eliminar'}</span>
+                    <span className="sm:hidden">{(dictionary as any).app?.restaurant?.design?.deleteButton || 'Elim'}</span>
                 </Button>
                 <AlertDialog>
                     <AlertDialogTrigger asChild>
                         <Button type="button" variant="outline" disabled={!tables.length && !elements.length} className="text-xs sm:text-sm">
                             <Trash2 className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-                            <span className="hidden sm:inline">Limpiar</span>
-                            <span className="sm:hidden">Limpiar</span>
+                            <span className="hidden sm:inline">{(dictionary as any).app?.restaurant?.design?.resetDesign || 'Limpiar'}</span>
+                            <span className="sm:hidden">{(dictionary as any).app?.restaurant?.design?.resetDesign || 'Limpiar'}</span>
                         </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                         <AlertDialogHeader>
-                            <AlertDialogTitle className="text-base sm:text-lg">¿Estás seguro?</AlertDialogTitle>
+                            <AlertDialogTitle className="text-base sm:text-lg">{(dictionary as any).app?.restaurant?.design?.resetDesignConfirmation || '¿Estás seguro?'}</AlertDialogTitle>
                             <AlertDialogDescription className="text-sm sm:text-base">
-                                Esta acción no se puede deshacer. Se eliminará todo el diseño.
+                                {(dictionary as any).app?.restaurant?.design?.resetDesignDescription || 'Esta acción no se puede deshacer. Se eliminará todo el diseño.'}
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
-                            <AlertDialogCancel className="text-xs sm:text-sm">Cancelar</AlertDialogCancel>
+                            <AlertDialogCancel className="text-xs sm:text-sm">{(dictionary as any).app?.restaurant?.config?.cancel || 'Cancelar'}</AlertDialogCancel>
                             <AlertDialogAction onClick={() => { setElements([]); setTables([]); setSelectedId(null); }} className="text-xs sm:text-sm">
-                                Confirmar
+                                {(dictionary as any).app?.restaurant?.design?.confirmReset || 'Confirmar'}
                             </AlertDialogAction>
                         </AlertDialogFooter>
                     </AlertDialogContent>
@@ -520,7 +522,7 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
                             size="icon"
                             onClick={deleteSelected}
                             className="text-destructive hover:text-destructive/80"
-                            title="Eliminar elemento"
+                            title={(dictionary as any).app?.restaurant?.design?.deleteElement || 'Eliminar elemento'}
                         >
                             <Trash2 className="h-4 w-4" />
                         </Button>
@@ -577,9 +579,10 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
     );
 }
 
-export function RestaurantDesignView({ config, design }: {
+export function RestaurantDesignView({ config, design, dictionary }: {
     config: RestaurantConfigData | null;
     design: RestaurantDesignData | null;
+    dictionary: Dictionary;
 }) {
     const [tables, setTables] = useState<RestaurantTableData[]>((design?.tables || []).map(t => ({ ...t, type: 'table' })));
     const [elements, setElements] = useState<RestaurantElement[]>(design?.elements || []);
@@ -607,12 +610,12 @@ export function RestaurantDesignView({ config, design }: {
         <form action={formAction}>
             <Card>
                 <CardHeader>
-                    <CardTitle className="text-lg sm:text-xl">Diseño del Restaurante</CardTitle>
+                    <CardTitle className="text-lg sm:text-xl">{(dictionary as any).app?.restaurant?.design?.title || 'Diseño del Restaurante'}</CardTitle>
                 </CardHeader>
                 <CardContent className="p-1 sm:p-2 md:p-6">
                     {!config ? (
                         <div className="text-center py-6 sm:py-8">
-                            <p className="text-sm sm:text-base">Guarda la configuración para empezar.</p>
+                            <p className="text-sm sm:text-base">{(dictionary as any).app?.restaurant?.view?.noConfig || 'Guarda la configuración para empezar.'}</p>
                         </div>
                     ) : (
                         <div>
@@ -629,13 +632,14 @@ export function RestaurantDesignView({ config, design }: {
                                 setTables={setTables}
                                 elements={elements}
                                 setElements={setElements}
+                                dictionary={dictionary}
                             />
                         </div>
                     )}
                 </CardContent>
                 {config && (
                     <CardFooter className="flex justify-center sm:justify-end gap-2 sm:gap-4 items-center">
-                        <SubmitButton />
+                        <SubmitButton dictionary={dictionary} />
                     </CardFooter>
                 )}
             </Card>

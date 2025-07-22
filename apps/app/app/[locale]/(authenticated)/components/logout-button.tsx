@@ -40,14 +40,8 @@ export function LogoutButton({ userName, dictionary, locale }: LogoutButtonProps
         return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
     };
 
-    const logoutText = dictionary?.app?.admin?.navigation?.logout ||
-        dictionary?.app?.client?.navigation?.logout ||
-        dictionary?.app?.pharmacy?.navigation?.logout ||
-        'Cerrar sesión';
-    const loggingOutText = dictionary?.app?.admin?.navigation?.loggingOut ||
-        dictionary?.app?.client?.navigation?.loggingOut ||
-        dictionary?.app?.pharmacy?.navigation?.loggingOut ||
-        'Cerrando sesión...';
+    const logoutText = dictionary?.app?.auth?.logout || 'Cerrar sesión';
+    const loggingOutText = dictionary?.app?.auth?.loggingOut || 'Cerrando sesión...';
 
     return (
         <DropdownMenu>

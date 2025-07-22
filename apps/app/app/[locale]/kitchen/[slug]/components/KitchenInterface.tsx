@@ -36,6 +36,8 @@ export default function KitchenInterface({
     const [kitchenOrders, setKitchenOrders] = useState<OrderData[]>(orders);
     const [isConnected, setIsConnected] = useState(false);
 
+
+
     // WebSocket connection para tiempo real
     const { isConnected: socketConnected, updateOrderStatus: socketUpdateOrderStatus } = useSocket({
         restaurantSlug: restaurantConfig.slug,
@@ -87,7 +89,7 @@ export default function KitchenInterface({
                     bg: 'bg-yellow-50',
                     blob: 'bg-yellow-200',
                     accent: 'bg-yellow-500',
-                    text: 'Activa',
+                    text: dictionary.web?.orders?.table?.status?.active || 'Activa',
                     borderColor: 'border-yellow-200'
                 };
             case 'READY':
@@ -95,7 +97,7 @@ export default function KitchenInterface({
                     bg: 'bg-green-50',
                     blob: 'bg-green-200',
                     accent: 'bg-green-500',
-                    text: 'Lista/Entregada',
+                    text: dictionary.web?.orders?.table?.status?.ready || 'Lista/Entregada',
                     borderColor: 'border-green-200'
                 };
             case 'CANCELLED':
@@ -103,7 +105,7 @@ export default function KitchenInterface({
                     bg: 'bg-red-50',
                     blob: 'bg-red-200',
                     accent: 'bg-red-500',
-                    text: 'Cancelada',
+                    text: dictionary.web?.orders?.table?.status?.cancelled || 'Cancelada',
                     borderColor: 'border-red-200'
                 };
             default:
@@ -111,7 +113,7 @@ export default function KitchenInterface({
                     bg: 'bg-gray-50',
                     blob: 'bg-gray-200',
                     accent: 'bg-gray-500',
-                    text: 'Completado',
+                    text: dictionary.web?.orders?.table?.status?.paid || 'Completado',
                     borderColor: 'border-gray-200'
                 };
         }
@@ -173,7 +175,7 @@ export default function KitchenInterface({
                             </div>
                             <div className="min-w-0 flex-1">
                                 <h1 className="text-lg sm:text-xl font-bold text-gray-900 truncate">
-                                    Panel de Cocina
+                                    {dictionary.web?.services?.kitchen?.title || 'Panel de Cocina'}
                                 </h1>
                                 <p className="text-xs sm:text-sm text-gray-600 truncate">{restaurantConfig.name}</p>
                             </div>
@@ -183,17 +185,17 @@ export default function KitchenInterface({
                             {isConnected ? (
                                 <Badge variant="default" className="bg-green-500 text-xs sm:text-sm">
                                     <Wifi className="w-3 h-3 mr-1" />
-                                    <span className="hidden sm:inline">Conectado</span>
+                                    <span className="hidden sm:inline">{dictionary.web?.orders?.connection?.connected || 'Conectado'}</span>
                                 </Badge>
                             ) : (
                                 <Badge variant="destructive" className="text-xs sm:text-sm">
                                     <WifiOff className="w-3 h-3 mr-1" />
-                                    <span className="hidden sm:inline">Desconectado</span>
+                                    <span className="hidden sm:inline">{dictionary.web?.orders?.connection?.disconnected || 'Desconectado'}</span>
                                 </Badge>
                             )}
                         </div>
                         <div className="text-right">
-                            <p className="text-xs sm:text-sm text-gray-600">Órdenes activas</p>
+                            <p className="text-xs sm:text-sm text-gray-600">{dictionary.web?.orders?.stats?.active || 'Órdenes activas'}</p>
                             <p className="text-lg sm:text-2xl font-bold text-orange-600">{activeOrders.length}</p>
                         </div>
                     </div>
@@ -206,7 +208,7 @@ export default function KitchenInterface({
                     <div className="flex items-center gap-3 mb-4">
                         <Filter className="w-5 h-5 text-gray-600" />
                         <h3 className="text-lg font-semibold text-gray-900">
-                            Filtros
+                            {dictionary.web?.orders?.filters?.all || 'Filtros'}
                         </h3>
                     </div>
                     <div className="grid grid-cols-2 sm:flex gap-2 flex-wrap">
@@ -217,7 +219,7 @@ export default function KitchenInterface({
                                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                 }`}
                         >
-                            Todas ({activeOrders.length})
+                            {dictionary.web?.orders?.filters?.all || 'Todas'} ({activeOrders.length})
                         </button>
                         <button
                             onClick={() => setOrderFilter('in_progress')}
@@ -226,7 +228,7 @@ export default function KitchenInterface({
                                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                 }`}
                         >
-                            En Proceso ({activeOrders.filter(o => o.status === 'ACTIVE').length})
+                            {dictionary.web?.orders?.filters?.active || 'En Proceso'} ({activeOrders.filter(o => o.status === 'ACTIVE').length})
                         </button>
                         <button
                             onClick={() => setOrderFilter('ready')}
@@ -235,7 +237,7 @@ export default function KitchenInterface({
                                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                 }`}
                         >
-                            Listos ({activeOrders.filter(o => o.status === 'READY').length})
+                            {dictionary.web?.orders?.filters?.ready || 'Listos'} ({activeOrders.filter(o => o.status === 'READY').length})
                         </button>
                     </div>
                 </div>
@@ -244,8 +246,8 @@ export default function KitchenInterface({
                 {sortedOrders.length === 0 ? (
                     <div className="text-center py-24 text-gray-500 bg-white rounded-lg shadow-sm">
                         <ChefHat className="w-16 h-16 mx-auto text-gray-300 mb-4" />
-                        <h3 className="text-xl font-semibold">No hay órdenes para mostrar</h3>
-                        <p className="text-sm">Cuando lleguen nuevas órdenes, aparecerán aquí.</p>
+                        <h3 className="text-xl font-semibold">{dictionary.web?.orders?.table?.noOrders || 'No hay órdenes para mostrar'}</h3>
+                        <p className="text-sm">{dictionary.web?.orders?.table?.noOrders || 'Cuando lleguen nuevas órdenes, aparecerán aquí.'}</p>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -283,8 +285,8 @@ export default function KitchenInterface({
                                             <span className="text-sm font-mono bg-white px-2 py-1 rounded-full border">#{order.id.substring(0, 5)}</span>
                                         </div>
                                         <div className="flex items-center justify-between mt-2">
-                                            <h3 className="font-bold text-xl text-gray-800">Mesa {order.table?.label || 'Mostrador'}</h3>
-                                            <span className="text-sm text-gray-500">hace {timeElapsed}</span>
+                                            <h3 className="font-bold text-xl text-gray-800">{dictionary.web?.orders?.table?.table || 'Mesa'} {order.table?.label || 'Mostrador'}</h3>
+                                            <span className="text-sm text-gray-500">{dictionary.web?.waiter?.order?.timeElapsed || 'hace'} {timeElapsed}</span>
                                         </div>
                                     </CardHeader>
                                     <CardContent className="relative z-10">
@@ -296,7 +298,7 @@ export default function KitchenInterface({
                                                         style={{ borderRadius: "60% 40% 30% 70%" }}
                                                     ></div>
                                                     <p className="text-sm text-gray-700">
-                                                        <span className='font-bold'>{item.quantity}x</span> {item.dish?.name || 'Plato no disponible'}
+                                                        <span className='font-bold'>{item.quantity}x</span> {item.dish?.name || (dictionary.web?.orders?.table?.dishNotAvailable || 'Plato no disponible')}
                                                     </p>
                                                 </div>
                                             ))}

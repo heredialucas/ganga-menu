@@ -38,8 +38,8 @@ function SubmitButton({ dictionary }: { dictionary: Dictionary }) {
     return (
         <Button type="submit" disabled={pending} className="w-full sm:w-auto text-xs sm:text-sm">
             {pending ? <Loader2 className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 animate-spin" /> : <Save className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />}
-            <span className="hidden sm:inline">{dictionary.app.admin.menu.dishes.form.update}</span>
-            <span className="sm:hidden">Guardar</span>
+            <span className="hidden sm:inline">{(dictionary as any).app?.restaurant?.config?.save || 'Guardar Configuración'}</span>
+            <span className="sm:hidden">{(dictionary as any).app?.restaurant?.config?.saving || 'Guardando...'}</span>
         </Button>
     );
 }
@@ -64,7 +64,7 @@ export function RestaurantConfigForm({
 
         startTransition(() => {
             toast.promise(saveRestaurantConfig(state, formData), {
-                loading: 'Guardando configuración...',
+                loading: (dictionary as any).app?.restaurant?.config?.toast?.saving || 'Guardando configuración...',
                 success: (result) => {
                     setState(result);
                     if (!result.success) throw new Error(result.message);
@@ -74,8 +74,8 @@ export function RestaurantConfigForm({
                     // Si el error viene de la promesa (e.g. !res.success), ya tenemos un mensaje.
                     if (err.message) return err.message;
                     // Si es otro tipo de error.
-                    setState({ success: false, message: 'Ocurrió un error inesperado.' });
-                    return 'Ocurrió un error inesperado.';
+                    setState({ success: false, message: (dictionary as any).app?.restaurant?.config?.toast?.unexpectedError || 'Ocurrió un error inesperado.' });
+                    return (dictionary as any).app?.restaurant?.config?.toast?.unexpectedError || 'Ocurrió un error inesperado.';
                 },
             });
         });
@@ -91,7 +91,7 @@ export function RestaurantConfigForm({
             if (state.success) {
                 toast.success(state.message);
             } else {
-                toast.error(state.message || 'Ocurrió un error.');
+                toast.error(state.message || (dictionary as any).app?.restaurant?.config?.toast?.error || 'Ocurrió un error.');
             }
         }
     }, [state]);
@@ -102,26 +102,26 @@ export function RestaurantConfigForm({
                 {/* General Info Section */}
                 <Card>
                     <CardHeader>
-                        <CardTitle className="text-lg sm:text-xl">Información General</CardTitle>
+                        <CardTitle className="text-lg sm:text-xl">{(dictionary as any).app?.restaurant?.config?.title || 'Información General'}</CardTitle>
                         <CardDescription className="text-sm sm:text-base">
-                            Logo, nombre y descripción de tu restaurante.
+                            {(dictionary as any).app?.restaurant?.config?.description || 'Logo, nombre y descripción de tu restaurante.'}
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="p-1 sm:p-2 md:p-6 grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                         <div className="lg:col-span-1">
-                            <Label className="text-sm sm:text-base">Logo del Restaurante</Label>
-                            <ImageUpload name="logoUrl" initialUrl={config?.logoUrl} />
+                            <Label className="text-sm sm:text-base">{(dictionary as any).app?.restaurant?.config?.logo || 'Logo del Restaurante'}</Label>
+                            <ImageUpload name="logoUrl" initialUrl={config?.logoUrl} dictionary={dictionary} />
                             {state?.errors?.logoUrl && <p className="text-sm text-red-500 mt-2">{state.errors.logoUrl[0]}</p>}
                         </div>
                         <div className="lg:col-span-2 space-y-4">
                             <div className="space-y-2">
-                                <Label htmlFor="name" className="text-sm sm:text-base">Nombre del Restaurante</Label>
-                                <Input id="name" name="name" defaultValue={config?.name} />
+                                <Label htmlFor="name" className="text-sm sm:text-base">{(dictionary as any).app?.restaurant?.config?.name || 'Nombre del Restaurante'}</Label>
+                                <Input id="name" name="name" defaultValue={config?.name} placeholder={(dictionary as any).app?.restaurant?.config?.namePlaceholder || 'Ingresa el nombre de tu restaurante'} />
                                 {state?.errors?.name && <p className="text-sm text-red-500">{state.errors.name[0]}</p>}
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="description" className="text-sm sm:text-base">Descripción</Label>
-                                <Textarea id="description" name="description" defaultValue={config?.description || ''} />
+                                <Label htmlFor="description" className="text-sm sm:text-base">{(dictionary as any).app?.restaurant?.config?.description || 'Descripción'}</Label>
+                                <Textarea id="description" name="description" defaultValue={config?.description || ''} placeholder={(dictionary as any).app?.restaurant?.config?.descriptionPlaceholder || 'Describe tu restaurante'} />
                                 {state?.errors?.description && <p className="text-sm text-red-500">{state.errors.description[0]}</p>}
                             </div>
                         </div>
@@ -133,26 +133,26 @@ export function RestaurantConfigForm({
                 {/* Contact Info Section */}
                 <Card>
                     <CardHeader>
-                        <CardTitle className="text-lg sm:text-xl">Información de Contacto</CardTitle>
+                        <CardTitle className="text-lg sm:text-xl">{(dictionary as any).app?.restaurant?.config?.contactInfo?.title || 'Información de Contacto'}</CardTitle>
                         <CardDescription className="text-sm sm:text-base">
-                            Información de contacto para que tus clientes puedan ubicarte y comunicarse contigo.
+                            {(dictionary as any).app?.restaurant?.config?.contactInfo?.description || 'Información de contacto para que tus clientes puedan ubicarte y comunicarse contigo.'}
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="p-1 sm:p-2 md:p-6 space-y-4 sm:space-y-6">
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                             <div className="space-y-2">
-                                <Label htmlFor="address" className="text-sm sm:text-base">Dirección</Label>
-                                <Input id="address" name="address" defaultValue={config?.address || ''} placeholder="Calle, número, ciudad" />
+                                <Label htmlFor="address" className="text-sm sm:text-base">{(dictionary as any).app?.restaurant?.config?.address || 'Dirección'}</Label>
+                                <Input id="address" name="address" defaultValue={config?.address || ''} placeholder={(dictionary as any).app?.restaurant?.config?.addressPlaceholder || 'Calle, número, ciudad'} />
                                 {state?.errors?.address && <p className="text-sm text-red-500">{state.errors.address[0]}</p>}
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="phone" className="text-sm sm:text-base">Teléfono</Label>
-                                <Input id="phone" name="phone" defaultValue={config?.phone || ''} placeholder="+34 123 456 789" />
+                                <Label htmlFor="phone" className="text-sm sm:text-base">{(dictionary as any).app?.restaurant?.config?.phone || 'Teléfono'}</Label>
+                                <Input id="phone" name="phone" defaultValue={config?.phone || ''} placeholder={(dictionary as any).app?.restaurant?.config?.phonePlaceholder || '+34 123 456 789'} />
                                 {state?.errors?.phone && <p className="text-sm text-red-500">{state.errors.phone[0]}</p>}
                             </div>
                             <div className="space-y-2 sm:col-span-2 lg:col-span-1">
-                                <Label htmlFor="email" className="text-sm sm:text-base">Email de Contacto</Label>
-                                <Input id="email" name="email" type="email" defaultValue={config?.email || ''} placeholder="contacto@restaurante.com" />
+                                <Label htmlFor="email" className="text-sm sm:text-base">{(dictionary as any).app?.restaurant?.config?.email || 'Email de Contacto'}</Label>
+                                <Input id="email" name="email" type="email" defaultValue={config?.email || ''} placeholder={(dictionary as any).app?.restaurant?.config?.emailPlaceholder || 'contacto@restaurante.com'} />
                                 {state?.errors?.email && <p className="text-sm text-red-500">{state.errors.email[0]}</p>}
                             </div>
                             {/* <div className="space-y-2">
@@ -170,19 +170,19 @@ export function RestaurantConfigForm({
                         <AccordionTrigger className="text-base sm:text-lg font-medium">
                             <div className="flex items-center gap-2">
                                 <Clock className="h-4 w-4 sm:h-5 sm:w-5" />
-                                <span className="hidden sm:inline">Horarios de Apertura</span>
-                                <span className="sm:hidden">Horarios</span>
+                                <span className="hidden sm:inline">{(dictionary as any).app?.restaurant?.openingHours?.title || 'Horarios de Apertura'}</span>
+                                <span className="sm:hidden">{(dictionary as any).app?.restaurant?.view?.hoursTab || 'Horarios'}</span>
                             </div>
                         </AccordionTrigger>
                         <AccordionContent>
                             <Card className="border-none">
                                 <CardHeader>
                                     <CardDescription className="text-sm sm:text-base">
-                                        Define los días y horas en que tu restaurante está abierto.
+                                        {(dictionary as any).app?.restaurant?.openingHours?.description || 'Define los días y horas en que tu restaurante está abierto.'}
                                     </CardDescription>
                                 </CardHeader>
                                 <CardContent className="p-1 sm:p-2 md:p-6">
-                                    <OpeningHoursManager initialHours={config?.hours || undefined} />
+                                    <OpeningHoursManager initialHours={config?.hours || undefined} dictionary={dictionary} />
                                     {state?.errors?.hours && <p className="text-sm text-red-500 mt-2">{state.errors.hours[0]}</p>}
                                 </CardContent>
                             </Card>

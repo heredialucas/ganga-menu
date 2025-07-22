@@ -2,7 +2,7 @@
   "name": "app",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 4000 --turbopack",
+    "dev": "next dev -p 4001 --turbopack",
     "build": "next build",
     "start": "next start -p 3000",
     "analyze": "ANALYZE=true pnpm build",

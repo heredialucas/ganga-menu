@@ -1,14 +1,12 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import { createUser, getUserById, verifyUserCredentials, findUserByEmail } from './userService';
+import { verifyUserCredentials } from './userService';
 import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 import { database } from '@repo/database';
 import bcrypt from 'bcryptjs';
-import type { UserPermission, Permission } from '@repo/database/generated/client';
-
-// Import permissions system
-import { ADMIN_PERMISSIONS } from '@repo/auth/server-permissions';
+import { redirect } from 'next/navigation';
+import { COOKIE_NAMES } from '../constants';
 
 // Cookie expiration (30 days in seconds)
 const COOKIE_EXPIRATION = 60 * 60 * 24 * 30;
@@ -26,6 +24,8 @@ async function setCookie(name: string, value: string, options?: Partial<Response
             secure: process.env.NODE_ENV === 'production',
             maxAge: COOKIE_EXPIRATION,
             sameSite: 'lax',
+            domain: process.env.COOKIE_DOMAIN || undefined,
+            priority: 'high',
             ...options,
         });
     } catch (error) {
@@ -66,9 +66,13 @@ export async function signIn({ email, password }: { email: string; password: str
             email: user.email,
             role: user.role.toLowerCase(),
             permissions: permissions,
+            app: 'ganga-menu',
+            version: '1.0.0',
+            createdAt: new Date().toISOString(),
+            sessionId: `${user.id}-${Date.now()}`
         });
 
-        await setCookie('auth-token', token);
+        await setCookie(COOKIE_NAMES.AUTH_TOKEN, token);
 
         return {
             success: true,
@@ -95,7 +99,15 @@ export async function signUp(data: {
     password: string;
 }) {
     try {
-        const allPermissions = await database.permission.findMany({ select: { id: true } });
+        // Obtener los permisos básicos para usuarios nuevos
+        const basicPermissions = await database.permission.findMany({
+            where: {
+                name: {
+                    in: ['account:view_own', 'account:edit_own', 'account:change_password']
+                }
+            },
+            select: { id: true }
+        });
 
         const result = await database.user.create({
             data: {
@@ -103,9 +115,9 @@ export async function signUp(data: {
                 lastName: data.lastName,
                 email: data.email,
                 password: await bcrypt.hash(data.password, 12),
-                role: 'admin',
+                role: 'user',
                 permissions: {
-                    create: allPermissions.map(p => ({ permissionId: p.id }))
+                    create: basicPermissions.map(p => ({ permissionId: p.id }))
                 }
             },
             include: { permissions: { include: { permission: true } } }
@@ -125,9 +137,13 @@ export async function signUp(data: {
             email: user.email,
             role: user.role.toLowerCase(),
             permissions: permissions,
+            app: 'ganga-menu',
+            version: '1.0.0',
+            createdAt: new Date().toISOString(),
+            sessionId: `${user.id}-${Date.now()}`
         });
 
-        await setCookie('auth-token', token);
+        await setCookie(COOKIE_NAMES.AUTH_TOKEN, token);
 
         return {
             success: true,
@@ -151,14 +167,24 @@ export async function signUp(data: {
 /**
  * Sign out the current user
  */
-export async function signOut() {
+export async function signOut(locale: string = 'es') {
     try {
         const cookieStore = await cookies();
+
+        // Eliminar todas las cookies de la aplicación
+        Object.values(COOKIE_NAMES).forEach(cookieName => {
+            cookieStore.delete(cookieName);
+        });
+
+        // También eliminar cookie con nombre antiguo por compatibilidad
         cookieStore.delete('auth-token');
-        return { success: true };
+
+        // Redirigir al login después de eliminar la cookie
+        redirect(`/${locale}/sign-in`);
     } catch (error) {
         console.error('Error al eliminar cookie:', error);
-        return { success: false, error: 'Error al cerrar sesión' };
+        // Si hay error, redirigir de todas formas
+        redirect(`/${locale}/sign-in`);
     }
 }
 
@@ -169,7 +195,7 @@ export async function signOut() {
 export async function getCurrentUser() {
     try {
         const cookieStore = await cookies();
-        const tokenCookie = cookieStore.get('auth-token');
+        const tokenCookie = cookieStore.get(COOKIE_NAMES.AUTH_TOKEN);
 
         if (!tokenCookie || !tokenCookie.value || tokenCookie.value.trim() === '') {
             return null;
@@ -202,7 +228,7 @@ export async function getCurrentUser() {
             // Verificar si el token en la cookie está desactualizado
             if (JSON.stringify(permissions) !== JSON.stringify(token.permissions)) {
                 const newToken = JSON.stringify({ ...token, permissions });
-                await setCookie('auth-token', newToken);
+                await setCookie(COOKIE_NAMES.AUTH_TOKEN, newToken);
             }
 
             return {
@@ -231,7 +257,7 @@ export async function getCurrentUser() {
 export async function getCurrentUserId(): Promise<string | null> {
     try {
         const cookieStore = await cookies();
-        const tokenCookie = cookieStore.get('auth-token');
+        const tokenCookie = cookieStore.get(COOKIE_NAMES.AUTH_TOKEN);
 
         if (!tokenCookie || !tokenCookie.value || tokenCookie.value.trim() === '') {
             return null;

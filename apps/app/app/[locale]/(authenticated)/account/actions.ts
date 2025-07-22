@@ -7,10 +7,16 @@ import {
     deleteUser as deleteUserService,
     updateUser as updateUserService,
 } from '@repo/data-services/src/services/userService';
+import {
+    createUserWithInheritance,
+    updateUserWithInheritance,
+    deleteUserWithInheritance
+} from '@repo/data-services/src/services/userManagementService';
 import { z } from 'zod';
 import type { UserRole } from '@repo/database';
 import { hasPermission } from '@repo/auth/server-permissions';
 import { getCurrentUserId } from '@repo/data-services/src/services/authService';
+import { database } from '@repo/database';
 
 // Esquema para la actualización del perfil
 const profileSchema = z.object({
@@ -122,16 +128,15 @@ export async function createUser(formData: FormData) {
 
         const { permissions, ...userData } = validated.data;
 
-        const result = await createUserService({
+        // Usar la nueva función con herencia
+        const result = await createUserWithInheritance({
             ...userData,
             password: userData.password!,
-            role: userData.role as UserRole,
-            creatorId,
-            permissionNames: permissions,
+            createdById: creatorId, // Esto es requerido para la herencia
         });
 
         if (!result.success) {
-            return { success: false, message: result.message || 'Error al crear el usuario' };
+            return { success: false, message: result.error || 'Error al crear el usuario' };
         }
 
         revalidatePath('/account');
@@ -148,6 +153,21 @@ export async function updateUser(userId: string, formData: FormData) {
             return { success: false, message: 'No tienes permisos para actualizar usuarios.' };
         }
 
+        const currentUserId = await getCurrentUserId();
+        if (!currentUserId) {
+            return { success: false, message: 'No se pudo identificar al usuario actual.' };
+        }
+
+        // Verificar que el usuario a actualizar es subordinado del usuario actual
+        const userToUpdate = await database.user.findUnique({
+            where: { id: userId },
+            select: { createdById: true }
+        });
+
+        if (!userToUpdate || userToUpdate.createdById !== currentUserId) {
+            return { success: false, message: 'Solo puedes actualizar usuarios que hayas creado.' };
+        }
+
         const data = {
             name: formData.get('name'),
             lastName: formData.get('lastName'),
@@ -162,7 +182,17 @@ export async function updateUser(userId: string, formData: FormData) {
             return { success: false, message: validated.error.errors[0].message };
         }
 
-        await updateUserService(userId, { ...validated.data, role: validated.data.role as UserRole, password: validated.data.password || '' });
+        // Usar la nueva función con herencia
+        const result = await updateUserWithInheritance(userId, {
+            ...validated.data,
+            role: validated.data.role as UserRole,
+            password: validated.data.password || '',
+            permissions: validated.data.permissions
+        });
+
+        if (!result.success) {
+            return { success: false, message: result.error || 'Error al actualizar el usuario' };
+        }
 
         revalidatePath('/account');
         return { success: true, message: 'Usuario actualizado exitosamente' };
@@ -178,7 +208,27 @@ export async function deleteUser(userId: string) {
             return { success: false, message: 'No tienes permisos para eliminar usuarios.' };
         }
 
-        await deleteUserService(userId);
+        const currentUserId = await getCurrentUserId();
+        if (!currentUserId) {
+            return { success: false, message: 'No se pudo identificar al usuario actual.' };
+        }
+
+        // Verificar que el usuario a eliminar es subordinado del usuario actual
+        const userToDelete = await database.user.findUnique({
+            where: { id: userId },
+            select: { createdById: true }
+        });
+
+        if (!userToDelete || userToDelete.createdById !== currentUserId) {
+            return { success: false, message: 'Solo puedes eliminar usuarios que hayas creado.' };
+        }
+
+        const result = await deleteUserWithInheritance(userId);
+
+        if (!result.success) {
+            return { success: false, message: result.error || 'Error al eliminar el usuario' };
+        }
+
         revalidatePath('/account');
         return { success: true, message: 'Usuario eliminado exitosamente' };
 

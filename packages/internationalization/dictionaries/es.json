@@ -38,6 +38,14 @@
       "logout": "Cerrar sesión",
       "loggingOut": "Cerrando sesión..."
     },
+    "accessDenied": {
+      "title": "Acceso Denegado",
+      "description": "No tienes permisos para acceder a esta área. Esta sección está reservada para usuarios autorizados con el rol apropiado.",
+      "needAccess": {
+        "title": "¿Necesitas acceso?",
+        "description": "Si necesitas acceso a esta sección, por favor contacta a un administrador para solicitar la autorización apropiada."
+      }
+    },
     "sidebar": {
       "account": "Cuenta",
       "menu": "Menú",

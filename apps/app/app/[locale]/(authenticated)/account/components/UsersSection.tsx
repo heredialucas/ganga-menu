@@ -140,7 +140,7 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
             lastName: '',
             email: '',
             password: '',
-            role: 'user',
+            role: 'premium', // Siempre premium
             permissions: ['account:view_own', 'account:edit_own', 'account:change_password'],
         });
         setIsUserDialogOpen(true);
@@ -153,7 +153,7 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
             lastName: user.lastName,
             email: user.email,
             password: '',
-            role: user.role as UserRole,
+            role: 'premium', // Siempre premium para usuarios gestionados
             permissions: user.permissions || [],
         });
         setIsUserDialogOpen(true);
@@ -169,17 +169,8 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
     };
 
     const handleRoleChange = (role: UserRole) => {
-        if (role === 'admin') {
-            setUserForm(prev => ({ ...prev, role, permissions: allPermissions }));
-        } else if (role === 'user') {
-            setUserForm(prev => ({
-                ...prev,
-                role,
-                permissions: ['account:view_own', 'account:edit_own', 'account:change_password']
-            }));
-        } else {
-            setUserForm(prev => ({ ...prev, role }));
-        }
+        // Los usuarios premium siempre crean/gestionan usuarios premium
+        setUserForm(prev => ({ ...prev, role: 'premium' }));
     };
 
     const handleUserSubmit = () => {
@@ -322,17 +313,6 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
                         <div className="grid grid-cols-1 sm:grid-cols-4 items-start sm:items-center gap-2 sm:gap-4">
                             <Label htmlFor="password" className="text-left sm:text-right text-sm sm:text-base">{dictionary.app?.account?.users?.password || 'Contraseña'}</Label>
                             <Input id="password" type="password" placeholder={editingUser ? (dictionary.app?.account?.users?.passwordPlaceholder || 'Dejar en blanco para no cambiar') : ''} value={userForm.password} onChange={e => setUserForm({ ...userForm, password: e.target.value })} className="col-span-1 sm:col-span-3 text-sm sm:text-base" />
-                        </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-4 items-start sm:items-center gap-2 sm:gap-4">
-                            <Label htmlFor="role" className="text-left sm:text-right text-sm sm:text-base">{dictionary.app?.account?.users?.role || 'Rol'}</Label>
-                            <Select value={userForm.role} onValueChange={(value) => handleRoleChange(value as UserRole)}>
-                                <SelectTrigger className="col-span-1 sm:col-span-3 text-sm sm:text-base">
-                                    <SelectValue placeholder={dictionary.app?.account?.users?.rolePlaceholder || 'Selecciona un rol'} />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="user">{dictionary.app?.account?.users?.restaurantManager || 'Encargado de restaurante'}</SelectItem>
-                                </SelectContent>
-                            </Select>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-4 items-start gap-2 sm:gap-4 pt-3 sm:pt-4">
                             <Label className="text-left sm:text-right pt-2 text-sm sm:text-base">{dictionary.app?.account?.users?.permissionsLabel || 'Permisos'}</Label>

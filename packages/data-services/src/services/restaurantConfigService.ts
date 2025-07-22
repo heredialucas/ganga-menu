@@ -72,13 +72,32 @@ export async function getRestaurantConfig(userId?: string): Promise<RestaurantCo
             throw new Error('Usuario no autenticado');
         }
 
-        const config = await database.restaurantConfig.findFirst({
+        // Primero buscar la configuración del usuario actual
+        let config = await database.restaurantConfig.findFirst({
             where: {
                 isActive: true,
                 createdById: currentUserId
             },
             orderBy: { createdAt: 'desc' }
         });
+
+        // Si no tiene configuración propia, buscar la del padre
+        if (!config) {
+            const user = await database.user.findUnique({
+                where: { id: currentUserId },
+                select: { createdById: true }
+            });
+
+            if (user?.createdById && user.createdById !== currentUserId) {
+                config = await database.restaurantConfig.findFirst({
+                    where: {
+                        isActive: true,
+                        createdById: user.createdById
+                    },
+                    orderBy: { createdAt: 'desc' }
+                });
+            }
+        }
 
         return config;
     } catch (error) {

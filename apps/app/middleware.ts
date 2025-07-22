@@ -6,7 +6,7 @@ import {
 } from '@repo/security/middleware';
 import { env } from './env';
 import { internationalizationMiddleware } from '@repo/internationalization/middleware';
-
+import { COOKIE_NAMES } from '@repo/data-services/src/constants';
 // --- 1. Definición de Roles ---
 const ROLES = {
   ADMIN: 'admin',
@@ -72,7 +72,7 @@ const PUBLIC_ROUTES = [
 ];
 
 // Authentication cookie name
-const AUTH_COOKIE_NAME = 'auth-token';
+const AUTH_COOKIE_NAME = COOKIE_NAMES.AUTH_TOKEN;
 
 // Security middleware
 const securityHeaders = env.FLAGS_SECRET
@@ -92,19 +92,18 @@ const isAuthenticatedRoute = (pathname: string): boolean => {
 
 // --- 4. Lógica de Acceso Mejorada con Permisos ---
 const hasAccessToRoute = (pathname: string, userRole: Role, userPermissions: string[] = []): boolean => {
-  // El Admin y Premium siempre tienen acceso a todo
+  // El Admin y Premium siempre tienen acceso a todo - sin verificar permisos específicos
   if (userRole === ROLES.ADMIN || userRole === ROLES.PREMIUM) {
     return true;
   }
 
-  // Encuentra la ruta base más específica que coincida con el pathname actual
+  // Para usuarios normales, verificar permisos específicos
   const matchingRoute = Object.keys(ROUTE_PERMISSIONS)
     .filter(route => pathname.startsWith(route))
     .sort((a, b) => b.length - a.length)[0];
 
   if (matchingRoute) {
     const requiredPermissions = ROUTE_PERMISSIONS[matchingRoute];
-    // El usuario debe tener al menos uno de los permisos requeridos para la ruta
     return requiredPermissions.some(permission => userPermissions.includes(permission));
   }
 
@@ -181,11 +180,13 @@ export function middleware(req: NextRequest) {
       userId = token.id;
       userRole = getUserRole(token.role);
       userPermissions = token.permissions || [];
+
     } catch (error) {
       console.error('Error parsing auth token:', error);
       // Si el token es inválido, tratar al usuario como no autenticado
       const response = NextResponse.redirect(new URL(`/${locale}/sign-in`, req.url));
       response.cookies.delete(AUTH_COOKIE_NAME);
+      response.cookies.delete('auth-token'); // También eliminar cookie con nombre antiguo por compatibilidad
       return response;
     }
   }
@@ -203,7 +204,9 @@ export function middleware(req: NextRequest) {
   }
 
   // Verificar si tiene acceso a la ruta solicitada
-  if (!hasAccessToRoute(pathnameWithoutLocale, userRole, userPermissions)) {
+  const hasAccess = hasAccessToRoute(pathnameWithoutLocale, userRole, userPermissions);
+
+  if (!hasAccess) {
     return NextResponse.redirect(new URL(`/${locale}/access-denied`, req.url));
   }
 

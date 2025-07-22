@@ -13,7 +13,7 @@ export default function AccessDeniedLayout({ children }: AccessDeniedLayoutProps
                 <div className="container mx-auto">
                     <Link href="/" className="flex items-center gap-2">
                         <Leaf className="h-5 w-5 text-green-500" />
-                        <span className="font-bold text-lg">Cannamedicus</span>
+                        <span className="font-bold text-lg">Ganga-Menú</span>
                     </Link>
                 </div>
             </header>

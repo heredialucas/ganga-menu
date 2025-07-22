@@ -5,6 +5,9 @@ import { Toaster } from './components/ui/sonner';
 import { TooltipProvider } from './components/ui/tooltip';
 import { ThemeProvider } from './providers/theme';
 
+// Export PremiumGate components
+export { PremiumGate, usePremiumAccess } from './components/ui/premium-gate';
+
 type DesignSystemProviderProperties = ThemeProviderProps;
 
 export const DesignSystemProvider = ({

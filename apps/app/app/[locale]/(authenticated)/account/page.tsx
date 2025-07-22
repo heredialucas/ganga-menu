@@ -1,5 +1,5 @@
 import { getCurrentUser } from '@repo/data-services/src/services/authService';
-import { getAllUsers } from '@repo/data-services/src/services/userService';
+import { getSubordinateUsers } from '@repo/data-services/src/services/userManagementService';
 import { getDictionary } from '@repo/internationalization';
 import {
     hasPermission,
@@ -18,9 +18,10 @@ interface AccountPageProps {
 }
 
 export default async function AccountPage({ params }: AccountPageProps) {
-    // Verificar permisos básicos
-    await requirePermission('account:view_own');
     const { locale } = await params;
+
+    // Verificar permisos básicos con el locale
+    await requirePermission('account:view_own', locale);
 
     // Obtener datos en el servidor
     const [currentUser, dictionary] = await Promise.all([
@@ -42,7 +43,8 @@ export default async function AccountPage({ params }: AccountPageProps) {
 
     // Verificar si puede gestionar usuarios para obtener la lista
     const canManageUsers = await hasPermission('admin:manage_users');
-    const users = canManageUsers ? await getAllUsers(currentUser.id) : [];
+    const usersResult = canManageUsers ? await getSubordinateUsers(currentUser.id) : { success: true, users: [] };
+    const users = usersResult.success ? usersResult.users || [] : [];
 
     // Filtrar los permisos de administrador para que no se puedan asignar desde la UI
     const assignablePermissions = ADMIN_PERMISSIONS.filter(p => !p.startsWith('admin:'));

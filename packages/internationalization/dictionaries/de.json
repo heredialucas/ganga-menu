@@ -38,6 +38,14 @@
       "logout": "Abmelden",
       "loggingOut": "Abmeldung läuft..."
     },
+    "accessDenied": {
+      "title": "Zugriff verweigert",
+      "description": "Sie haben keine Berechtigung, auf diesen Bereich zuzugreifen. Dieser Bereich ist für autorisierte Benutzer mit der entsprechenden Rolle reserviert.",
+      "needAccess": {
+        "title": "Zugriff benötigt?",
+        "description": "Wenn Sie Zugriff auf diesen Bereich benötigen, wenden Sie sich bitte an einen Administrator, um die entsprechende Berechtigung zu beantragen."
+      }
+    },
     "sidebar": {
       "account": "Konto",
       "menu": "Menü",

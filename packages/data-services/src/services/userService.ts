@@ -3,8 +3,52 @@
 import { revalidatePath } from 'next/cache';
 import { UserData, UserFormData } from '../types/user';
 import { database } from '@repo/database';
-import { UserRole } from '@repo/database';
+import { UserRole } from '@repo/database/generated/client';
 import bcrypt from 'bcryptjs';
+
+/**
+ * Verifica si un usuario debe ver funcionalidades premium
+ * Los usuarios cuyo padre es premium/admin no deben ver funcionalidades premium
+ */
+export async function shouldShowPremiumFeatures(userId: string): Promise<boolean> {
+    try {
+        const user = await database.user.findUnique({
+            where: { id: userId },
+            include: {
+                createdBy: {
+                    select: {
+                        role: true
+                    }
+                }
+            }
+        });
+
+        if (!user) {
+            return true; // Por defecto mostrar si no se encuentra el usuario
+        }
+
+        // Si el usuario es admin o premium, no mostrar funcionalidades premium
+        if (user.role === 'admin' || user.role === 'premium') {
+            return false;
+        }
+
+        // Si el usuario es 'user', verificar si el padre es premium/admin
+        if (user.role === 'user' && user.createdBy) {
+            const parentRole = user.createdBy.role;
+            // Si el padre es premium o admin, no mostrar funcionalidades premium
+            if (parentRole === 'premium' || parentRole === 'admin') {
+                return false;
+            }
+        }
+
+        return true; // Mostrar funcionalidades premium por defecto
+    } catch (error) {
+        console.error('Error al verificar si mostrar funcionalidades premium:', error);
+        return true; // Por defecto mostrar las funcionalidades
+    }
+}
+
+
 
 /**
  * Crear un nuevo usuario
@@ -336,5 +380,140 @@ export async function findUserByStripeCustomerId(stripeCustomerId: string) {
     } catch (error) {
         console.error(`Error finding user by stripeCustomerId ${stripeCustomerId}:`, error);
         throw new Error('Could not find user by Stripe Customer ID.');
+    }
+}
+
+/**
+ * Asigna permisos básicos a un usuario recién creado
+ */
+async function assignBasicPermissions(userId: string): Promise<void> {
+    try {
+        // Buscar los permisos básicos
+        const basicPermissions = await database.permission.findMany({
+            where: {
+                name: {
+                    in: ['account:view_own', 'account:edit_own', 'account:change_password']
+                }
+            }
+        });
+
+        // Crear las relaciones usuario-permiso
+        const userPermissions = basicPermissions.map(permission => ({
+            userId,
+            permissionId: permission.id
+        }));
+
+        if (userPermissions.length > 0) {
+            await database.userPermission.createMany({
+                data: userPermissions
+            });
+        }
+
+        console.log(`Assigned ${userPermissions.length} basic permissions to user ${userId}`);
+    } catch (error) {
+        console.error('Error assigning basic permissions:', error);
+        throw error;
+    }
+}
+
+/**
+ * Actualiza automáticamente el rol de todos los usuarios hijos cuando cambia el rol del padre
+ * Si el padre es premium/admin, los hijos heredan premium
+ * Si el padre es user, los hijos vuelven a user
+ */
+export async function updateChildrenRoles(parentId: string, parentRole: UserRole): Promise<void> {
+    try {
+        // Buscar todos los usuarios creados por este padre
+        const children = await database.user.findMany({
+            where: { createdById: parentId },
+            select: { id: true, role: true }
+        });
+
+        if (children.length === 0) return;
+
+        // Determinar el rol que deben heredar los hijos
+        const inheritedRole: UserRole = (parentRole === 'premium' || parentRole === 'admin') ? 'premium' : 'user';
+
+        // Actualizar todos los hijos
+        await database.user.updateMany({
+            where: { createdById: parentId },
+            data: { role: inheritedRole }
+        });
+
+        console.log(`Updated ${children.length} children of user ${parentId} to role: ${inheritedRole}`);
+    } catch (error) {
+        console.error('Error updating children roles:', error);
+        throw error;
+    }
+}
+
+/**
+ * Crea un usuario subordinado con herencia de rol del padre
+ * SOLO para usuarios creados desde la gestión de usuarios
+ */
+export async function createSubordinateUser(userData: {
+    email: string;
+    name: string;
+    lastName: string;
+    password: string;
+    createdById: string; // OBLIGATORIO - ID del padre
+    stripeCustomerId?: string;
+}): Promise<any> {
+    try {
+        // Verificar que el padre existe y obtener su rol
+        const parent = await database.user.findUnique({
+            where: { id: userData.createdById },
+            select: { role: true }
+        });
+
+        if (!parent) {
+            throw new Error('Parent user not found');
+        }
+
+        // Determinar el rol heredado
+        const inheritedRole: UserRole = (parent.role === 'premium' || parent.role === 'admin') ? 'premium' : 'user';
+
+        // Hashear la contraseña
+        const hashedPassword = await bcrypt.hash(userData.password, 12);
+
+        // Crear el usuario con el rol heredado
+        const newUser = await database.user.create({
+            data: {
+                ...userData,
+                password: hashedPassword, // Usar la contraseña hasheada
+                role: inheritedRole
+            }
+        });
+
+        // Asignar permisos básicos
+        await assignBasicPermissions(newUser.id);
+
+        console.log(`Created subordinate user ${newUser.id} with inherited role: ${inheritedRole}`);
+        return newUser;
+    } catch (error) {
+        console.error('Error creating subordinate user:', error);
+        throw error;
+    }
+}
+
+/**
+ * Actualiza el rol de un usuario y automáticamente actualiza todos sus hijos directos
+ */
+export async function updateUserRoleWithChildrenInheritance(userId: string, newRole: UserRole): Promise<any> {
+    try {
+        // Actualizar el usuario
+        const updatedUser = await database.user.update({
+            where: { id: userId },
+            data: { role: newRole }
+        });
+
+        // Actualizar solo los hijos directos
+        await updateChildrenRoles(userId, newRole);
+
+        console.log(`Updated user ${userId} to role: ${newRole} and children`);
+        return updatedUser;
+    } catch (error) {
+        console.error('Error updating user role with inheritance:', error);
+        throw error;
     }
 } 

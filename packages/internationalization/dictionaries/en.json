@@ -38,6 +38,14 @@
       "logout": "Sign out",
       "loggingOut": "Signing out..."
     },
+    "accessDenied": {
+      "title": "Access Denied",
+      "description": "You don't have permission to access this area. This section is reserved for authorized users with the appropriate role.",
+      "needAccess": {
+        "title": "Need access?",
+        "description": "If you need access to this section, please contact an administrator to request the appropriate authorization."
+      }
+    },
     "sidebar": {
       "account": "Account",
       "menu": "Menu",

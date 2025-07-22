@@ -61,7 +61,7 @@ export function FeedbackWidget({ dictionary }: FeedbackWidgetProps) {
                 className="flex items-center gap-2"
             >
                 <MessageSquare className="h-4 w-4" />
-                <span className="hidden sm:inline">Compartir enlaces</span>
+                <span className="hidden sm:inline">Dar feedback</span>
                 <span className="sm:hidden">Para dar feedback</span>
             </Button>
 

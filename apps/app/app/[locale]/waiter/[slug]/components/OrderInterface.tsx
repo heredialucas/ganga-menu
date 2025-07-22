@@ -1006,11 +1006,13 @@ export default function OrderInterface({
                                                                             <>
                                                                                 <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                                                                                 <span className="hidden sm:inline">Liberando...</span>
+                                                                                <span className="sm:hidden">...</span>
                                                                             </>
                                                                         ) : (
                                                                             <>
                                                                                 <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4" />
                                                                                 <span className="hidden sm:inline">Liberar Mesa</span>
+                                                                                <span className="sm:hidden">Liberar</span>
                                                                             </>
                                                                         )}
                                                                     </button>

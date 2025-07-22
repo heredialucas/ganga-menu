@@ -1,0 +1,1452 @@
+{
+  "app": {
+    "auth": {
+      "signIn": {
+        "title": "Anmelden",
+        "email": "E-Mail",
+        "password": "Passwort",
+        "button": "Anmelden",
+        "signing": "Anmeldung läuft...",
+        "goToSignUp": "Kein Konto? Konto erstellen",
+        "errors": {
+          "emptyFields": "Bitte füllen Sie alle Felder aus",
+          "invalidCredentials": "Anmeldefehler",
+          "generic": "Bei der Anmeldung ist ein Fehler aufgetreten"
+        }
+      },
+      "signUp": {
+        "title": "Konto erstellen",
+        "firstName": "Vorname",
+        "lastName": "Nachname",
+        "email": "E-Mail",
+        "password": "Passwort",
+        "confirmPassword": "Passwort bestätigen",
+        "button": "Konto erstellen",
+        "creating": "Konto wird erstellt...",
+        "goToSignIn": "Haben Sie bereits ein Konto? Anmelden",
+        "errors": {
+          "emptyFields": "Bitte füllen Sie alle Felder aus",
+          "passwordsDoNotMatch": "Passwörter stimmen nicht überein",
+          "accountCreation": "Fehler beim Erstellen des Kontos",
+          "generic": "Bei der Kontenerstellung ist ein Fehler aufgetreten"
+        }
+      },
+      "layout": {
+        "title": "Interne Tools für Ganga-Menü",
+        "description": "Interne Tools für Ganga-Menü, die Ihnen bei der Verwaltung Ihrer digitalen Menüs helfen."
+      },
+      "logout": "Abmelden",
+      "loggingOut": "Abmeldung läuft..."
+    },
+    "sidebar": {
+      "account": "Konto",
+      "menu": "Menü",
+      "orders": "Bestellungen",
+      "services": "Dienste",
+      "restaurant": "Restaurant"
+    },
+    "share": {
+      "title": "Links teilen",
+      "description": "Teilen Sie diese Links, um Zugang zu den verschiedenen Ansichten Ihres Restaurants zu gewähren.",
+      "open": "Dialog zum Teilen öffnen",
+      "links_button": "Links",
+      "menu": "Link zum öffentlichen Menü",
+      "kitchen": "Link zur Küchenansicht",
+      "waiter": "Link zur Kellneransicht"
+    },
+    "feedback": {
+      "buttonDesktop": "Feedback geben",
+      "buttonMobile": "Für Feedback",
+      "modalTitle": "Helfen Sie uns zu wachsen!",
+      "modalDescription": "Ihre Meinung ist uns sehr wichtig. Teilen Sie uns mit, was Sie denken, und helfen Sie uns, Ganga-Menü zu verbessern.",
+      "title": "Feedback senden",
+      "name": "Name",
+      "email": "E-Mail",
+      "message": "Nachricht",
+      "namePlaceholder": "Ihr Name",
+      "emailPlaceholder": "ihre@email.com",
+      "messagePlaceholder": "Erzählen Sie uns, was Sie denken...",
+      "cancel": "Abbrechen",
+      "send": "Senden",
+      "sending": "Wird gesendet...",
+      "success": "Vielen Dank für Ihr Feedback!",
+      "error": "Fehler beim Senden des Feedbacks. Versuchen Sie es erneut."
+    },
+    "account": {
+      "title": "Kontoverwaltung",
+      "subtitle": "Einstellungen und Benutzer",
+      "userNotFound": "Benutzer nicht gefunden",
+      "tabs": {
+        "profile": {
+          "desktop": "Mein Profil",
+          "mobile": "Profil"
+        },
+        "users": {
+          "desktop": "Benutzerverwaltung",
+          "mobile": "Benutzer"
+        }
+      },
+      "profile": {
+        "title": "Persönliche Informationen",
+        "description": "Aktualisieren Sie Ihre persönlichen Informationen und Kontoeinstellungen",
+        "name": "Vorname",
+        "lastName": "Nachname",
+        "email": "E-Mail",
+        "currentRole": "Aktuelle Rolle",
+        "admin": "Administrator",
+        "user": "Benutzer",
+        "saveChanges": {
+          "desktop": "Änderungen speichern",
+          "mobile": "Speichern"
+        },
+        "saving": "Wird gespeichert...",
+        "validation": {
+          "nameRequired": "Vorname ist erforderlich",
+          "lastNameRequired": "Nachname ist erforderlich",
+          "emailInvalid": "Ungültige E-Mail"
+        },
+        "toast": {
+          "updating": "Profil wird aktualisiert...",
+          "success": "Profil erfolgreich aktualisiert.",
+          "error": "Fehler beim Aktualisieren des Profils"
+        }
+      },
+      "password": {
+        "title": "Sicherheit",
+        "description": "Verwalten Sie Ihr Passwort und Sicherheitseinstellungen",
+        "currentPassword": "Aktuelles Passwort",
+        "newPassword": "Neues Passwort",
+        "confirmPassword": "Neues Passwort bestätigen",
+        "updatePassword": {
+          "desktop": "Passwort aktualisieren",
+          "mobile": "Aktualisieren"
+        },
+        "updating": "Wird aktualisiert...",
+        "validation": {
+          "currentPasswordRequired": "Aktuelles Passwort ist erforderlich",
+          "newPasswordMin": "Das neue Passwort muss mindestens 6 Zeichen haben",
+          "passwordsDoNotMatch": "Passwörter stimmen nicht überein"
+        },
+        "toast": {
+          "updating": "Passwort wird aktualisiert...",
+          "success": "Passwort erfolgreich aktualisiert.",
+          "error": "Fehler beim Aktualisieren des Passworts"
+        }
+      },
+      "users": {
+        "title": "Systembenutzer",
+        "description": "Verwalten Sie Benutzer und ihre Berechtigungen",
+        "newUser": {
+          "desktop": "Neuer Benutzer",
+          "mobile": "Neu"
+        },
+        "editUser": "Benutzer bearbeiten",
+        "createUser": "Benutzer erstellen",
+        "editUserDescription": "Aktualisieren Sie die Benutzerdetails.",
+        "createUserDescription": "Erstellen Sie einen neuen Benutzer und weisen Sie ihm Berechtigungen zu.",
+        "password": "Passwort",
+        "passwordPlaceholder": "Leer lassen, um nicht zu ändern",
+        "role": "Rolle",
+        "rolePlaceholder": "Wählen Sie eine Rolle",
+        "restaurantManager": "Restaurantleiter",
+        "permissionsLabel": "Berechtigungen",
+        "permissions": "Berechtigungen",
+        "cancel": "Abbrechen",
+        "saveChanges": {
+          "desktop": "Änderungen speichern",
+          "mobile": "Speichern"
+        },
+        "create": {
+          "desktop": "Benutzer erstellen",
+          "mobile": "Erstellen"
+        },
+        "saving": "Wird gespeichert...",
+        "deleteUser": "Benutzer löschen",
+        "deleteConfirmation": "Sind Sie sicher?",
+        "deleteDescription": "Diese Aktion kann nicht rückgängig gemacht werden. Der Benutzer wird dauerhaft gelöscht",
+        "deleting": "Wird gelöscht...",
+        "validation": {
+          "nameRequired": "Vorname, Nachname und E-Mail sind erforderlich",
+          "passwordRequired": "Passwort ist für neue Benutzer erforderlich",
+          "passwordMin": "Das Passwort muss mindestens 6 Zeichen haben"
+        },
+        "permissionGroups": {
+          "dishes": "Gerichte",
+          "categories": "Kategorien",
+          "dailySpecials": "Tagesangebote",
+          "restaurant": "Restaurant",
+          "orders": "Bestellungen",
+          "kitchen": "Küche",
+          "waiter": "Kellner",
+          "menu": "Menü",
+          "account": "Konto",
+          "admin": "Administration"
+        },
+        "permissions": {
+          "dishesView": "Gerichte anzeigen",
+          "dishesCreate": "Gerichte erstellen",
+          "dishesEdit": "Gerichte bearbeiten",
+          "dishesDelete": "Gerichte löschen",
+          "dishesManageStatus": "Gerichtestatus verwalten",
+          "categoriesView": "Kategorien anzeigen",
+          "categoriesCreate": "Kategorien erstellen",
+          "categoriesEdit": "Kategorien bearbeiten",
+          "categoriesDelete": "Kategorien löschen",
+          "categoriesManageOrder": "Kategorie-Reihenfolge verwalten",
+          "dailySpecialsView": "Tagesangebote anzeigen",
+          "dailySpecialsCreate": "Tagesangebote erstellen",
+          "dailySpecialsEdit": "Tagesangebote bearbeiten",
+          "dailySpecialsDelete": "Tagesangebote löschen",
+          "restaurantViewConfig": "Restaurant-Konfiguration anzeigen",
+          "restaurantEditConfig": "Restaurant-Konfiguration bearbeiten",
+          "restaurantManageSettings": "Restaurant-Einstellungen verwalten",
+          "restaurantViewDesign": "Restaurant-Design anzeigen",
+          "restaurantEditDesign": "Restaurant-Design bearbeiten",
+          "ordersView": "Bestellungen anzeigen",
+          "ordersCreate": "Bestellungen erstellen",
+          "ordersEdit": "Bestellungen bearbeiten",
+          "ordersDelete": "Bestellungen löschen",
+          "ordersManageStatus": "Bestellstatus verwalten",
+          "kitchenViewOrders": "Küchenbestellungen anzeigen",
+          "kitchenUpdateStatus": "Küchenstatus aktualisieren",
+          "waiterViewOrders": "Kellnerbestellungen anzeigen",
+          "waiterCreateOrders": "Kellnerbestellungen erstellen",
+          "waiterViewMenu": "Kellnermenü anzeigen",
+          "menuViewPublic": "Öffentliches Menü anzeigen",
+          "accountViewOwn": "Eigenes Konto anzeigen",
+          "accountEditOwn": "Eigenes Konto bearbeiten",
+          "accountChangePassword": "Passwort ändern",
+          "adminFullAccess": "Vollzugriff",
+          "adminManageUsers": "Benutzer verwalten",
+          "adminSystemSettings": "Systemeinstellungen"
+        },
+        "toast": {
+          "updating": "Benutzer wird aktualisiert...",
+          "creating": "Benutzer wird erstellt...",
+          "deleting": "Benutzer wird gelöscht...",
+          "updated": "Benutzer erfolgreich aktualisiert.",
+          "created": "Benutzer erfolgreich erstellt.",
+          "deleted": "Benutzer erfolgreich gelöscht."
+        }
+      }
+    },
+    "menu": {
+      "title": "Menüverwaltung",
+      "subtitle": "Erstellen und bearbeiten Sie Ihre Gerichte. Verwenden Sie die Dropdown-Menüs für erweiterte Einstellungen.",
+      "userNotAuthenticated": "Benutzer nicht authentifiziert.",
+      "categories": {
+        "title": "Kategorie-Manager",
+        "newCategory": "Neue Kategorie",
+        "existingCategories": "Vorhandene Kategorien",
+        "name": "Name",
+        "action": "Aktion",
+        "add": {
+          "desktop": "Hinzufügen",
+          "mobile": "Hinzufügen"
+        },
+        "namePlaceholder": "Kategoriename",
+        "deleteConfirmation": "Sind Sie sicher?",
+        "deleteDescription": "Diese Aktion kann nicht rückgängig gemacht werden. Die Kategorie wird gelöscht",
+        "cancel": "Abbrechen",
+        "delete": "Löschen",
+        "deleting": "Wird gelöscht...",
+        "toast": {
+          "success": "Kategorie erstellt.",
+          "error": "Fehler beim Erstellen der Kategorie",
+          "deleteSuccess": "Kategorie gelöscht.",
+          "deleteError": "Fehler beim Löschen der Kategorie",
+          "notAuthenticated": "Benutzer nicht authentifiziert."
+        }
+      },
+      "dishes": {
+        "title": "Gerichte",
+        "description": "Erstellen und verwalten Sie die Gerichte Ihres Menüs.",
+        "newDish": {
+          "desktop": "Neues Gericht",
+          "mobile": "Neu"
+        },
+        "editDish": "Gericht bearbeiten",
+        "createDish": "Gericht erstellen",
+        "image": "Bild",
+        "imagePlaceholder": "Klicken Sie, um ein Bild hochzuladen",
+        "name": "Name",
+        "description": "Beschreibung",
+        "price": "Preis",
+        "promotionalPrice": "Aktionspreis",
+        "category": "Kategorie",
+        "categoryPlaceholder": "Wählen Sie eine Kategorie",
+        "noCategory": "Keine Kategorie",
+        "edit": {
+          "desktop": "Bearbeiten",
+          "mobile": "Bearbeiten"
+        },
+        "cancel": "Abbrechen",
+        "save": "Speichern",
+        "saving": "Wird gespeichert...",
+        "deleteConfirmation": "Sind Sie sicher?",
+        "deleteDescription": "Diese Aktion kann nicht rückgängig gemacht werden. Das Gericht wird dauerhaft gelöscht",
+        "delete": "Löschen",
+        "deleting": "Wird gelöscht...",
+        "toast": {
+          "saving": "Gericht wird gespeichert...",
+          "updated": "Gericht erfolgreich aktualisiert.",
+          "created": "Gericht erfolgreich erstellt.",
+          "deleting": "Gericht wird gelöscht...",
+          "deleted": "Gericht erfolgreich gelöscht.",
+          "notAuthenticated": "Benutzer nicht authentifiziert"
+        }
+      },
+      "dailySpecials": {
+        "title": "Tagesangebote-Planer",
+        "schedulePromotion": "Aktion planen",
+        "dish": "Gericht",
+        "dishPlaceholder": "Wählen Sie ein Gericht",
+        "date": "Datum",
+        "startDate": "Startdatum",
+        "datePlaceholder": "Wählen Sie ein Datum",
+        "repeatPromotion": "Aktion wiederholen",
+        "recurrenceType": "Wiederholungstyp",
+        "weekly": "Wöchentlich",
+        "monthly": "Monatlich",
+        "weekDays": "Wochentage",
+        "endDate": "Enddatum der Wiederholung",
+        "addPromotion": {
+          "desktop": "Aktion hinzufügen",
+          "mobile": "Hinzufügen"
+        },
+        "adding": "Wird hinzugefügt...",
+        "promotionPreview": "Aktionsvorschau",
+        "promotionalPriceNote": "Der Aktionspreis muss im Gericht festgelegt werden.",
+        "activePromotions": "Aktive Aktionen",
+        "deletePromotion": "Aktion löschen",
+        "deletingPromotion": "Aktion wird gelöscht...",
+        "promotionDeleted": "Aktion erfolgreich gelöscht.",
+        "deletePromotions": "Aktionen löschen",
+        "deletingPromotions": "Aktionen werden gelöscht...",
+        "promotionsDeleted": "Aktionen erfolgreich gelöscht.",
+        "validation": {
+          "selectDishAndDate": "Bitte wählen Sie ein Gericht und ein Startdatum.",
+          "completeRecurrenceFields": "Für wiederkehrende Aktionen füllen Sie bitte alle Wiederholungsfelder aus."
+        },
+        "toast": {
+          "adding": "Aktion(en) wird/werden hinzugefügt...",
+          "error": "Aktion konnte nicht hinzugefügt werden.",
+          "deleting": "Aktionen werden gelöscht...",
+          "deleteError": "Aktionen konnten nicht gelöscht werden."
+        }
+      },
+      "access": {
+        "title": "Kundenzugang",
+        "description": "Konfigurieren Sie, wie Ihre Kunden auf das digitale Menü zugreifen. Dieser Link und QR-Code sind zum Teilen bestimmt.",
+        "configureRestaurant": "Konfigurieren Sie zuerst Ihr Restaurant",
+        "customLink": "Personalisierter Link (URL)",
+        "slugPlaceholder": "ihr-restaurant",
+        "copyLink": {
+          "desktop": "Link kopieren",
+          "mobile": "Kopieren"
+        },
+        "preview": {
+          "desktop": "Vorschau",
+          "mobile": "Ansicht"
+        },
+        "themeColor": "Hauptfarbe der Seite",
+        "themeColorNote": "Dies ist die Hauptfarbe auf der Seite, die Ihre Kunden sehen.",
+        "qrCode": "QR-Code des Menüs",
+        "downloadQR": {
+          "desktop": "QR herunterladen",
+          "mobile": "Herunterladen"
+        },
+        "qrNote": "Ihre Kunden können diesen Code scannen, um das Menü zu sehen.",
+        "toast": {
+          "linkCopied": "Menülink in die Zwischenablage kopiert.",
+          "qrDownloaded": "QR erfolgreich heruntergeladen"
+        }
+      }
+    },
+    "restaurant": {
+      "title": "Restaurantverwaltung",
+      "subtitle": "Definieren Sie die Einstellungen Ihres Restaurants und gestalten Sie die Tischverteilung.",
+      "userNotAuthenticated": "Benutzer nicht authentifiziert.",
+      "config": {
+        "title": "Restaurant-Einstellungen",
+        "description": "Konfigurieren Sie die Basisdaten Ihres Restaurants",
+        "name": "Restaurantname",
+        "namePlaceholder": "Geben Sie den Namen Ihres Restaurants ein",
+        "description": "Beschreibung",
+        "descriptionPlaceholder": "Beschreiben Sie Ihr Restaurant",
+        "address": "Adresse",
+        "addressPlaceholder": "Geben Sie die vollständige Adresse ein",
+        "phone": "Telefon",
+        "phonePlaceholder": "Geben Sie die Telefonnummer ein",
+        "email": "E-Mail",
+        "emailPlaceholder": "Geben Sie die Kontakt-E-Mail ein",
+        "website": "Webseite",
+        "websitePlaceholder": "https://ihr-restaurant.com",
+        "logo": "Restaurant-Logo",
+        "logoPlaceholder": "Laden Sie das Logo Ihres Restaurants hoch",
+        "banner": "Restaurant-Banner",
+        "bannerPlaceholder": "Laden Sie ein Bannerbild hoch",
+        "uploadImage": "Bild hochladen",
+        "uploadImageMobile": "Hochladen",
+        "noLogo": "Kein Logo vorhanden",
+        "save": "Einstellungen speichern",
+        "saving": "Wird gespeichert...",
+        "cancel": "Abbrechen",
+        "contactInfo": {
+          "title": "Kontaktinformationen",
+          "description": "Kontaktinformationen, damit Ihre Kunden Sie finden und kontaktieren können."
+        },
+        "toast": {
+          "saving": "Einstellungen werden gespeichert...",
+          "success": "Einstellungen erfolgreich gespeichert.",
+          "error": "Fehler beim Speichern der Einstellungen.",
+          "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten.",
+          "notAuthenticated": "Benutzer nicht authentifiziert"
+        }
+      },
+      "openingHours": {
+        "title": "Öffnungszeiten",
+        "description": "Konfigurieren Sie die Öffnungszeiten Ihres Restaurants",
+        "day": "Tag",
+        "open": "Geöffnet",
+        "closed": "Geschlossen",
+        "openingTime": "Öffnungszeit",
+        "closingTime": "Schließzeit",
+        "saveHours": "Öffnungszeiten speichern",
+        "savingHours": "Öffnungszeiten werden gespeichert...",
+        "applyToAll": "Auf alle Tage anwenden",
+        "allOpen": "Alle geöffnet",
+        "markAllOpen": "Alle als geöffnet markieren",
+        "addShift": "Schicht hinzufügen",
+        "days": {
+          "monday": "Montag",
+          "tuesday": "Dienstag",
+          "wednesday": "Mittwoch",
+          "thursday": "Donnerstag",
+          "friday": "Freitag",
+          "saturday": "Samstag",
+          "sunday": "Sonntag"
+        },
+        "toast": {
+          "saving": "Öffnungszeiten werden gespeichert...",
+          "success": "Öffnungszeiten erfolgreich gespeichert.",
+          "error": "Fehler beim Speichern der Öffnungszeiten.",
+          "notAuthenticated": "Benutzer nicht authentifiziert"
+        }
+      },
+      "design": {
+        "title": "Restaurant-Design",
+        "description": "Gestalten Sie die Tischverteilung in Ihrem Restaurant",
+        "tables": "Tische",
+        "addTable": "Tisch hinzufügen",
+        "tableNumber": "Tischnummer",
+        "tableNumberPlaceholder": "z.B. Tisch 1",
+        "tableCapacity": "Kapazität",
+        "tableCapacityPlaceholder": "Anzahl der Personen",
+        "tableShape": "Tischform",
+        "tableShapeRound": "Rund",
+        "tableShapeSquare": "Quadratisch",
+        "tableShapeRectangle": "Rechteckig",
+        "tablePosition": "Position",
+        "tablePositionX": "Position X",
+        "tablePositionY": "Position Y",
+        "tableColor": "Tischfarbe",
+        "tableStatus": "Tischstatus",
+        "tableStatusAvailable": "Verfügbar",
+        "tableStatusOccupied": "Belegt",
+        "tableStatusReserved": "Reserviert",
+        "tableStatusMaintenance": "Wartung",
+        "deleteTable": "Tisch löschen",
+        "deleteTableConfirmation": "Sind Sie sicher, dass Sie diesen Tisch löschen möchten?",
+        "saveDesign": "Design speichern",
+        "savingDesign": "Design wird gespeichert...",
+        "resetDesign": "Zurücksetzen",
+        "resetDesignConfirmation": "Sind Sie sicher?",
+        "resetDesignDescription": "Diese Aktion kann nicht rückgängig gemacht werden. Das gesamte Design wird gelöscht.",
+        "confirmReset": "Bestätigen",
+        "deleteElement": "Löschen",
+        "deleteButton": "Löschen",
+        "loading": "Designer wird geladen...",
+        "tools": {
+          "select": {
+            "desktop": "Auswählen",
+            "mobile": "Ausw."
+          },
+          "wall": {
+            "desktop": "Wand",
+            "mobile": "Wand"
+          },
+          "addObject": {
+            "desktop": "Objekt hinzufügen",
+            "mobile": "Hinzufügen"
+          },
+          "table": "Tisch",
+          "roundTable": "Runder Tisch",
+          "bar": "Bar",
+          "staircase": "Treppe"
+        },
+        "toast": {
+          "saving": "Design wird gespeichert...",
+          "success": "Design erfolgreich gespeichert.",
+          "error": "Fehler beim Speichern des Designs.",
+          "deleting": "Tisch wird gelöscht...",
+          "deleted": "Tisch erfolgreich gelöscht.",
+          "deleteError": "Fehler beim Löschen des Tisches.",
+          "resetting": "Design wird zurückgesetzt...",
+          "reset": "Design erfolgreich zurückgesetzt.",
+          "resetError": "Fehler beim Zurücksetzen des Designs.",
+          "notAuthenticated": "Benutzer nicht authentifiziert"
+        }
+      },
+      "qr": {
+        "title": "QR-Code-Generator",
+        "description": "Erstellen Sie QR-Codes für die Tische Ihres Restaurants",
+        "tableQR": "Tisch-QR-Code",
+        "downloadQR": "QR herunterladen",
+        "downloadAllQR": "Alle QR-Codes herunterladen",
+        "generatingQR": "QR wird generiert...",
+        "print": {
+          "desktop": "Drucken",
+          "mobile": "Dr."
+        },
+        "copyURL": {
+          "desktop": "URL kopieren",
+          "mobile": "Kopieren"
+        },
+        "selectTable": "Wählen Sie einen Tisch, um den QR-Code anzuzeigen",
+        "selectTableToGenerate": "Wählen Sie einen Tisch, um den QR-Code zu generieren",
+        "tableForQR": "QR für Tisch",
+        "table": "Tisch",
+        "noTablesConfigured": "Keine Tische konfiguriert",
+        "configureTablesInDesign": "Konfigurieren Sie die Tische im Tab 'Design'",
+        "printInstructions": "Scannen Sie diesen QR-Code, um das Menü zu sehen und zu bestellen",
+        "howItWorks": {
+          "title": "Wie funktioniert es?",
+          "security": "Sicherheit: Jeder Tisch hat seinen eigenen QR-Code",
+          "simplicity": "Einfachheit: Kunden müssen keinen Tisch auswählen",
+          "organization": "Organisation: Bestellungen werden automatisch dem richtigen Tisch zugeordnet",
+          "experience": "Erlebnis: Schneller und fehlerfreier Prozess"
+        },
+        "tablesAvailable": "Verfügbare Tische",
+        "selectTableForQR": "Wählen Sie einen Tisch, um seinen einzigartigen QR-Code zu generieren",
+        "loadingTables": "Tische werden geladen...",
+        "toast": {
+          "downloaded": "QR erfolgreich heruntergeladen.",
+          "downloadError": "Fehler beim Herunterladen des QR.",
+          "downloadingAll": "Alle QR-Codes werden heruntergeladen...",
+          "allDownloaded": "Alle QR-Codes erfolgreich heruntergeladen.",
+          "downloadAllError": "Fehler beim Herunterladen aller QR-Codes."
+        }
+      },
+      "view": {
+        "configTab": "Einstellungen",
+        "designTab": "Design",
+        "hoursTab": "Öffnungszeiten",
+        "qrTab": "QR-Codes",
+        "noConfig": "Keine Restaurant-Einstellungen vorhanden",
+        "noDesign": "Kein Restaurant-Design vorhanden",
+        "createConfig": "Einstellungen erstellen",
+        "createDesign": "Design erstellen"
+      }
+    },
+    "waiter": {
+      "title": "Bestellsystem",
+      "auth": {
+        "title": "Kellner-Zugang",
+        "code": "Zugangscode",
+        "enter": "Eingeben",
+        "invalidCode": "Falscher Code",
+        "placeholder": "Code eingeben"
+      },
+      "order": {
+        "title": "Bestellung aufnehmen",
+        "orderInfo": "Bestellinformationen",
+        "table": "Tisch",
+        "waiterName": "Kellner-Name",
+        "addDish": "Gericht hinzufügen",
+        "quantity": "Menge",
+        "notes": "Notizen",
+        "total": "Gesamt",
+        "submit": "Bestellung senden",
+        "success": "Bestellung erfolgreich gesendet",
+        "error": "Fehler beim Senden der Bestellung",
+        "empty": "Fügen Sie Gerichte zur Bestellung hinzu",
+        "selectTable": "Wählen Sie einen Tisch",
+        "dishAdded": "Gericht zur Bestellung hinzugefügt",
+        "remove": "Entfernen",
+        "orderNotes": "Bestellnotizen",
+        "categories": "Kategorien",
+        "all": "Alle",
+        "search": "Gerichte suchen...",
+        "price": "Preis",
+        "cart": "Warenkorb",
+        "items": "Artikel",
+        "orderSent": "Bestellung an die Küche gesendet!",
+        "submittedOrders": "Bestellverlauf",
+        "addToOrder": "Zur Bestellung hinzufügen",
+        "statusPending": "Ausstehend",
+        "statusInProgress": "In Vorbereitung",
+        "statusReady": "Fertig",
+        "statusDelivered": "Geliefert",
+        "statusCancelled": "Storniert",
+        "filterAll": "Alle",
+        "filterPending": "Ausstehend",
+        "filterReady": "Fertig",
+        "filterDelivered": "Geliefert",
+        "noOrdersFound": "Keine Bestellungen gefunden",
+        "addDishes": "Gerichte hinzufügen",
+        "markDelivered": "Als geliefert markieren",
+        "updating": "Wird aktualisiert...",
+        "releaseTable": "Tisch freigeben",
+        "releaseTableMobile": "Freigeben",
+        "releasingTable": "Wird freigegeben...",
+        "releasingTableMobile": "..."
+      }
+    },
+    "kitchen": {
+      "title": "Küchen-Panel",
+      "auth": {
+        "title": "Küchen-Zugang",
+        "code": "Zugangscode",
+        "enter": "Eingeben",
+        "invalidCode": "Falscher Code",
+        "placeholder": "Code eingeben",
+        "codeRequired": "Code erforderlich",
+        "verifying": "Wird überprüft..."
+      },
+      "interface": {
+        "title": "Küchen-Panel",
+        "filters": "Filter",
+        "noOrders": "Keine Bestellungen zum Anzeigen",
+        "noOrdersDescription": "Wenn neue Bestellungen eingehen, werden sie hier angezeigt.",
+        "activeOrders": "Aktive Bestellungen",
+        "table": "Tisch",
+        "counter": "Theke",
+        "timeElapsed": "vor",
+        "dishNotAvailable": "Gericht nicht verfügbar",
+        "connection": {
+          "connected": "Verbunden",
+          "disconnected": "Getrennt"
+        },
+        "filters": {
+          "all": "Alle",
+          "inProgress": "In Bearbeitung",
+          "ready": "Fertig"
+        },
+        "status": {
+          "active": "Aktiv",
+          "ready": "Fertig/Geliefert",
+          "cancelled": "Storniert",
+          "completed": "Abgeschlossen"
+        }
+      }
+    }
+  },
+  "web": {
+    "global": {
+      "primaryCta": "Kontaktieren Sie uns",
+      "secondaryCta": "Jetzt starten"
+    },
+    "header": {
+      "home": "Startseite",
+      "features": "Plattform",
+      "pricing": "Preise",
+      "about": "Über uns",
+      "contact": "Kontakt",
+      "logIn": "Anmelden",
+      "getStarted": "Jetzt kostenlos testen!",
+      "tryFree": "Kostenlos starten",
+      "navigation": "Navigation"
+    },
+    "home": {
+      "meta": {
+        "title": "Ganga-Menü - Digitale Menüs für Restaurants",
+        "description": "Die Plattform, die Restaurants dabei hilft, ihre digitalen Menüs einfach und professionell zu erstellen und zu verwalten."
+      },
+      "hero": {
+        "title": "Vollständige Verwaltung für Ihr Restaurant",
+        "subtitle": "Von interaktiven digitalen Menüs bis zur vollständigen Bestellverwaltung. Kellner nehmen Bestellungen einfach auf und die Küche kontrolliert jede Zubereitung in Echtzeit. Alles in einer integrierten Plattform.",
+        "getStarted": "Jetzt starten",
+        "learnMore": "Mehr erfahren",
+        "viewPricing": "Preise anzeigen",
+        "tryFree": "Kostenlose Demo ansehen",
+        "gallery": {
+          "menu": "Digitale Menüs",
+          "menuDesc": "Schön und interaktiv",
+          "waiters": "Kellner-System",
+          "waitersDesc": "Effiziente Verwaltung",
+          "kitchen": "Küchen-Panel",
+          "kitchenDesc": "Echtzeit-Kontrolle"
+        }
+      },
+      "cases": {
+        "title": "Positiver Einfluss auf die Umwelt",
+        "subtitle": "Entdecken Sie, wie Gangañam dabei hilft, Lebensmittelverschwendung in unserer Gemeinschaft zu reduzieren.",
+        "quote": "Jede gerettete Mahlzeit ist ein Schritt zu einer nachhaltigeren Welt",
+        "projectsTitle": "Erfolge",
+        "projectStatus": {
+          "finished": "Abgeschlossen",
+          "inProgress": "In Bearbeitung"
+        },
+        "modal": {
+          "description": "Beschreibung",
+          "technologies": "Technologien",
+          "features": "Funktionen"
+        }
+      },
+      "features": {
+        "title": "Vollständige Lösung für Ihr Restaurant",
+        "description": "Eine integrierte Plattform, die digitale Menüs, Bestellverwaltung, Kellner und Küche in einem effizienten System verbindet",
+        "items": [
+          {
+            "title": "Interaktive Digitale Menüs",
+            "description": "Erstellen Sie schöne und interaktive digitale Menüs mit hochwertigen Bildern, detaillierten Beschreibungen und Echtzeit-Updates."
+          },
+          {
+            "title": "Intelligente Bestellverwaltung",
+            "description": "Kellner nehmen Bestellungen direkt von Tablets oder Mobilgeräten auf. Alles synchronisiert sich automatisch mit der Küche für einen perfekten Ablauf."
+          },
+          {
+            "title": "Echtzeit-Küchen-Panel",
+            "description": "Die Küche erhält Bestellungen sofort und kann den Zubereitungsstatus aktualisieren: ausstehend, in Bearbeitung, bereit zum Servieren."
+          },
+          {
+            "title": "Kellner-System",
+            "description": "Intuitive Benutzeroberfläche für Kellner, um Tische zu verwalten, Bestellungen aufzunehmen, spezielle Notizen hinzuzufügen und die vollständige Kontrolle über den Service zu behalten."
+          },
+          {
+            "title": "Zentralisierte Verwaltung",
+            "description": "Vollständiges Verwaltungspanel zur Verwaltung von Menüs, Kategorien, Preisen, Tischen, Personal und zur Analyse der Restaurantleistung."
+          },
+          {
+            "title": "Optimierte Kunden-Erfahrung",
+            "description": "Kunden können aktualisierte Menüs sehen, Wartezeiten kennen und eine moderne und effiziente gastronomische Erfahrung genießen."
+          }
+        ]
+      },
+      "stats": {
+        "title": "WIE DIE INTEGRIERTE PLATTFORM FUNKTIONIERT",
+        "description": "Implementieren Sie die vollständige Lösung in Ihrem Restaurant und transformieren Sie die gastronomische Erfahrung",
+        "process": [
+          {
+            "title": "Konfigurieren Sie Ihr Restaurant",
+            "description": "Registrieren Sie Ihr Unternehmen, erstellen Sie das digitale Menü und konfigurieren Sie die Tische und Bereiche Ihres Restaurants."
+          },
+          {
+            "title": "Schulen Sie Ihr Personal",
+            "description": "Kellner greifen mit eindeutigen Codes zu, um Bestellungen von Mobilgeräten oder Tablets intuitiv aufzunehmen."
+          },
+          {
+            "title": "Echtzeit-Küche",
+            "description": "Die Küche erhält Bestellungen sofort und aktualisiert den Status: in Vorbereitung, bereit zum Servieren."
+          },
+          {
+            "title": "Optimierter Service",
+            "description": "Verbessern Sie die Effizienz, reduzieren Sie Wartezeiten und bieten Sie Ihren Kunden eine außergewöhnliche Erfahrung."
+          }
+        ]
+      },
+      "testimonials": {
+        "title": "Was unsere Restaurants sagen",
+        "description": "Echte Erfahrungen von Restaurants, die ihren Betrieb mit unserer integrierten Plattform transformiert haben",
+        "items": [
+          {
+            "title": "Hat unseren gesamten Betrieb revolutioniert",
+            "description": "Von digitalen Menüs bis zur Küchenbestellverwaltung funktioniert alles synchronisiert. Kellner nehmen Bestellungen schneller auf, die Küche hat bessere Kontrolle und unsere Kunden sind zufriedener. Wir haben die Effizienz um 40% gesteigert.",
+            "author": {
+              "name": "María Rodríguez",
+              "location": "Restaurante La Tradición, Madrid"
+            }
+          },
+          {
+            "title": "Kellner und Küche arbeiten in perfekter Harmonie",
+            "description": "Was uns am meisten beeindruckt, ist, wie Bestellungen sofort in der Küche ankommen und wir den Status in Echtzeit aktualisieren können. Kellner wissen genau, wann jedes Gericht fertig ist. Wir haben die Wartezeiten erheblich reduziert.",
+            "author": {
+              "name": "Carlos Mendoza",
+              "location": "Bistró Central, Barcelona"
+            }
+          },
+          {
+            "title": "Eine Investition, die sich selbst bezahlt",
+            "description": "Die integrierte Plattform ermöglichte es uns, das Personal zu optimieren und mehr Tische mit der gleichen Anzahl von Kellnern zu bedienen. Kunden sehen aktualisierte Menüs und das Personal ist weniger gestresst. Positiver ROI in weniger als 3 Monaten.",
+            "author": {
+              "name": "Ana Jiménez",
+              "location": "Taverna del Puerto, Valencia"
+            }
+          },
+          {
+            "title": "Technologie, die wirklich funktioniert",
+            "description": "Wir haben das komplette System implementiert: digitale Menüs, Bestellverwaltung und Küchen-Panel. Alles ist intuitiv, das Personal hat sich schnell angepasst und unsere Kunden bemerken den Unterschied in der Servicequalität.",
+            "author": {
+              "name": "Roberto Silva",
+              "location": "Casa Silva, Sevilla"
+            }
+          }
+        ]
+      },
+      "faq": {
+        "title": "Häufig gestellte Fragen",
+        "description": "Antworten auf die häufigsten Fragen zu unserer integrierten Plattform für Restaurants",
+        "cta": "Haben Sie noch Fragen? Kontaktieren Sie uns",
+        "needMore": "Benötigen Sie weitere Informationen?",
+        "contactDescription": "Wenn Sie die Antwort auf Ihre Frage nicht gefunden haben, ist unser Team bereit, Ihnen bei der Transformation Ihres Restaurants zu helfen.",
+        "items": [
+          {
+            "question": "Wie funktioniert die integrierte Plattform?",
+            "answer": "Unsere Plattform verbindet digitale Menüs, Bestellverwaltung und Küchenkontrolle in einem einzigen System. Kunden sehen das Menü, Kellner nehmen Bestellungen von Mobilgeräten auf, und die Küche erhält alles sofort mit Echtzeit-Statuskontrolle."
+          },
+          {
+            "question": "Was genau umfasst das System?",
+            "answer": "Es umfasst: anpassbare digitale Menüs, Bestellsystem für Kellner mit Tischverwaltung, Küchen-Panel zur Kontrolle der Zubereitungsstatus, vollständiges Verwaltungspanel und Echtzeit-Synchronisation zwischen allen Bereichen."
+          },
+          {
+            "question": "Ist es schwierig, das Personal zu schulen?",
+            "answer": "Nein, das System ist so konzipiert, dass es intuitiv ist. Kellner passen sich schnell an das Bestellsystem an und die Küche lernt in Minuten, das Kontrollpanel zu verwenden. Wir bieten Schulungen, die in die Implementierung einbezogen sind."
+          },
+          {
+            "question": "Funktioniert es in jeder Art von Restaurant?",
+            "answer": "Ja, von kleinen Cafés bis zu großen Restaurants. Das System passt sich an jede Art von Unternehmen an: Restaurants, Bars, Pizzerien, Food Trucks, etc. Wir konfigurieren Tische und Abläufe nach Ihren spezifischen Bedürfnissen."
+          },
+          {
+            "question": "Was passiert, wenn ich kein Internet habe oder die Verbindung unterbrochen wird?",
+            "answer": "Das System funktioniert mit Internetverbindung, hat aber einen grundlegenden Offline-Modus, der es ermöglicht, weiterhin Bestellungen aufzunehmen. Sobald die Verbindung wiederhergestellt ist, synchronisiert sich alles automatisch."
+          },
+          {
+            "question": "Kann ich das System sofort verwenden?",
+            "answer": "Ja! Sie können Ganga-Menü ab dem ersten Moment verwenden. Erstellen Sie Ihr Konto, konfigurieren Sie Ihr grundlegendes Menü und beginnen Sie in Minuten, Bestellungen zu erhalten. Erweiterte Funktionen können schrittweise nach Ihren Bedürfnissen aktiviert werden."
+          }
+        ]
+      },
+      "cta": {
+        "title": "Bereit, Ihr Restaurant zu transformieren?",
+        "description": "Schließen Sie sich Restaurants an, die ihren Betrieb mit unserer integrierten Plattform revolutioniert haben: digitale Menüs, Bestellverwaltung und Küchenkontrolle",
+        "calendly": {
+          "title": "Vereinbaren Sie eine Demonstration",
+          "subtitle": "30 Minuten · Kostenlos",
+          "benefits": [
+            "Sehen Sie die vollständige Plattform in Aktion",
+            "Erfahren Sie, wie Sie Ihren Betrieb optimieren können",
+            "Berechnen Sie Ihren personalisierten ROI"
+          ]
+        },
+        "features": {
+          "digitalMenus": "Digitale Menüs",
+          "digitalMenusDesc": "Schön und interaktiv",
+          "orderManagement": "Bestellverwaltung",
+          "orderManagementDesc": "Für effiziente Kellner",
+          "kitchenPanel": "Küchen-Panel",
+          "kitchenPanelDesc": "Echtzeit-Kontrolle",
+          "optimization": "Optimierung",
+          "optimizationDesc": "Reduziert Wartezeiten"
+        },
+        "platformDescription": "Vollständige und integrierte Plattform",
+        "revolutionDescription": "Revolutionieren Sie Ihren Betrieb mit unserer integrierten Lösung: schöne digitale Menüs, Bestellsystem für Kellner und Kontrollpanel für die Küche. Alles in Echtzeit synchronisiert."
+      },
+      "newsletter": {
+        "title": "Bleiben Sie informiert",
+        "description": "Abonnieren Sie, um Neuigkeiten, Tipps und Sonderangebote zu digitalen Menüs für Ihr Restaurant zu erhalten",
+        "placeholder": "Ihre E-Mail-Adresse",
+        "subscribe": "Abonnieren",
+        "subscribing": "Wird abonniert...",
+        "success": "Vielen Dank für Ihr Abonnement! Sie erhalten Neuigkeiten darüber, wie Sie Ihre digitale Präsenz verbessern können.",
+        "error": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+        "validation": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+        "privacy": "Wir versprechen, keinen Spam zu senden, nur relevante Inhalte über gastronomische Digitalisierung"
+      },
+      "footer": {
+        "companyDescription": "Integrierte Plattform, die digitale Menüs, Bestellverwaltung, Kellner und Küche in einem synchronisierten System verbindet, um den Betrieb Ihres Restaurants zu revolutionieren.",
+        "navigation": "Navigation",
+        "features": "Funktionen",
+        "menuCreation": "Interaktive Digitale Menüs",
+        "orderManagement": "Bestellverwaltung",
+        "kitchenControl": "Küchen-Panel",
+        "contact": "Kontakt",
+        "getStarted": "Starten",
+        "rights": "Alle Rechte vorbehalten",
+        "privacy": "Datenschutzrichtlinie",
+        "terms": "Allgemeine Geschäftsbedingungen"
+      }
+    },
+    "pricing": {
+      "title": "Starten Sie kostenlos und skalieren Sie Ihr Restaurant!",
+      "description": "Beginnen Sie ohne Kosten und schalten Sie Premium-Funktionen frei, während Sie wachsen. Alles Wesentliche ist ab Tag eins enthalten.",
+      "monthly": "Monat",
+      "popular": "BELIEBTESTE",
+      "tryIt": "Kostenlos starten",
+      "buyNow": "Jetzt buchen",
+      "contactUs": "Kontaktieren Sie uns",
+      "free": "Kostenlos",
+      "forever": "für immer",
+      "contactForPrice": "Anfragen",
+      "plans": [
+        {
+          "name": "Kostenlos",
+          "description": "Perfekt zum Starten. Enthält alles Wesentliche, um Ihr Restaurant ab dem ersten Tag zu digitalisieren",
+          "price": "0",
+          "features": [
+            "Unbegrenztes digitales Menü",
+            "Bis zu 3 Kellner gleichzeitig",
+            "Grundlegendes Küchen-Panel",
+            "Bis zu 10 Tische",
+            "E-Mail-Support"
+          ]
+        },
+        {
+          "name": "Professionell",
+          "description": "Für Restaurants, die ihren Betrieb vollständig mit Analysen und erweiterten Funktionen optimieren möchten",
+          "price": "15",
+          "features": [
+            "Alles vom kostenlosen Plan",
+            "Unbegrenzte Kellner",
+            "Unbegrenzte Tische",
+            "Erweiterte Analysen",
+            "Vollständige Anpassung",
+            "Prioritäts-Support 24/7"
+          ]
+        },
+        {
+          "name": "Unternehmen",
+          "description": "Maßgeschneiderte Lösungen für einzigartige Designs, Restaurantketten oder spezifische Bedürfnisse. Kontaktieren Sie uns für ein Angebot.",
+          "price": "contact",
+          "features": [
+            "Alles vom professionellen Plan",
+            "Mehrere Standorte",
+            "Benutzerdefinierte API",
+            "POS-Integration",
+            "Dedizierter Manager",
+            "Unternehmensberichte"
+          ]
+        }
+      ],
+      "features": {
+        "digitalMenus": "Interaktive digitale Menüs",
+        "orderManagement": "Bestellverwaltungssystem",
+        "kitchenPanel": "Küchen-Kontrollpanel",
+        "tableManagement": "Tisch- und Kellnerverwaltung",
+        "analytics": "Erweitertes Analyse-Panel",
+        "multiLocation": "Unterstützung für mehrere Standorte"
+      },
+      "trust": {
+        "description": "Mehr als 500 Restaurants transformieren bereits ihren Betrieb mit Ganga-Menü",
+        "rating": "4.9/5 • Keine Verpflichtung • Jederzeit kündbar"
+      }
+    },
+    "blog": {
+      "meta": {
+        "title": "Blog über nachhaltige Ernährung",
+        "description": "Tipps, Rezepte und Artikel über das Reduzieren von Lebensmittelverschwendung und das Fördern einer nachhaltigeren Verwendung."
+      }
+    },
+    "contact": {
+      "meta": {
+        "title": "Kontaktieren Sie uns",
+        "description": "Kontaktieren Sie unser Team, um mehr darüber zu erfahren, wie Ganga-Menü Ihnen bei der Digitalisierung Ihres Restaurant-Menüs helfen kann."
+      },
+      "hero": {
+        "title": "Wir sind hier, um Ihnen zu helfen",
+        "description": "Unser Team steht Ihnen zur Verfügung, um Ihre Fragen zu beantworten und Sie bei der Erstellung Ihres digitalen Menüs zu unterstützen.",
+        "cta": "Nachricht senden",
+        "benefits": [
+          {
+            "title": "Schnelle Antwort",
+            "description": "Unser Team ist bereit, Ihnen zu helfen, zu verstehen, wie Ganga-Menü funktioniert, und wie Sie Ihr digitales Menü heute selbst erstellen können."
+          },
+          {
+            "title": "Unterstützung für Restaurants",
+            "description": "Wenn Sie ein Restaurant haben, bieten wir Ihnen persönliche Hilfe, um Ihr digitales Menü zu konfigurieren und die Erfahrung Ihrer Kunden zu optimieren."
+          },
+          {
+            "title": "Gastronomische Gemeinschaft",
+            "description": "Wenn Sie Ganga-Menü beitreten, treten Sie einer Gemeinschaft von Restaurants bei, die sich für die digitale Präsentation auf dem neuesten Stand engagiert."
+          }
+        ],
+        "form": {
+          "title": "Lassen Sie uns über Ihren Projekt sprechen",
+          "firstName": "Vorname",
+          "lastName": "Nachname",
+          "date": "Bevorzugtes Datum",
+          "resume": "Fügen Sie relevante Dateien hinzu",
+          "cta": "Senden"
+        }
+      },
+      "form": {
+        "title": "Kontaktieren Sie uns",
+        "subtitle": "Wir antworten in 24 Stunden",
+        "subtitleInfo": "Restaurants zusammen digitalisieren",
+        "name_placeholder": "Vollständiger Name",
+        "email_placeholder": "E-Mail-Adresse",
+        "message_placeholder": "Teilen Sie uns Ihr Restaurant und wie wir Ihnen helfen können",
+        "sending": "Senden...",
+        "send_button": "Nachricht senden",
+        "success_message": "Ihre Nachricht wurde erfolgreich gesendet!",
+        "error_message": "Fehler beim Senden der Nachricht. Bitte versuchen Sie es später erneut."
+      }
+    },
+    "services": {
+      "title": "Dienste",
+      "subtitle": "Zugriffsschlüssel für Ihren Restaurant-Personal.",
+      "subtitleAlt": "Werkzeuge zur Verwaltung Ihres Restaurants.",
+      "waiter": {
+        "title": "Kellner-Verwaltung",
+        "description": "Ändern Sie den Zugangscode und teilen Sie den Link.",
+        "accessCode": "Zugangscode für Kellner",
+        "accessCodeDescription": "Dies ist der Code, den die Kellner verwenden werden, um sich anzumelden.",
+        "accessLink": "Zugangsschlüssel für Kellner",
+        "placeholder": "4+ Ziffern",
+        "save": "Speichern",
+        "saving": "Speichern...",
+        "savingShort": "...",
+        "saveShort": "OK",
+        "footer": "Denken Sie daran, die Änderungen des Codes vor dem Teilen des Links zu speichern."
+      },
+      "kitchen": {
+        "title": "Küchen-Verwaltung",
+        "description": "Ändern Sie den Zugangscode und teilen Sie den Link.",
+        "accessCode": "Zugangscode für die Küche",
+        "accessCodeDescription": "Dies ist der Code, den die Küche verwenden wird, um sich anzumelden.",
+        "accessLink": "Zugangsschlüssel für die Küche",
+        "placeholder": "4+ Ziffern",
+        "save": "Speichern",
+        "saving": "Speichern...",
+        "savingShort": "...",
+        "saveShort": "OK",
+        "footer": "Der Zugang zur Küche ist direkt und erfordert keinen Code."
+      },
+      "shared": {
+        "downloadQR": "QR herunterladen",
+        "downloadQRShort": "Herunterladen",
+        "open": "Öffnen",
+        "openShort": "Öffnen",
+        "copySuccess": "Link für {name} in die Zwischenablage kopiert.",
+        "savingCode": "Neuer Code wird gespeichert...",
+        "codeSaved": "Code erfolgreich aktualisiert",
+        "codeError": "Fehler beim Aktualisieren des Codes"
+      },
+      "setup": {
+        "title": "Erforderliche Konfiguration",
+        "description": "Um die Kellner- und Küchen-Dienste zu nutzen, müssen Sie zuerst Ihr Restaurant konfigurieren.",
+        "link": "Zur Restaurant-Konfiguration gehen"
+      }
+    },
+    "orders": {
+      "title": "Bestellverwaltung",
+      "subtitle": "Überwachen und verwalten Sie Ihre Restaurant-Bestellungen in Echtzeit",
+      "connection": {
+        "connected": "Verbunden",
+        "connectedShort": "OK",
+        "disconnected": "Getrennt",
+        "disconnectedShort": "Aus"
+      },
+      "stats": {
+        "total": "Gesamt",
+        "active": "Aktiv",
+        "ready": "Bereit",
+        "cancelled": "Storniert",
+        "paid": "Bezahlt"
+      },
+      "filters": {
+        "all": "Alle",
+        "active": "Aktiv",
+        "ready": "Bereit/Geliefert",
+        "cancelled": "Storniert",
+        "paid": "Bezahlt",
+        "allShort": "Alle",
+        "activeShort": "Aktiv",
+        "readyShort": "Bereit",
+        "cancelledShort": "Storniert",
+        "paidShort": "Bezahlt"
+      },
+      "tabs": {
+        "allOrders": {
+          "desktop": "Alle Bestellungen",
+          "mobile": "Alle"
+        },
+        "activeOrders": {
+          "desktop": "Aktive Bestellungen",
+          "mobile": "Aktiv"
+        },
+        "completed": {
+          "desktop": "Abgeschlossen",
+          "mobile": "Bereit"
+        }
+      },
+      "table": {
+        "title": "Bestellungen",
+        "noOrders": "Keine Bestellungen zum Anzeigen",
+        "headers": {
+          "id": "ID",
+          "customer": "Kunde",
+          "items": "Artikel",
+          "total": "Gesamt",
+          "status": "Status",
+          "date": "Datum",
+          "actions": "Aktionen"
+        },
+        "status": {
+          "active": "Aktiv",
+          "ready": "Bereit/Geliefert",
+          "cancelled": "Storniert",
+          "paid": "Bezahlt"
+        },
+        "customer": "Kunde",
+        "table": "Tisch",
+        "noItems": "Keine Artikel",
+        "dishNotAvailable": "Gericht nicht verfügbar",
+        "updating": "Aktualisieren...",
+        "updatingShort": "..."
+      },
+      "deleteDialog": {
+        "title": "Bestellung löschen",
+        "description": "Sind Sie sicher, dass Sie diese Bestellung löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
+        "order": "Bestellung",
+        "details": "Details",
+        "cancel": "Abbrechen",
+        "delete": "Löschen",
+        "deleting": "Löschen..."
+      },
+      "toast": {
+        "updatingStatus": "Bestellstatus wird aktualisiert...",
+        "statusUpdated": "Status erfolgreich aktualisiert",
+        "statusError": "Fehler beim Aktualisieren des Status",
+        "deletingOrder": "Bestellung wird gelöscht...",
+        "orderDeleted": "Bestellung erfolgreich gelöscht",
+        "deleteError": "Fehler beim Löschen der Bestellung",
+        "unexpectedError": "Unerwarteter Fehler beim Löschen der Bestellung"
+      },
+      "setup": {
+        "notFound": "Restaurant-Konfiguration nicht gefunden"
+      }
+    },
+    "waiter": {
+      "auth": {
+        "title": "Kellner-Zugang",
+        "code": "Zugangscode",
+        "codeRequired": "Zugangscode erforderlich",
+        "invalidCode": "Falscher Code",
+        "placeholder": "Code eingeben",
+        "enter": "Eingeben",
+        "verifying": "Überprüfen..."
+      },
+      "order": {
+        "title": "Bestellung aufnehmen",
+        "orderSent": "Bestellung an die Küche gesendet!",
+        "submittedOrders": "Bestellungen",
+        "noOrdersFound": "Keine Bestellungen gefunden",
+        "addDishes": "Gerichte hinzufügen",
+        "markDelivered": "Als geliefert markieren",
+        "updating": "Aktualisieren...",
+        "addToOrder": "Neue Bestellung",
+        "orderInfo": "Neue Bestellung",
+        "table": "Tisch",
+        "waiterName": "Kellner-Name",
+        "total": "Gesamt",
+        "search": "Gerichte suchen...",
+        "all": "Alle Kategorien",
+        "submit": "Bestellung senden",
+        "error": "Fehler beim Senden der Bestellung",
+        "cancel": "Abbrechen",
+        "selectDishes": "Gerichte auswählen",
+        "addToCart": "Gerichte zum Warenkorb hinzufügen, um eine Bestellung zu erstellen",
+        "selectTable": "Wählen Sie einen Tisch fortzufahren",
+        "special": "Spezial",
+        "selected": "Ausgewählt",
+        "notes": "Notizen...",
+        "generalNotes": "Allgemeine Notizen:",
+        "tablesAndOrders": "Abgeschlossene Tische und Bestellungen",
+        "tablesWithOrders": "Tisch mit abgeschlossenen Bestellungen",
+        "tablesWithOrdersPlural": "Tische mit abgeschlossenen Bestellungen",
+        "noTablesWithOrders": "Keine Tische mit abgeschlossenen Bestellungen",
+        "noTablesWithOrdersDesc": "Tische mit bezahlten oder stornierten Bestellungen erscheinen hier, um sie freizugeben.",
+        "releaseTable": "Tisch freigeben",
+        "releaseTableMobile": "Freigeben",
+        "releasingTable": "Freigeben...",
+        "releasingTableMobile": "...",
+        "order": "Bestellung",
+        "orders": "Bestellungen",
+        "orderPlural": "Bestellungen",
+        "totalFinalized": "Gesamt abgeschlossen",
+        "paid": "Bezahlt",
+        "cancelled": "Storniert",
+        "confirmPayment": "Zahlung der Tischbestätigung",
+        "confirmPaymentDesc": "Sind Sie sicher, dass Sie die gesamte Tischbestellung als bezahlt markieren möchten? Diese Aktion markiert alle aktiven und bereiten Bestellungen dieser Tisch als bezahlt.",
+        "confirmPaymentButton": "Zahlung bestätigen",
+        "marking": "Markieren...",
+        "systemOrders": "System-Bestellungen",
+        "timeElapsed": "vor",
+        "by": "Von:",
+        "counter": "Anzeige",
+        "optional": "Optional",
+        "quantitiesAndNotes": "Mengen und Notizen:",
+        "perUnit": "c/u",
+        "totalLabel": "Gesamt:",
+        "generalNotesPlaceholder": "Allgemeine Notizen...",
+        "verifying": "Überprüfen...",
+        "active": "Aktiv",
+        "readyDelivered": "Bereit/Geliefert"
+      }
+    },
+    "menu": {
+      "title": "Unser Menü",
+      "todaySpecial": "Tagesgericht",
+      "featuredDish": "Ausgewähltes Gericht",
+      "specialDescription": "Entdecken Sie unser tägliches Spezialgericht, das mit frischen Zutaten und der besten Qualität zubereitet wird.",
+      "todayOnly": "Nur heute",
+      "comingSoon": "Bald verfügbar... Wir bereiten unser Menü vor.",
+      "address": "Adresse",
+      "phone": "Telefon",
+      "hours": "Öffnungszeiten",
+      "contact": "Kontakt",
+      "searchPlaceholder": "Gerichte suchen...",
+      "allCategories": "Alle Kategorien",
+      "specialsOnly": "Nur Tagesgerichte",
+      "filters": "Filter",
+      "noResults": "Keine Gerichte mit den angewendeten Filtern gefunden.",
+      "clearFilters": "Filter zurücksetzen",
+      "currency": "€",
+      "closed": "Geschlossen",
+      "categories": {
+        "noDishes": "Keine Gerichte in dieser Kategorie verfügbar"
+      },
+      "dish": {
+        "outOfStock": "Ausverkauft",
+        "available": "Verfügbar"
+      },
+      "footer": {
+        "poweredBy": "Digitale Menüs erstellt mit",
+        "businessInfo": "Geschäftsinformationen"
+      }
+    },
+    "legal": {
+      "terms": {
+        "title": "Allgemeine Geschäftsbedingungen",
+        "lastUpdate": "Zuletzt aktualisiert:",
+        "date": "24. Oktober 2024",
+        "sections": {
+          "acceptance": "Zustimmung zu den Allgemeinen Geschäftsbedingungen",
+          "serviceDescription": "Beschreibung des Dienstes",
+          "registration": "Registrierung und Benutzerkonten",
+          "billing": "Pläne und Abrechnung",
+          "acceptableUse": "Zulässige Nutzung",
+          "intellectualProperty": "Geistiges Eigentum",
+          "availability": "Dienstverfügbarkeit",
+          "liability": "Haftungsbeschränkung",
+          "termination": "Kündigung",
+          "privacy": "Datenschutz und Datenschutz",
+          "governingLaw": "Anwendbares Recht",
+          "contact": "Kontakt",
+          "general": "Allgemeine Bestimmungen"
+        },
+        "content": {
+          "acceptance": "Durch den Zugriff und die Nutzung von Ganga-Menü stimmen Sie diesen Allgemeinen Geschäftsbedingungen vollständig zu. Wenn Sie mit einem Teil dieser Bedingungen nicht einverstanden sind, sollten Sie unsere Dienste nicht nutzen.",
+          "serviceDescription": "Ganga-Menü ist eine integrierte Managementplattform für Restaurants, die Folgendes umfasst:",
+          "serviceFeatures": [
+            "Erstellung und Verwaltung interaktiver digitaler Menüs",
+            "Bestellverwaltungssystem für Bedienstete",
+            "Echtzeit-Küchen-Kontrollpanel",
+            "Analyse- und Berichtswerkzeuge",
+            "Mesa- und Reservierungsverwaltung",
+            "Integration mit Zahlungssystemen"
+          ],
+          "modificationRights": "Wir behalten uns das Recht vor, diese Bedingungen jederzeit zu ändern. Die Änderungen treten sofort nach ihrer Veröffentlichung auf unserer Website in Kraft.",
+          "registration": {
+            "eligibility": "Eignung",
+            "eligibilityDescription": "Um unsere Dienste zu nutzen, müssen Sie:",
+            "eligibilityRequirements": [
+              "Älter als 18 Jahre oder rechtliche Genehmigung",
+              "Liefern Sie wahrheitsgemäße und aktualisierte Informationen",
+              "Sie sind Eigentümer oder haben die Genehmigung, das Restaurant zu verwalten",
+              "Befolgen Sie alle anwendbaren Gesetze und Vorschriften"
+            ],
+            "userResponsibilities": "Verantwortlichkeiten des Benutzers",
+            "userResponsibilitiesList": [
+              "Die Vertraulichkeit Ihrer Zugangsdaten bewahren",
+              "Sofortige Benachrichtigung über unbefugte Nutzung",
+              "Sie sind für alle Aktivitäten auf Ihrem Konto verantwortlich",
+              "Halten Sie Ihre Kontaktinformationen aktualisiert"
+            ]
+          },
+          "billing": {
+            "freePlan": "Kostenloser Plan",
+            "freePlanFeatures": [
+              "Eingeschränkter Zugriff auf grundlegende Funktionen",
+              "Keine monatlichen Kosten",
+              "Einschränkungen bei der Anzahl von Benutzern und Funktionen"
+            ],
+            "paidPlans": "Bezahlpläne",
+            "paidPlansFeatures": [
+              "Monatliche oder jährliche Abrechnung",
+              "Automatische Verlängerung außer Kündigung",
+              "Effektive Änderungen des Plans im nächsten Abrechnungszeitraum",
+              "Keine Rückerstattungen für unvollständige Zeiträume"
+            ]
+          },
+          "acceptableUse": {
+            "allowed": "Erlaubt:",
+            "allowedItems": [
+              "Die Plattform für rechtmäßige Restaurantverwaltung nutzen",
+              "Eigenes Inhalt hochladen (Menüs, Bilder, Beschreibungen)",
+              "Ihre Erfahrung anpassen und personalisieren",
+              "Mit autorisierten Drittanbietersystemen integrieren"
+            ],
+            "prohibited": "Untersagt:",
+            "prohibitedItems": [
+              "Die Plattform für illegale Aktivitäten nutzen",
+              "Versuch, auf Daten anderer Benutzer zuzugreifen",
+              "Ingenieurwissenschaftliche Inverse des Software",
+              "Überlastung oder Störung der Dienste",
+              "Inhalt hochladen, der verleumderisch, falsch oder Urheberrechtsverletzungen ist",
+              "Unsere Dienste wiederverkaufen oder neu verteilen"
+            ]
+          },
+          "intellectualProperty": {
+            "ourRights": "Unsere Rechte",
+            "ourRightsDescription": "Ganga-Menü und alles darin (Software, Design, Logos, Texte) ist unser Eigentum oder gehört unseren Lizenznehmern und ist durch Urheberrechte, eingetragene Marken und andere Eigentumsrechte geschützt.",
+            "yourContent": "Ihr Inhalt",
+            "yourContentDescription": "Sie behalten alle Rechte an dem Inhalt, den Sie hochladen (Menüs, Bilder, Beschreibungen). Durch die Nutzung unserer Dienste gewähren Sie uns eine Lizenz, um Ihren Inhalt unter Beibehaltung der Erfordernisse des Dienstes zu verwenden, zu speichern und zu zeigen."
+          },
+          "availability": {
+            "description": "Wir bemühen uns, unsere Dienste rund um die Uhr verfügbar zu halten, aber wir können keine Verfügbarkeit von 100% garantieren. Wir können erwarten:",
+            "interruptions": [
+              "Geplante Wartung (mit vorheriger Ankündigung)",
+              "Ungeplante technische Unterbrechungen",
+              "Sicherheitsaktualisierungen",
+              "Funktionsverbesserungen"
+            ]
+          },
+          "liability": {
+            "description": "In der maximalen Höhe, die das Gesetz zulässt:",
+            "limitations": [
+              "Ganga-Menü wird 'wie besehen' bereitgestellt",
+              "Wir garantieren nicht, dass der Service ununterbrochen oder fehlerfrei ist",
+              "Wir haften nicht für indirekte oder Folgeschäden",
+              "Unsere maximale Haftung beträgt nicht die im vorherigen Abrechnungszeitraum gezahlten Gebühren",
+              "Sie sind für die Sicherung Ihrer Inhalte verantwortlich"
+            ]
+          },
+          "termination": {
+            "byUser": "Kündigung durch Sie",
+            "byUserDescription": "Sie können Ihr Konto jederzeit über Ihre Kontoeinstellungen oder per Kontaktaufnahme mit uns kündigen. Die Kündigung wirkt sich auf das Ende des aktuellen Abrechnungszeitraums aus.",
+            "byUs": "Kündigung durch uns",
+            "byUsDescription": "Wir können Ihr Konto suspendieren oder beenden, wenn:",
+            "terminationReasons": [
+              "Sie brechen diese Nutzungsbedingungen",
+              "Sie zahlen unbezahlte Gebühren",
+              "Sie beteiligen sich an betrügerischen oder illegalen Aktivitäten",
+              "Ihr Konto bleibt längere Zeit inaktiv"
+            ]
+          },
+          "privacy": {
+            "description": "Die Verarbeitung Ihrer personenbezogenen Daten unterliegt unserer Datenschutzerklärung, die Teil dieser Bedingungen ist. Wir empfehlen Ihnen, sie sorgfältig zu lesen."
+          },
+          "governingLaw": {
+            "description": "Diese Bedingungen unterliegen dem Recht von [Rechtsgebiet] ohne Rücksicht auf seine Konfliktregeln. Jede Streitigkeit wird in den zuständigen Gerichten von [Rechtsgebiet] entschieden."
+          },
+          "contact": {
+            "description": "Für Fragen zu diesen Allgemeinen Geschäftsbedingungen kontaktieren Sie uns:",
+            "email": "E-Mail:",
+            "address": "Adresse:",
+            "phone": "Telefon:",
+            "emailValue": "legal@ganga-menu.com",
+            "addressValue": "[Unternehmensadresse]",
+            "phoneValue": "[Telefonnummer]"
+          },
+          "general": {
+            "integrity": "Integrität: Diese Bedingungen stellen das vollständige Abkommen zwischen den Parteien dar",
+            "severability": "Teilbarkeit: Wenn eine Bestimmung ungültig ist, bleiben die übrigen Bestimmungen wirksam",
+            "waiver": "Verzicht: Die Nichtausübung eines Rechts stellt keinen Verzicht dar",
+            "assignment": "Zuweisung: Sie können diese Bedingungen nicht ohne unsere Zustimmung übertragen",
+            "survival": "Überlebensfähigkeit: Bestimmungen, die aus ihrem Wesen heraus überleben müssen, bleiben wirksam"
+          }
+        }
+      },
+      "privacy": {
+        "title": "Datenschutzerklärung",
+        "lastUpdate": "Zuletzt aktualisiert:",
+        "date": "24. Oktober 2024",
+        "sections": {
+          "information": "Informationen, die wir erfassen",
+          "usage": "Wie wir Ihre Informationen verwenden",
+          "sharing": "Informationen teilen",
+          "security": "Datensicherheit",
+          "cookies": "Cookies und Tracking",
+          "rights": "Ihre Rechte",
+          "changes": "Änderungen an dieser Datenschutzerklärung",
+          "contact": "Kontaktieren Sie uns"
+        },
+        "content": {
+          "information": {
+            "description": "Wir erfassen Informationen, die Sie direkt mitteilen, wie Sie ein Konto erstellen, unsere Dienste nutzen oder uns für Support kontaktieren.",
+            "includes": "Dies kann Folgendes umfassen:",
+            "items": [
+              "Kontoinformationen (Name, E-Mail, Restaurantdetails)",
+              "Menü- und Bestelldaten",
+              "Zahlungsinformationen",
+              "Kommunikationsprotokolle",
+              "Nutzungsanalyse"
+            ]
+          },
+          "usage": {
+            "description": "Wir verwenden die Informationen, die wir erfassen, um:",
+            "purposes": [
+              "Unsere Dienste bereitstellen und aufrechterhalten",
+              "Transaktionen verarbeiten und verwandte Informationen senden",
+              "Technische Benachrichtigungen und Supportnachrichten senden",
+              "Ihre Kommentare und Fragen beantworten",
+              "Unsere Dienste und neue Funktionen entwickeln",
+              "Schutz vor Betrug und Missbrauch"
+            ]
+          },
+          "sharing": {
+            "description": "Wir verkaufen, kommerzialisieren oder übertragen Ihre personenbezogenen Daten an Dritte ohne Ihre Zustimmung, außer wie in dieser Datenschutzerklärung beschrieben.",
+            "mayShare": "Wir teilen Informationen mit:",
+            "parties": [
+              "Dienstleister, die bei unseren Betrieben helfen",
+              "Rechtspersonen, wenn dies nach Gesetz gefordert wird",
+              "Geschäftspartner mit Ihrer ausdrücklichen Zustimmung"
+            ]
+          },
+          "security": {
+            "description": "Wir treffen angemessene Sicherheitsmaßnahmen, um Ihre personenbezogenen Daten gegen unbefugten Zugriff, Änderung, Offenlegung oder Zerstörung zu schützen.",
+            "measures": "Diese Maßnahmen umfassen:",
+            "securityItems": [
+              "Verschlüsselung von Daten während der Übertragung und im Ruhezustand",
+              "Regelmäßige Sicherheitsbewertungen",
+              "Zugangs- und Authentifizierungssteuerungen",
+              "Sichere Datencenter und Infrastruktur"
+            ]
+          },
+          "cookies": {
+            "description": "Wir verwenden Cookies und ähnliche Tracking-Technologien, um Ihre Erfahrung auf unserer Plattform zu verbessern.",
+            "help": "Diese Technologien helfen uns, indem sie:",
+            "benefits": [
+              "Ihre Präferenzen und Einstellungen merken",
+              "Analysieren, wie unsere Dienste genutzt werden",
+              "Inhalt personalisieren",
+              "Unsere Dienste verbessern"
+            ]
+          },
+          "rights": {
+            "description": "Sie haben das Recht auf:",
+            "rightsList": [
+              "Zugriff auf Ihre personenbezogenen Daten",
+              "Korrektur ungenauer Daten",
+              "Löschen Ihrer Daten",
+              "Widerruf der Verarbeitung Ihrer Daten",
+              "Datenportabilität",
+              "Widerruf des Einwilligungserklärungs in jedem Moment"
+            ]
+          },
+          "changes": {
+            "description": "Wir aktualisieren diese Datenschutzerklärung von Zeit zu Zeit. Wir teilen Ihnen jede Änderung mit, indem wir die neue Datenschutzerklärung auf dieser Seite veröffentlichen und die Aktualisierungsdatum aktualisieren.",
+            "review": "Wir empfehlen Ihnen, diese Datenschutzerklärung regelmäßig zu überprüfen, um Änderungen festzustellen."
+          },
+          "contact": {
+            "description": "Wenn Sie Fragen zu dieser Datenschutzerklärung haben, kontaktieren Sie uns:",
+            "email": "E-Mail:",
+            "emailValue": "heredialucasfac22@gmail.com"
+          }
+        }
+      }
+    }
+  }
+}

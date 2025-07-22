@@ -1246,7 +1246,117 @@
             "Herramientas de análisis y reportes",
             "Gestión de mesas y reservas",
             "Integración con sistemas de pago"
-          ]
+          ],
+          "modificationRights": "Nos reservamos el derecho de modificar estos términos en cualquier momento. Los cambios entrarán en vigor inmediatamente después de su publicación en nuestro sitio web.",
+          "registration": {
+            "eligibility": "Elegibilidad",
+            "eligibilityDescription": "Para utilizar nuestros servicios, debes:",
+            "eligibilityRequirements": [
+              "Ser mayor de 18 años o tener autorización legal",
+              "Proporcionar información veraz y actualizada",
+              "Ser propietario o estar autorizado para gestionar el restaurante",
+              "Cumplir con todas las leyes y regulaciones aplicables"
+            ],
+            "userResponsibilities": "Responsabilidades del Usuario",
+            "userResponsibilitiesList": [
+              "Mantener la confidencialidad de las credenciales de acceso",
+              "Notificar inmediatamente cualquier uso no autorizado",
+              "Ser responsable de todas las actividades en tu cuenta",
+              "Mantener actualizada la información de contacto"
+            ]
+          },
+          "billing": {
+            "freePlan": "Plan Gratuito",
+            "freePlanFeatures": [
+              "Acceso limitado a funcionalidades básicas",
+              "Sin costo mensual",
+              "Limitaciones en número de usuarios y funciones"
+            ],
+            "paidPlans": "Planes de Pago",
+            "paidPlansFeatures": [
+              "Facturación mensual o anual",
+              "Renovación automática salvo cancelación",
+              "Cambios de plan efectivos en el siguiente período de facturación",
+              "No se ofrecen reembolsos por períodos parciales"
+            ]
+          },
+          "acceptableUse": {
+            "allowed": "Está Permitido:",
+            "allowedItems": [
+              "Usar la plataforma para gestión legítima de restaurantes",
+              "Subir contenido propio (menús, imágenes, descripciones)",
+              "Configurar y personalizar tu experiencia",
+              "Integrar con sistemas de terceros autorizados"
+            ],
+            "prohibited": "Está Prohibido:",
+            "prohibitedItems": [
+              "Usar la plataforma para actividades ilegales",
+              "Intentar acceder a datos de otros usuarios",
+              "Realizar ingeniería inversa del software",
+              "Sobrecargar o interferir con los servicios",
+              "Subir contenido ofensivo, falso o que infrinja derechos",
+              "Revender o redistribuir nuestros servicios"
+            ]
+          },
+          "intellectualProperty": {
+            "ourRights": "Nuestros Derechos",
+            "ourRightsDescription": "Ganga-Menú y todo su contenido (software, diseño, logos, textos) son propiedad nuestra o de nuestros licenciantes y están protegidos por derechos de autor, marcas registradas y otras leyes de propiedad intelectual.",
+            "yourContent": "Tu Contenido",
+            "yourContentDescription": "Mantienes todos los derechos sobre el contenido que subas (menús, imágenes, descripciones). Al usar nuestros servicios, nos otorgas una licencia para usar, almacenar y mostrar tu contenido según sea necesario para proporcionar el servicio."
+          },
+          "availability": {
+            "description": "Nos esforzamos por mantener nuestros servicios disponibles las 24 horas del día, pero no podemos garantizar disponibilidad del 100%. Podemos experimentar:",
+            "interruptions": [
+              "Mantenimiento programado (con aviso previo)",
+              "Interrupciones técnicas no planificadas",
+              "Actualizaciones de seguridad",
+              "Mejoras en la funcionalidad"
+            ]
+          },
+          "liability": {
+            "description": "En la máxima medida permitida por la ley:",
+            "limitations": [
+              "Ganga-Menú se proporciona 'tal como está'",
+              "No garantizamos que el servicio será ininterrumpido o libre de errores",
+              "No somos responsables por pérdidas indirectas o consecuenciales",
+              "Nuestra responsabilidad total no excederá las tarifas pagadas en los 12 meses anteriores",
+              "Eres responsable de mantener copias de seguridad de tu contenido"
+            ]
+          },
+          "termination": {
+            "byUser": "Terminación por tu Parte",
+            "byUserDescription": "Puedes cancelar tu cuenta en cualquier momento desde la configuración de tu cuenta o contactándonos. La cancelación será efectiva al final del período de facturación actual.",
+            "byUs": "Terminación por Nuestra Parte",
+            "byUsDescription": "Podemos suspender o terminar tu cuenta si:",
+            "terminationReasons": [
+              "Violas estos términos de servicio",
+              "No pagas las tarifas adeudadas",
+              "Participas en actividades fraudulentas o ilegales",
+              "Tu cuenta permanece inactiva por períodos prolongados"
+            ]
+          },
+          "privacy": {
+            "description": "El manejo de tu información personal se rige por nuestra Política de Privacidad, que forma parte integral de estos términos. Te recomendamos leerla cuidadosamente."
+          },
+          "governingLaw": {
+            "description": "Estos términos se rigen por las leyes de [Jurisdicción] sin tener en cuenta sus principios de conflicto de leyes. Cualquier disputa se resolverá en los tribunales competentes de [Jurisdicción]."
+          },
+          "contact": {
+            "description": "Para preguntas sobre estos términos y condiciones, contáctanos:",
+            "email": "Email:",
+            "address": "Dirección:",
+            "phone": "Teléfono:",
+            "emailValue": "legal@ganga-menu.com",
+            "addressValue": "[Dirección de la empresa]",
+            "phoneValue": "[Número de teléfono]"
+          },
+          "general": {
+            "integrity": "Integridad: Estos términos constituyen el acuerdo completo entre las partes",
+            "severability": "Divisibilidad: Si alguna disposición es inválida, el resto permanece en vigor",
+            "waiver": "Renuncia: La falta de ejercicio de un derecho no constituye renuncia",
+            "assignment": "Asignación: No puedes transferir estos términos sin nuestro consentimiento",
+            "survival": "Supervivencia: Las disposiciones que por su naturaleza deben sobrevivir continuarán vigentes"
+          }
         }
       },
       "privacy": {
@@ -1262,6 +1372,79 @@
           "rights": "Tus Derechos",
           "changes": "Cambios a Esta Política",
           "contact": "Contactanos"
+        },
+        "content": {
+          "information": {
+            "description": "Recopilamos información que nos proporcionas directamente, como cuando creas una cuenta, usas nuestros servicios o nos contactas para soporte.",
+            "includes": "Esto puede incluir:",
+            "items": [
+              "Información de cuenta (nombre, email, detalles del restaurante)",
+              "Datos de menús y pedidos",
+              "Información de pago",
+              "Registros de comunicación",
+              "Análisis de uso"
+            ]
+          },
+          "usage": {
+            "description": "Usamos la información que recopilamos para:",
+            "purposes": [
+              "Proporcionar y mantener nuestros servicios",
+              "Procesar transacciones y enviar información relacionada",
+              "Enviar avisos técnicos y mensajes de soporte",
+              "Responder a tus comentarios y preguntas",
+              "Mejorar nuestros servicios y desarrollar nuevas funciones",
+              "Proteger contra fraude y abuso"
+            ]
+          },
+          "sharing": {
+            "description": "No vendemos, comercializamos o transferimos de otra manera tu información personal a terceros sin tu consentimiento, excepto como se describe en esta política.",
+            "mayShare": "Podemos compartir información con:",
+            "parties": [
+              "Proveedores de servicios que ayudan en nuestras operaciones",
+              "Autoridades legales cuando lo requiera la ley",
+              "Socios comerciales con tu consentimiento explícito"
+            ]
+          },
+          "security": {
+            "description": "Implementamos medidas de seguridad apropiadas para proteger tu información personal contra acceso no autorizado, alteración, divulgación o destrucción.",
+            "measures": "Estas medidas incluyen:",
+            "securityItems": [
+              "Cifrado de datos en tránsito y en reposo",
+              "Evaluaciones de seguridad regulares",
+              "Controles de acceso y autenticación",
+              "Centros de datos e infraestructura seguros"
+            ]
+          },
+          "cookies": {
+            "description": "Usamos cookies y tecnologías de seguimiento similares para mejorar tu experiencia en nuestra plataforma.",
+            "help": "Estas tecnologías nos ayudan a:",
+            "benefits": [
+              "Recordar tus preferencias y configuraciones",
+              "Analizar cómo se usan nuestros servicios",
+              "Proporcionar contenido personalizado",
+              "Mejorar nuestros servicios"
+            ]
+          },
+          "rights": {
+            "description": "Tienes derecho a:",
+            "rightsList": [
+              "Acceder a tu información personal",
+              "Corregir datos inexactos",
+              "Solicitar la eliminación de tus datos",
+              "Oponerte al procesamiento de tus datos",
+              "Portabilidad de datos",
+              "Retirar el consentimiento en cualquier momento"
+            ]
+          },
+          "changes": {
+            "description": "Podemos actualizar esta política de privacidad de vez en cuando. Te notificaremos cualquier cambio publicando la nueva política en esta página y actualizando la fecha de 'Última Actualización'.",
+            "review": "Te recomendamos revisar esta política de privacidad periódicamente para cualquier cambio."
+          },
+          "contact": {
+            "description": "Si tienes alguna pregunta sobre esta política de privacidad, contáctanos:",
+            "email": "Email:",
+            "emailValue": "heredialucasfac22@gmail.com"
+          }
         }
       }
     }

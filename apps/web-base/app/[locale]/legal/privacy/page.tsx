@@ -41,14 +41,12 @@ const Privacy = async ({ params }: PrivacyProps) => {
                             <section>
                                 <h2 className="text-xl sm:text-2xl font-bold text-[#0d4b3d] mb-3 sm:mb-4">1. {dictionary.web.legal.privacy.sections.information}</h2>
                                 <div className="space-y-3 sm:space-y-4 text-gray-700 text-sm sm:text-base">
-                                    <p>We collect information you provide directly to us, such as when you create an account, use our services, or contact us for support.</p>
-                                    <p>This may include:</p>
+                                    <p>{dictionary.web.legal.privacy.content.information.description}</p>
+                                    <p>{dictionary.web.legal.privacy.content.information.includes}</p>
                                     <ul className="list-disc pl-4 sm:pl-6 space-y-1 sm:space-y-2">
-                                        <li>Account information (name, email, restaurant details)</li>
-                                        <li>Menu and order data</li>
-                                        <li>Payment information</li>
-                                        <li>Communication records</li>
-                                        <li>Usage analytics</li>
+                                        {dictionary.web.legal.privacy.content.information.items.map((item, index) => (
+                                            <li key={index}>{item}</li>
+                                        ))}
                                     </ul>
                                 </div>
                             </section>
@@ -56,14 +54,11 @@ const Privacy = async ({ params }: PrivacyProps) => {
                             <section>
                                 <h2 className="text-xl sm:text-2xl font-bold text-[#0d4b3d] mb-3 sm:mb-4">2. {dictionary.web.legal.privacy.sections.usage}</h2>
                                 <div className="space-y-3 sm:space-y-4 text-gray-700 text-sm sm:text-base">
-                                    <p>We use the information we collect to:</p>
+                                    <p>{dictionary.web.legal.privacy.content.usage.description}</p>
                                     <ul className="list-disc pl-4 sm:pl-6 space-y-1 sm:space-y-2">
-                                        <li>Provide and maintain our services</li>
-                                        <li>Process transactions and send related information</li>
-                                        <li>Send technical notices and support messages</li>
-                                        <li>Respond to your comments and questions</li>
-                                        <li>Improve our services and develop new features</li>
-                                        <li>Protect against fraud and abuse</li>
+                                        {dictionary.web.legal.privacy.content.usage.purposes.map((purpose, index) => (
+                                            <li key={index}>{purpose}</li>
+                                        ))}
                                     </ul>
                                 </div>
                             </section>
@@ -71,12 +66,12 @@ const Privacy = async ({ params }: PrivacyProps) => {
                             <section>
                                 <h2 className="text-xl sm:text-2xl font-bold text-[#0d4b3d] mb-3 sm:mb-4">3. {dictionary.web.legal.privacy.sections.sharing}</h2>
                                 <div className="space-y-3 sm:space-y-4 text-gray-700 text-sm sm:text-base">
-                                    <p>We do not sell, trade, or otherwise transfer your personal information to third parties without your consent, except as described in this policy.</p>
-                                    <p>We may share information with:</p>
+                                    <p>{dictionary.web.legal.privacy.content.sharing.description}</p>
+                                    <p>{dictionary.web.legal.privacy.content.sharing.mayShare}</p>
                                     <ul className="list-disc pl-4 sm:pl-6 space-y-1 sm:space-y-2">
-                                        <li>Service providers who assist in our operations</li>
-                                        <li>Legal authorities when required by law</li>
-                                        <li>Business partners with your explicit consent</li>
+                                        {dictionary.web.legal.privacy.content.sharing.parties.map((party, index) => (
+                                            <li key={index}>{party}</li>
+                                        ))}
                                     </ul>
                                 </div>
                             </section>
@@ -84,13 +79,12 @@ const Privacy = async ({ params }: PrivacyProps) => {
                             <section>
                                 <h2 className="text-xl sm:text-2xl font-bold text-[#0d4b3d] mb-3 sm:mb-4">4. {dictionary.web.legal.privacy.sections.security}</h2>
                                 <div className="space-y-3 sm:space-y-4 text-gray-700 text-sm sm:text-base">
-                                    <p>We implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction.</p>
-                                    <p>These measures include:</p>
+                                    <p>{dictionary.web.legal.privacy.content.security.description}</p>
+                                    <p>{dictionary.web.legal.privacy.content.security.measures}</p>
                                     <ul className="list-disc pl-4 sm:pl-6 space-y-1 sm:space-y-2">
-                                        <li>Encryption of data in transit and at rest</li>
-                                        <li>Regular security assessments</li>
-                                        <li>Access controls and authentication</li>
-                                        <li>Secure data centers and infrastructure</li>
+                                        {dictionary.web.legal.privacy.content.security.securityItems.map((item, index) => (
+                                            <li key={index}>{item}</li>
+                                        ))}
                                     </ul>
                                 </div>
                             </section>
@@ -98,13 +92,12 @@ const Privacy = async ({ params }: PrivacyProps) => {
                             <section>
                                 <h2 className="text-xl sm:text-2xl font-bold text-[#0d4b3d] mb-3 sm:mb-4">5. {dictionary.web.legal.privacy.sections.cookies}</h2>
                                 <div className="space-y-3 sm:space-y-4 text-gray-700 text-sm sm:text-base">
-                                    <p>We use cookies and similar tracking technologies to enhance your experience on our platform.</p>
-                                    <p>These technologies help us:</p>
+                                    <p>{dictionary.web.legal.privacy.content.cookies.description}</p>
+                                    <p>{dictionary.web.legal.privacy.content.cookies.help}</p>
                                     <ul className="list-disc pl-4 sm:pl-6 space-y-1 sm:space-y-2">
-                                        <li>Remember your preferences and settings</li>
-                                        <li>Analyze how our services are used</li>
-                                        <li>Provide personalized content</li>
-                                        <li>Improve our services</li>
+                                        {dictionary.web.legal.privacy.content.cookies.benefits.map((benefit, index) => (
+                                            <li key={index}>{benefit}</li>
+                                        ))}
                                     </ul>
                                 </div>
                             </section>
@@ -112,14 +105,11 @@ const Privacy = async ({ params }: PrivacyProps) => {
                             <section>
                                 <h2 className="text-xl sm:text-2xl font-bold text-[#0d4b3d] mb-3 sm:mb-4">6. {dictionary.web.legal.privacy.sections.rights}</h2>
                                 <div className="space-y-3 sm:space-y-4 text-gray-700 text-sm sm:text-base">
-                                    <p>You have the right to:</p>
+                                    <p>{dictionary.web.legal.privacy.content.rights.description}</p>
                                     <ul className="list-disc pl-4 sm:pl-6 space-y-1 sm:space-y-2">
-                                        <li>Access your personal information</li>
-                                        <li>Correct inaccurate data</li>
-                                        <li>Request deletion of your data</li>
-                                        <li>Object to processing of your data</li>
-                                        <li>Data portability</li>
-                                        <li>Withdraw consent at any time</li>
+                                        {dictionary.web.legal.privacy.content.rights.rightsList.map((right, index) => (
+                                            <li key={index}>{right}</li>
+                                        ))}
                                     </ul>
                                 </div>
                             </section>
@@ -127,19 +117,19 @@ const Privacy = async ({ params }: PrivacyProps) => {
                             <section>
                                 <h2 className="text-xl sm:text-2xl font-bold text-[#0d4b3d] mb-3 sm:mb-4">7. {dictionary.web.legal.privacy.sections.changes}</h2>
                                 <div className="space-y-3 sm:space-y-4 text-gray-700 text-sm sm:text-base">
-                                    <p>We may update this privacy policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the "Last Updated" date.</p>
-                                    <p>We encourage you to review this privacy policy periodically for any changes.</p>
+                                    <p>{dictionary.web.legal.privacy.content.changes.description}</p>
+                                    <p>{dictionary.web.legal.privacy.content.changes.review}</p>
                                 </div>
                             </section>
 
                             <section>
                                 <h2 className="text-xl sm:text-2xl font-bold text-[#0d4b3d] mb-3 sm:mb-4">8. {dictionary.web.legal.privacy.sections.contact}</h2>
                                 <div className="space-y-3 sm:space-y-4 text-gray-700 text-sm sm:text-base">
-                                    <p>If you have any questions about this privacy policy, please contact us:</p>
+                                    <p>{dictionary.web.legal.privacy.content.contact.description}</p>
                                     <ul className="list-none space-y-1 sm:space-y-2">
-                                        <li><strong>Email:</strong> privacy@ganga-menu.com</li>
-                                        <li><strong>Address:</strong> [Company Address]</li>
-                                        <li><strong>Phone:</strong> [Phone Number]</li>
+                                        <li><strong>{dictionary.web.legal.privacy.content.contact.email}</strong> {dictionary.web.legal.privacy.content.contact.emailValue}</li>
+                                        {/* <li><strong>{dictionary.web.legal.privacy.content.contact.address}</strong> {dictionary.web.legal.privacy.content.contact.addressValue}</li> */}
+                                        {/* <li><strong>{dictionary.web.legal.privacy.content.contact.phone}</strong> {dictionary.web.legal.privacy.content.contact.phoneValue}</li> */}
                                     </ul>
                                 </div>
                             </section>

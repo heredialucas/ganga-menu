@@ -1254,7 +1254,117 @@
             "Analytics and reporting tools",
             "Table and reservation management",
             "Payment system integration"
-          ]
+          ],
+          "modificationRights": "We reserve the right to modify these terms at any time. Changes will take effect immediately after being posted on our website.",
+          "registration": {
+            "eligibility": "Eligibility",
+            "eligibilityDescription": "To use our services, you must:",
+            "eligibilityRequirements": [
+              "Be 18 years of age or older or have legal authorization",
+              "Provide truthful and up-to-date information",
+              "Be the owner or be authorized to manage the restaurant",
+              "Comply with all applicable laws and regulations"
+            ],
+            "userResponsibilities": "User Responsibilities",
+            "userResponsibilitiesList": [
+              "Maintain the confidentiality of access credentials",
+              "Immediately notify any unauthorized use",
+              "Be responsible for all activities in your account",
+              "Keep contact information updated"
+            ]
+          },
+          "billing": {
+            "freePlan": "Free Plan",
+            "freePlanFeatures": [
+              "Limited access to basic functionalities",
+              "No monthly cost",
+              "Limitations on number of users and functions"
+            ],
+            "paidPlans": "Paid Plans",
+            "paidPlansFeatures": [
+              "Monthly or annual billing",
+              "Automatic renewal unless cancelled",
+              "Plan changes effective in the next billing period",
+              "No refunds for partial periods"
+            ]
+          },
+          "acceptableUse": {
+            "allowed": "Allowed:",
+            "allowedItems": [
+              "Use the platform for legitimate restaurant management",
+              "Upload your own content (menus, images, descriptions)",
+              "Configure and customize your experience",
+              "Integrate with authorized third-party systems"
+            ],
+            "prohibited": "Prohibited:",
+            "prohibitedItems": [
+              "Use the platform for illegal activities",
+              "Attempt to access other users' data",
+              "Reverse engineer the software",
+              "Overload or interfere with services",
+              "Upload offensive, false, or rights-infringing content",
+              "Resell or redistribute our services"
+            ]
+          },
+          "intellectualProperty": {
+            "ourRights": "Our Rights",
+            "ourRightsDescription": "Ganga-Menú and all its content (software, design, logos, texts) are our property or that of our licensors and are protected by copyright, trademarks, and other intellectual property laws.",
+            "yourContent": "Your Content",
+            "yourContentDescription": "You retain all rights to the content you upload (menus, images, descriptions). By using our services, you grant us a license to use, store, and display your content as necessary to provide the service."
+          },
+          "availability": {
+            "description": "We strive to keep our services available 24/7, but we cannot guarantee 100% availability. We may experience:",
+            "interruptions": [
+              "Scheduled maintenance (with prior notice)",
+              "Unplanned technical interruptions",
+              "Security updates",
+              "Functionality improvements"
+            ]
+          },
+          "liability": {
+            "description": "To the maximum extent permitted by law:",
+            "limitations": [
+              "Ganga-Menú is provided 'as is'",
+              "We do not guarantee that the service will be uninterrupted or error-free",
+              "We are not responsible for indirect or consequential losses",
+              "Our total liability will not exceed fees paid in the previous 12 months",
+              "You are responsible for maintaining backups of your content"
+            ]
+          },
+          "termination": {
+            "byUser": "Termination by You",
+            "byUserDescription": "You can cancel your account at any time from your account settings or by contacting us. Cancellation will be effective at the end of the current billing period.",
+            "byUs": "Termination by Us",
+            "byUsDescription": "We may suspend or terminate your account if:",
+            "terminationReasons": [
+              "You violate these terms of service",
+              "You do not pay outstanding fees",
+              "You engage in fraudulent or illegal activities",
+              "Your account remains inactive for extended periods"
+            ]
+          },
+          "privacy": {
+            "description": "The handling of your personal information is governed by our Privacy Policy, which is an integral part of these terms. We recommend reading it carefully."
+          },
+          "governingLaw": {
+            "description": "These terms are governed by the laws of [Jurisdiction] without regard to its conflict of law principles. Any dispute will be resolved in the competent courts of [Jurisdiction]."
+          },
+          "contact": {
+            "description": "For questions about these terms and conditions, contact us:",
+            "email": "Email:",
+            "address": "Address:",
+            "phone": "Phone:",
+            "emailValue": "legal@ganga-menu.com",
+            "addressValue": "[Company Address]",
+            "phoneValue": "[Phone Number]"
+          },
+          "general": {
+            "integrity": "Integrity: These terms constitute the complete agreement between the parties",
+            "severability": "Severability: If any provision is invalid, the rest remains in force",
+            "waiver": "Waiver: The failure to exercise a right does not constitute waiver",
+            "assignment": "Assignment: You cannot transfer these terms without our consent",
+            "survival": "Survival: Provisions that by their nature must survive will continue in force"
+          }
         }
       },
       "privacy": {
@@ -1270,6 +1380,79 @@
           "rights": "Your Rights",
           "changes": "Changes to This Policy",
           "contact": "Contact Us"
+        },
+        "content": {
+          "information": {
+            "description": "We collect information you provide directly to us, such as when you create an account, use our services, or contact us for support.",
+            "includes": "This may include:",
+            "items": [
+              "Account information (name, email, restaurant details)",
+              "Menu and order data",
+              "Payment information",
+              "Communication records",
+              "Usage analytics"
+            ]
+          },
+          "usage": {
+            "description": "We use the information we collect to:",
+            "purposes": [
+              "Provide and maintain our services",
+              "Process transactions and send related information",
+              "Send technical notices and support messages",
+              "Respond to your comments and questions",
+              "Improve our services and develop new features",
+              "Protect against fraud and abuse"
+            ]
+          },
+          "sharing": {
+            "description": "We do not sell, trade, or otherwise transfer your personal information to third parties without your consent, except as described in this policy.",
+            "mayShare": "We may share information with:",
+            "parties": [
+              "Service providers who assist in our operations",
+              "Legal authorities when required by law",
+              "Business partners with your explicit consent"
+            ]
+          },
+          "security": {
+            "description": "We implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction.",
+            "measures": "These measures include:",
+            "securityItems": [
+              "Encryption of data in transit and at rest",
+              "Regular security assessments",
+              "Access controls and authentication",
+              "Secure data centers and infrastructure"
+            ]
+          },
+          "cookies": {
+            "description": "We use cookies and similar tracking technologies to enhance your experience on our platform.",
+            "help": "These technologies help us:",
+            "benefits": [
+              "Remember your preferences and settings",
+              "Analyze how our services are used",
+              "Provide personalized content",
+              "Improve our services"
+            ]
+          },
+          "rights": {
+            "description": "You have the right to:",
+            "rightsList": [
+              "Access your personal information",
+              "Correct inaccurate data",
+              "Request deletion of your data",
+              "Object to processing of your data",
+              "Data portability",
+              "Withdraw consent at any time"
+            ]
+          },
+          "changes": {
+            "description": "We may update this privacy policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the 'Last Updated' date.",
+            "review": "We encourage you to review this privacy policy periodically for any changes."
+          },
+          "contact": {
+            "description": "If you have any questions about this privacy policy, please contact us:",
+            "email": "Email:",
+            "emailValue": "heredialucasfac22@gmail.com"
+          }
         }
       }
     }

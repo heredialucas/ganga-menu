@@ -38,8 +38,12 @@ function SubmitButton({ dictionary }: { dictionary: Dictionary }) {
     return (
         <Button type="submit" disabled={pending} className="w-full sm:w-auto text-xs sm:text-sm">
             {pending ? <Loader2 className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 animate-spin" /> : <Save className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />}
-            <span className="hidden sm:inline">{(dictionary as any).app?.restaurant?.config?.save || 'Guardar Configuración'}</span>
-            <span className="sm:hidden">{(dictionary as any).app?.restaurant?.config?.saving || 'Guardando...'}</span>
+            <span className="hidden sm:inline">
+                {pending ? (dictionary as any).app?.restaurant?.config?.saving || 'Guardando...' : (dictionary as any).app?.restaurant?.config?.save || 'Guardar Configuración'}
+            </span>
+            <span className="sm:hidden">
+                {pending ? (dictionary as any).app?.restaurant?.config?.savingMobile || 'Guardando...' : (dictionary as any).app?.restaurant?.config?.saveMobile || 'Guardar'}
+            </span>
         </Button>
     );
 }
@@ -48,10 +52,14 @@ export function RestaurantConfigForm({
     config,
     dictionary,
     appUrl,
+    canEdit = true,
+    canView = true,
 }: {
     config: RestaurantConfigData | null;
     dictionary: Dictionary;
     appUrl: string;
+    canEdit?: boolean;
+    canView?: boolean;
 }) {
     const [state, setState] = useState(initialState);
     const [isPending, startTransition] = useTransition();
@@ -59,7 +67,7 @@ export function RestaurantConfigForm({
     const formRef = useRef<HTMLFormElement>(null);
 
     const handleSubmit = async () => {
-        if (!formRef.current) return;
+        if (!formRef.current || !canEdit) return; // Solo permitir submit si puede editar
         const formData = new FormData(formRef.current);
 
         startTransition(() => {
@@ -99,29 +107,58 @@ export function RestaurantConfigForm({
     return (
         <form ref={formRef} action={handleSubmit}>
             <div className="space-y-4 sm:space-y-6 md:space-y-8 md:pb-24">
+                {!canEdit && (
+                    <div className="p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-md">
+                        <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                            Modo solo lectura: Puedes ver la configuración pero no modificarla.
+                        </p>
+                    </div>
+                )}
                 {/* General Info Section */}
                 <Card>
                     <CardHeader>
-                        <CardTitle className="text-lg sm:text-xl">{(dictionary as any).app?.restaurant?.config?.title || 'Información General'}</CardTitle>
+                        <CardTitle className="text-lg sm:text-xl">
+                            {canEdit
+                                ? (dictionary as any).app?.restaurant?.config?.title || 'Información General'
+                                : (dictionary as any).app?.restaurant?.config?.title || 'Información General' + ' (Solo Lectura)'
+                            }
+                        </CardTitle>
                         <CardDescription className="text-sm sm:text-base">
-                            {(dictionary as any).app?.restaurant?.config?.description || 'Logo, nombre y descripción de tu restaurante.'}
+                            {canEdit
+                                ? (dictionary as any).app?.restaurant?.config?.description || 'Logo, nombre y descripción de tu restaurante.'
+                                : (dictionary as any).app?.restaurant?.config?.description || 'Logo, nombre y descripción de tu restaurante.' + ' (Modo solo lectura)'
+                            }
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="p-1 sm:p-2 md:p-6 grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                         <div className="lg:col-span-1">
                             <Label className="text-sm sm:text-base">{(dictionary as any).app?.restaurant?.config?.logo || 'Logo del Restaurante'}</Label>
-                            <ImageUpload name="logoUrl" initialUrl={config?.logoUrl} dictionary={dictionary} />
+                            <ImageUpload name="logoUrl" initialUrl={config?.logoUrl} dictionary={dictionary} canEdit={canEdit} />
                             {state?.errors?.logoUrl && <p className="text-sm text-red-500 mt-2">{state.errors.logoUrl[0]}</p>}
                         </div>
                         <div className="lg:col-span-2 space-y-4">
                             <div className="space-y-2">
                                 <Label htmlFor="name" className="text-sm sm:text-base">{(dictionary as any).app?.restaurant?.config?.name || 'Nombre del Restaurante'}</Label>
-                                <Input id="name" name="name" defaultValue={config?.name} placeholder={(dictionary as any).app?.restaurant?.config?.namePlaceholder || 'Ingresa el nombre de tu restaurante'} />
+                                <Input
+                                    id="name"
+                                    name="name"
+                                    defaultValue={config?.name}
+                                    placeholder={(dictionary as any).app?.restaurant?.config?.namePlaceholder || 'Ingresa el nombre de tu restaurante'}
+                                    disabled={!canEdit}
+                                    readOnly={!canEdit}
+                                />
                                 {state?.errors?.name && <p className="text-sm text-red-500">{state.errors.name[0]}</p>}
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="description" className="text-sm sm:text-base">{(dictionary as any).app?.restaurant?.config?.description || 'Descripción'}</Label>
-                                <Textarea id="description" name="description" defaultValue={config?.description || ''} placeholder={(dictionary as any).app?.restaurant?.config?.descriptionPlaceholder || 'Describe tu restaurante'} />
+                                <Textarea
+                                    id="description"
+                                    name="description"
+                                    defaultValue={config?.description || ''}
+                                    placeholder={(dictionary as any).app?.restaurant?.config?.descriptionPlaceholder || 'Describe tu restaurante'}
+                                    disabled={!canEdit}
+                                    readOnly={!canEdit}
+                                />
                                 {state?.errors?.description && <p className="text-sm text-red-500">{state.errors.description[0]}</p>}
                             </div>
                         </div>
@@ -142,17 +179,39 @@ export function RestaurantConfigForm({
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                             <div className="space-y-2">
                                 <Label htmlFor="address" className="text-sm sm:text-base">{(dictionary as any).app?.restaurant?.config?.address || 'Dirección'}</Label>
-                                <Input id="address" name="address" defaultValue={config?.address || ''} placeholder={(dictionary as any).app?.restaurant?.config?.addressPlaceholder || 'Calle, número, ciudad'} />
+                                <Input
+                                    id="address"
+                                    name="address"
+                                    defaultValue={config?.address || ''}
+                                    placeholder={(dictionary as any).app?.restaurant?.config?.addressPlaceholder || 'Calle, número, ciudad'}
+                                    disabled={!canEdit}
+                                    readOnly={!canEdit}
+                                />
                                 {state?.errors?.address && <p className="text-sm text-red-500">{state.errors.address[0]}</p>}
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="phone" className="text-sm sm:text-base">{(dictionary as any).app?.restaurant?.config?.phone || 'Teléfono'}</Label>
-                                <Input id="phone" name="phone" defaultValue={config?.phone || ''} placeholder={(dictionary as any).app?.restaurant?.config?.phonePlaceholder || '+34 123 456 789'} />
+                                <Input
+                                    id="phone"
+                                    name="phone"
+                                    defaultValue={config?.phone || ''}
+                                    placeholder={(dictionary as any).app?.restaurant?.config?.phonePlaceholder || '+34 123 456 789'}
+                                    disabled={!canEdit}
+                                    readOnly={!canEdit}
+                                />
                                 {state?.errors?.phone && <p className="text-sm text-red-500">{state.errors.phone[0]}</p>}
                             </div>
                             <div className="space-y-2 sm:col-span-2 lg:col-span-1">
                                 <Label htmlFor="email" className="text-sm sm:text-base">{(dictionary as any).app?.restaurant?.config?.email || 'Email de Contacto'}</Label>
-                                <Input id="email" name="email" type="email" defaultValue={config?.email || ''} placeholder={(dictionary as any).app?.restaurant?.config?.emailPlaceholder || 'contacto@restaurante.com'} />
+                                <Input
+                                    id="email"
+                                    name="email"
+                                    type="email"
+                                    defaultValue={config?.email || ''}
+                                    placeholder={(dictionary as any).app?.restaurant?.config?.emailPlaceholder || 'contacto@restaurante.com'}
+                                    disabled={!canEdit}
+                                    readOnly={!canEdit}
+                                />
                                 {state?.errors?.email && <p className="text-sm text-red-500">{state.errors.email[0]}</p>}
                             </div>
                             {/* <div className="space-y-2">
@@ -182,7 +241,7 @@ export function RestaurantConfigForm({
                                     </CardDescription>
                                 </CardHeader>
                                 <CardContent className="p-1 sm:p-2 md:p-6">
-                                    <OpeningHoursManager initialHours={config?.hours || undefined} dictionary={dictionary} />
+                                    <OpeningHoursManager initialHours={config?.hours || undefined} dictionary={dictionary} canEdit={canEdit} />
                                     {state?.errors?.hours && <p className="text-sm text-red-500 mt-2">{state.errors.hours[0]}</p>}
                                 </CardContent>
                             </Card>
@@ -192,13 +251,15 @@ export function RestaurantConfigForm({
             </div>
 
             {/* Sticky Footer for Submit Button */}
-            <div className="static md:fixed bottom-0 left-0 md:left-64 right-0 z-50">
-                <div className="bg-background/95 backdrop-blur-sm supports-[backdrop-filter]:bg-background/60 border-t p-3 sm:p-4">
-                    <div className="max-w-6xl mx-auto flex justify-center sm:justify-end">
-                        <SubmitButton dictionary={dictionary} />
+            {canEdit && (
+                <div className="static md:fixed bottom-0 left-0 md:left-64 right-0 z-50">
+                    <div className="bg-background/95 backdrop-blur-sm supports-[backdrop-filter]:bg-background/60 border-t p-3 sm:p-4">
+                        <div className="max-w-6xl mx-auto flex justify-center sm:justify-end">
+                            <SubmitButton dictionary={dictionary} />
+                        </div>
                     </div>
                 </div>
-            </div>
+            )}
         </form>
     );
 } 

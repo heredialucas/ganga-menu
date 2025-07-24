@@ -14,10 +14,25 @@ import { Popover, PopoverContent, PopoverTrigger } from '@repo/design-system/com
 import { PlusCircle, Save, Square, Circle as CircleIcon, MinusSquare, Pen, Trash2, MousePointer, Loader2, ChevronsUp, Type } from 'lucide-react';
 import { saveRestaurantDesign } from '@repo/data-services/src/services/restaurantDesignService';
 import type { RestaurantConfigData } from '@repo/data-services/src/services/restaurantConfigService';
-import type { RestaurantDesignData, RestaurantTableData as BaseRestaurantTableData, RestaurantElement, SaveDesignResult } from '@repo/data-services/src/services/restaurantDesignService';
+import type { RestaurantDesignData, RestaurantTableData as BaseRestaurantTableData, RestaurantElement, SaveDesignResult, TemporaryRestaurantTableData } from '@repo/data-services/src/services/restaurantDesignService';
 import type { Dictionary } from '@repo/internationalization';
 
-type RestaurantTableData = BaseRestaurantTableData & { type: 'table' };
+// Tipo local para mesas temporales (sin restaurantDesignId requerido)
+type LocalRestaurantTableData = {
+    id: string;
+    type: 'table';
+    label: string;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    rotation: number;
+    shape: string;
+    fill: string;
+    createdAt: Date;
+    updatedAt: Date;
+    restaurantDesignId?: string;
+};
 
 const initialState: SaveDesignResult = {
     success: false,
@@ -30,8 +45,12 @@ function SubmitButton({ dictionary }: { dictionary: Dictionary }) {
     return (
         <Button type="submit" disabled={pending} className="w-full sm:w-auto text-xs sm:text-sm">
             {pending ? <Loader2 className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 animate-spin" /> : <Save className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />}
-            <span className="hidden sm:inline">{(dictionary as any).app?.restaurant?.design?.saveDesign || 'Guardar Diseño'}</span>
-            <span className="sm:hidden">{(dictionary as any).app?.restaurant?.design?.savingDesign || 'Guardando...'}</span>
+            <span className="hidden sm:inline">
+                {pending ? (dictionary as any).app?.restaurant?.design?.savingDesign || 'Guardando...' : (dictionary as any).app?.restaurant?.design?.saveDesign || 'Guardar Diseño'}
+            </span>
+            <span className="sm:hidden">
+                {pending ? (dictionary as any).app?.restaurant?.design?.savingDesignMobile || 'Guardando...' : (dictionary as any).app?.restaurant?.design?.saveDesignMobile || 'Guardar'}
+            </span>
         </Button>
     );
 }
@@ -41,29 +60,35 @@ let Stage: any, Layer: any, Rect: any, Circle: any, Transformer: any, Line: any,
 
 const initializeKonva = async () => {
     if (typeof window !== 'undefined') {
-        const konva = await import('react-konva');
-        Stage = konva.Stage;
-        Layer = konva.Layer;
-        Rect = konva.Rect;
-        Circle = konva.Circle;
-        Transformer = konva.Transformer;
-        Line = konva.Line;
-        Group = konva.Group;
-        Text = konva.Text;
-        return true;
+        try {
+            const konva = await import('react-konva');
+            Stage = konva.Stage;
+            Layer = konva.Layer;
+            Rect = konva.Rect;
+            Circle = konva.Circle;
+            Transformer = konva.Transformer;
+            Line = konva.Line;
+            Group = konva.Group;
+            Text = konva.Text;
+            console.log('Konva components loaded:', { Stage, Layer, Rect, Circle, Transformer, Line, Group, Text });
+            return true;
+        } catch (error) {
+            console.error('Error loading Konva:', error);
+            return false;
+        }
     }
     return false;
 };
 
 // Componente individual para cada elemento
 interface ElementProps {
-    element: RestaurantTableData | RestaurantElement;
+    element: LocalRestaurantTableData | RestaurantElement;
     isSelected: boolean;
     onSelect: () => void;
     onChange: (attrs: any) => void;
 }
 
-const KonvaElement: FC<ElementProps> = ({ element, isSelected, onSelect, onChange }) => {
+const KonvaElement: FC<ElementProps & { canEdit?: boolean }> = ({ element, isSelected, onSelect, onChange, canEdit = true }) => {
     const shapeRef = useRef<any>(null);
 
     useEffect(() => {
@@ -73,6 +98,7 @@ const KonvaElement: FC<ElementProps> = ({ element, isSelected, onSelect, onChang
     }, [isSelected]);
 
     const handleDragEnd = (e: any) => {
+        if (!canEdit) return; // No permitir arrastrar si no puede editar
         const node = e.target;
         onChange({
             ...element,
@@ -82,6 +108,7 @@ const KonvaElement: FC<ElementProps> = ({ element, isSelected, onSelect, onChang
     };
 
     const handleTransformEnd = (e: any) => {
+        if (!canEdit) return; // No permitir transformar si no puede editar
         const node = shapeRef.current;
         if (!node) return;
 
@@ -117,6 +144,8 @@ const KonvaElement: FC<ElementProps> = ({ element, isSelected, onSelect, onChang
     };
 
     const handleClick = () => {
+        if (!canEdit) return; // No permitir seleccionar si no puede editar
+        console.log('Element clicked:', element.id);
         onSelect();
     };
 
@@ -124,18 +153,20 @@ const KonvaElement: FC<ElementProps> = ({ element, isSelected, onSelect, onChang
     const commonProps = {
         ref: shapeRef,
         id: element.id,
-        x: (element as any).x || 0,
-        y: (element as any).y || 0,
-        rotation: (element as any).rotation || 0,
-        draggable: true,
+        x: element.x || 0,
+        y: element.y || 0,
+        rotation: element.rotation || 0,
+        draggable: canEdit, // Solo arrastrable si puede editar
         onClick: handleClick,
         onTap: handleClick,
         onDragEnd: handleDragEnd,
         onTransformEnd: handleTransformEnd,
         strokeWidth: isSelected ? 2 : 1,
         stroke: isSelected ? '#4F46E5' : '#333',
-        opacity: 0.9,
+        opacity: canEdit ? 0.9 : 0.6, // Más opaco si no puede editar
     };
+
+    console.log('KonvaElement props for', element.id, ':', { id: element.id, x: element.x, y: element.y, isSelected });
 
     const width = 'width' in element ? element.width : 50;
     const height = 'height' in element ? element.height : 50;
@@ -221,14 +252,16 @@ const KonvaElement: FC<ElementProps> = ({ element, isSelected, onSelect, onChang
     );
 };
 
-function DesignCanvas({ config, design, tables, setTables, elements, setElements, dictionary }: {
+function DesignCanvas({ config, design, tables, setTables, elements, setElements, dictionary, canEdit = true, canView = true }: {
     config: RestaurantConfigData;
     design: RestaurantDesignData | null;
-    tables: RestaurantTableData[];
-    setTables: React.Dispatch<React.SetStateAction<RestaurantTableData[]>>;
+    tables: LocalRestaurantTableData[];
+    setTables: React.Dispatch<React.SetStateAction<LocalRestaurantTableData[]>>;
     elements: RestaurantElement[];
     setElements: React.Dispatch<React.SetStateAction<RestaurantElement[]>>;
     dictionary: Dictionary;
+    canEdit?: boolean;
+    canView?: boolean;
 }) {
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const [activeTool, setActiveTool] = useState<'select' | 'wall'>('select');
@@ -250,7 +283,11 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
     const containerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        initializeKonva().then(setKonvaReady);
+        console.log('Initializing Konva...');
+        initializeKonva().then((ready) => {
+            console.log('Konva initialization result:', ready);
+            setKonvaReady(ready);
+        });
     }, []);
 
     useEffect(() => {
@@ -271,11 +308,14 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
 
     // Manejo del transformer
     useEffect(() => {
+        console.log('Transformer effect - konvaReady:', konvaReady, 'selectedId:', selectedId, 'trRef:', !!trRef.current);
         if (!konvaReady || !trRef.current) return;
 
         if (selectedId) {
             const selectedNode = layerRef.current?.findOne(`#${selectedId}`);
+            console.log('Selected node:', selectedNode, 'for ID:', selectedId);
             if (selectedNode) {
+                console.log('Applying transformer to node:', selectedNode);
                 trRef.current.nodes([selectedNode]);
                 layerRef.current?.batchDraw();
 
@@ -287,8 +327,12 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
                     left: stageBox.left + window.scrollX + nodeBox.x - 50,
                 };
                 setTooltipPos(tooltipPosition);
+            } else {
+                console.log('Node not found for ID:', selectedId);
+                console.log('Available nodes in layer:', layerRef.current?.children);
             }
         } else {
+            console.log('Clearing transformer');
             trRef.current.nodes([]);
             setTooltipPos(null);
         }
@@ -297,6 +341,8 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
     const allItems = [...tables, ...elements];
 
     const handleStageClick = (e: any) => {
+        if (!canEdit) return; // No permitir interacciones si no puede editar
+
         const clickedOnEmpty = e.target === e.target.getStage();
         if (clickedOnEmpty) {
             if (activeTool === 'wall') {
@@ -310,13 +356,13 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
     };
 
     const handleMouseMove = (e: any) => {
-        if (!isDrawing || activeTool !== 'wall') return;
+        if (!canEdit || !isDrawing || activeTool !== 'wall') return;
         const pos = e.target.getStage().getPointerPosition();
         setCurrentWall(prev => [prev[0], prev[1], pos.x, pos.y]);
     };
 
     const handleMouseUp = () => {
-        if (!isDrawing || activeTool !== 'wall') return;
+        if (!canEdit || !isDrawing || activeTool !== 'wall') return;
         setIsDrawing(false);
         if (currentWall.length < 4 || (currentWall[0] === currentWall[2] && currentWall[1] === currentWall[3])) {
             setCurrentWall([]);
@@ -344,6 +390,7 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
     };
 
     const handleElementChange = (newAttrs: any) => {
+        console.log('Element change:', newAttrs);
         if (newAttrs.type === 'table') {
             setTables(prev => prev.map(t => t.id === newAttrs.id ? newAttrs : t));
         } else {
@@ -352,10 +399,11 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
     };
 
     const addElement = (type: 'table' | 'bar' | 'staircase', shape: 'rectangle' | 'circle' | null) => {
+        if (!canEdit) return; // No permitir agregar elementos si no puede editar
         const common = { id: `el_${Date.now()}_${Math.random()}`, x: 50, y: 50, rotation: 0 };
 
         if (type === 'table') {
-            const newTable: RestaurantTableData = {
+            const newTable: LocalRestaurantTableData = {
                 ...common,
                 type,
                 shape: shape!,
@@ -365,8 +413,10 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
                 label: `Mesa ${tables.length + 1}`,
                 createdAt: new Date(),
                 updatedAt: new Date(),
-                restaurantDesignId: design!.id,
+                // Solo asignar restaurantDesignId si el diseño existe
+                ...(design?.id && { restaurantDesignId: design.id }),
             };
+            console.log('Creating new table:', newTable);
             setTables(prev => [...prev, newTable]);
         } else {
             const newElement = {
@@ -382,17 +432,19 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
     };
 
     const deleteSelected = () => {
-        if (!selectedId) return;
+        if (!canEdit || !selectedId) return; // No permitir eliminar si no puede editar
         setTables(prev => prev.filter(t => t.id !== selectedId));
         setElements(prev => prev.filter(e => e.id !== selectedId));
         setSelectedId(null);
     };
 
     const updateLabel = (id: string, newLabel: string) => {
+        if (!canEdit) return; // No permitir actualizar etiquetas si no puede editar
         setTables(prev => prev.map(t => t.id === id ? { ...t, label: newLabel } : t));
     };
 
     const updateColor = (id: string, newColor: string) => {
+        if (!canEdit) return; // No permitir actualizar colores si no puede editar
         const allItems = [...tables, ...elements];
         const item = allItems.find(item => item.id === id);
         if (!item) return;
@@ -404,81 +456,90 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
         }
     };
 
-    if (!konvaReady) {
+    if (!konvaReady || !Stage || !Layer || !Rect || !Circle || !Transformer || !Line || !Group || !Text) {
+        console.log('Konva not ready:', { konvaReady, Stage, Layer, Rect, Circle, Transformer, Line, Group, Text });
         return <div className="h-96 bg-gray-50 border rounded-lg flex items-center justify-center">{(dictionary as any).app?.restaurant?.design?.loading || 'Cargando diseñador...'}</div>;
     }
 
     return (
         <div className="space-y-2 sm:space-y-3 md:space-y-4">
-            <div className="flex flex-wrap gap-1 sm:gap-2 md:gap-4 items-center p-2 sm:p-3 border rounded-lg">
-                <Button type="button" variant={activeTool === 'select' ? 'secondary' : 'outline'} onClick={() => setActiveTool('select')} className="text-xs sm:text-sm">
-                    <MousePointer className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-                    <span className="hidden sm:inline">{(dictionary as any).app?.restaurant?.design?.tools?.select?.desktop || 'Seleccionar'}</span>
-                    <span className="sm:hidden">{(dictionary as any).app?.restaurant?.design?.tools?.select?.mobile || 'Sel'}</span>
-                </Button>
-                <Button type="button" variant={activeTool === 'wall' ? 'secondary' : 'outline'} onClick={() => setActiveTool('wall')} className="text-xs sm:text-sm">
-                    <Pen className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-                    <span className="hidden sm:inline">{(dictionary as any).app?.restaurant?.design?.tools?.wall?.desktop || 'Pared'}</span>
-                    <span className="sm:hidden">{(dictionary as any).app?.restaurant?.design?.tools?.wall?.mobile || 'Pared'}</span>
-                </Button>
-                <Popover>
-                    <PopoverTrigger asChild>
-                        <Button type="button" variant="outline" className="text-xs sm:text-sm">
-                            <PlusCircle className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-                            <span className="hidden sm:inline">{(dictionary as any).app?.restaurant?.design?.tools?.addObject?.desktop || 'Añadir Objeto'}</span>
-                            <span className="sm:hidden">{(dictionary as any).app?.restaurant?.design?.tools?.addObject?.mobile || 'Añadir'}</span>
-                        </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-2">
-                        <div className="grid grid-cols-2 sm:flex sm:gap-2">
-                            <Button type="button" variant="ghost" onClick={() => addElement('table', 'rectangle')} className="flex-col h-auto text-xs">
-                                <Square className="h-4 w-4 sm:h-6 sm:w-6" />
-                                <span className="text-xs">{(dictionary as any).app?.restaurant?.design?.tools?.table || 'Mesa'}</span>
+            {canEdit && (
+                <div className="flex flex-wrap gap-1 sm:gap-2 md:gap-4 items-center p-2 sm:p-3 border rounded-lg">
+                    <Button type="button" variant={activeTool === 'select' ? 'secondary' : 'outline'} onClick={() => setActiveTool('select')} className="text-xs sm:text-sm">
+                        <MousePointer className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                        <span className="hidden sm:inline">{(dictionary as any).app?.restaurant?.design?.tools?.select?.desktop || 'Seleccionar'}</span>
+                        <span className="sm:hidden">{(dictionary as any).app?.restaurant?.design?.tools?.select?.mobile || 'Sel'}</span>
+                    </Button>
+                    <Button type="button" variant={activeTool === 'wall' ? 'secondary' : 'outline'} onClick={() => setActiveTool('wall')} className="text-xs sm:text-sm">
+                        <Pen className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                        <span className="hidden sm:inline">{(dictionary as any).app?.restaurant?.design?.tools?.wall?.desktop || 'Pared'}</span>
+                        <span className="sm:hidden">{(dictionary as any).app?.restaurant?.design?.tools?.wall?.mobile || 'Pared'}</span>
+                    </Button>
+                    <Popover>
+                        <PopoverTrigger asChild>
+                            <Button type="button" variant="outline" className="text-xs sm:text-sm">
+                                <PlusCircle className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                                <span className="hidden sm:inline">{(dictionary as any).app?.restaurant?.design?.tools?.addObject?.desktop || 'Añadir Objeto'}</span>
+                                <span className="sm:hidden">{(dictionary as any).app?.restaurant?.design?.tools?.addObject?.mobile || 'Añadir'}</span>
                             </Button>
-                            <Button type="button" variant="ghost" onClick={() => addElement('table', 'circle')} className="flex-col h-auto text-xs">
-                                <CircleIcon className="h-4 w-4 sm:h-6 sm:w-6" />
-                                <span className="text-xs">{(dictionary as any).app?.restaurant?.design?.tools?.roundTable || 'Mesa Red.'}</span>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-2">
+                            <div className="grid grid-cols-2 sm:flex sm:gap-2">
+                                <Button type="button" variant="ghost" onClick={() => addElement('table', 'rectangle')} className="flex-col h-auto text-xs">
+                                    <Square className="h-4 w-4 sm:h-6 sm:w-6" />
+                                    <span className="text-xs">{(dictionary as any).app?.restaurant?.design?.tools?.table || 'Mesa'}</span>
+                                </Button>
+                                <Button type="button" variant="ghost" onClick={() => addElement('table', 'circle')} className="flex-col h-auto text-xs">
+                                    <CircleIcon className="h-4 w-4 sm:h-6 sm:w-6" />
+                                    <span className="text-xs">{(dictionary as any).app?.restaurant?.design?.tools?.roundTable || 'Mesa Red.'}</span>
+                                </Button>
+                                <Button type="button" variant="ghost" onClick={() => addElement('bar', 'rectangle')} className="flex-col h-auto text-xs">
+                                    <MinusSquare className="h-4 w-4 sm:h-6 sm:w-6" />
+                                    <span className="text-xs">{(dictionary as any).app?.restaurant?.design?.tools?.bar || 'Barra'}</span>
+                                </Button>
+                                <Button type="button" variant="ghost" onClick={() => addElement('staircase', null)} className="flex-col h-auto text-xs">
+                                    <ChevronsUp className="h-4 w-4 sm:h-6 sm:w-6" />
+                                    <span className="text-xs">{(dictionary as any).app?.restaurant?.design?.tools?.staircase || 'Escalera'}</span>
+                                </Button>
+                            </div>
+                        </PopoverContent>
+                    </Popover>
+                    <Button type="button" variant="outline" onClick={deleteSelected} disabled={!selectedId} className="text-xs sm:text-sm min-w-[80px] sm:min-w-[100px]">
+                        <Trash2 className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                        <span className="hidden sm:inline">{(dictionary as any).app?.restaurant?.design?.deleteButton || 'Eliminar'}</span>
+                        <span className="sm:hidden">{(dictionary as any).app?.restaurant?.design?.deleteButton || 'Elim'}</span>
+                    </Button>
+                    <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                            <Button type="button" variant="outline" disabled={!tables.length && !elements.length} className="text-xs sm:text-sm">
+                                <Trash2 className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                                <span className="hidden sm:inline">{(dictionary as any).app?.restaurant?.design?.resetDesign || 'Limpiar'}</span>
+                                <span className="sm:hidden">{(dictionary as any).app?.restaurant?.design?.resetDesign || 'Limpiar'}</span>
                             </Button>
-                            <Button type="button" variant="ghost" onClick={() => addElement('bar', 'rectangle')} className="flex-col h-auto text-xs">
-                                <MinusSquare className="h-4 w-4 sm:h-6 sm:w-6" />
-                                <span className="text-xs">{(dictionary as any).app?.restaurant?.design?.tools?.bar || 'Barra'}</span>
-                            </Button>
-                            <Button type="button" variant="ghost" onClick={() => addElement('staircase', null)} className="flex-col h-auto text-xs">
-                                <ChevronsUp className="h-4 w-4 sm:h-6 sm:w-6" />
-                                <span className="text-xs">{(dictionary as any).app?.restaurant?.design?.tools?.staircase || 'Escalera'}</span>
-                            </Button>
-                        </div>
-                    </PopoverContent>
-                </Popover>
-                <Button type="button" variant="outline" onClick={deleteSelected} disabled={!selectedId} className="text-xs sm:text-sm min-w-[80px] sm:min-w-[100px]">
-                    <Trash2 className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-                    <span className="hidden sm:inline">{(dictionary as any).app?.restaurant?.design?.deleteButton || 'Eliminar'}</span>
-                    <span className="sm:hidden">{(dictionary as any).app?.restaurant?.design?.deleteButton || 'Elim'}</span>
-                </Button>
-                <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                        <Button type="button" variant="outline" disabled={!tables.length && !elements.length} className="text-xs sm:text-sm">
-                            <Trash2 className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-                            <span className="hidden sm:inline">{(dictionary as any).app?.restaurant?.design?.resetDesign || 'Limpiar'}</span>
-                            <span className="sm:hidden">{(dictionary as any).app?.restaurant?.design?.resetDesign || 'Limpiar'}</span>
-                        </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                        <AlertDialogHeader>
-                            <AlertDialogTitle className="text-base sm:text-lg">{(dictionary as any).app?.restaurant?.design?.resetDesignConfirmation || '¿Estás seguro?'}</AlertDialogTitle>
-                            <AlertDialogDescription className="text-sm sm:text-base">
-                                {(dictionary as any).app?.restaurant?.design?.resetDesignDescription || 'Esta acción no se puede deshacer. Se eliminará todo el diseño.'}
-                            </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                            <AlertDialogCancel className="text-xs sm:text-sm">{(dictionary as any).app?.restaurant?.config?.cancel || 'Cancelar'}</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => { setElements([]); setTables([]); setSelectedId(null); }} className="text-xs sm:text-sm">
-                                {(dictionary as any).app?.restaurant?.design?.confirmReset || 'Confirmar'}
-                            </AlertDialogAction>
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
-                </AlertDialog>
-            </div>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle className="text-base sm:text-lg">{(dictionary as any).app?.restaurant?.design?.resetDesignConfirmation || '¿Estás seguro?'}</AlertDialogTitle>
+                                <AlertDialogDescription className="text-sm sm:text-base">
+                                    {(dictionary as any).app?.restaurant?.design?.resetDesignDescription || 'Esta acción no se puede deshacer. Se eliminará todo el diseño.'}
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel className="text-xs sm:text-sm">{(dictionary as any).app?.restaurant?.config?.cancel || 'Cancelar'}</AlertDialogCancel>
+                                <AlertDialogAction onClick={() => {
+                                    if (canEdit) {
+                                        setElements([]);
+                                        setTables([]);
+                                        setSelectedId(null);
+                                    }
+                                }} className="text-xs sm:text-sm">
+                                    {(dictionary as any).app?.restaurant?.design?.confirmReset || 'Confirmar'}
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
+                </div>
+            )}
 
             {tooltipPos && selectedId && (() => {
                 const allItems = [...tables, ...elements];
@@ -541,37 +602,46 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
                     onMouseUp={handleMouseUp}
                 >
                     <Layer ref={layerRef}>
-                        {allItems.map((item) => (
-                            <KonvaElement
-                                key={item.id}
-                                element={item}
-                                isSelected={item.id === selectedId}
-                                onSelect={() => setSelectedId(item.id)}
-                                onChange={handleElementChange}
-                            />
-                        ))}
+                        {allItems.map((item) => {
+                            console.log('Rendering item:', item);
+                            return (
+                                <KonvaElement
+                                    key={item.id}
+                                    element={item}
+                                    isSelected={item.id === selectedId}
+                                    onSelect={() => {
+                                        console.log('Selecting item:', item.id);
+                                        setSelectedId(item.id);
+                                    }}
+                                    onChange={handleElementChange}
+                                    canEdit={canEdit}
+                                />
+                            );
+                        })}
 
                         {isDrawing && <Line points={currentWall} stroke="#333" strokeWidth={5} listening={false} />}
 
-                        <Transformer
-                            ref={trRef}
-                            rotateEnabled={true}
-                            rotationSnaps={[0, 45, 90, 135, 180, 225, 270, 315]}
-                            rotateAnchorOffset={60}
-                            enabledAnchors={['top-left', 'top-right', 'bottom-left', 'bottom-right', 'top-center', 'middle-right', 'bottom-center', 'middle-left']}
-                            boundBoxFunc={(oldBox: any, newBox: any) => {
-                                if (newBox.width < 5 || newBox.height < 5) {
-                                    return oldBox;
-                                }
-                                return newBox;
-                            }}
-                            anchorSize={20}
-                            borderStroke="#4F46E5"
-                            borderStrokeWidth={2}
-                            anchorStroke="#4F46E5"
-                            anchorFill="white"
-                            anchorStrokeWidth={2}
-                        />
+                        {canEdit && (
+                            <Transformer
+                                ref={trRef}
+                                rotateEnabled={true}
+                                rotationSnaps={[0, 45, 90, 135, 180, 225, 270, 315]}
+                                rotateAnchorOffset={60}
+                                enabledAnchors={['top-left', 'top-right', 'bottom-left', 'bottom-right', 'top-center', 'middle-right', 'bottom-center', 'middle-left']}
+                                boundBoxFunc={(oldBox: any, newBox: any) => {
+                                    if (newBox.width < 5 || newBox.height < 5) {
+                                        return oldBox;
+                                    }
+                                    return newBox;
+                                }}
+                                anchorSize={20}
+                                borderStroke="#4F46E5"
+                                borderStrokeWidth={2}
+                                anchorStroke="#4F46E5"
+                                anchorFill="white"
+                                anchorStrokeWidth={2}
+                            />
+                        )}
                     </Layer>
                 </Stage>
             </div>
@@ -579,12 +649,14 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
     );
 }
 
-export function RestaurantDesignView({ config, design, dictionary }: {
+export function RestaurantDesignView({ config, design, dictionary, canEdit = true, canView = true }: {
     config: RestaurantConfigData | null;
     design: RestaurantDesignData | null;
     dictionary: Dictionary;
+    canEdit?: boolean;
+    canView?: boolean;
 }) {
-    const [tables, setTables] = useState<RestaurantTableData[]>((design?.tables || []).map(t => ({ ...t, type: 'table' })));
+    const [tables, setTables] = useState<LocalRestaurantTableData[]>((design?.tables || []).map(t => ({ ...t, type: 'table' })));
     const [elements, setElements] = useState<RestaurantElement[]>(design?.elements || []);
     const [state, formAction] = useActionState(saveRestaurantDesign, initialState);
 
@@ -613,6 +685,13 @@ export function RestaurantDesignView({ config, design, dictionary }: {
                     <CardTitle className="text-lg sm:text-xl">{(dictionary as any).app?.restaurant?.design?.title || 'Diseño del Restaurante'}</CardTitle>
                 </CardHeader>
                 <CardContent className="p-1 sm:p-2 md:p-6">
+                    {!canEdit && (
+                        <div className="p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-md mb-4">
+                            <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                                Modo solo lectura: Puedes ver el diseño pero no modificarlo.
+                            </p>
+                        </div>
+                    )}
                     {!config ? (
                         <div className="text-center py-6 sm:py-8">
                             <p className="text-sm sm:text-base">{(dictionary as any).app?.restaurant?.view?.noConfig || 'Guarda la configuración para empezar.'}</p>
@@ -620,7 +699,7 @@ export function RestaurantDesignView({ config, design, dictionary }: {
                     ) : (
                         <div>
                             <input type="hidden" name="restaurantConfigId" value={config.id} />
-                            <input type="hidden" name="tables" value={JSON.stringify(tables.map(({ type, ...rest }) => rest))} />
+                            <input type="hidden" name="tables" value={JSON.stringify(tables.map(({ type, restaurantDesignId, ...rest }) => rest))} />
                             <input type="hidden" name="elements" value={JSON.stringify(elements)} />
                             <input type="hidden" name="canvasWidth" value={designSize.width} />
                             <input type="hidden" name="canvasHeight" value={designSize.height} />
@@ -633,11 +712,13 @@ export function RestaurantDesignView({ config, design, dictionary }: {
                                 elements={elements}
                                 setElements={setElements}
                                 dictionary={dictionary}
+                                canEdit={canEdit}
+                                canView={canView}
                             />
                         </div>
                     )}
                 </CardContent>
-                {config && (
+                {config && canEdit && (
                     <CardFooter className="flex justify-center sm:justify-end gap-2 sm:gap-4 items-center">
                         <SubmitButton dictionary={dictionary} />
                     </CardFooter>

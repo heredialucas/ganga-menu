@@ -1,27 +1,19 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { MessageCircle, Expand, Plus, Minus } from 'lucide-react';
+import { MessageCircle, Expand, Plus, Minus, Heart, Minus as MinusIcon, Palette } from 'lucide-react';
 import { Dictionary } from '@repo/internationalization';
 import { Dish } from './types';
 import { generateWhatsAppLinkForDish } from './utils';
 import ImageModal from './ImageModal';
+import { getTemplateStyles } from './templateStyles';
+import { DishCardProps, getDefaultTemplate } from '../../types/templates';
 
-interface DishCardProps {
-    dish: Dish;
-    dictionary: Dictionary;
-    restaurantName: string;
-    restaurantPhone?: string | null;
-    specialDishIds: Set<string>;
-    restaurantConfigId: string;
-    onAddToOrder?: (dishId: string, quantity: number) => void;
-    isTableSpecificView?: boolean;
-}
-
-export default function DishCard({ dish, dictionary, restaurantName, restaurantPhone, specialDishIds, restaurantConfigId, onAddToOrder, isTableSpecificView = false }: DishCardProps) {
+export default function DishCard({ dish, dictionary, restaurantName, restaurantPhone, specialDishIds, restaurantConfigId, onAddToOrder, isTableSpecificView = false, themeColor = '#16a34a', template = getDefaultTemplate() }: DishCardProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [quantity, setQuantity] = useState(1);
     const whatsappLink = restaurantPhone ? generateWhatsAppLinkForDish(restaurantPhone, dish.name, restaurantName) : '';
     const isSpecialDish = specialDishIds.has(dish.id);
+    const styles = getTemplateStyles(template);
 
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
@@ -36,84 +28,96 @@ export default function DishCard({ dish, dictionary, restaurantName, restaurantP
 
     return (
         <>
-            <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-gray-200 group hover:scale-105 h-full flex flex-col">
+            <div className={`${styles.card} transition-all duration-200 overflow-hidden group hover:scale-105 h-full flex flex-col`}>
                 {dish.imageUrl && (
-                    <div className="relative h-36 sm:h-40 md:h-48 overflow-hidden">
-                        <Image
-                            src={dish.imageUrl}
-                            alt={dish.name}
-                            fill
-                            className="object-cover group-hover:scale-110 transition-transform duration-500 cursor-pointer"
-                            sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                            onClick={openModal}
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
-
-                        {/* Botón de expandir imagen - visible en mobile, hover en desktop */}
+                    <div className="relative h-32 sm:h-48 overflow-hidden">
+                        <div className={styles.cardImageContainer}>
+                            <Image
+                                src={dish.imageUrl}
+                                alt={dish.name}
+                                width={400}
+                                height={200}
+                                className="w-full h-24 sm:h-40 object-cover rounded-md sm:rounded-xl cursor-pointer group-hover:scale-105 transition-transform duration-300"
+                                onClick={openModal}
+                            />
+                        </div>
+                        {/* Botón de expandir imagen */}
                         <button
                             onClick={openModal}
-                            className="absolute top-2 right-2 p-1.5 bg-black/50 hover:bg-black/70 text-white rounded-full transition-all duration-300 sm:opacity-0 sm:group-hover:opacity-100 opacity-100"
+                            className={`absolute top-1 right-1 sm:top-4 sm:right-4 ${styles.expandButton} sm:opacity-0 sm:group-hover:opacity-100 opacity-100`}
                             aria-label="Ver imagen completa"
                         >
-                            <Expand className="w-4 h-4" />
+                            {template === 'luxury-premium' ? (
+                                <Heart className="w-4 h-4 text-white" />
+                            ) : template === 'playful-fun' ? (
+                                <span className="text-lg animate-bounce">😋</span>
+                            ) : template === 'zen-minimal' ? (
+                                <MinusIcon className="w-4 h-4 text-white" />
+                            ) : template === 'artistic-creative' ? (
+                                <Heart className="w-4 h-4 text-white" />
+                            ) : template === 'retro-vintage' ? (
+                                <Expand className="w-4 h-4 text-amber-800" />
+                            ) : (
+                                <Expand className="w-4 h-4 text-gray-600" />
+                            )}
                         </button>
                     </div>
                 )}
 
-                <div className="p-3 sm:p-4 flex-1 flex flex-col">
-                    <div className="flex justify-between items-start mb-2 gap-2 sm:gap-3">
-                        <h3 className="text-base sm:text-lg md:text-xl font-semibold text-gray-800 flex-1 leading-tight break-words line-clamp-2">
+                <div className="p-3 sm:p-6 flex-1 flex flex-col">
+                    <div className="flex justify-between items-start mb-1.5 sm:mb-2 gap-1 sm:gap-2 md:gap-3">
+                        <h3 className={`text-xs sm:text-base md:text-lg lg:text-xl font-semibold flex-1 leading-tight break-words line-clamp-2 ${template === 'retro-vintage' ? 'text-amber-900' : template === 'luxury-premium' ? 'text-yellow-100' : template === 'artistic-creative' ? 'text-white font-akaya-kanadaka' : 'text-gray-800'}`}>
                             {dish.name}
                         </h3>
                         <div className="flex flex-col items-end text-right shrink-0 min-w-0">
                             {isSpecialDish && dish.promotionalPrice && dish.promotionalPrice > 0 ? (
                                 <>
-                                    <span className="text-xs sm:text-sm text-gray-400 line-through whitespace-nowrap">
+                                    <span className={`text-xs line-through whitespace-nowrap ${template === 'retro-vintage' ? 'text-amber-400' : template === 'luxury-premium' ? 'text-yellow-600' : template === 'artistic-creative' ? 'text-pink-200' : 'text-gray-400'}`}>
                                         ${dish.price.toFixed(2)}
                                     </span>
-                                    <span className={`text-base sm:text-lg md:text-xl font-bold whitespace-nowrap`} style={{ color: 'var(--theme-promotional-price)' }}>
+                                    <span className={`text-xs sm:text-base md:text-lg lg:text-xl font-bold whitespace-nowrap ${styles.promotionalPrice}`}>
                                         ${dish.promotionalPrice.toFixed(2)}
                                     </span>
-                                    <span className={`text-xs font-semibold px-1.5 py-0.5 rounded-full mt-1 whitespace-nowrap`} style={{ backgroundColor: 'var(--theme-offer-badge-bg)', color: 'var(--theme-offer-badge-text)' }}>
-                                        OFERTA
+                                    <span className={`text-xs font-semibold px-1 sm:px-2 py-0.5 sm:py-1 rounded-full mt-0.5 sm:mt-1 whitespace-nowrap ${styles.specialOffer}`}>
+                                        {dictionary.web?.menu?.todayOnly || 'OFERTA'}
                                     </span>
                                 </>
                             ) : (
-                                <span className={`text-base sm:text-lg md:text-xl font-bold whitespace-nowrap`} style={{ color: 'var(--theme-price)' }}>
+                                <span className={`text-xs sm:text-base md:text-lg lg:text-xl font-bold whitespace-nowrap ${styles.price}`}>
                                     ${dish.price.toFixed(2)}
                                 </span>
                             )}
                         </div>
                     </div>
-                    <p className="text-gray-600 text-xs sm:text-sm md:text-base mb-3 flex-1 break-words line-clamp-3">
+                    <p className={`text-xs sm:text-sm md:text-base mb-1.5 sm:mb-3 flex-1 break-words line-clamp-2 sm:line-clamp-3 ${template === 'retro-vintage' ? 'text-amber-700' : template === 'luxury-premium' ? 'text-yellow-300' : template === 'artistic-creative' ? 'text-pink-200 font-akaya-kanadaka' : 'text-gray-600'}`}>
                         {dish.description}
                     </p>
 
                     {/* Controles de cantidad - solo en vista de mesa específica */}
                     {isTableSpecificView && (
-                        <div className="flex items-center justify-between mb-3">
-                            <div className="flex items-center gap-2">
+                        <div className="flex items-center justify-between mb-1.5 sm:mb-3">
+                            <div className={styles.quantityContainer}>
                                 <button
                                     onClick={decreaseQuantity}
-                                    className="p-1 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+                                    className={styles.quantityButton}
                                     disabled={quantity <= 1}
                                 >
-                                    <Minus className="w-3 h-3" />
+                                    <Minus className={`w-2 h-2 sm:w-3 sm:h-3 ${template === 'retro-vintage' ? 'text-amber-800' : template === 'artistic-creative' ? 'text-pink-200' : 'text-gray-600'}`} />
                                 </button>
-                                <span className="text-sm font-medium min-w-[2rem] text-center">{quantity}</span>
+                                <span className={`text-xs font-medium min-w-[1.25rem] sm:min-w-[2rem] text-center ${template === 'retro-vintage' ? 'text-amber-800' : template === 'artistic-creative' ? 'text-pink-200' : 'text-gray-700'}`}>{quantity}</span>
                                 <button
                                     onClick={increaseQuantity}
-                                    className="p-1 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+                                    className={styles.quantityButton}
                                 >
-                                    <Plus className="w-3 h-3" />
+                                    <Plus className={`w-2 h-2 sm:w-3 sm:h-3 ${template === 'retro-vintage' ? 'text-amber-800' : template === 'artistic-creative' ? 'text-pink-200' : 'text-gray-600'}`} />
                                 </button>
                             </div>
                             <button
                                 onClick={handleAddToOrder}
-                                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-300 shadow-md hover:shadow-lg`}
-                                style={{ backgroundColor: 'var(--theme-bg)', color: 'var(--theme-text)' }}
+                                className={styles.buttonSecondary}
                             >
-                                Agregar
+                                <span className="hidden sm:inline">{dictionary.web?.menu?.dish?.addToOrder || 'Agregar'}</span>
+                                <span className="sm:hidden">+</span>
                             </button>
                         </div>
                     )}
@@ -124,11 +128,10 @@ export default function DishCard({ dish, dictionary, restaurantName, restaurantP
                             href={whatsappLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className={`inline-flex items-center justify-center gap-2 w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg transition-all duration-300 text-xs sm:text-sm font-medium shadow-md hover:shadow-lg mt-auto`}
-                            style={{ backgroundColor: 'var(--theme-bg)', color: 'var(--theme-text)' }}
+                            className={`inline-flex items-center justify-center gap-1 sm:gap-2 w-full py-1.5 sm:py-3 ${styles.buttonSecondary} mt-auto`}
                         >
-                            <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4" />
-                            <span className="whitespace-nowrap">Consultar</span>
+                            <MessageCircle className={`w-3 h-3 sm:w-4 sm:h-4 ${template === 'retro-vintage' ? 'text-amber-800' : template === 'artistic-creative' ? 'text-pink-200' : 'text-gray-600'}`} />
+                            <span className="whitespace-nowrap text-xs sm:text-sm">{dictionary.web?.menu?.dish?.consult || 'Consultar'}</span>
                         </a>
                     )}
                 </div>

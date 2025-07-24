@@ -191,40 +191,18 @@
           "admin": "Administration"
         },
         "permissions": {
-          "dishesView": "Gerichte anzeigen",
-          "dishesCreate": "Gerichte erstellen",
-          "dishesEdit": "Gerichte bearbeiten",
-          "dishesDelete": "Gerichte löschen",
-          "dishesManageStatus": "Gerichtestatus verwalten",
-          "categoriesView": "Kategorien anzeigen",
-          "categoriesCreate": "Kategorien erstellen",
-          "categoriesEdit": "Kategorien bearbeiten",
-          "categoriesDelete": "Kategorien löschen",
-          "categoriesManageOrder": "Kategorie-Reihenfolge verwalten",
-          "dailySpecialsView": "Tagesangebote anzeigen",
-          "dailySpecialsCreate": "Tagesangebote erstellen",
-          "dailySpecialsEdit": "Tagesangebote bearbeiten",
-          "dailySpecialsDelete": "Tagesangebote löschen",
-          "restaurantViewConfig": "Restaurant-Konfiguration anzeigen",
-          "restaurantEditConfig": "Restaurant-Konfiguration bearbeiten",
-          "restaurantManageSettings": "Restaurant-Einstellungen verwalten",
-          "restaurantViewDesign": "Restaurant-Design anzeigen",
-          "restaurantEditDesign": "Restaurant-Design bearbeiten",
+          "menuView": "Menü anzeigen",
+          "menuEdit": "Menü bearbeiten",
+          "restaurantView": "Restaurant anzeigen",
+          "restaurantEdit": "Restaurant bearbeiten",
           "ordersView": "Bestellungen anzeigen",
-          "ordersCreate": "Bestellungen erstellen",
           "ordersEdit": "Bestellungen bearbeiten",
-          "ordersDelete": "Bestellungen löschen",
-          "ordersManageStatus": "Bestellstatus verwalten",
-          "kitchenViewOrders": "Küchenbestellungen anzeigen",
-          "kitchenUpdateStatus": "Küchenstatus aktualisieren",
-          "waiterViewOrders": "Kellnerbestellungen anzeigen",
-          "waiterCreateOrders": "Kellnerbestellungen erstellen",
-          "waiterViewMenu": "Kellnermenü anzeigen",
-          "menuViewPublic": "Öffentliches Menü anzeigen",
+          "servicesView": "Dienste anzeigen",
+          "servicesEdit": "Dienste bearbeiten",
           "accountViewOwn": "Eigenes Konto anzeigen",
           "accountEditOwn": "Eigenes Konto bearbeiten",
           "accountChangePassword": "Passwort ändern",
-          "adminFullAccess": "Vollzugriff",
+          "adminFullAccess": "Vollständiger Administratorzugriff",
           "adminManageUsers": "Benutzer verwalten",
           "adminSystemSettings": "Systemeinstellungen"
         },
@@ -365,6 +343,9 @@
           "mobile": "Herunterladen"
         },
         "qrNote": "Ihre Kunden können diesen Code scannen, um das Menü zu sehen.",
+        "save": "Einstellungen speichern",
+        "saveMobile": "Speichern",
+        "saving": "Wird gespeichert...",
         "toast": {
           "linkCopied": "Menülink in die Zwischenablage kopiert.",
           "qrDownloaded": "QR erfolgreich heruntergeladen"
@@ -1217,7 +1198,9 @@
       },
       "dish": {
         "outOfStock": "Ausverkauft",
-        "available": "Verfügbar"
+        "available": "Verfügbar",
+        "addToOrder": "Hinzufügen",
+        "consult": "Konsultieren"
       },
       "footer": {
         "poweredBy": "Digitale Menüs erstellt mit",

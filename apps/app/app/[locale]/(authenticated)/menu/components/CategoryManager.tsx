@@ -3,7 +3,7 @@
 import { useTransition, useState } from 'react';
 import { Button } from '@repo/design-system/components/ui/button';
 import { Input } from '@repo/design-system/components/ui/input';
-import { useToast } from '@repo/design-system/hooks/use-toast';
+import { toast } from 'sonner';
 import { Plus, Trash2 } from 'lucide-react';
 import type { Category } from '@repo/database';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@repo/design-system/components/ui/alert-dialog';
@@ -15,15 +15,18 @@ import type { Dictionary } from '@repo/internationalization';
 interface CategoryManagerProps {
     categories: Category[];
     dictionary: Dictionary;
+    canEdit?: boolean;
+    canView?: boolean;
 }
 
-export function CategoryManager({ categories, dictionary }: CategoryManagerProps) {
-    const { toast } = useToast();
+export function CategoryManager({ categories, dictionary, canEdit = true, canView = true }: CategoryManagerProps) {
     const [isPending, startTransition] = useTransition();
     const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; category: Category | null }>({ open: false, category: null });
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        if (!canEdit) return; // Solo permitir submit si puede editar
+
         const form = e.currentTarget;
         const formData = new FormData(form);
         const name = formData.get('name') as string;
@@ -31,24 +34,28 @@ export function CategoryManager({ categories, dictionary }: CategoryManagerProps
         startTransition(async () => {
             try {
                 const user = await getCurrentUser();
+
                 if (!user) throw new Error(dictionary.app?.menu?.categories?.toast?.notAuthenticated || "Usuario no autenticado.");
 
                 await createCategory({ name }, user.id);
-                toast({ title: "Éxito", description: dictionary.app?.menu?.categories?.toast?.success || "Categoría creada." });
+
+                toast.success(dictionary.app?.menu?.categories?.toast?.success || "Categoría creada.");
                 form.reset();
             } catch (error: any) {
-                toast({ title: "Error", description: error.message, variant: "destructive" });
+                toast.error(error.message);
             }
         });
     };
 
     const handleDelete = (category: Category) => {
+        if (!canEdit) return; // Solo permitir eliminar si puede editar
+
         startTransition(async () => {
             try {
                 await deleteCategory(category.id);
-                toast({ title: "Éxito", description: dictionary.app?.menu?.categories?.toast?.deleteSuccess || "Categoría eliminada." });
+                toast.success(dictionary.app?.menu?.categories?.toast?.deleteSuccess || "Categoría eliminada.");
             } catch (error: any) {
-                toast({ title: "Error", description: dictionary.app?.menu?.categories?.toast?.deleteError || error.message, variant: "destructive" });
+                toast.error(error.message);
             }
             setDeleteDialog({ open: false, category: null });
         });
@@ -57,16 +64,18 @@ export function CategoryManager({ categories, dictionary }: CategoryManagerProps
     return (
         <>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 lg:gap-6 p-1 sm:p-2">
-                <div className="space-y-3">
-                    <h4 className="font-semibold text-base sm:text-lg">{dictionary.app?.menu?.categories?.newCategory || 'Nueva Categoría'}</h4>
-                    <form onSubmit={handleSubmit} className="flex items-stretch gap-2">
-                        <Input name="name" placeholder={dictionary.app?.menu?.categories?.namePlaceholder || 'Nombre de la categoría'} required className="flex-1" />
-                        <Button type="submit" disabled={isPending} className="px-3">
-                            <Plus className="h-4 w-4" />
-                            <span className="hidden sm:inline ml-2">{dictionary.app?.menu?.categories?.add?.desktop || 'Agregar'}</span>
-                        </Button>
-                    </form>
-                </div>
+                {canEdit && (
+                    <div className="space-y-3">
+                        <h4 className="font-semibold text-base sm:text-lg">{dictionary.app?.menu?.categories?.newCategory || 'Nueva Categoría'}</h4>
+                        <form onSubmit={handleSubmit} className="flex items-stretch gap-2">
+                            <Input name="name" placeholder={dictionary.app?.menu?.categories?.namePlaceholder || 'Nombre de la categoría'} required className="flex-1" />
+                            <Button type="submit" disabled={isPending} className="px-3">
+                                <Plus className="h-4 w-4" />
+                                <span className="hidden sm:inline ml-2">{dictionary.app?.menu?.categories?.add?.desktop || 'Agregar'}</span>
+                            </Button>
+                        </form>
+                    </div>
+                )}
                 <div className="space-y-3">
                     <h4 className="font-semibold text-base sm:text-lg">{dictionary.app?.menu?.categories?.existingCategories || 'Categorías Existentes'}</h4>
                     <div className="border rounded-md overflow-hidden">
@@ -83,9 +92,11 @@ export function CategoryManager({ categories, dictionary }: CategoryManagerProps
                                         <TableRow key={cat.id}>
                                             <TableCell className="font-medium text-sm sm:text-base">{cat.name}</TableCell>
                                             <TableCell className="text-right">
-                                                <Button variant="ghost" size="icon" onClick={() => setDeleteDialog({ open: true, category: cat })}>
-                                                    <Trash2 className="h-4 w-4 text-red-500" />
-                                                </Button>
+                                                {canEdit && (
+                                                    <Button variant="ghost" size="icon" onClick={() => setDeleteDialog({ open: true, category: cat })}>
+                                                        <Trash2 className="h-4 w-4 text-red-500" />
+                                                    </Button>
+                                                )}
                                             </TableCell>
                                         </TableRow>
                                     ))}

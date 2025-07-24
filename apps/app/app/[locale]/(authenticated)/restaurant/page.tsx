@@ -1,4 +1,4 @@
-import { getCurrentUser, requirePermission } from '@repo/auth/server';
+import { getCurrentUser, requirePermission, hasPermission } from '@repo/auth/server';
 import { getRestaurantConfig } from '@repo/data-services/src/services/restaurantConfigService';
 import { getRestaurantDesignByConfigId } from '@repo/data-services/src/services/restaurantDesignService';
 import { getDictionary } from '@repo/internationalization';
@@ -12,7 +12,7 @@ export default async function RestaurantPage({
 }: {
     params: Promise<{ locale: string }>;
 }) {
-    await requirePermission('restaurant:view_config');
+    await requirePermission('restaurant:view');
     const user = await getCurrentUser();
     const paramsData = await params;
     const dictionary = await getDictionary(paramsData.locale);
@@ -20,6 +20,14 @@ export default async function RestaurantPage({
     const restaurantDesign = restaurantConfig
         ? await getRestaurantDesignByConfigId(restaurantConfig.id)
         : null;
+
+    // Verificar permisos en el servidor
+    const [canViewRestaurant, canEditRestaurant, hasDesignPermission, hasQRPermission] = await Promise.all([
+        hasPermission('restaurant:view'),
+        hasPermission('restaurant:edit'),
+        hasPermission('restaurant:design'),
+        hasPermission('restaurant:qr_codes')
+    ]);
 
     return (
         <div className="space-y-3 sm:space-y-4 md:space-y-6 p-1 sm:p-2 md:p-6">
@@ -43,6 +51,10 @@ export default async function RestaurantPage({
                 design={restaurantDesign}
                 dictionary={dictionary}
                 appUrl={getAppUrl()}
+                showDesignTab={hasDesignPermission}
+                showQRTab={hasQRPermission}
+                canEdit={canEditRestaurant}
+                canView={canViewRestaurant}
             />
         </div>
     );

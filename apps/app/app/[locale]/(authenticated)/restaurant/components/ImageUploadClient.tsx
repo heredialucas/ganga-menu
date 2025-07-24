@@ -9,9 +9,10 @@ interface ImageUploadProps {
     name: string;
     initialUrl?: string | null;
     dictionary?: any;
+    canEdit?: boolean;
 }
 
-export function ImageUpload({ name, initialUrl, dictionary }: ImageUploadProps) {
+export function ImageUpload({ name, initialUrl, dictionary, canEdit = true }: ImageUploadProps) {
     const [preview, setPreview] = useState<string | null>(initialUrl || null);
     const [urlValue, setUrlValue] = useState(initialUrl || ''); // For the hidden input
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -50,36 +51,45 @@ export function ImageUpload({ name, initialUrl, dictionary }: ImageUploadProps) 
                 )}
             </div>
 
-            <div className="flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-4">
-                <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => fileInputRef.current?.click()}
-                    className="w-full sm:w-auto text-xs sm:text-sm"
-                >
-                    <UploadCloud className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-                    <span className="hidden sm:inline">{dictionary?.app?.restaurant?.config?.uploadImage || 'Subir imagen'}</span>
-                    <span className="sm:hidden">{dictionary?.app?.restaurant?.config?.uploadImageMobile || 'Subir'}</span>
-                </Button>
-                <input
-                    type="file"
-                    name={`${name}File`} // Use a different name for the file to avoid conflict
-                    ref={fileInputRef}
-                    accept="image/*"
-                    className="hidden"
-                    onChange={handleFileChange}
-                />
-                <input
-                    type="hidden"
-                    name={name}
-                    value={urlValue}
-                />
-                {preview && (
-                    <Button type="button" variant="destructive" size="icon" onClick={handleRemove} className="w-full sm:w-auto">
-                        <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
+            {canEdit && (
+                <div className="flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-4">
+                    <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => fileInputRef.current?.click()}
+                        className="w-full sm:w-auto text-xs sm:text-sm"
+                    >
+                        <UploadCloud className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                        <span className="hidden sm:inline">{dictionary?.app?.restaurant?.config?.uploadImage || 'Subir imagen'}</span>
+                        <span className="sm:hidden">{dictionary?.app?.restaurant?.config?.uploadImageMobile || 'Subir'}</span>
                     </Button>
-                )}
-            </div>
+                    <input
+                        type="file"
+                        name={`${name}File`} // Use a different name for the file to avoid conflict
+                        ref={fileInputRef}
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleFileChange}
+                    />
+                    <input
+                        type="hidden"
+                        name={name}
+                        value={urlValue}
+                    />
+                    {preview && (
+                        <Button
+                            type="button"
+                            variant="destructive"
+                            onClick={handleRemove}
+                            className="w-full sm:w-auto text-xs sm:text-sm min-w-[80px] sm:min-w-[100px]"
+                        >
+                            <Trash2 className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                            <span className="hidden sm:inline">{dictionary?.app?.restaurant?.config?.removeImage || 'Eliminar'}</span>
+                            <span className="sm:hidden">{dictionary?.app?.restaurant?.config?.removeImageMobile || 'Eliminar'}</span>
+                        </Button>
+                    )}
+                </div>
+            )}
         </div>
     );
 } 

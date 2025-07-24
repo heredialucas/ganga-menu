@@ -84,6 +84,11 @@ export const config: Config = {
       fontFamily: {
         sans: ['var(--font-geist-sans)', ...defaultTheme.fontFamily.sans],
         mono: ['var(--font-geist-mono)', ...defaultTheme.fontFamily.mono],
+        'playfair-display': ['var(--font-playfair-display)', ...defaultTheme.fontFamily.serif],
+        'dancing-script': ['var(--font-dancing-script)', ...defaultTheme.fontFamily.sans],
+        'bebas-neue': ['var(--font-bebas-neue)', ...defaultTheme.fontFamily.sans],
+        'orbitron': ['var(--font-orbitron)', ...defaultTheme.fontFamily.sans],
+        'akaya-kanadaka': ['var(--font-akaya-kanadaka)', ...defaultTheme.fontFamily.sans],
       },
       keyframes: {
         'accordion-down': {

@@ -17,6 +17,7 @@ import Image from 'next/image';
 import { createDish, updateDish, deleteDish } from '@repo/data-services/src/services/dishService';
 import { uploadR2Image } from '@repo/data-services/src/services/uploadR2Image';
 import { getCurrentUser } from '@repo/data-services/src/services/authService';
+import { getRestaurantOwner } from '@repo/data-services/src/services/restaurantConfigService';
 import type { Dictionary } from '@repo/internationalization';
 
 interface DishWithCategory extends Dish {
@@ -27,9 +28,11 @@ interface DishManagerProps {
     dishes: DishWithCategory[];
     categories: Category[];
     dictionary: Dictionary;
+    canEdit: boolean;
+    canView: boolean;
 }
 
-export function DishManager({ dishes, categories, dictionary }: DishManagerProps) {
+export function DishManager({ dishes, categories, dictionary, canEdit, canView }: DishManagerProps) {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [editingDish, setEditingDish] = useState<DishWithCategory | null>(null);
     const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; dish: DishWithCategory | null }>({ open: false, dish: null });
@@ -38,6 +41,7 @@ export function DishManager({ dishes, categories, dictionary }: DishManagerProps
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleOpenDialog = (dish: DishWithCategory | null) => {
+        if (!canEdit) return; // Solo permitir abrir el diálogo si puede editar
         setEditingDish(dish);
         setPreviewImage(dish?.imageUrl || null);
         setIsDialogOpen(true);
@@ -56,6 +60,8 @@ export function DishManager({ dishes, categories, dictionary }: DishManagerProps
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        if (!canEdit) return; // Solo permitir submit si puede editar
+
         const form = e.currentTarget;
         const formData = new FormData(form);
         const name = formData.get('name') as string;
@@ -81,7 +87,14 @@ export function DishManager({ dishes, categories, dictionary }: DishManagerProps
             } else {
                 const user = await getCurrentUser();
                 if (!user) throw new Error(dictionary.app?.menu?.dishes?.toast?.notAuthenticated || "Usuario no autenticado");
-                await createDish(dishData, user.id);
+
+                // Obtener el ID del dueño del restaurante
+                const restaurantOwnerId = await getRestaurantOwner(user.id);
+                if (!restaurantOwnerId) {
+                    throw new Error("No se pudo determinar el dueño del restaurante");
+                }
+
+                await createDish(dishData, restaurantOwnerId);
             }
         };
 
@@ -98,6 +111,8 @@ export function DishManager({ dishes, categories, dictionary }: DishManagerProps
     };
 
     const handleDelete = (dish: DishWithCategory) => {
+        if (!canEdit) return; // Solo permitir eliminar si puede editar
+
         startTransition(async () => {
             toast.promise(deleteDish(dish.id), {
                 loading: dictionary.app?.menu?.dishes?.toast?.deleting || 'Eliminando plato...',
@@ -118,74 +133,86 @@ export function DishManager({ dishes, categories, dictionary }: DishManagerProps
                         <div className="flex-1 text-center sm:text-left">
                             <CardTitle className="flex items-center gap-2 justify-center sm:justify-start">
                                 <UtensilsCrossed className="h-5 w-5" />
-                                <span className="text-lg sm:text-xl">{dictionary.app?.menu?.dishes?.title || 'Platos'}</span>
+                                <span className="text-lg sm:text-xl">
+                                    {canEdit
+                                        ? (dictionary.app?.menu?.dishes?.title || 'Platos')
+                                        : (dictionary.app?.menu?.dishes?.title || 'Platos') + ' (Solo Lectura)'
+                                    }
+                                </span>
                             </CardTitle>
-                            <CardDescription className="text-sm sm:text-base">{dictionary.app?.menu?.dishes?.description || 'Crea y gestiona los platos de tu menú.'}</CardDescription>
+                            <CardDescription className="text-sm sm:text-base">
+                                {canEdit
+                                    ? (dictionary.app?.menu?.dishes?.description || 'Crea y gestiona los platos de tu menú.')
+                                    : (dictionary.app?.menu?.dishes?.description || 'Crea y gestiona los platos de tu menú.') + ' (Modo solo lectura)'
+                                }
+                            </CardDescription>
                         </div>
-                        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                            <DialogTrigger asChild>
-                                <Button onClick={() => handleOpenDialog(null)} className="w-full sm:w-auto">
-                                    <Plus className="h-4 w-4 mr-2" />
-                                    <span className="hidden sm:inline">{dictionary.app?.menu?.dishes?.newDish?.desktop || 'Nuevo Plato'}</span>
-                                    <span className="sm:hidden">{dictionary.app?.menu?.dishes?.newDish?.mobile || 'Nuevo'}</span>
-                                </Button>
-                            </DialogTrigger>
-                            <DialogContent className="max-w-[95vw] sm:max-w-md lg:max-w-lg">
-                                <DialogHeader>
-                                    <DialogTitle className="text-lg sm:text-xl">{editingDish ? (dictionary.app?.menu?.dishes?.editDish || 'Editar Plato') : (dictionary.app?.menu?.dishes?.createDish || 'Crear Plato')}</DialogTitle>
-                                </DialogHeader>
-                                <form onSubmit={handleSubmit} className="space-y-4">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="image-upload">{dictionary.app?.menu?.dishes?.image || 'Imagen'}</Label>
-                                        <Input id="image" name="image" type="file" onChange={handleFileChange} ref={fileInputRef} className="hidden" />
-                                        <div
-                                            className="w-full h-32 bg-gray-100 dark:bg-zinc-800 rounded-md flex flex-col items-center justify-center border-2 border-dashed cursor-pointer"
-                                            onClick={() => fileInputRef.current?.click()}
-                                        >
-                                            {previewImage ? (
-                                                <Image src={previewImage} alt="Vista previa" width={128} height={128} className="h-full w-full rounded-md object-cover" />
-                                            ) : (
-                                                <div className="text-center text-muted-foreground">
-                                                    <ImageIcon className="h-8 w-8 mx-auto" />
-                                                    <p className="text-sm mt-1">{dictionary.app?.menu?.dishes?.imagePlaceholder || 'Haz clic para subir una imagen'}</p>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="name">{dictionary.app?.menu?.dishes?.name || 'Nombre'}</Label>
-                                        <Input id="name" name="name" defaultValue={editingDish?.name} required />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="description">{dictionary.app?.menu?.dishes?.description || 'Descripción'}</Label>
-                                        <Textarea id="description" name="description" defaultValue={editingDish?.description || ''} />
-                                    </div>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {canEdit && (
+                            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                                <DialogTrigger asChild>
+                                    <Button onClick={() => handleOpenDialog(null)} className="w-full sm:w-auto">
+                                        <Plus className="h-4 w-4 mr-2" />
+                                        <span className="hidden sm:inline">{dictionary.app?.menu?.dishes?.newDish?.desktop || 'Nuevo Plato'}</span>
+                                        <span className="sm:hidden">{dictionary.app?.menu?.dishes?.newDish?.mobile || 'Nuevo'}</span>
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent className="max-w-[95vw] sm:max-w-md lg:max-w-lg">
+                                    <DialogHeader>
+                                        <DialogTitle className="text-lg sm:text-xl">{editingDish ? (dictionary.app?.menu?.dishes?.editDish || 'Editar Plato') : (dictionary.app?.menu?.dishes?.createDish || 'Crear Plato')}</DialogTitle>
+                                    </DialogHeader>
+                                    <form onSubmit={handleSubmit} className="space-y-4">
                                         <div className="space-y-2">
-                                            <Label htmlFor="price">{dictionary.app?.menu?.dishes?.price || 'Precio'}</Label>
-                                            <Input id="price" name="price" type="number" step="0.01" defaultValue={editingDish?.price} required />
+                                            <Label htmlFor="image-upload">{dictionary.app?.menu?.dishes?.image || 'Imagen'}</Label>
+                                            <Input id="image" name="image" type="file" onChange={handleFileChange} ref={fileInputRef} className="hidden" />
+                                            <div
+                                                className="w-full h-32 bg-gray-100 dark:bg-zinc-800 rounded-md flex flex-col items-center justify-center border-2 border-dashed cursor-pointer"
+                                                onClick={() => fileInputRef.current?.click()}
+                                            >
+                                                {previewImage ? (
+                                                    <Image src={previewImage} alt="Vista previa" width={128} height={128} className="h-full w-full rounded-md object-cover" />
+                                                ) : (
+                                                    <div className="text-center text-muted-foreground">
+                                                        <ImageIcon className="h-8 w-8 mx-auto" />
+                                                        <p className="text-sm mt-1">{dictionary.app?.menu?.dishes?.imagePlaceholder || 'Haz clic para subir una imagen'}</p>
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
                                         <div className="space-y-2">
-                                            <Label htmlFor="promotionalPrice">{dictionary.app?.menu?.dishes?.promotionalPrice || 'Precio Promocional'}</Label>
-                                            <Input id="promotionalPrice" name="promotionalPrice" type="number" step="0.01" defaultValue={editingDish?.promotionalPrice || ''} />
+                                            <Label htmlFor="name">{dictionary.app?.menu?.dishes?.name || 'Nombre'}</Label>
+                                            <Input id="name" name="name" defaultValue={editingDish?.name} required />
                                         </div>
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="categoryId">{dictionary.app?.menu?.dishes?.category || 'Categoría'}</Label>
-                                        <Select name="categoryId" defaultValue={editingDish?.categoryId || ''}>
-                                            <SelectTrigger><SelectValue placeholder={dictionary.app?.menu?.dishes?.categoryPlaceholder || 'Selecciona una categoría'} /></SelectTrigger>
-                                            <SelectContent>
-                                                {categories.map(cat => <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>)}
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-                                    <DialogFooter>
-                                        <Button type="button" variant="ghost" onClick={() => setIsDialogOpen(false)}>{dictionary.app?.menu?.dishes?.cancel || 'Cancelar'}</Button>
-                                        <Button type="submit" disabled={isPending}>{isPending ? (dictionary.app?.menu?.dishes?.saving || 'Guardando...') : (dictionary.app?.menu?.dishes?.save || 'Guardar')}</Button>
-                                    </DialogFooter>
-                                </form>
-                            </DialogContent>
-                        </Dialog>
+                                        <div className="space-y-2">
+                                            <Label htmlFor="description">{dictionary.app?.menu?.dishes?.description || 'Descripción'}</Label>
+                                            <Textarea id="description" name="description" defaultValue={editingDish?.description || ''} />
+                                        </div>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            <div className="space-y-2">
+                                                <Label htmlFor="price">{dictionary.app?.menu?.dishes?.price || 'Precio'}</Label>
+                                                <Input id="price" name="price" type="number" step="0.01" defaultValue={editingDish?.price} required />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <Label htmlFor="promotionalPrice">{dictionary.app?.menu?.dishes?.promotionalPrice || 'Precio Promocional'}</Label>
+                                                <Input id="promotionalPrice" name="promotionalPrice" type="number" step="0.01" defaultValue={editingDish?.promotionalPrice || ''} />
+                                            </div>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label htmlFor="categoryId">{dictionary.app?.menu?.dishes?.category || 'Categoría'}</Label>
+                                            <Select name="categoryId" defaultValue={editingDish?.categoryId || ''}>
+                                                <SelectTrigger><SelectValue placeholder={dictionary.app?.menu?.dishes?.categoryPlaceholder || 'Selecciona una categoría'} /></SelectTrigger>
+                                                <SelectContent>
+                                                    {categories.map(cat => <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>)}
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                        <DialogFooter>
+                                            <Button type="button" variant="ghost" onClick={() => setIsDialogOpen(false)}>{dictionary.app?.menu?.dishes?.cancel || 'Cancelar'}</Button>
+                                            <Button type="submit" disabled={isPending}>{isPending ? (dictionary.app?.menu?.dishes?.saving || 'Guardando...') : (dictionary.app?.menu?.dishes?.save || 'Guardar')}</Button>
+                                        </DialogFooter>
+                                    </form>
+                                </DialogContent>
+                            </Dialog>
+                        )}
                     </div>
                 </CardHeader>
                 <CardContent className="p-2 sm:p-3 md:p-6">
@@ -193,11 +220,13 @@ export function DishManager({ dishes, categories, dictionary }: DishManagerProps
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
                             {dishes.map((dish) => (
                                 <Card key={dish.id} className="overflow-hidden flex flex-col relative">
-                                    <div className="absolute top-2 right-2 z-10 transition-opacity">
-                                        <Button variant="destructive" size="icon" onClick={() => setDeleteDialog({ open: true, dish })}>
-                                            <Trash2 className="h-4 w-4" />
-                                        </Button>
-                                    </div>
+                                    {canEdit && (
+                                        <div className="absolute top-2 right-2 z-10 transition-opacity">
+                                            <Button variant="destructive" size="icon" onClick={() => setDeleteDialog({ open: true, dish })}>
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
+                                        </div>
+                                    )}
                                     <div className="relative h-24 sm:h-32 w-full">
                                         {dish.imageUrl ? (
                                             <Image src={dish.imageUrl} alt={dish.name} layout="fill" className="object-cover" />
@@ -216,11 +245,13 @@ export function DishManager({ dishes, categories, dictionary }: DishManagerProps
                                         <div className="flex items-baseline gap-2">
                                             <p className="font-bold text-base sm:text-lg">${dish.price.toFixed(2)}</p>
                                         </div>
-                                        <Button variant="outline" size="sm" className="w-full mt-2 sm:mt-3" onClick={() => handleOpenDialog(dish)}>
-                                            <Edit className="h-4 w-4 mr-2" />
-                                            <span className="hidden sm:inline">{dictionary.app?.menu?.dishes?.edit?.desktop || 'Editar'}</span>
-                                            <span className="sm:hidden">{dictionary.app?.menu?.dishes?.edit?.mobile || 'Editar'}</span>
-                                        </Button>
+                                        {canEdit && (
+                                            <Button variant="outline" size="sm" className="w-full mt-2 sm:mt-3" onClick={() => handleOpenDialog(dish)}>
+                                                <Edit className="h-4 w-4 mr-2" />
+                                                <span className="hidden sm:inline">Editar</span>
+                                                <span className="sm:hidden">Editar</span>
+                                            </Button>
+                                        )}
                                     </CardContent>
                                 </Card>
                             ))}

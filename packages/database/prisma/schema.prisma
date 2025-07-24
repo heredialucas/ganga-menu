@@ -43,12 +43,18 @@ model User {
   createdBy    User?   @relation("UserCreations", fields: [createdById], references: [id])
   createdUsers User[]  @relation("UserCreations")
 
+  // Relación con restaurante padre (para subordinados)
+  restaurantOwnerId String?
+  restaurantOwner   User?   @relation("RestaurantOwnership", fields: [restaurantOwnerId], references: [id])
+  restaurantUsers   User[]  @relation("RestaurantOwnership")
+
   // Relaciones
   createdDishes     Dish[]             @relation("CreatedBy")
   createdCategories Category[]         @relation("CategoryCreatedBy")
   dailySpecials     DailySpecial[]     @relation("DailySpecialCreatedBy")
   restaurantConfigs RestaurantConfig[] @relation("RestaurantConfigCreatedBy")
   restaurantDesigns RestaurantDesign[] @relation("RestaurantDesignCreatedBy")
+  ownedRestaurants  RestaurantConfig[] @relation("RestaurantOwner")
 
   // Relación con permisos
   permissions UserPermission[]
@@ -93,7 +99,7 @@ model Category {
   createdBy   User   @relation("CategoryCreatedBy", fields: [createdById], references: [id])
   createdById String
 
-  @@unique([name])
+  @@unique([name, createdById])
 }
 
 model Dish {
@@ -159,6 +165,7 @@ model RestaurantConfig {
   logoUrl     String?
   slug        String   @unique @default("mi-restaurante") // slug único para la URL
   themeColor  String   @default("green") // green, red, blue, yellow, brown
+  template    String   @default("neomorphic") // neomorphic, retro-vintage
   waiterCode  String   @default("1234") // código para que los mozos accedan
   kitchenCode String   @default("5678") // código para que la cocina acceda
   isActive    Boolean  @default(true)
@@ -168,10 +175,13 @@ model RestaurantConfig {
   // Relaciones
   createdBy        User              @relation("RestaurantConfigCreatedBy", fields: [createdById], references: [id])
   createdById      String
+  owner            User              @relation("RestaurantOwner", fields: [ownerId], references: [id])
+  ownerId          String
   restaurantDesign RestaurantDesign?
   orders           Order[]
 
   @@index([slug])
+  @@index([ownerId])
 }
 
 model RestaurantDesign {

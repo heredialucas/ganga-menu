@@ -7,45 +7,20 @@ import { redirect } from 'next/navigation';
 
 // Tipos de permisos disponibles para el contexto de restaurante
 export type Permission =
-    // Dishes (Platos)
-    | 'dishes:view'
-    | 'dishes:create'
-    | 'dishes:edit'
-    | 'dishes:delete'
-    | 'dishes:manage_status'
-    // Categories (Categorías)
-    | 'categories:view'
-    | 'categories:create'
-    | 'categories:edit'
-    | 'categories:delete'
-    | 'categories:manage_order'
-    // Daily Specials (Especiales del día)
-    | 'daily_specials:view'
-    | 'daily_specials:create'
-    | 'daily_specials:edit'
-    | 'daily_specials:delete'
-    // Restaurant Config (Configuración del restaurante)
-    | 'restaurant:view_config'
-    | 'restaurant:edit_config'
-    | 'restaurant:manage_settings'
-    // Restaurant Design (Diseño del restaurante)
-    | 'restaurant:view_design'
-    | 'restaurant:edit_design'
-    // Orders (Órdenes)
+    // Menu Management (Gestión del Menú - incluye platos, categorías, especiales)
+    | 'menu:view'
+    | 'menu:edit'
+    // Restaurant Management (Gestión del Restaurante - incluye config y diseño)
+    | 'restaurant:view'
+    | 'restaurant:edit'
+    | 'restaurant:design'
+    | 'restaurant:qr_codes'
+    // Orders Management (Gestión de Órdenes)
     | 'orders:view'
-    | 'orders:create'
     | 'orders:edit'
-    | 'orders:delete'
-    | 'orders:manage_status'
-    // Kitchen (Cocina)
-    | 'kitchen:view_orders'
-    | 'kitchen:update_status'
-    // Waiter (Mozo)
-    | 'waiter:view_orders'
-    | 'waiter:create_orders'
-    | 'waiter:view_menu'
-    // Menu Sharing (Menú público)
-    | 'menu:view_public'
+    // Services Management (Gestión de Servicios - códigos de acceso)
+    | 'services:view'
+    | 'services:edit'
     // Account (Cuenta propia)
     | 'account:view_own'
     | 'account:edit_own'
@@ -57,44 +32,20 @@ export type Permission =
 
 // Permisos por defecto para admins (acceso total)
 export const ADMIN_PERMISSIONS: Permission[] = [
-    // Dishes
-    'dishes:view',
-    'dishes:create',
-    'dishes:edit',
-    'dishes:delete',
-    'dishes:manage_status',
-    // Categories
-    'categories:view',
-    'categories:create',
-    'categories:edit',
-    'categories:delete',
-    'categories:manage_order',
-    // Daily Specials
-    'daily_specials:view',
-    'daily_specials:create',
-    'daily_specials:edit',
-    'daily_specials:delete',
+    // Menu Management
+    'menu:view',
+    'menu:edit',
     // Restaurant
-    'restaurant:view_config',
-    'restaurant:edit_config',
-    'restaurant:manage_settings',
-    'restaurant:view_design',
-    'restaurant:edit_design',
+    'restaurant:view',
+    'restaurant:edit',
+    'restaurant:design',
+    'restaurant:qr_codes',
     // Orders
     'orders:view',
-    'orders:create',
     'orders:edit',
-    'orders:delete',
-    'orders:manage_status',
-    // Kitchen
-    'kitchen:view_orders',
-    'kitchen:update_status',
-    // Waiter
-    'waiter:view_orders',
-    'waiter:create_orders',
-    'waiter:view_menu',
-    // Menu
-    'menu:view_public',
+    // Services
+    'services:view',
+    'services:edit',
     // Account
     'account:view_own',
     'account:edit_own',
@@ -233,21 +184,21 @@ export const SIDEBAR_CONFIG: SidebarItem[] = [
         mobileLabel: 'sidebar.menu',
         href: '/menu',
         icon: 'UtensilsCrossed',
-        allRequiredPermissions: ['dishes:view'],
+        allRequiredPermissions: ['menu:view'],
     },
     {
         label: 'sidebar.restaurant',
         mobileLabel: 'sidebar.restaurant',
         href: '/restaurant',
         icon: 'Layout',
-        allRequiredPermissions: ['restaurant:view_config'],
+        allRequiredPermissions: ['restaurant:view'],
     },
     {
         label: 'sidebar.services',
         mobileLabel: 'sidebar.services',
         href: '/services',
         icon: 'Settings',
-        anyRequiredPermissions: ['waiter:view_orders', 'kitchen:view_orders'],
+        anyRequiredPermissions: ['services:view'],
     }, {
         label: 'sidebar.orders',
         mobileLabel: 'sidebar.orders',

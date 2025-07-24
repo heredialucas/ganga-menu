@@ -23,6 +23,14 @@ export {
     getAuthorizedSidebarItems,
 } from './server';
 
+// Permission Guard Components
+export {
+    PermissionGuard,
+    SinglePermissionGuard,
+    AllPermissionsGuard,
+    AnyPermissionGuard,
+} from './components/PermissionGuard';
+
 // Middleware
 export { authMiddleware } from './middleware';
 

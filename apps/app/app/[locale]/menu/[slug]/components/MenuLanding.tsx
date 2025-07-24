@@ -1,11 +1,10 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Dictionary } from '@repo/internationalization';
 import { RestaurantConfigData } from '@repo/data-services/src/services/restaurantConfigService';
 import { TableData } from '@repo/data-services/src/services/tableService';
 import { useSocket } from '@/hooks/useSocket';
-import { Clock } from 'lucide-react';
 import { createOrderFromMenuAction } from '../actions';
 
 // Componentes modulares
@@ -16,12 +15,12 @@ import {
     CategorySection,
     EmptyState,
     MenuFooter,
-    DecorativeElements,
     OrderCart,
     getThemeColors,
     type Category,
     type Dish
 } from './ui';
+import { getTemplateStyles } from './ui/templateStyles';
 import OrderStatusBar from './ui/OrderStatusBar';
 
 interface TodaySpecialType {
@@ -221,15 +220,50 @@ export default function MenuLanding({
         })
     }));
 
+    const template = restaurantConfig.template as 'neomorphic' | 'retro-vintage' | 'luxury-premium' | 'playful-fun' | 'zen-minimal' | 'artistic-creative';
+    const styles = getTemplateStyles(template);
+
     return (
-        <div className="min-h-screen bg-gray-50 relative" style={themeColors.cssVariables}>
-            {/* Elementos decorativos de fondo como en web-base */}
-            <DecorativeElements
-                variant="background"
-                className="fixed inset-0 z-0 pointer-events-none"
-            />
+        <div className={styles.container}>
+            {/* Luxury Background Elements - solo para luxury-premium */}
+            {template === 'luxury-premium' && (
+                <div className="absolute inset-0 pointer-events-none">
+                    <div className="absolute top-10 sm:top-20 right-10 sm:right-20 w-48 h-48 sm:w-96 sm:h-96 bg-gradient-to-br from-yellow-600/10 to-amber-600/10 rounded-full blur-2xl sm:blur-3xl"></div>
+                    <div className="absolute bottom-10 sm:bottom-20 left-10 sm:left-20 w-40 h-40 sm:w-80 sm:h-80 bg-gradient-to-br from-amber-600/10 to-yellow-600/10 rounded-full blur-2xl sm:blur-3xl"></div>
+                </div>
+            )}
 
+            {/* Playful Fun Background Elements - solo para playful-fun */}
+            {template === 'playful-fun' && (
+                <div className="absolute inset-0 pointer-events-none">
+                    <div className="absolute top-10 sm:top-20 left-10 sm:left-20 text-3xl sm:text-6xl animate-bounce">🎉</div>
+                    <div className="absolute top-20 sm:top-40 right-10 sm:right-40 text-2xl sm:text-4xl animate-spin-slow">🌟</div>
+                    <div className="absolute bottom-20 sm:bottom-40 left-10 sm:left-40 text-3xl sm:text-5xl animate-pulse">🎈</div>
+                    <div className="absolute bottom-10 sm:bottom-20 right-10 sm:right-20 text-2xl sm:text-4xl animate-bounce delay-500">🎊</div>
+                    <div className="absolute top-1/2 left-5 sm:left-10 w-12 h-12 sm:w-16 sm:h-16 bg-pink-300 rounded-full animate-bounce"></div>
+                    <div className="absolute top-1/3 right-5 sm:right-10 w-8 h-8 sm:w-12 sm:h-12 bg-yellow-300 rounded-full animate-bounce delay-300"></div>
+                </div>
+            )}
 
+            {/* Zen Minimal Background Elements - solo para zen-minimal */}
+            {template === 'zen-minimal' && (
+                <div className="absolute inset-0 pointer-events-none">
+                    <div className="absolute top-20 left-20 w-1 h-16 bg-gray-200"></div>
+                    <div className="absolute top-40 right-20 w-1 h-12 bg-gray-200"></div>
+                    <div className="absolute bottom-40 left-20 w-1 h-20 bg-gray-200"></div>
+                    <div className="absolute bottom-20 right-20 w-1 h-14 bg-gray-200"></div>
+                </div>
+            )}
+
+            {/* Artistic Creative Background Elements - solo para artistic-creative */}
+            {template === 'artistic-creative' && (
+                <div className="absolute inset-0 pointer-events-none">
+                    <div className="absolute top-20 left-20 w-64 h-64 bg-gradient-to-br from-pink-400/20 to-purple-400/20 rounded-full blur-3xl animate-pulse"></div>
+                    <div className="absolute bottom-20 right-20 w-80 h-80 bg-gradient-to-br from-orange-400/20 to-pink-400/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+                    <div className="absolute top-1/2 left-10 w-2 h-32 bg-gradient-to-b from-pink-400 to-transparent transform rotate-45"></div>
+                    <div className="absolute top-1/3 right-20 w-2 h-24 bg-gradient-to-b from-purple-400 to-transparent transform -rotate-12"></div>
+                </div>
+            )}
 
             {/* Contenido principal */}
             <div className="relative z-10">
@@ -238,6 +272,8 @@ export default function MenuLanding({
                     restaurantConfig={restaurantConfig}
                     dictionary={dictionary}
                     isTableSpecificView={isTableSpecificView}
+                    themeColor={restaurantConfig.themeColor}
+                    template={template}
                 />
 
                 {/* Filters */}
@@ -261,17 +297,15 @@ export default function MenuLanding({
                         restaurantName={restaurantConfig.name}
                         restaurantPhone={restaurantConfig.phone}
                         isTableSpecificView={isTableSpecificView}
+                        themeColor={restaurantConfig.themeColor}
+                        template={template}
                     />
                 )}
 
 
 
                 {/* Menu Categories */}
-                <main className="max-w-6xl mx-auto px-4 py-8 relative">
-                    <DecorativeElements
-                        variant="section"
-                    />
-
+                <main className="px-6 py-8 relative">
                     {/* Estado de órdenes en tiempo real - solo en vista de mesa específica */}
                     {isTableSpecificView && table && (
                         <OrderStatusBar
@@ -293,12 +327,6 @@ export default function MenuLanding({
                         <div className="space-y-12">
                             {filteredCategories.map((category, index) => (
                                 <div key={category.id} className="relative">
-                                    {/* Elementos decorativos alternados para cada categoría */}
-                                    {index % 2 === 0 && (
-                                        <DecorativeElements
-                                            variant="minimal"
-                                        />
-                                    )}
                                     <CategorySection
                                         category={category}
                                         dictionary={dictionary}
@@ -308,6 +336,8 @@ export default function MenuLanding({
                                         restaurantConfigId={restaurantConfig.id}
                                         onAddToOrder={addToCart}
                                         isTableSpecificView={isTableSpecificView}
+                                        themeColor={restaurantConfig.themeColor}
+                                        template={template}
                                     />
                                 </div>
                             ))}
@@ -319,6 +349,8 @@ export default function MenuLanding({
                 <MenuFooter
                     restaurantConfig={restaurantConfig}
                     dictionary={dictionary}
+                    themeColor={restaurantConfig.themeColor}
+                    template={template}
                 />
 
                 {/* Carrito de compras - solo en vista de mesa específica */}

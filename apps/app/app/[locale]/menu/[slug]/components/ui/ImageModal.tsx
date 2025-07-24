@@ -91,11 +91,11 @@ export default function ImageModal({
                     </div>
 
                     {/* Información de la imagen con gradiente temático */}
-                    <div className={`p-3 sm:p-4 md:p-6 relative overflow-hidden`} style={{ background: 'var(--gradient-category)', color: 'var(--theme-text)' }}>
+                    <div className="p-3 sm:p-4 md:p-6 relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 text-gray-800">
                         {/* Gradientes animados de fondo */}
                         <div className="absolute inset-0">
                             {/* Gradiente base con movimiento */}
-                            <div className={`absolute inset-0 animate-pulse`} style={{ background: 'var(--gradient-overlay)' }}></div>
+                            <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-blue-50 to-purple-50 opacity-50"></div>
 
                             {/* Gradientes animados múltiples */}
                             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shimmer"></div>

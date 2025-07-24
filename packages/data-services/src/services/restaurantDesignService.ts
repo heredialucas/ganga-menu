@@ -36,6 +36,11 @@ interface StaircaseElement extends BaseElement {
 export type RestaurantElement = ShapeElement | StaircaseElement;
 export type RestaurantTableData = RestaurantTable;
 
+// Tipo para mesas temporales (sin restaurantDesignId requerido)
+export type TemporaryRestaurantTableData = Omit<RestaurantTable, 'restaurantDesignId'> & {
+    restaurantDesignId?: string;
+};
+
 // Helper function para validar y convertir JsonValue a RestaurantElement[]
 function parseElements(elementsJson: unknown): RestaurantElement[] {
     if (!Array.isArray(elementsJson)) {
@@ -159,6 +164,15 @@ export async function saveRestaurantDesign(
         return { success: false, message: 'ID de configuración o de usuario no válido' };
     }
 
+    // ✅ CORREGIDO: Obtener el ID del dueño del restaurante
+    const { getRestaurantOwner } = await import('./restaurantConfigService');
+    const restaurantOwnerId = await getRestaurantOwner(userId);
+
+    if (!restaurantOwnerId) {
+        console.error("Error: No se pudo determinar el dueño del restaurante.");
+        return { success: false, message: 'No se pudo determinar el dueño del restaurante' };
+    }
+
     try {
         const existingDesign = await database.restaurantDesign.findUnique({
             where: { restaurantConfigId },
@@ -172,7 +186,7 @@ export async function saveRestaurantDesign(
                     canvasWidth,
                     canvasHeight,
                     elements: elements as any,
-                    createdById: userId,
+                    createdById: restaurantOwnerId, // ✅ Usar restaurantOwnerId en lugar de userId
                     restaurantTables: {
                         create: tables.map(table => ({
                             label: table.label, x: table.x, y: table.y, width: table.width,

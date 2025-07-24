@@ -190,44 +190,24 @@
           "account": "Cuenta",
           "admin": "Administración"
         },
-        "permissions": {
-          "dishesView": "Ver platos",
-          "dishesCreate": "Crear platos",
-          "dishesEdit": "Editar platos",
-          "dishesDelete": "Eliminar platos",
-          "dishesManageStatus": "Gestionar estado de platos",
-          "categoriesView": "Ver categorías",
-          "categoriesCreate": "Crear categorías",
-          "categoriesEdit": "Editar categorías",
-          "categoriesDelete": "Eliminar categorías",
-          "categoriesManageOrder": "Gestionar orden de categorías",
-          "dailySpecialsView": "Ver especiales del día",
-          "dailySpecialsCreate": "Crear especiales del día",
-          "dailySpecialsEdit": "Editar especiales del día",
-          "dailySpecialsDelete": "Eliminar especiales del día",
-          "restaurantViewConfig": "Ver configuración del restaurante",
-          "restaurantEditConfig": "Editar configuración del restaurante",
-          "restaurantManageSettings": "Gestionar configuración del restaurante",
-          "restaurantViewDesign": "Ver diseño del restaurante",
-          "restaurantEditDesign": "Editar diseño del restaurante",
-          "ordersView": "Ver órdenes",
-          "ordersCreate": "Crear órdenes",
-          "ordersEdit": "Editar órdenes",
-          "ordersDelete": "Eliminar órdenes",
-          "ordersManageStatus": "Gestionar estado de órdenes",
-          "kitchenViewOrders": "Ver órdenes de cocina",
-          "kitchenUpdateStatus": "Actualizar estado de cocina",
-          "waiterViewOrders": "Ver órdenes de mozo",
-          "waiterCreateOrders": "Crear órdenes de mozo",
-          "waiterViewMenu": "Ver menú de mozo",
-          "menuViewPublic": "Ver menú público",
-          "accountViewOwn": "Ver cuenta propia",
-          "accountEditOwn": "Editar cuenta propia",
-          "accountChangePassword": "Cambiar contraseña",
-          "adminFullAccess": "Acceso completo",
-          "adminManageUsers": "Gestionar usuarios",
-          "adminSystemSettings": "Configuración del sistema"
-        },
+            "permissions": {
+      "menuView": "Ver menú",
+      "menuEdit": "Editar menú",
+      "restaurantView": "Ver restaurante",
+      "restaurantEdit": "Editar restaurante",
+      "restaurantDesign": "Diseño del restaurante",
+      "restaurantQrCodes": "Códigos QR de mesas",
+      "ordersView": "Ver órdenes",
+      "ordersEdit": "Editar órdenes",
+      "servicesView": "Ver servicios",
+      "servicesEdit": "Editar servicios",
+      "accountViewOwn": "Ver cuenta propia",
+      "accountEditOwn": "Editar cuenta propia",
+      "accountChangePassword": "Cambiar contraseña",
+      "adminFullAccess": "Acceso completo de administrador",
+      "adminManageUsers": "Gestionar usuarios",
+      "adminSystemSettings": "Configuración del sistema"
+    },
         "toast": {
           "updating": "Actualizando usuario...",
           "creating": "Creando usuario...",
@@ -365,6 +345,9 @@
           "mobile": "Descargar"
         },
         "qrNote": "Tus clientes pueden escanear este código para ver el menú.",
+        "save": "Guardar Configuración",
+        "saveMobile": "Guardar",
+        "saving": "Guardando...",
         "toast": {
           "linkCopied": "Enlace del menú copiado al portapapeles.",
           "qrDownloaded": "QR descargado correctamente"
@@ -1217,7 +1200,9 @@
       },
       "dish": {
         "outOfStock": "Agotado",
-        "available": "Disponible"
+        "available": "Disponible",
+        "addToOrder": "Agregar",
+        "consult": "Consultar"
       },
       "footer": {
         "poweredBy": "Menú digital creado con",

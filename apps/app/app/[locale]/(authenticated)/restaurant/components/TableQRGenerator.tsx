@@ -16,9 +16,11 @@ interface TableQRGeneratorProps {
     config: RestaurantConfigData | null;
     appUrl: string;
     dictionary: Dictionary;
+    canEdit?: boolean;
+    canView?: boolean;
 }
 
-export function TableQRGenerator({ config, appUrl, dictionary }: TableQRGeneratorProps) {
+export function TableQRGenerator({ config, appUrl, dictionary, canEdit = true, canView = true }: TableQRGeneratorProps) {
     const [tables, setTables] = useState<TableData[]>([]);
     const [selectedTable, setSelectedTable] = useState<TableData | null>(null);
     const [qrCodeUrl, setQrCodeUrl] = useState<string>('');

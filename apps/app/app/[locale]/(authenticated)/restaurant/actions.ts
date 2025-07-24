@@ -20,13 +20,13 @@ const restaurantConfigSchema = z.object({
         catch (e) { return false; }
     }, { message: "Formato de horarios inválido." }),
     logoUrl: z.string().url('URL de logo inválida').optional().or(z.literal('')),
-    slug: z.string().min(3, 'El enlace debe tener al menos 3 caracteres').optional(),
-    themeColor: z.string().regex(/^#[0-9a-fA-F]{6}$/, 'El color debe ser un código hexadecimal válido (ej: #16a34a)').optional(),
 });
-
 
 export async function saveRestaurantConfig(prevState: any, formData: FormData) {
     try {
+        // Verificar permisos antes de proceder
+        await requirePermission('restaurant:edit');
+
         const user = await getCurrentUser();
         if (!user) {
             throw new Error('Usuario no autenticado');
@@ -96,6 +96,9 @@ export async function saveRestaurantConfig(prevState: any, formData: FormData) {
 }
 
 export async function saveRestaurantDesign(prevState: any, formData: FormData) {
+    // Verificar permisos antes de proceder
+    await requirePermission('restaurant:edit');
+
     // The `saveDesign` service function handles authentication, data parsing,
     // database operations, and revalidation. This wrapper simply passes the arguments through.
     return saveDesign(prevState, formData);
@@ -103,7 +106,7 @@ export async function saveRestaurantDesign(prevState: any, formData: FormData) {
 
 export async function getRestaurantTables() {
     try {
-        await requirePermission('restaurant:view_config');
+        await requirePermission('restaurant:view');
         const user = await getCurrentUser();
 
         if (!user) {

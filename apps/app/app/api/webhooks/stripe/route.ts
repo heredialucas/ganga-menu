@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { env } from '@/env';
-import { updateUserRole, updateUserStripeCustomerId, findUserByStripeCustomerId } from '@repo/data-services';
+import { updateUserStripeCustomerId, findUserByStripeCustomerId, upgradeUserToPremium, downgradeUserFromPremium } from '@repo/data-services';
+import { database } from '@repo/database';
 
 const stripe = new Stripe(env.STRIPE_API_KEY);
 
@@ -30,23 +31,41 @@ export async function POST(req: Request) {
     switch (event.type) {
         case 'checkout.session.completed': {
             const session = event.data.object as Stripe.Checkout.Session;
-            const userId = session?.client_reference_id;
             const stripeCustomerId = session?.customer;
+            console.log('session', session);
+            const customerEmail = session?.customer_details?.email;
+            const customerName = session?.customer_details?.name;
 
-            console.log(`Processing checkout.session.completed for user: ${userId}`);
+            console.log(`Processing checkout.session.completed`);
             console.log(`Stripe Customer ID: ${stripeCustomerId}`);
+            console.log(`Customer Email: ${customerEmail}`);
+            console.log(`Customer Name: ${customerName}`);
 
-            if (!userId || !stripeCustomerId || typeof stripeCustomerId !== 'string') {
-                console.error('🔴 Webhook Error: Missing client_reference_id or customer_id in session.');
+            if (!customerEmail || !stripeCustomerId || typeof stripeCustomerId !== 'string') {
+                console.error('🔴 Webhook Error: Missing customer email or customer_id in session.');
                 return NextResponse.json({ error: 'Webhook Error: Missing required session data.' }, { status: 400 });
             }
 
             try {
-                // Actualizar el rol del usuario a 'admin' (Profesional)
-                await updateUserRole(userId, 'admin');
+                // Buscar usuario por email en nuestra base de datos
+                const user = await database.user.findUnique({
+                    where: { email: customerEmail }
+                });
+
+                if (!user) {
+                    console.error(`🔴 User not found with email: ${customerEmail}`);
+                    return NextResponse.json({ error: 'User not found with provided email.' }, { status: 404 });
+                }
+
+                console.log(`✅ Found user: ${user.id} (${user.email})`);
+
+                // Usar la función existente upgradeUserToPremium que ya maneja permisos
+                await upgradeUserToPremium(user.id);
+
                 // Guardar el ID de cliente de Stripe en nuestro sistema
-                await updateUserStripeCustomerId(userId, stripeCustomerId);
-                console.log(`✅ User ${userId} upgraded to Pro. Stripe Customer ID ${stripeCustomerId} saved.`);
+                await updateUserStripeCustomerId(user.id, stripeCustomerId);
+                console.log(`✅ User ${user.id} (${user.email}) upgraded to Premium with all permissions. Stripe Customer ID ${stripeCustomerId} saved.`);
+
             } catch (error) {
                 console.error(`🔴 Database error during user upgrade:`, error);
                 return NextResponse.json({ error: 'Database error: Could not upgrade user.' }, { status: 500 });
@@ -69,9 +88,9 @@ export async function POST(req: Request) {
             try {
                 const user = await findUserByStripeCustomerId(stripeCustomerId);
                 if (user) {
-                    // Degradar al usuario de vuelta al rol 'user' (Gratuito)
-                    await updateUserRole(user.id, 'user');
-                    console.log(`✅ User ${user.id} downgraded to Free due to subscription cancellation/failure.`);
+                    // Usar la nueva función que quita permisos premium y asigna básicos
+                    await downgradeUserFromPremium(user.id);
+                    console.log(`✅ User ${user.id} (${user.email}) downgraded to Free with basic permissions due to subscription cancellation/failure.`);
                 } else {
                     console.warn(`⚠️ No user found for Stripe Customer ID: ${stripeCustomerId}`);
                 }

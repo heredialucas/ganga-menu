@@ -1,21 +1,22 @@
-import { requirePermission } from '@repo/auth/server-permissions';
-import { database } from '@repo/database';
 import { getCurrentUser } from '@repo/data-services/src/services/authService';
-import { upsertDailySpecial, deleteDailySpecials } from '@repo/data-services/src/services/dailySpecialService';
+import { getDictionary } from '@repo/internationalization';
+import { requirePermission, hasPermission } from '@repo/auth/server-permissions';
 import { getRestaurantConfig } from '@repo/data-services/src/services/restaurantConfigService';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@repo/design-system/components/ui/accordion';
+import { getAllDishesWithFullData } from '@repo/data-services/src/services/dishService';
+import { getAllCategoriesWithFullData } from '@repo/data-services/src/services/categoryService';
+import { getAllDailySpecialsWithFullData, upsertDailySpecial, deleteDailySpecials } from '@repo/data-services/src/services/dailySpecialService';
+import { getAppUrl } from '@/lib/utils';
 import { DishManager } from './components/DishManager';
 import { CategoryManager } from './components/CategoryManager';
 import { DailySpecialManager } from './components/DailySpecialManager';
 import { MenuAccessWidget } from './components/MenuAccessWidget';
-import { getDictionary } from '@repo/internationalization';
 import { ShareLinksWidget } from '@/components/ShareLinksWidget';
 import { FeedbackWidget } from '@/components/FeedbackWidget';
-import { getAppUrl } from '@/lib/utils';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@repo/design-system/components/ui/accordion';
 
 export default async function MenuPage({ params }: { params: Promise<{ locale: string }> }) {
     const { locale } = await params;
-    await requirePermission('dishes:view');
+    await requirePermission('menu:view');
 
     const [user, dictionary] = await Promise.all([
         getCurrentUser(),
@@ -27,22 +28,19 @@ export default async function MenuPage({ params }: { params: Promise<{ locale: s
     if (!user) {
         return <p className="p-4 text-center">{dictionary.app?.menu?.userNotAuthenticated || 'Usuario no autenticado.'}</p>;
     }
-    const userId = user.id;
 
-    const dishes = await database.dish.findMany({
-        where: { createdById: userId },
-        include: { category: true },
-        orderBy: { name: 'asc' }
-    });
-    const categories = await database.category.findMany({
-        where: { createdById: userId },
-        orderBy: { name: 'asc' }
-    });
-    const dailySpecials = await database.dailySpecial.findMany({
-        where: { createdById: userId },
-        include: { dish: true },
-        orderBy: { date: 'desc' }
-    });
+    // Verificar permisos específicos del menú
+    const [canViewMenu, canEditMenu] = await Promise.all([
+        hasPermission('menu:view'),
+        hasPermission('menu:edit')
+    ]);
+
+    // ✅ CORREGIDO: Usar los servicios que manejan correctamente la lógica de restaurante padre
+    const [dishes, categories, dailySpecials] = await Promise.all([
+        getAllDishesWithFullData(user.id), // Este servicio ya usa getRestaurantOwner internamente
+        getAllCategoriesWithFullData(user.id), // Este servicio ya usa getRestaurantOwner internamente
+        getAllDailySpecialsWithFullData(user.id), // Este servicio ya usa getRestaurantOwner internamente
+    ]);
 
     return (
         <div className="space-y-3 sm:space-y-4 md:space-y-6 p-1 sm:p-2 md:p-6">
@@ -61,8 +59,20 @@ export default async function MenuPage({ params }: { params: Promise<{ locale: s
                 </div>
             </div>
 
-            <DishManager dishes={dishes} categories={categories} dictionary={dictionary} />
-            <MenuAccessWidget config={restaurantConfig} appUrl={getAppUrl()} dictionary={dictionary} />
+            <DishManager
+                dishes={dishes}
+                categories={categories}
+                dictionary={dictionary}
+                canEdit={canEditMenu}
+                canView={canViewMenu}
+            />
+            <MenuAccessWidget
+                config={restaurantConfig}
+                appUrl={getAppUrl()}
+                dictionary={dictionary}
+                canEdit={canEditMenu}
+                canView={canViewMenu}
+            />
 
             <Accordion type="multiple" className="w-full space-y-3 sm:space-y-4">
                 <AccordionItem value="categories" className="border rounded-lg px-3 sm:px-4">
@@ -70,7 +80,12 @@ export default async function MenuPage({ params }: { params: Promise<{ locale: s
                         <h3 className="font-semibold text-base sm:text-lg">{dictionary.app?.menu?.categories?.title || 'Gestor de Categorías'}</h3>
                     </AccordionTrigger>
                     <AccordionContent>
-                        <CategoryManager categories={categories} dictionary={dictionary} />
+                        <CategoryManager
+                            categories={categories}
+                            dictionary={dictionary}
+                            canEdit={canEditMenu}
+                            canView={canViewMenu}
+                        />
                     </AccordionContent>
                 </AccordionItem>
 
@@ -85,6 +100,8 @@ export default async function MenuPage({ params }: { params: Promise<{ locale: s
                             upsertDailySpecial={upsertDailySpecial}
                             deleteDailySpecials={deleteDailySpecials}
                             dictionary={dictionary}
+                            canEdit={canEditMenu}
+                            canView={canViewMenu}
                         />
                     </AccordionContent>
                 </AccordionItem>

@@ -13,5 +13,25 @@ export { default as OrderCart } from './OrderCart';
 // Tipos
 export type { Category, Dish, ThemeColors } from './types';
 
+// Tipos de templates centralizados
+export type {
+    TemplateType,
+    TemplateConfig,
+    TemplateStyles,
+    BaseTemplateProps,
+    MenuHeaderProps,
+    TodaySpecialProps,
+    CategorySectionProps,
+    MenuFooterProps,
+    DishCardProps,
+    ImageModalProps,
+    OrderCartProps,
+    OrderStatusBarProps,
+    MenuFiltersProps,
+    EmptyStateProps,
+    getDefaultTemplate,
+    isValidTemplate
+} from '../../types/templates';
+
 // Utilidades
 export { getThemeColors } from './utils'; 

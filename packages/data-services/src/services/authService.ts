@@ -90,6 +90,232 @@ export async function signIn({ email, password }: { email: string; password: str
 }
 
 /**
+ * Get user by Stripe Customer ID
+ */
+export async function getUserByStripeCustomerId(stripeCustomerId: string) {
+    try {
+        const user = await database.user.findFirst({
+            where: { stripeCustomerId },
+            include: { permissions: { include: { permission: true } } }
+        });
+
+        return user;
+    } catch (error) {
+        console.error('Error obteniendo usuario por Stripe Customer ID:', error);
+        return null;
+    }
+}
+
+/**
+ * Upgrade user to premium and assign all premium permissions
+ */
+export async function upgradeUserToPremium(userId: string) {
+    try {
+        console.log(`🚀 Actualizando usuario ${userId} a premium...`);
+
+        // 1. Actualizar rol a premium
+        await database.user.update({
+            where: { id: userId },
+            data: { role: 'premium' }
+        });
+
+        // 2. Obtener todos los permisos premium
+        const premiumPermissions = await database.permission.findMany({
+            where: {
+                name: {
+                    in: [
+                        'restaurant:design',
+                        'restaurant:qr_codes',
+                        'services:view',
+                        'services:edit',
+                        'orders:view',
+                        'orders:edit',
+                        'admin:manage_users'
+                    ]
+                }
+            }
+        });
+
+        console.log(`📋 Permisos premium encontrados: ${premiumPermissions.length}`);
+
+        // 3. Obtener todos los subordinados del usuario
+        const subordinates = await database.user.findMany({
+            where: { createdById: userId },
+            select: { id: true, email: true }
+        });
+
+        console.log(`👥 Subordinados encontrados: ${subordinates.length}`);
+
+        // 4. Asignar permisos premium SOLO al usuario principal
+        console.log(`🔄 Procesando usuario principal: ${userId}`);
+
+        for (const permission of premiumPermissions) {
+            const existing = await database.userPermission.findFirst({
+                where: {
+                    userId,
+                    permissionId: permission.id
+                }
+            });
+
+            if (!existing) {
+                await database.userPermission.create({
+                    data: {
+                        userId,
+                        permissionId: permission.id
+                    }
+                });
+                console.log(`✅ Permiso premium asignado al principal: ${permission.name}`);
+            } else {
+                console.log(`⏭️ Principal ya tiene el permiso: ${permission.name}`);
+            }
+        }
+
+        // 5. Actualizar roles de subordinados para que hereden premium
+        if (subordinates.length > 0) {
+            console.log(`🔄 Actualizando roles de ${subordinates.length} subordinados a premium...`);
+
+            await database.user.updateMany({
+                where: { createdById: userId },
+                data: { role: 'premium' }
+            });
+
+            console.log(`✅ ${subordinates.length} subordinados actualizados a rol premium`);
+        }
+
+        console.log(`🎉 Usuario ${userId} actualizado a premium. ${subordinates.length} subordinados heredaron rol premium.`);
+
+        return { success: true };
+    } catch (error) {
+        console.error('❌ Error actualizando a premium:', error);
+        throw error;
+    }
+}
+
+/**
+ * Downgrade user from premium and remove premium permissions
+ */
+export async function downgradeUserFromPremium(userId: string) {
+    try {
+        console.log(`📉 Degradando usuario ${userId} de premium a user...`);
+
+        // 1. Actualizar rol a user
+        await database.user.update({
+            where: { id: userId },
+            data: { role: 'user' }
+        });
+
+        // 2. Obtener todos los permisos premium que hay que quitar
+        const premiumPermissions = await database.permission.findMany({
+            where: {
+                name: {
+                    in: [
+                        'restaurant:design',
+                        'restaurant:qr_codes',
+                        'services:view',
+                        'services:edit',
+                        'orders:view',
+                        'orders:edit',
+                        'admin:manage_users'
+                    ]
+                }
+            }
+        });
+
+        console.log(`📋 Permisos premium a quitar: ${premiumPermissions.length}`);
+
+        // 3. Obtener todos los subordinados del usuario
+        const subordinates = await database.user.findMany({
+            where: { createdById: userId },
+            select: { id: true, email: true }
+        });
+
+        console.log(`👥 Subordinados encontrados: ${subordinates.length}`);
+
+        // 4. Quitar permisos premium SOLO al usuario principal
+        console.log(`🔄 Procesando usuario principal: ${userId}`);
+
+        for (const permission of premiumPermissions) {
+            await database.userPermission.deleteMany({
+                where: {
+                    userId,
+                    permissionId: permission.id
+                }
+            });
+            console.log(`❌ Permiso premium removido del principal: ${permission.name}`);
+        }
+
+        // 5. Asegurar que el usuario principal tenga permisos básicos
+        const basicPermissions = await database.permission.findMany({
+            where: {
+                name: {
+                    in: [
+                        'account:view_own',
+                        'account:edit_own',
+                        'account:change_password',
+                        'menu:view',
+                        'menu:edit',
+                        'restaurant:view',
+                        'restaurant:edit'
+                    ]
+                }
+            }
+        });
+
+        // 6. Asignar permisos básicos al usuario principal (evitar duplicados)
+        for (const permission of basicPermissions) {
+            const existing = await database.userPermission.findFirst({
+                where: {
+                    userId,
+                    permissionId: permission.id
+                }
+            });
+
+            if (!existing) {
+                await database.userPermission.create({
+                    data: {
+                        userId,
+                        permissionId: permission.id
+                    }
+                });
+                console.log(`✅ Permiso básico asignado al principal: ${permission.name}`);
+            }
+        }
+
+        // 7. Quitar permisos premium a los subordinados (mantienen los que el dueño les asignó)
+        console.log(`🔄 Procesando subordinados para quitar permisos premium...`);
+
+        for (const subordinate of subordinates) {
+            console.log(`🔄 Procesando subordinado: ${subordinate.email} (${subordinate.id})`);
+
+            // Cambiar rol de premium a user si es necesario
+            await database.user.update({
+                where: { id: subordinate.id },
+                data: { role: 'user' }
+            });
+            console.log(`📝 Rol de ${subordinate.email} cambiado a user`);
+
+            // Quitar solo permisos premium, mantener los demás
+            for (const permission of premiumPermissions) {
+                await database.userPermission.deleteMany({
+                    where: {
+                        userId: subordinate.id,
+                        permissionId: permission.id
+                    }
+                });
+                console.log(`❌ Permiso premium removido de ${subordinate.email}: ${permission.name}`);
+            }
+        }
+
+        console.log(`🎉 Usuario ${userId} degradado a user. Subordinados mantienen permisos asignados por el gestor.`);
+
+        return { success: true };
+    } catch (error) {
+        console.error('❌ Error degradando de premium:', error);
+        throw error;
+    }
+}
+
+/**
  * Sign up a new user
  */
 export async function signUp(data: {
@@ -99,11 +325,19 @@ export async function signUp(data: {
     password: string;
 }) {
     try {
-        // Obtener los permisos básicos para usuarios nuevos
+        // Obtener permisos básicos para usuarios nuevos
         const basicPermissions = await database.permission.findMany({
             where: {
                 name: {
-                    in: ['account:view_own', 'account:edit_own', 'account:change_password']
+                    in: [
+                        'account:view_own',
+                        'account:edit_own',
+                        'account:change_password',
+                        'menu:view',
+                        'menu:edit',
+                        'restaurant:view',
+                        'restaurant:edit'
+                    ]
                 }
             },
             select: { id: true }
@@ -130,13 +364,13 @@ export async function signUp(data: {
             include: { permissions: { include: { permission: true } } }
         });
 
-        const permissions = user.permissions.map(p => p.permission.name);
+        const permissionsList = user.permissions.map(p => p.permission.name);
 
         const token = JSON.stringify({
             id: user.id,
             email: user.email,
             role: user.role.toLowerCase(),
-            permissions: permissions,
+            permissions: permissionsList,
             app: 'ganga-menu',
             version: '1.0.0',
             createdAt: new Date().toISOString(),
@@ -274,4 +508,5 @@ export async function getCurrentUserId(): Promise<string | null> {
         console.error('Error al obtener ID de usuario actual:', error);
         return null;
     }
-} 
+}
+

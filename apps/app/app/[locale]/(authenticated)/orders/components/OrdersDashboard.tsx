@@ -22,6 +22,8 @@ interface OrdersDashboardProps {
     orders: OrderData[];
     restaurantConfig: RestaurantConfigData;
     dictionary: Dictionary;
+    canView?: boolean;
+    canEdit?: boolean;
 }
 
 type OrderStatus = 'ACTIVE' | 'READY' | 'CANCELLED' | 'PAID';
@@ -29,7 +31,9 @@ type OrderStatus = 'ACTIVE' | 'READY' | 'CANCELLED' | 'PAID';
 export function OrdersDashboard({
     orders: initialOrders,
     restaurantConfig,
-    dictionary
+    dictionary,
+    canView = true,
+    canEdit = true
 }: OrdersDashboardProps) {
     const [orders, setOrders] = useState<OrderData[]>(initialOrders);
     const [selectedStatus, setSelectedStatus] = useState<OrderStatus | 'ALL'>('ALL');
@@ -114,6 +118,7 @@ export function OrdersDashboard({
     };
 
     const handleStatusUpdate = async (orderId: string, newStatus: OrderStatus) => {
+        if (!canEdit) return; // No permitir actualizar si no puede editar
         setUpdatingOrderId(orderId);
 
         try {
@@ -151,6 +156,7 @@ export function OrdersDashboard({
     };
 
     const handleDeleteOrder = async (orderId: string) => {
+        if (!canEdit) return; // No permitir eliminar si no puede editar
         setDeletingOrderId(orderId);
 
         try {
@@ -191,11 +197,24 @@ export function OrdersDashboard({
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div className="text-center sm:text-left flex-1">
                     <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">
-                        {dictionary.web?.orders?.title || 'Gestión de Órdenes'}
+                        {canEdit
+                            ? (dictionary.web?.orders?.title || 'Gestión de Órdenes')
+                            : (dictionary.web?.orders?.title || 'Gestión de Órdenes') + ' (Solo Lectura)'
+                        }
                     </h1>
                     <p className="text-sm sm:text-base text-muted-foreground mt-2">
-                        {dictionary.web?.orders?.subtitle || 'Monitorea y gestiona las órdenes de tu restaurante en tiempo real'}
+                        {canEdit
+                            ? (dictionary.web?.orders?.subtitle || 'Monitorea y gestiona las órdenes de tu restaurante en tiempo real')
+                            : (dictionary.web?.orders?.subtitle || 'Monitorea y gestiona las órdenes de tu restaurante en tiempo real') + ' (Modo solo lectura)'
+                        }
                     </p>
+                    {!canEdit && (
+                        <div className="mt-2 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-md">
+                            <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                                Modo solo lectura: Puedes ver las órdenes pero no modificarlas.
+                            </p>
+                        </div>
+                    )}
                 </div>
 
                 {/* Estado de conexión */}
@@ -251,6 +270,8 @@ export function OrdersDashboard({
                         dictionary={dictionary}
                         updatingOrderId={updatingOrderId}
                         deletingOrderId={deletingOrderId}
+                        canView={canView}
+                        canEdit={canEdit}
                     />
                 </TabsContent>
 
@@ -262,6 +283,8 @@ export function OrdersDashboard({
                         dictionary={dictionary}
                         updatingOrderId={updatingOrderId}
                         deletingOrderId={deletingOrderId}
+                        canView={canView}
+                        canEdit={canEdit}
                     />
                 </TabsContent>
 
@@ -273,6 +296,8 @@ export function OrdersDashboard({
                         dictionary={dictionary}
                         updatingOrderId={updatingOrderId}
                         deletingOrderId={deletingOrderId}
+                        canView={canView}
+                        canEdit={canEdit}
                     />
                 </TabsContent>
             </Tabs>

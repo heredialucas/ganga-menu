@@ -1,4 +1,4 @@
-import { requirePermission } from '@repo/auth/server-permissions';
+import { requirePermission, hasPermission } from '@repo/auth/server-permissions';
 import { getDictionary } from '@repo/internationalization';
 import { getRestaurantConfig } from '@repo/data-services/src/services/restaurantConfigService';
 import { getOrdersByRestaurant } from '@repo/data-services';
@@ -7,6 +7,12 @@ import { OrdersDashboard } from './components/OrdersDashboard';
 export default async function OrdersPage({ params }: { params: Promise<{ locale: string }> }) {
     const { locale } = await params;
     await requirePermission('orders:view');
+
+    // Verificar permisos específicos
+    const [canViewOrders, canEditOrders] = await Promise.all([
+        hasPermission('orders:view'),
+        hasPermission('orders:edit')
+    ]);
 
     const [dictionary, restaurantConfig, orders] = await Promise.all([
         getDictionary(locale),
@@ -34,6 +40,8 @@ export default async function OrdersPage({ params }: { params: Promise<{ locale:
                 orders={orders}
                 restaurantConfig={restaurantConfig}
                 dictionary={dictionary}
+                canView={canViewOrders}
+                canEdit={canEditOrders}
             />
         </div>
     );

@@ -26,6 +26,7 @@ type OpeningHours = Record<string, DayHours>;
 interface OpeningHoursManagerProps {
     initialHours?: string; // JSON string
     dictionary: Dictionary;
+    canEdit?: boolean;
 }
 
 function parseInitialHours(initialHoursString?: string): OpeningHours {
@@ -45,17 +46,47 @@ function parseInitialHours(initialHoursString?: string): OpeningHours {
             if (parsed[day]) {
                 // If slots array doesn't exist, it's the old format. Convert it.
                 if (!parsed[day].slots) {
-                    parsed[day].slots = [{
-                        id: `migrated-${day}`,
-                        open: parsed[day].open || '09:00',
-                        close: parsed[day].close || '17:00'
-                    }];
+                    // Handle old format with openTime/closeTime
+                    if (parsed[day].openTime && parsed[day].closeTime) {
+                        parsed[day].slots = [{
+                            id: `migrated-${day}`,
+                            open: parsed[day].openTime,
+                            close: parsed[day].closeTime
+                        }];
+                    }
+                    // Handle old format with open/close
+                    else if (parsed[day].open && parsed[day].close) {
+                        parsed[day].slots = [{
+                            id: `migrated-${day}`,
+                            open: parsed[day].open,
+                            close: parsed[day].close
+                        }];
+                    }
+                    // Handle old format with ranges
+                    else if (parsed[day].ranges && Array.isArray(parsed[day].ranges)) {
+                        parsed[day].slots = parsed[day].ranges.map((range: any, index: number) => ({
+                            id: `migrated-${day}-${index}`,
+                            open: range.openTime || range.open || '09:00',
+                            close: range.closeTime || range.close || '17:00'
+                        }));
+                    }
+                    // Default fallback
+                    else {
+                        parsed[day].slots = [{
+                            id: `migrated-${day}`,
+                            open: '09:00',
+                            close: '17:00'
+                        }];
+                    }
                 }
-                // Ensure every slot has an ID
+                // Ensure every slot has an ID and proper format
                 parsed[day].slots.forEach((slot: TimeSlot, index: number) => {
                     if (!slot.id) {
                         slot.id = `${day}-${index}-${Date.now()}`;
                     }
+                    // Ensure open and close properties exist
+                    if (!slot.open) slot.open = '09:00';
+                    if (!slot.close) slot.close = '17:00';
                 });
             }
         }
@@ -66,7 +97,7 @@ function parseInitialHours(initialHoursString?: string): OpeningHours {
     }
 }
 
-export function OpeningHoursManager({ initialHours, dictionary }: OpeningHoursManagerProps) {
+export function OpeningHoursManager({ initialHours, dictionary, canEdit = true }: OpeningHoursManagerProps) {
     const [hours, setHours] = useState<OpeningHours>(() => parseInitialHours(initialHours));
 
     const handleToggleDay = (day: string, isOpen: boolean) => {
@@ -128,6 +159,7 @@ export function OpeningHoursManager({ initialHours, dictionary }: OpeningHoursMa
                         checked={areAllOpen}
                         onCheckedChange={handleToggleAll}
                         aria-label="Toggle all days"
+                        disabled={!canEdit}
                     />
                     <Label className="text-xs sm:text-sm">{areAllOpen ? ((dictionary as any).app?.restaurant?.openingHours?.allOpen || 'Todos abiertos') : ((dictionary as any).app?.restaurant?.openingHours?.markAllOpen || 'Marcar todos como abiertos')}</Label>
                 </div>
@@ -146,6 +178,7 @@ export function OpeningHoursManager({ initialHours, dictionary }: OpeningHoursMa
                                     <Switch
                                         checked={dayHours.isOpen}
                                         onCheckedChange={(checked) => handleToggleDay(day, checked)}
+                                        disabled={!canEdit}
                                     />
                                     <Label className="text-xs sm:text-sm">{dayHours.isOpen ? ((dictionary as any).app?.restaurant?.openingHours?.open || 'Abierto') : ((dictionary as any).app?.restaurant?.openingHours?.closed || 'Cerrado')}</Label>
                                 </div>
@@ -159,33 +192,39 @@ export function OpeningHoursManager({ initialHours, dictionary }: OpeningHoursMa
                                                 type="time"
                                                 value={slot.open}
                                                 onChange={(e) => handleTimeChange(day, slot.id, 'open', e.target.value)}
+                                                disabled={!canEdit}
                                             />
                                             <span>-</span>
                                             <Input
                                                 type="time"
                                                 value={slot.close}
                                                 onChange={(e) => handleTimeChange(day, slot.id, 'close', e.target.value)}
+                                                disabled={!canEdit}
                                             />
-                                            <Button
-                                                type="button"
-                                                variant="ghost"
-                                                size="icon"
-                                                onClick={() => handleRemoveSlot(day, slot.id)}
-                                                disabled={dayHours.slots.length <= 1}
-                                            >
-                                                <Trash2 className="h-4 w-4" />
-                                            </Button>
+                                            {canEdit && (
+                                                <Button
+                                                    type="button"
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    onClick={() => handleRemoveSlot(day, slot.id)}
+                                                    disabled={dayHours.slots.length <= 1}
+                                                >
+                                                    <Trash2 className="h-4 w-4" />
+                                                </Button>
+                                            )}
                                         </div>
                                     ))}
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        size="sm"
-                                        onClick={() => handleAddSlot(day)}
-                                    >
-                                        <PlusCircle className="mr-2 h-4 w-4" />
-                                        {(dictionary as any).app?.restaurant?.openingHours?.addShift || 'Añadir turno'}
-                                    </Button>
+                                    {canEdit && (
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => handleAddSlot(day)}
+                                        >
+                                            <PlusCircle className="mr-2 h-4 w-4" />
+                                            {(dictionary as any).app?.restaurant?.openingHours?.addShift || 'Añadir turno'}
+                                        </Button>
+                                    )}
                                 </div>
                             )}
                         </div>

@@ -2,10 +2,13 @@ import { getCurrentUser } from '@repo/data-services/src/services/authService';
 import { getSubordinateUsers } from '@repo/data-services/src/services/userManagementService';
 import { getDictionary } from '@repo/internationalization';
 import {
-    hasPermission,
     requirePermission,
-    ADMIN_PERMISSIONS
-} from '@repo/auth/server-permissions';
+    hasPermission,
+    ADMIN_PERMISSIONS,
+    PermissionGuard,
+    SinglePermissionGuard,
+    AnyPermissionGuard
+} from '@repo/auth';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/design-system/components/ui/tabs';
 import { ProfileSection } from './components/ProfileSection';
 import { PasswordSection } from './components/PasswordSection';
@@ -41,10 +44,22 @@ export default async function AccountPage({ params }: AccountPageProps) {
         );
     }
 
-    // Verificar si puede gestionar usuarios para obtener la lista
-    const canManageUsers = await hasPermission('admin:manage_users');
+    // Verificar permisos específicos a nivel de servidor
+    const [
+        canViewOwnAccount,
+        canEditOwnAccount,
+        canChangePassword,
+        canManageUsers
+    ] = await Promise.all([
+        hasPermission('account:view_own'),
+        hasPermission('account:edit_own'),
+        hasPermission('account:change_password'),
+        hasPermission('admin:manage_users')
+    ]);
+
+    // Obtener usuarios solo si tiene permisos para gestionarlos
     const usersResult = canManageUsers ? await getSubordinateUsers(currentUser.id) : { success: true, users: [] };
-    const users = usersResult.success ? usersResult.users || [] : [];
+    const users = usersResult.success ? (usersResult.users || []).filter(user => user.id !== currentUser.id) : [];
 
     // Filtrar los permisos de administrador para que no se puedan asignar desde la UI
     const assignablePermissions = ADMIN_PERMISSIONS.filter(p => !p.startsWith('admin:'));
@@ -66,46 +81,76 @@ export default async function AccountPage({ params }: AccountPageProps) {
                 </div>
             </div>
 
-            <Tabs defaultValue="profile" className="space-y-3 sm:space-y-4">
-                <div className="overflow-x-auto">
-                    <TabsList className={`grid w-full ${canManageUsers ? 'grid-cols-2' : 'grid-cols-1'} h-auto sm:h-10 min-w-[300px] md:min-w-0`}>
-                        <TabsTrigger value="profile" className="text-xs sm:text-sm py-2 sm:py-0">
-                            <span className="hidden sm:inline">{dictionary.app?.account?.tabs?.profile?.desktop || 'Mi Perfil'}</span>
-                            <span className="sm:hidden">{dictionary.app?.account?.tabs?.profile?.mobile || 'Perfil'}</span>
-                        </TabsTrigger>
-                        {canManageUsers && (
-                            <TabsTrigger value="users" className="text-xs sm:text-sm py-2 sm:py-0">
-                                <span className="hidden sm:inline">{dictionary.app?.account?.tabs?.users?.desktop || 'Gestión de Usuarios'}</span>
-                                <span className="sm:hidden">{dictionary.app?.account?.tabs?.users?.mobile || 'Usuarios'}</span>
-                            </TabsTrigger>
-                        )}
-                    </TabsList>
-                </div>
+            <PermissionGuard
+                requiredPermissions={['account:view_own']}
+                fallback={
+                    <div className="flex items-center justify-center min-h-[50vh]">
+                        <div className="text-center">
+                            <p className="text-sm sm:text-base text-muted-foreground">
+                                No tienes permisos para acceder a esta sección
+                            </p>
+                        </div>
+                    </div>
+                }
+                showFallback={true}
+            >
+                <Tabs defaultValue="profile" className="space-y-3 sm:space-y-4">
+                    <div className="overflow-x-auto">
+                        <TabsList className="flex w-full h-auto sm:h-10 min-w-[300px] md:min-w-0">
+                            <SinglePermissionGuard permission="account:view_own">
+                                <TabsTrigger value="profile" className="text-xs sm:text-sm py-2 sm:py-0 flex-1">
+                                    <span className="hidden sm:inline">{dictionary.app?.account?.tabs?.profile?.desktop || 'Mi Perfil'}</span>
+                                    <span className="sm:hidden">{dictionary.app?.account?.tabs?.profile?.mobile || 'Perfil'}</span>
+                                </TabsTrigger>
+                            </SinglePermissionGuard>
 
-                <TabsContent value="profile" className="space-y-3 sm:space-y-4">
-                    <ProfileSection
-                        currentUser={currentUser}
-                        dictionary={dictionary}
-                        canEdit={await hasPermission('account:edit_own')}
-                    />
-                    <PasswordSection
-                        currentUser={currentUser}
-                        dictionary={dictionary}
-                        canChange={await hasPermission('account:change_password')}
-                    />
-                </TabsContent>
+                            <SinglePermissionGuard permission="admin:manage_users">
+                                <TabsTrigger value="users" className="text-xs sm:text-sm py-2 sm:py-0 flex-1">
+                                    <span className="hidden sm:inline">{dictionary.app?.account?.tabs?.users?.desktop || 'Gestión de Usuarios'}</span>
+                                    <span className="sm:hidden">{dictionary.app?.account?.tabs?.users?.mobile || 'Usuarios'}</span>
+                                </TabsTrigger>
+                            </SinglePermissionGuard>
+                        </TabsList>
+                    </div>
 
-                {canManageUsers && (
-                    <TabsContent value="users" className="space-y-3 sm:space-y-4">
-                        <UsersSection
-                            users={users}
-                            currentUser={currentUser}
-                            dictionary={dictionary}
-                            allPermissions={assignablePermissions}
-                        />
-                    </TabsContent>
-                )}
-            </Tabs>
+                    <SinglePermissionGuard permission="account:view_own">
+                        <TabsContent value="profile" className="space-y-3 sm:space-y-4">
+                            {/* ProfileSection - solo uno con el nivel de permisos correcto */}
+                            {canViewOwnAccount && (
+                                <ProfileSection
+                                    currentUser={currentUser}
+                                    dictionary={dictionary}
+                                    canEdit={canEditOwnAccount}
+                                    canView={canViewOwnAccount}
+                                />
+                            )}
+
+                            <SinglePermissionGuard permission="account:change_password">
+                                <PasswordSection
+                                    currentUser={currentUser}
+                                    dictionary={dictionary}
+                                    canChange={true}
+                                />
+                            </SinglePermissionGuard>
+                        </TabsContent>
+                    </SinglePermissionGuard>
+
+                    <SinglePermissionGuard permission="admin:manage_users">
+                        <TabsContent value="users" className="space-y-3 sm:space-y-4">
+                            <UsersSection
+                                users={users}
+                                currentUser={currentUser}
+                                dictionary={dictionary}
+                                allPermissions={assignablePermissions}
+                                canCreateUsers={canManageUsers}
+                                canEditUsers={canManageUsers}
+                                canDeleteUsers={canManageUsers}
+                                canManageUsers={canManageUsers}
+                            />
+                        </TabsContent>
+                    </SinglePermissionGuard>
+                </Tabs>
+            </PermissionGuard>
         </div>
     );
 } 

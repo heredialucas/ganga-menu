@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { database } from '@repo/database';
 import { getRestaurantConfig } from '@repo/data-services/src/services/restaurantConfigService';
+import { requirePermission } from '@repo/auth/server-permissions';
 import { z } from 'zod';
 
 const updateWaiterCodeSchema = z.object({
@@ -15,6 +16,9 @@ const updateKitchenCodeSchema = z.object({
 
 export async function updateWaiterCode(formData: FormData) {
     try {
+        // Verificar permisos antes de proceder
+        await requirePermission('services:edit');
+
         const config = await getRestaurantConfig();
         if (!config) {
             throw new Error('Configuración de restaurante no encontrada.');
@@ -51,6 +55,9 @@ export async function updateWaiterCode(formData: FormData) {
 
 export async function updateKitchenCode(formData: FormData) {
     try {
+        // Verificar permisos antes de proceder
+        await requirePermission('services:edit');
+
         const config = await getRestaurantConfig();
         if (!config) {
             throw new Error('Configuración de restaurante no encontrada.');

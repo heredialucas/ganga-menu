@@ -32,7 +32,7 @@ export default function MenuFilters({
 }: MenuFiltersProps) {
     return (
         <section className="bg-white/95 backdrop-blur-md border-b sticky top-0 z-50 shadow-sm transition-all duration-300">
-            <div className="max-w-6xl mx-auto px-4 py-4 md:py-6">
+            <div className="w-full max-w-6xl mx-auto px-4 py-4 md:py-6">
                 <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
                     <h2 className="text-xl md:text-2xl font-bold text-gray-900">
                         {dictionary.web?.menu?.title || 'Nuestro Menú'}

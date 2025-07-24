@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { database, RecurrenceType } from '@repo/database';
 import { getCurrentUserId } from './authService';
+import { requirePermission } from '@repo/auth/server-permissions';
 import { z } from 'zod';
 import { addMonths, addWeeks, setDay, isBefore, isEqual } from 'date-fns';
 import { randomUUID } from 'crypto';
@@ -48,6 +49,9 @@ const upsertDailySpecialSchema = z.object({
  */
 export async function createDailySpecial(data: DailySpecialFormData, createdById: string) {
     try {
+        // Verificar permiso para editar menú
+        await requirePermission('menu:edit');
+
         // Ya no verificamos si existe un plato para esa fecha, permitimos múltiples
 
         // Crear el plato del día
@@ -74,6 +78,10 @@ export async function createDailySpecial(data: DailySpecialFormData, createdById
         return dailySpecial;
     } catch (error) {
         console.error('Error al crear plato del día:', error);
+        // ✅ CORREGIDO: Preservar el mensaje de error original si existe
+        if (error instanceof Error) {
+            throw error; // Mantener el mensaje original del error
+        }
         throw new Error('No se pudo crear el plato del día');
     }
 }
@@ -89,8 +97,16 @@ export async function getAllDailySpecials(userId?: string) {
             throw new Error('Usuario no autenticado');
         }
 
+        // Obtener el ID del dueño del restaurante
+        const { getRestaurantOwner } = await import('./restaurantConfigService');
+        const restaurantOwnerId = await getRestaurantOwner(currentUserId);
+
+        if (!restaurantOwnerId) {
+            return [];
+        }
+
         const dailySpecials = await database.dailySpecial.findMany({
-            where: { createdById: currentUserId },
+            where: { createdById: restaurantOwnerId },
             include: {
                 dish: {
                     include: {
@@ -106,6 +122,41 @@ export async function getAllDailySpecials(userId?: string) {
         return dailySpecials as DailySpecialData[];
     } catch (error) {
         console.error("Error al obtener platos del día:", error);
+        throw new Error("No se pudieron obtener los platos del día");
+    }
+}
+
+/**
+ * Obtener todos los platos del día del usuario actual con datos completos (para panel de admin)
+ * Esta función devuelve los datos completos incluyendo createdById para compatibilidad con componentes
+ */
+export async function getAllDailySpecialsWithFullData(userId?: string) {
+    try {
+        // Si no se proporciona userId, obtener el actual
+        const currentUserId = userId || await getCurrentUserId();
+        if (!currentUserId) {
+            throw new Error('Usuario no autenticado');
+        }
+
+        // Obtener el ID del dueño del restaurante
+        const { getRestaurantOwner } = await import('./restaurantConfigService');
+        const restaurantOwnerId = await getRestaurantOwner(currentUserId);
+
+        if (!restaurantOwnerId) {
+            return [];
+        }
+
+        const dailySpecials = await database.dailySpecial.findMany({
+            where: { createdById: restaurantOwnerId },
+            include: {
+                dish: true
+            },
+            orderBy: { date: 'desc' },
+        });
+
+        return dailySpecials;
+    } catch (error) {
+        console.error("Error al obtener platos del día con datos completos:", error);
         throw new Error("No se pudieron obtener los platos del día");
     }
 }
@@ -207,11 +258,19 @@ export async function updateDailySpecial(specialId: string, data: DailySpecialFo
             throw new Error("Usuario no autenticado");
         }
 
+        // ✅ CORREGIDO: Obtener el ID del dueño del restaurante
+        const { getRestaurantOwner } = await import('./restaurantConfigService');
+        const restaurantOwnerId = await getRestaurantOwner(userId);
+
+        if (!restaurantOwnerId) {
+            throw new Error("No se pudo determinar el dueño del restaurante");
+        }
+
         // Ya no verificamos fechas únicas, permitimos múltiples platos por día
         const specialToUpdate = await database.dailySpecial.findFirst({
             where: {
                 id: specialId,
-                createdById: userId
+                createdById: restaurantOwnerId // ✅ Usar restaurantOwnerId en lugar de userId
             }
         });
 
@@ -243,6 +302,10 @@ export async function updateDailySpecial(specialId: string, data: DailySpecialFo
         return dailySpecial;
     } catch (error) {
         console.error("Error al actualizar plato del día:", error);
+        // ✅ CORREGIDO: Preservar el mensaje de error original si existe
+        if (error instanceof Error) {
+            throw error; // Mantener el mensaje original del error
+        }
         throw new Error("No se pudo actualizar el plato del día");
     }
 }
@@ -252,25 +315,37 @@ export async function updateDailySpecial(specialId: string, data: DailySpecialFo
  */
 export async function deleteDailySpecial(specialId: string) {
     try {
+        // Verificar permiso para editar menú
+        await requirePermission('menu:edit');
+
         const userId = await getCurrentUserId();
         if (!userId) {
             throw new Error("Usuario no autenticado");
         }
 
+        // ✅ CORREGIDO: Obtener el ID del dueño del restaurante
+        const { getRestaurantOwner } = await import('./restaurantConfigService');
+        const restaurantOwnerId = await getRestaurantOwner(userId);
+
+        if (!restaurantOwnerId) {
+            throw new Error("No se pudo determinar el dueño del restaurante");
+        }
+
+        // Verificar que el plato del día pertenece al restaurante padre
         const specialToDelete = await database.dailySpecial.findFirst({
             where: {
                 id: specialId,
-                createdById: userId
+                createdById: restaurantOwnerId, // ✅ Usar restaurantOwnerId en lugar de userId
             }
         });
 
         if (!specialToDelete) {
-            throw new Error("Promoción no encontrada o no tienes permiso para eliminarla.");
+            throw new Error("Plato del día no encontrado o no tienes permiso para eliminarlo.");
         }
 
         // Eliminar plato del día de la base de datos
         await database.dailySpecial.delete({
-            where: { id: specialId },
+            where: { id: specialId }
         });
 
         revalidatePath('/admin/dashboard');
@@ -278,6 +353,10 @@ export async function deleteDailySpecial(specialId: string) {
         return { success: true };
     } catch (error) {
         console.error("Error al eliminar plato del día:", error);
+        // ✅ CORREGIDO: Preservar el mensaje de error original si existe
+        if (error instanceof Error) {
+            throw error; // Mantener el mensaje original del error
+        }
         throw new Error("No se pudo eliminar el plato del día");
     }
 }
@@ -398,10 +477,18 @@ export async function upsertDailySpecial(data: {
 }) {
     const validatedData = upsertDailySpecialSchema.parse(data);
     const { dishId, date, isRecurring, recurrenceType, recurrenceDays, recurrenceEndDate } = validatedData;
-    const createdById = await getCurrentUserId();
+    const userId = await getCurrentUserId();
 
-    if (!createdById) {
+    if (!userId) {
         throw new Error('Usuario no autenticado');
+    }
+
+    // ✅ CORREGIDO: Obtener el ID del dueño del restaurante
+    const { getRestaurantOwner } = await import('./restaurantConfigService');
+    const restaurantOwnerId = await getRestaurantOwner(userId);
+
+    if (!restaurantOwnerId) {
+        throw new Error("No se pudo determinar el dueño del restaurante");
     }
 
     if (!isRecurring) {
@@ -410,7 +497,7 @@ export async function upsertDailySpecial(data: {
             data: {
                 dishId,
                 date,
-                createdById,
+                createdById: restaurantOwnerId, // ✅ Usar restaurantOwnerId en lugar de userId
             },
         });
         revalidatePath('/admin/dashboard/menu');
@@ -437,7 +524,7 @@ export async function upsertDailySpecial(data: {
                     specialsToCreate.push({
                         dishId,
                         date: targetDate,
-                        createdById,
+                        createdById: restaurantOwnerId, // ✅ Usar restaurantOwnerId en lugar de userId
                         recurrenceType,
                         recurrenceDays: recurrenceDays.join(','),
                         recurrenceEndDate,
@@ -451,7 +538,7 @@ export async function upsertDailySpecial(data: {
             specialsToCreate.push({
                 dishId,
                 date: currentDate,
-                createdById,
+                createdById: restaurantOwnerId, // ✅ Usar restaurantOwnerId en lugar de userId
                 recurrenceType,
                 recurrenceEndDate,
                 recurrenceParentId: parentId,
@@ -479,10 +566,18 @@ export async function deleteDailySpecials(ids: string[]) {
     }
 
     try {
+        // ✅ CORREGIDO: Obtener el ID del dueño del restaurante
+        const { getRestaurantOwner } = await import('./restaurantConfigService');
+        const restaurantOwnerId = await getRestaurantOwner(userId);
+
+        if (!restaurantOwnerId) {
+            throw new Error("No se pudo determinar el dueño del restaurante");
+        }
+
         await database.dailySpecial.deleteMany({
             where: {
                 id: { in: ids },
-                createdById: userId,
+                createdById: restaurantOwnerId, // ✅ Usar restaurantOwnerId en lugar de userId
             },
         });
         revalidatePath('/menu');

@@ -20,25 +20,29 @@ type Role = typeof ROLES[keyof typeof ROLES];
 const ROUTE_PERMISSIONS: Record<string, string[]> = {
   // Main 4 sections
   '/account': ['account:view_own'],
-  '/menu': ['dishes:view'], // Menu section includes dishes, categories, daily specials
-  '/waiter': ['waiter:view_orders', 'waiter:create_orders'],
-  '/restaurant': ['restaurant:view_config'],
+  '/menu': ['menu:view'], // Menu section includes dishes, categories, daily specials
+  '/restaurant': ['restaurant:view'], // Restaurant section includes config and design
+  '/services': ['services:view'], // Services section includes waiter and kitchen codes
+  '/orders': ['orders:view'], // Orders section
 
-  // Menu sub-routes
-  '/menu/dishes': ['dishes:view'],
-  '/menu/categories': ['categories:view'],
-  '/menu/daily-specials': ['daily_specials:view'],
+  // Menu sub-routes (all use menu:view since they're part of the menu view)
+  '/menu/dishes': ['menu:view'],
+  '/menu/categories': ['menu:view'],
+  '/menu/daily-specials': ['menu:view'],
 
-  // Waiter sub-routes
-  '/waiter/orders': ['orders:view'],
-  '/waiter/history': ['orders:view'],
+  // Restaurant sub-routes (all use restaurant:view since they're part of restaurant view)
+  '/restaurant/config': ['restaurant:view'],
+  '/restaurant/design': ['restaurant:view'],
 
-  // Restaurant sub-routes
-  '/restaurant/config': ['restaurant:view_config'],
-  '/restaurant/design': ['restaurant:view_design'],
+  // Services sub-routes (all use services:view since they're part of services view)
+  '/services/waiter-codes': ['services:view'],
+  '/services/kitchen-codes': ['services:view'],
 
-  // Kitchen routes (existing)
-  '/kitchen': ['kitchen:view_orders'],
+  // Orders sub-routes (all use orders:view since they're part of orders view)
+  '/orders/create': ['orders:view'],
+  '/orders/edit': ['orders:view'],
+  '/orders/delete': ['orders:view'],
+  '/orders/status': ['orders:view'],
 
   // Client routes (if they exist - fallback)
   '/client': ['account:view_own'],

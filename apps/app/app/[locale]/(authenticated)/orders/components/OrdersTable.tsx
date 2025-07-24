@@ -48,6 +48,8 @@ interface OrdersTableProps {
     dictionary: Dictionary;
     updatingOrderId?: string | null;
     deletingOrderId?: string | null;
+    canView?: boolean;
+    canEdit?: boolean;
 }
 
 const statusConfig = (dictionary: Dictionary) => ({
@@ -73,7 +75,7 @@ const statusConfig = (dictionary: Dictionary) => ({
     },
 });
 
-export function OrdersTable({ orders, onStatusUpdate, onDeleteOrder, dictionary, updatingOrderId, deletingOrderId }: OrdersTableProps) {
+export function OrdersTable({ orders, onStatusUpdate, onDeleteOrder, dictionary, updatingOrderId, deletingOrderId, canView = true, canEdit = true }: OrdersTableProps) {
     const [deleteDialog, setDeleteDialog] = useState<{
         isOpen: boolean;
         orderId: string;
@@ -109,6 +111,7 @@ export function OrdersTable({ orders, onStatusUpdate, onDeleteOrder, dictionary,
     };
 
     const handleDeleteClick = (order: OrderData) => {
+        if (!canEdit) return; // No permitir eliminar si no puede editar
         const orderInfo = `${order.items.length} items - ${formatPrice(order.total)}`;
         setDeleteDialog({
             isOpen: true,
@@ -118,6 +121,7 @@ export function OrdersTable({ orders, onStatusUpdate, onDeleteOrder, dictionary,
     };
 
     const handleDeleteConfirm = async () => {
+        if (!canEdit) return; // No permitir eliminar si no puede editar
         setIsDeleting(true);
         try {
             // Primero eliminar de la base de datos
@@ -168,7 +172,17 @@ export function OrdersTable({ orders, onStatusUpdate, onDeleteOrder, dictionary,
         <>
             <Card>
                 <CardHeader className="p-3 sm:p-6">
-                    <CardTitle className="text-lg sm:text-xl">{dictionary.web?.orders?.table?.title || 'Órdenes'} ({orders.length})</CardTitle>
+                    <CardTitle className="text-lg sm:text-xl">
+                        {canEdit
+                            ? (dictionary.web?.orders?.table?.title || 'Órdenes')
+                            : (dictionary.web?.orders?.table?.title || 'Órdenes') + ' (Solo Lectura)'
+                        } ({orders.length})
+                    </CardTitle>
+                    {!canEdit && (
+                        <p className="text-sm text-muted-foreground">
+                            Modo solo lectura: Puedes ver las órdenes pero no modificarlas.
+                        </p>
+                    )}
                 </CardHeader>
                 <CardContent className="p-0 sm:p-6">
                     <div className="overflow-x-auto">
@@ -244,7 +258,7 @@ export function OrdersTable({ orders, onStatusUpdate, onDeleteOrder, dictionary,
                                                     onValueChange={(value: OrderStatus) =>
                                                         onStatusUpdate(order.id, value)
                                                     }
-                                                    disabled={updatingOrderId === order.id}
+                                                    disabled={!canEdit || updatingOrderId === order.id}
                                                 >
                                                     <SelectTrigger className="w-20 sm:w-32 text-xs sm:text-sm">
                                                         {updatingOrderId === order.id ? (
@@ -269,19 +283,21 @@ export function OrdersTable({ orders, onStatusUpdate, onDeleteOrder, dictionary,
                                                     </SelectContent>
                                                 </Select>
 
-                                                <Button
-                                                    variant="outline"
-                                                    size="sm"
-                                                    onClick={() => handleDeleteClick(order)}
-                                                    disabled={deletingOrderId === order.id}
-                                                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                                                >
-                                                    {deletingOrderId === order.id ? (
-                                                        <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
-                                                    ) : (
-                                                        <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
-                                                    )}
-                                                </Button>
+                                                {canEdit && (
+                                                    <Button
+                                                        variant="outline"
+                                                        size="sm"
+                                                        onClick={() => handleDeleteClick(order)}
+                                                        disabled={deletingOrderId === order.id}
+                                                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                                                    >
+                                                        {deletingOrderId === order.id ? (
+                                                            <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
+                                                        ) : (
+                                                            <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
+                                                        )}
+                                                    </Button>
+                                                )}
                                             </div>
                                         </TableCell>
                                     </TableRow>

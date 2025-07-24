@@ -15,6 +15,8 @@ interface ServicesCardsProps {
     restaurantConfig: RestaurantConfigData;
     dictionary: Dictionary;
     locale: string;
+    canView: boolean;
+    canEdit: boolean;
 }
 
 interface ShareableLinkProps {
@@ -23,7 +25,7 @@ interface ShareableLinkProps {
     onCopy: () => void;
 }
 
-const ShareableLink = ({ link, linkName, onCopy, dictionary }: ShareableLinkProps & { dictionary: Dictionary }) => {
+const ShareableLink = ({ link, linkName, onCopy, dictionary, canView }: ShareableLinkProps & { dictionary: Dictionary, canView: boolean }) => {
     const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string | null>(null);
 
     useEffect(() => {
@@ -52,9 +54,11 @@ const ShareableLink = ({ link, linkName, onCopy, dictionary }: ShareableLinkProp
                 <div className="flex-grow p-2 bg-muted rounded-md font-mono text-xs sm:text-sm text-muted-foreground truncate">
                     {link}
                 </div>
-                <Button variant="outline" size="icon" onClick={onCopy} className="flex-shrink-0">
-                    <Copy className="h-4 w-4" />
-                </Button>
+                {canView && (
+                    <Button variant="outline" size="icon" onClick={onCopy} className="flex-shrink-0">
+                        <Copy className="h-4 w-4" />
+                    </Button>
+                )}
             </div>
             {qrCodeDataUrl && (
                 <div className="p-2 sm:p-4 bg-white rounded-lg border flex flex-col items-center gap-2 sm:gap-4">
@@ -82,7 +86,7 @@ const ShareableLink = ({ link, linkName, onCopy, dictionary }: ShareableLinkProp
 };
 
 
-export function ServicesCards({ restaurantConfig, dictionary, locale }: ServicesCardsProps) {
+export function ServicesCards({ restaurantConfig, dictionary, locale, canView, canEdit }: ServicesCardsProps) {
     const [isPending, startTransition] = useTransition();
     const [waiterCode, setWaiterCode] = useState(restaurantConfig.waiterCode);
     const [kitchenCode, setKitchenCode] = useState(restaurantConfig.kitchenCode || '5678');
@@ -96,38 +100,46 @@ export function ServicesCards({ restaurantConfig, dictionary, locale }: Services
     };
 
     const handleUpdateWaiterCode = () => {
-        const promise = async () => {
-            const formData = new FormData();
-            formData.append('code', waiterCode);
-            const result = await updateWaiterCode(formData);
-            if (!result.success) {
-                throw new Error(result.message);
-            }
-            return result;
-        };
+        if (!canEdit) return; // No permitir actualizar si no puede editar
 
-        toast.promise(promise(), {
-            loading: dictionary.web?.services?.shared?.savingCode || 'Guardando nuevo código...',
-            success: (result) => `${result.message || dictionary.web?.services?.shared?.codeSaved || 'Código actualizado exitosamente'}`,
-            error: (err) => `${dictionary.web?.services?.shared?.codeError || 'Error al actualizar el código'}: ${err.message}`,
+        startTransition(async () => {
+            const promise = async () => {
+                const formData = new FormData();
+                formData.append('code', waiterCode);
+                const result = await updateWaiterCode(formData);
+                if (!result.success) {
+                    throw new Error(result.message);
+                }
+                return result;
+            };
+
+            toast.promise(promise(), {
+                loading: dictionary.web?.services?.shared?.savingCode || 'Guardando nuevo código...',
+                success: (result) => `${result.message || dictionary.web?.services?.shared?.codeSaved || 'Código actualizado exitosamente'}`,
+                error: (err) => `${dictionary.web?.services?.shared?.codeError || 'Error al actualizar el código'}: ${err.message}`,
+            });
         });
     };
 
     const handleUpdateKitchenCode = () => {
-        const promise = async () => {
-            const formData = new FormData();
-            formData.append('code', kitchenCode);
-            const result = await updateKitchenCode(formData);
-            if (!result.success) {
-                throw new Error(result.message);
-            }
-            return result;
-        };
+        if (!canEdit) return; // No permitir actualizar si no puede editar
 
-        toast.promise(promise(), {
-            loading: dictionary.web?.services?.shared?.savingCode || 'Guardando nuevo código...',
-            success: (result) => `${result.message || dictionary.web?.services?.shared?.codeSaved || 'Código actualizado exitosamente'}`,
-            error: (err) => `${dictionary.web?.services?.shared?.codeError || 'Error al actualizar el código'}: ${err.message}`,
+        startTransition(async () => {
+            const promise = async () => {
+                const formData = new FormData();
+                formData.append('code', kitchenCode);
+                const result = await updateKitchenCode(formData);
+                if (!result.success) {
+                    throw new Error(result.message);
+                }
+                return result;
+            };
+
+            toast.promise(promise(), {
+                loading: dictionary.web?.services?.shared?.savingCode || 'Guardando nuevo código...',
+                success: (result) => `${result.message || dictionary.web?.services?.shared?.codeSaved || 'Código actualizado exitosamente'}`,
+                error: (err) => `${dictionary.web?.services?.shared?.codeError || 'Error al actualizar el código'}: ${err.message}`,
+            });
         });
     };
 
@@ -139,9 +151,17 @@ export function ServicesCards({ restaurantConfig, dictionary, locale }: Services
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
                         <UtensilsCrossed className="h-6 w-6 sm:h-8 sm:w-8 text-blue-500 flex-shrink-0" />
                         <div className="text-center sm:text-left">
-                            <CardTitle className="text-lg sm:text-xl">{dictionary.web?.services?.waiter?.title || 'Gestión de Mozos'}</CardTitle>
+                            <CardTitle className="text-lg sm:text-xl">
+                                {canEdit
+                                    ? (dictionary.web?.services?.waiter?.title || 'Gestión de Mozos')
+                                    : (dictionary.web?.services?.waiter?.title || 'Gestión de Mozos') + ' (Solo Lectura)'
+                                }
+                            </CardTitle>
                             <CardDescription className="text-sm sm:text-base">
-                                {dictionary.web?.services?.waiter?.description || 'Modifica el código de acceso y comparte el enlace.'}
+                                {canEdit
+                                    ? (dictionary.web?.services?.waiter?.description || 'Modifica el código de acceso y comparte el enlace.')
+                                    : (dictionary.web?.services?.waiter?.description || 'Modifica el código de acceso y comparte el enlace.') + ' (Modo solo lectura)'
+                                }
                             </CardDescription>
                         </div>
                     </div>
@@ -159,12 +179,15 @@ export function ServicesCards({ restaurantConfig, dictionary, locale }: Services
                                 value={waiterCode}
                                 onChange={(e) => setWaiterCode(e.target.value)}
                                 className="flex-grow"
+                                disabled={!canEdit}
                             />
-                            <Button type="button" onClick={handleUpdateWaiterCode} disabled={isPending} className="flex-shrink-0">
-                                <Save className="mr-2 h-4 w-4" />
-                                <span className="hidden sm:inline">{isPending ? (dictionary.web?.services?.waiter?.saving || 'Guardando...') : (dictionary.web?.services?.waiter?.save || 'Guardar')}</span>
-                                <span className="sm:hidden">{isPending ? (dictionary.web?.services?.waiter?.savingShort || '...') : (dictionary.web?.services?.waiter?.saveShort || 'OK')}</span>
-                            </Button>
+                            {canEdit && (
+                                <Button type="button" onClick={handleUpdateWaiterCode} disabled={isPending} className="flex-shrink-0">
+                                    <Save className="mr-2 h-4 w-4" />
+                                    <span className="hidden sm:inline">{isPending ? (dictionary.web?.services?.waiter?.saving || 'Guardando...') : (dictionary.web?.services?.waiter?.save || 'Guardar')}</span>
+                                    <span className="sm:hidden">{isPending ? (dictionary.web?.services?.waiter?.savingShort || '...') : (dictionary.web?.services?.waiter?.saveShort || 'OK')}</span>
+                                </Button>
+                            )}
                         </div>
                     </div>
                     <div className="mt-auto pt-6 sm:pt-8">
@@ -174,6 +197,7 @@ export function ServicesCards({ restaurantConfig, dictionary, locale }: Services
                             linkName="Mozos"
                             onCopy={() => handleCopyToClipboard(waiterLink, 'Mozos')}
                             dictionary={dictionary}
+                            canView={canView}
                         />
                     </div>
                 </CardContent>
@@ -190,9 +214,17 @@ export function ServicesCards({ restaurantConfig, dictionary, locale }: Services
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
                         <ChefHat className="h-6 w-6 sm:h-8 sm:w-8 text-orange-500 flex-shrink-0" />
                         <div className="text-center sm:text-left">
-                            <CardTitle className="text-lg sm:text-xl">{dictionary.web?.services?.kitchen?.title || 'Gestión de Cocina'}</CardTitle>
+                            <CardTitle className="text-lg sm:text-xl">
+                                {canEdit
+                                    ? (dictionary.web?.services?.kitchen?.title || 'Gestión de Cocina')
+                                    : (dictionary.web?.services?.kitchen?.title || 'Gestión de Cocina') + ' (Solo Lectura)'
+                                }
+                            </CardTitle>
                             <CardDescription className="text-sm sm:text-base">
-                                {dictionary.web?.services?.kitchen?.description || 'Modifica el código de acceso y comparte el enlace.'}
+                                {canEdit
+                                    ? (dictionary.web?.services?.kitchen?.description || 'Modifica el código de acceso y comparte el enlace.')
+                                    : (dictionary.web?.services?.kitchen?.description || 'Modifica el código de acceso y comparte el enlace.') + ' (Modo solo lectura)'
+                                }
                             </CardDescription>
                         </div>
                     </div>
@@ -210,12 +242,15 @@ export function ServicesCards({ restaurantConfig, dictionary, locale }: Services
                                 value={kitchenCode}
                                 onChange={(e) => setKitchenCode(e.target.value)}
                                 className="flex-grow"
+                                disabled={!canEdit}
                             />
-                            <Button type="button" onClick={handleUpdateKitchenCode} disabled={isPending} className="flex-shrink-0">
-                                <Save className="mr-2 h-4 w-4" />
-                                <span className="hidden sm:inline">{isPending ? (dictionary.web?.services?.kitchen?.saving || 'Guardando...') : (dictionary.web?.services?.kitchen?.save || 'Guardar')}</span>
-                                <span className="sm:hidden">{isPending ? (dictionary.web?.services?.kitchen?.savingShort || '...') : (dictionary.web?.services?.kitchen?.saveShort || 'OK')}</span>
-                            </Button>
+                            {canEdit && (
+                                <Button type="button" onClick={handleUpdateKitchenCode} disabled={isPending} className="flex-shrink-0">
+                                    <Save className="mr-2 h-4 w-4" />
+                                    <span className="hidden sm:inline">{isPending ? (dictionary.web?.services?.kitchen?.saving || 'Guardando...') : (dictionary.web?.services?.kitchen?.save || 'Guardar')}</span>
+                                    <span className="sm:hidden">{isPending ? (dictionary.web?.services?.kitchen?.savingShort || '...') : (dictionary.web?.services?.kitchen?.saveShort || 'OK')}</span>
+                                </Button>
+                            )}
                         </div>
                     </div>
                     <div className="mt-auto pt-4 sm:pt-6">
@@ -225,6 +260,7 @@ export function ServicesCards({ restaurantConfig, dictionary, locale }: Services
                             linkName="Cocina"
                             onCopy={() => handleCopyToClipboard(kitchenLink, 'Cocina')}
                             dictionary={dictionary}
+                            canView={canView}
                         />
                     </div>
                 </CardContent>

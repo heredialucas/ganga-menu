@@ -476,25 +476,28 @@ export async function createSubordinateUser(userData: {
         // Hashear la contraseña
         const hashedPassword = await bcrypt.hash(userData.password, 12);
 
-        // Crear el usuario con el rol heredado
+        // Crear el usuario con el rol heredado y establecer relación con el restaurante padre
         const newUser = await database.user.create({
             data: {
                 ...userData,
                 password: hashedPassword, // Usar la contraseña hasheada
-                role: inheritedRole
+                role: inheritedRole,
+                restaurantOwnerId: userData.createdById // El padre es el dueño del restaurante
             }
         });
 
         // Asignar permisos básicos
         await assignBasicPermissions(newUser.id);
 
-        console.log(`Created subordinate user ${newUser.id} with inherited role: ${inheritedRole}`);
+        console.log(`Created subordinate user ${newUser.id} with inherited role: ${inheritedRole} and restaurant ownership from ${userData.createdById}`);
         return newUser;
     } catch (error) {
         console.error('Error creating subordinate user:', error);
         throw error;
     }
 }
+
+
 
 /**
  * Actualiza el rol de un usuario y automáticamente actualiza todos sus hijos directos

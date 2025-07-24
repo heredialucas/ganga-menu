@@ -11,7 +11,7 @@ import { Switch } from '@repo/design-system/components/ui/switch';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@repo/design-system/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@repo/design-system/components/ui/alert-dialog';
 import { toast } from 'sonner';
-import { User, Mail, Plus, Edit, Trash2 } from 'lucide-react';
+import { User, Mail, Plus, Edit, Trash2, Eye } from 'lucide-react';
 import type { UserData } from '@repo/data-services/src/types/user';
 import { UserRole } from '@repo/database/generated/client';
 import type { Dictionary } from '@repo/internationalization';
@@ -24,6 +24,10 @@ interface UsersSectionProps {
     currentUser: any;
     dictionary: Dictionary;
     allPermissions: Permission[];
+    canCreateUsers?: boolean;
+    canEditUsers?: boolean;
+    canDeleteUsers?: boolean;
+    canManageUsers?: boolean;
 }
 
 const groupPermissions = (permissions: Permission[]) => {
@@ -58,67 +62,42 @@ const translatePermissionGroup = (group: string, dictionary: Dictionary): string
 // Función para traducir los nombres de los permisos
 const translatePermission = (permission: string, dictionary: Dictionary): string => {
     const permissionTranslations: Record<string, string> = {
-        // Dishes
-        'dishes:view': dictionary.app?.account?.users?.permissions?.dishesView || 'Ver platos',
-        'dishes:create': dictionary.app?.account?.users?.permissions?.dishesCreate || 'Crear platos',
-        'dishes:edit': dictionary.app?.account?.users?.permissions?.dishesEdit || 'Editar platos',
-        'dishes:delete': dictionary.app?.account?.users?.permissions?.dishesDelete || 'Eliminar platos',
-        'dishes:manage_status': dictionary.app?.account?.users?.permissions?.dishesManageStatus || 'Gestionar estado de platos',
-
-        // Categories
-        'categories:view': dictionary.app?.account?.users?.permissions?.categoriesView || 'Ver categorías',
-        'categories:create': dictionary.app?.account?.users?.permissions?.categoriesCreate || 'Crear categorías',
-        'categories:edit': dictionary.app?.account?.users?.permissions?.categoriesEdit || 'Editar categorías',
-        'categories:delete': dictionary.app?.account?.users?.permissions?.categoriesDelete || 'Eliminar categorías',
-        'categories:manage_order': dictionary.app?.account?.users?.permissions?.categoriesManageOrder || 'Gestionar orden de categorías',
-
-        // Daily Specials
-        'daily_specials:view': dictionary.app?.account?.users?.permissions?.dailySpecialsView || 'Ver especiales del día',
-        'daily_specials:create': dictionary.app?.account?.users?.permissions?.dailySpecialsCreate || 'Crear especiales del día',
-        'daily_specials:edit': dictionary.app?.account?.users?.permissions?.dailySpecialsEdit || 'Editar especiales del día',
-        'daily_specials:delete': dictionary.app?.account?.users?.permissions?.dailySpecialsDelete || 'Eliminar especiales del día',
-
-        // Restaurant
-        'restaurant:view_config': dictionary.app?.account?.users?.permissions?.restaurantViewConfig || 'Ver configuración del restaurante',
-        'restaurant:edit_config': dictionary.app?.account?.users?.permissions?.restaurantEditConfig || 'Editar configuración del restaurante',
-        'restaurant:manage_settings': dictionary.app?.account?.users?.permissions?.restaurantManageSettings || 'Gestionar configuración del restaurante',
-        'restaurant:view_design': dictionary.app?.account?.users?.permissions?.restaurantViewDesign || 'Ver diseño del restaurante',
-        'restaurant:edit_design': dictionary.app?.account?.users?.permissions?.restaurantEditDesign || 'Editar diseño del restaurante',
-
-        // Orders
+        // Menu Management
+        'menu:view': dictionary.app?.account?.users?.permissions?.menuView || 'Ver menú',
+        'menu:edit': dictionary.app?.account?.users?.permissions?.menuEdit || 'Editar menú',
+        // Restaurant Management
+        'restaurant:view': dictionary.app?.account?.users?.permissions?.restaurantView || 'Ver restaurante',
+        'restaurant:edit': dictionary.app?.account?.users?.permissions?.restaurantEdit || 'Editar restaurante',
+        'restaurant:design': dictionary.app?.account?.users?.permissions?.restaurantDesign || 'Diseño del restaurante',
+        'restaurant:qr_codes': dictionary.app?.account?.users?.permissions?.restaurantQrCodes || 'Códigos QR de mesas',
+        // Orders Management
         'orders:view': dictionary.app?.account?.users?.permissions?.ordersView || 'Ver órdenes',
-        'orders:create': dictionary.app?.account?.users?.permissions?.ordersCreate || 'Crear órdenes',
         'orders:edit': dictionary.app?.account?.users?.permissions?.ordersEdit || 'Editar órdenes',
-        'orders:delete': dictionary.app?.account?.users?.permissions?.ordersDelete || 'Eliminar órdenes',
-        'orders:manage_status': dictionary.app?.account?.users?.permissions?.ordersManageStatus || 'Gestionar estado de órdenes',
-
-        // Kitchen
-        'kitchen:view_orders': dictionary.app?.account?.users?.permissions?.kitchenViewOrders || 'Ver órdenes de cocina',
-        'kitchen:update_status': dictionary.app?.account?.users?.permissions?.kitchenUpdateStatus || 'Actualizar estado de cocina',
-
-        // Waiter
-        'waiter:view_orders': dictionary.app?.account?.users?.permissions?.waiterViewOrders || 'Ver órdenes de mozo',
-        'waiter:create_orders': dictionary.app?.account?.users?.permissions?.waiterCreateOrders || 'Crear órdenes de mozo',
-        'waiter:view_menu': dictionary.app?.account?.users?.permissions?.waiterViewMenu || 'Ver menú de mozo',
-
-        // Menu
-        'menu:view_public': dictionary.app?.account?.users?.permissions?.menuViewPublic || 'Ver menú público',
-
+        // Services Management
+        'services:view': dictionary.app?.account?.users?.permissions?.servicesView || 'Ver servicios',
+        'services:edit': dictionary.app?.account?.users?.permissions?.servicesEdit || 'Editar servicios',
         // Account
         'account:view_own': dictionary.app?.account?.users?.permissions?.accountViewOwn || 'Ver cuenta propia',
         'account:edit_own': dictionary.app?.account?.users?.permissions?.accountEditOwn || 'Editar cuenta propia',
         'account:change_password': dictionary.app?.account?.users?.permissions?.accountChangePassword || 'Cambiar contraseña',
-
         // Admin
-        'admin:full_access': dictionary.app?.account?.users?.permissions?.adminFullAccess || 'Acceso completo',
+        'admin:full_access': dictionary.app?.account?.users?.permissions?.adminFullAccess || 'Acceso completo de administrador',
         'admin:manage_users': dictionary.app?.account?.users?.permissions?.adminManageUsers || 'Gestionar usuarios',
-        'admin:system_settings': dictionary.app?.account?.users?.permissions?.adminSystemSettings || 'Configuración del sistema'
+        'admin:system_settings': dictionary.app?.account?.users?.permissions?.adminSystemSettings || 'Configuración del sistema',
     };
-
     return permissionTranslations[permission] || permission.split(':')[1]?.replace(/_/g, ' ') || permission;
 };
 
-export function UsersSection({ users, currentUser, dictionary, allPermissions }: UsersSectionProps) {
+export function UsersSection({
+    users,
+    currentUser,
+    dictionary,
+    allPermissions,
+    canCreateUsers = false,
+    canEditUsers = false,
+    canDeleteUsers = false,
+    canManageUsers = false
+}: UsersSectionProps) {
     const [isUserDialogOpen, setIsUserDialogOpen] = useState(false);
     const [editingUser, setEditingUser] = useState<UserData | null>(null);
     const [deleteUserDialog, setDeleteUserDialog] = useState<{ open: boolean; user: UserData | null }>({ open: false, user: null });
@@ -255,18 +234,20 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
                                 {dictionary.app?.account?.users?.description || 'Gestiona los usuarios y sus permisos'}
                             </CardDescription>
                         </div>
-                        <div className="flex shrink-0 gap-2">
-                            <Button className="w-full sm:w-auto text-sm sm:text-base" onClick={handleCreateUser}>
-                                <Plus className="h-4 w-4 mr-2" />
-                                <span className="hidden sm:inline">{dictionary.app?.account?.users?.newUser?.desktop || 'Nuevo Usuario'}</span>
-                                <span className="sm:hidden">{dictionary.app?.account?.users?.newUser?.mobile || 'Nuevo'}</span>
-                            </Button>
-                        </div>
+                        {canCreateUsers && (
+                            <div className="flex shrink-0 gap-2">
+                                <Button className="w-full sm:w-auto text-sm sm:text-base" onClick={handleCreateUser}>
+                                    <Plus className="h-4 w-4 mr-2" />
+                                    <span className="hidden sm:inline">{dictionary.app?.account?.users?.newUser?.desktop || 'Nuevo Usuario'}</span>
+                                    <span className="sm:hidden">{dictionary.app?.account?.users?.newUser?.mobile || 'Nuevo'}</span>
+                                </Button>
+                            </div>
+                        )}
                     </div>
                 </CardHeader>
                 <CardContent className="p-3 sm:p-6">
                     <div className="space-y-3 sm:space-y-4">
-                        {users.map((user) => (
+                        {users.filter(user => user.id !== currentUser?.id).map((user) => (
                             <div key={user.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 sm:p-4 border rounded-lg gap-3 sm:gap-4">
                                 <div className="flex items-center gap-3 sm:gap-4">
                                     <div className="flex flex-col">
@@ -276,12 +257,24 @@ export function UsersSection({ users, currentUser, dictionary, allPermissions }:
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-1 sm:gap-2">
-                                    <Button variant="ghost" size="icon" onClick={() => handleEditUser(user)} className="h-8 w-8 sm:h-10 sm:w-10">
-                                        <Edit className="h-3 w-3 sm:h-4 sm:w-4" />
-                                    </Button>
-                                    <Button variant="ghost" size="icon" onClick={() => setDeleteUserDialog({ open: true, user })} disabled={user.id === currentUser?.id} className="h-8 w-8 sm:h-10 sm:w-10">
-                                        <Trash2 className="h-3 w-3 sm:h-4 sm:w-4 text-red-500" />
-                                    </Button>
+                                    {canEditUsers && (
+                                        <Button variant="ghost" size="icon" onClick={() => handleEditUser(user)} className="h-8 w-8 sm:h-10 sm:w-10">
+                                            <Edit className="h-3 w-3 sm:h-4 sm:w-4" />
+                                        </Button>
+                                    )}
+
+                                    {canDeleteUsers && (
+                                        <Button variant="ghost" size="icon" onClick={() => setDeleteUserDialog({ open: true, user })} disabled={user.id === currentUser?.id} className="h-8 w-8 sm:h-10 sm:w-10">
+                                            <Trash2 className="h-3 w-3 sm:h-4 sm:w-4 text-red-500" />
+                                        </Button>
+                                    )}
+
+                                    {/* Si no tiene permisos para editar/eliminar, mostrar solo vista */}
+                                    {!canEditUsers && !canDeleteUsers && canManageUsers && (
+                                        <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-10 sm:w-10">
+                                            <Eye className="h-3 w-3 sm:h-4 sm:w-4" />
+                                        </Button>
+                                    )}
                                 </div>
                             </div>
                         ))}

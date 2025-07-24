@@ -7,7 +7,7 @@ import { revalidatePath } from 'next/cache';
 export async function deleteOrderAction(orderId: string) {
     try {
         // Verificar permisos
-        await requirePermission('orders:delete');
+        await requirePermission('orders:edit');
 
         // Eliminar la orden
         await deleteOrder(orderId);

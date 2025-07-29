@@ -21,8 +21,6 @@ export const env = createEnv({
     NEXT_PUBLIC_APP_URL: z.string().url(),
     NEXT_PUBLIC_STRIPE_PRO_LINK_LIVE: z.string().url(),
     NEXT_PUBLIC_STRIPE_PRO_LINK_TEST: z.string().url(),
-    // URL base de la API (para MercadoPago)
-    NEXT_PUBLIC_API_BASE_URL: z.string().url(),
     // URLs de redes sociales (opcionales)
     NEXT_PUBLIC_FACEBOOK_URL: z.string().url().optional(),
     NEXT_PUBLIC_INSTAGRAM_URL: z.string().url().optional(),
@@ -32,7 +30,6 @@ export const env = createEnv({
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_STRIPE_PRO_LINK_LIVE: process.env.NEXT_PUBLIC_STRIPE_PRO_LINK_LIVE,
     NEXT_PUBLIC_STRIPE_PRO_LINK_TEST: process.env.NEXT_PUBLIC_STRIPE_PRO_LINK_TEST,
-    NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
     NEXT_PUBLIC_FACEBOOK_URL: process.env.NEXT_PUBLIC_FACEBOOK_URL,
     NEXT_PUBLIC_INSTAGRAM_URL: process.env.NEXT_PUBLIC_INSTAGRAM_URL,
     NEXT_PUBLIC_LINKEDIN_URL: process.env.NEXT_PUBLIC_LINKEDIN_URL,

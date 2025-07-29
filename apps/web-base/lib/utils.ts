@@ -8,13 +8,6 @@ export function getAppUrl() {
 }
 
 /**
- * Obtiene la URL base de la API
- */
-export function getApiBaseUrl() {
-    return env.NEXT_PUBLIC_API_BASE_URL;
-}
-
-/**
  * Obtiene las URLs de redes sociales
  */
 export function getSocialUrls() {
@@ -30,13 +23,5 @@ export function getSocialUrls() {
  */
 export function buildAppUrl(path: string = '') {
     const baseUrl = getAppUrl();
-    return `${baseUrl}${path.startsWith('/') ? path : `/${path}`}`;
-}
-
-/**
- * Construye una URL completa para la API
- */
-export function buildApiUrl(path: string = '') {
-    const baseUrl = getApiBaseUrl();
     return `${baseUrl}${path.startsWith('/') ? path : `/${path}`}`;
 } 

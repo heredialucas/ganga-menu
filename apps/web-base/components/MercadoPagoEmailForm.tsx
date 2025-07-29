@@ -9,6 +9,7 @@ import { MoveRight } from 'lucide-react';
 import type { Dictionary } from '@repo/internationalization';
 import { env } from '@/env';
 
+
 interface MercadoPagoEmailFormProps {
     dictionary: Dictionary;
     className?: string;
@@ -35,10 +36,10 @@ export function MercadoPagoEmailForm({
         setIsLoading(true);
 
         try {
-            console.log('🔍 Llamando al endpoint:', env.NEXT_PUBLIC_API_BASE_URL + '/api/mercadopago');
+            console.log('🔍 Llamando al endpoint:', env.NEXT_PUBLIC_APP_URL + '/api/mercadopago');
             console.log('🔍 Email enviado:', email);
 
-            const response = await fetch(env.NEXT_PUBLIC_API_BASE_URL + '/api/mercadopago', {
+            const response = await fetch(env.NEXT_PUBLIC_APP_URL + '/api/mercadopago', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email }),

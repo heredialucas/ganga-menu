@@ -173,12 +173,13 @@ model RestaurantConfig {
   updatedAt   DateTime @updatedAt
 
   // Relaciones
-  createdBy        User              @relation("RestaurantConfigCreatedBy", fields: [createdById], references: [id])
-  createdById      String
-  owner            User              @relation("RestaurantOwner", fields: [ownerId], references: [id])
-  ownerId          String
-  restaurantDesign RestaurantDesign?
-  orders           Order[]
+  createdBy                User                      @relation("RestaurantConfigCreatedBy", fields: [createdById], references: [id])
+  createdById              String
+  owner                    User                      @relation("RestaurantOwner", fields: [ownerId], references: [id])
+  ownerId                  String
+  restaurantDesign         RestaurantDesign?
+  orders                   Order[]
+  mercadopagoSubscriptions MercadoPagoSubscription[]
 
   @@index([slug])
   @@index([ownerId])
@@ -276,4 +277,22 @@ model OrderItem {
 
   @@index([orderId])
   @@index([dishId])
+}
+
+model MercadoPagoSubscription {
+  id                 String   @id @default(uuid())
+  email              String
+  preapprovalId      String   @unique
+  status             String // 'pending', 'authorized', 'cancelled'
+  restaurantConfigId String? // Relación con el restaurante
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  // Relación con RestaurantConfig
+  restaurantConfig RestaurantConfig? @relation(fields: [restaurantConfigId], references: [id])
+
+  @@index([email])
+  @@index([preapprovalId])
+  @@index([status])
+  @@index([restaurantConfigId])
 }

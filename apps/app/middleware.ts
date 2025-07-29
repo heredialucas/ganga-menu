@@ -69,6 +69,7 @@ const PUBLIC_ROUTES = [
   '/sign-in',
   '/sign-up',
   '/api/webhooks',
+  '/api/mercadopago',
   '/access-denied',
   '/menu', // Menu público - accesible sin autenticación
   '/waiter', // Waiter - requiere código pero no autenticación de usuario
@@ -148,8 +149,8 @@ const getUserRole = (role?: string): Role => {
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // Si es un webhook de la API, no procesar nada más
-  if (pathname.startsWith('/api/webhooks')) {
+  // Si es un webhook de la API, endpoint de MercadoPago o webhook de MercadoPago, no procesar nada más
+  if (pathname.startsWith('/api/webhooks') || pathname.startsWith('/api/mercadopago')) {
     return;
   }
 

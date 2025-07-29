@@ -7,6 +7,7 @@ import logo from '@/public/logo.png';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import type { Dictionary } from '@repo/internationalization';
+import { env } from '@/env';
 
 // Simple data structure for saved food
 const defaultFoodData = {
@@ -88,7 +89,7 @@ export const Footer = ({ dictionary }: FooterProps) => {
             </p>
             <div className="flex gap-3 sm:gap-4">
               <a
-                href="https://www.facebook.com/"
+                href={env.NEXT_PUBLIC_FACEBOOK_URL || 'https://www.facebook.com/'}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-500 hover:text-[#0d4b3d] dark:text-gray-400 dark:hover:text-[#0d4b3d]/90 transition-colors"
@@ -96,7 +97,7 @@ export const Footer = ({ dictionary }: FooterProps) => {
                 <Facebook className="w-5 h-5 sm:w-6 sm:h-6" />
               </a>
               <a
-                href="https://www.instagram.com/"
+                href={env.NEXT_PUBLIC_INSTAGRAM_URL || 'https://www.instagram.com/'}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-500 hover:text-[#0d4b3d] dark:text-gray-400 dark:hover:text-[#0d4b3d]/90 transition-colors"
@@ -104,7 +105,7 @@ export const Footer = ({ dictionary }: FooterProps) => {
                 <Instagram className="w-5 h-5 sm:w-6 sm:h-6" />
               </a>
               <a
-                href="https://www.linkedin.com/"
+                href={env.NEXT_PUBLIC_LINKEDIN_URL || 'https://www.linkedin.com/'}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-500 hover:text-[#0d4b3d] dark:text-gray-400 dark:hover:text-[#0d4b3d]/90 transition-colors"

@@ -4,11 +4,10 @@ import { ReactNode } from 'react';
 import { LogoutButton } from '../logout-button';
 import { Dictionary } from '@repo/internationalization';
 // import { ModeToggle } from '@repo/design-system/components/mode-toggle';
-import Link from 'next/link';
-import { Button } from '@repo/design-system/components/ui/button';
 import { PremiumGate } from '@repo/design-system';
 import { env } from '@/env';
 import { LanguageSwitcher } from '../language-switcher';
+import { UnifiedPremiumButton } from './UnifiedPremiumButton';
 
 type User = {
     id: string;
@@ -46,11 +45,12 @@ export function UserHeaderClient({ logo, title = 'Ganga-Menú', extraItems, dict
                         minRole="premium"
                         userId={user?.id}
                         fallback={
-                            <Link href={stripeProLink} target="_blank" rel="noopener noreferrer">
-                                <Button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold">
-                                    {(dictionary as any)?.app?.header?.upgradeToPro || "Pasar a Profesional"}
-                                </Button>
-                            </Link>
+                            <UnifiedPremiumButton
+                                userId={user?.id || ''}
+                                price={1500}
+                                locale={locale}
+                                dictionary={dictionary}
+                            />
                         }
                     >
                         <div></div>

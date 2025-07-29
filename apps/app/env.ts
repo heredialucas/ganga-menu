@@ -34,10 +34,14 @@ export const env = createEnv({
     NEXT_PUBLIC_APP_URL: z.string().url(),
     NEXT_PUBLIC_STRIPE_PRO_LINK_LIVE: z.string().url(),
     NEXT_PUBLIC_STRIPE_PRO_LINK_TEST: z.string().url(),
+    NEXT_PUBLIC_SOCKET_IO_URL: z.string().url(),
+    NEXT_PUBLIC_WEB_BASE_URL: z.string().url(),
   },
   experimental__runtimeEnv: {
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_STRIPE_PRO_LINK_LIVE: process.env.NEXT_PUBLIC_STRIPE_PRO_LINK_LIVE,
     NEXT_PUBLIC_STRIPE_PRO_LINK_TEST: process.env.NEXT_PUBLIC_STRIPE_PRO_LINK_TEST,
+    NEXT_PUBLIC_SOCKET_IO_URL: process.env.NEXT_PUBLIC_SOCKET_IO_URL,
+    NEXT_PUBLIC_WEB_BASE_URL: process.env.NEXT_PUBLIC_WEB_BASE_URL,
   },
 });

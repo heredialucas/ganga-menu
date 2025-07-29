@@ -631,6 +631,9 @@
           "completed": "Completado"
         }
       }
+    },
+    "header": {
+      "upgradeToPro": "Pasar a Profesional"
     }
   },
   "web": {

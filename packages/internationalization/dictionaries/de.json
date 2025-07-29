@@ -629,6 +629,9 @@
           "completed": "Abgeschlossen"
         }
       }
+    },
+    "header": {
+      "upgradeToPro": "Zu Pro upgraden"
     }
   },
   "web": {

@@ -29,14 +29,6 @@ export default async function AuthenticatedLayout({
       getCurrentUser()
     ]);
 
-    // Solo redirigir si no hay elementos del sidebar Y el usuario no es premium/admin
-    // Los usuarios premium pueden no tener elementos del sidebar si no tienen permisos específicos
-    const isPremiumOrAdmin = currentUser?.role === 'premium' || currentUser?.role === 'admin';
-
-    if (authorizedSidebarItems.length === 0 && !isPremiumOrAdmin) {
-      return redirect(`/${locale}/sign-in`);
-    }
-
     return (
       <SidebarProvider>
         <RestaurantConfigProvider config={restaurantConfig}>

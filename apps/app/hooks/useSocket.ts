@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { io, Socket } from 'socket.io-client';
+import { env } from '@/env';
 
 interface UseSocketOptions {
     restaurantSlug: string;
@@ -36,7 +37,7 @@ export function useSocket({
             return;
         }
 
-        const socketUrl = process.env.NEXT_PUBLIC_SOCKET_IO_URL || 'http://localhost:3001';
+        const socketUrl = env.NEXT_PUBLIC_SOCKET_IO_URL;
 
         socketRef.current = io(socketUrl, {
             autoConnect: false,

@@ -12,6 +12,29 @@ export const config: NextConfig = {
       bodySizeLimit: '10mb',
     },
   },
+
+  async headers() {
+    return [
+      {
+        // Aplicar a todas las rutas de la API
+        source: '/api/:path*',
+        headers: [
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*', // En producción, especificar solo el dominio de web-base
+          },
+          {
+            key: 'Access-Control-Allow-Methods',
+            value: 'GET, POST, PUT, DELETE, OPTIONS',
+          },
+          {
+            key: 'Access-Control-Allow-Headers',
+            value: 'Content-Type, Authorization',
+          },
+        ],
+      },
+    ];
+  },
   images: {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [

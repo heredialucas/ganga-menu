@@ -21,7 +21,7 @@ export async function POST(req: Request) {
             signature,
             env.STRIPE_WEBHOOK_SECRET,
         );
-        console.log(`✅ Webhook event constructed successfully: ${event.type}`);
+
     } catch (err: any) {
         console.error(`🔴 Webhook signature verification failed: ${err.message}`);
         return NextResponse.json({ error: `Webhook Error: ${err.message}` }, { status: 400 });
@@ -57,14 +57,11 @@ export async function POST(req: Request) {
                     return NextResponse.json({ error: 'User not found with provided email.' }, { status: 404 });
                 }
 
-                console.log(`✅ Found user: ${user.id} (${user.email})`);
-
                 // Usar la función existente upgradeUserToPremium que ya maneja permisos
                 await upgradeUserToPremium(user.id);
 
                 // Guardar el ID de cliente de Stripe en nuestro sistema
                 await updateUserStripeCustomerId(user.id, stripeCustomerId);
-                console.log(`✅ User ${user.id} (${user.email}) upgraded to Premium with all permissions. Stripe Customer ID ${stripeCustomerId} saved.`);
 
             } catch (error) {
                 console.error(`🔴 Database error during user upgrade:`, error);
@@ -90,7 +87,6 @@ export async function POST(req: Request) {
                 if (user) {
                     // Usar la nueva función que quita permisos premium y asigna básicos
                     await downgradeUserFromPremium(user.id);
-                    console.log(`✅ User ${user.id} (${user.email}) downgraded to Free with basic permissions due to subscription cancellation/failure.`);
                 } else {
                     console.warn(`⚠️ No user found for Stripe Customer ID: ${stripeCustomerId}`);
                 }

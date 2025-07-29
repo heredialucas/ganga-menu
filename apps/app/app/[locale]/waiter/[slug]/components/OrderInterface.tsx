@@ -33,6 +33,7 @@ import {
     DialogTitle,
 } from '@repo/design-system/components/ui/dialog';
 import { Button } from '@repo/design-system/components/ui/button';
+import { env } from '@/env';
 
 interface Category {
     id: string;
@@ -341,7 +342,7 @@ export default function OrderInterface({
 
                 // Sincronizar con WebSocket server
                 try {
-                    const response = await fetch(`${process.env.NEXT_PUBLIC_SOCKET_IO_URL || 'http://localhost:3001'}/sync-orders`, {
+                    const response = await fetch(`${env.NEXT_PUBLIC_SOCKET_IO_URL}/sync-orders`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

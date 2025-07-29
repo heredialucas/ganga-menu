@@ -17,6 +17,7 @@ import {
 import { updateOrderStatusAction } from '../../../waiter/[slug]/actions';
 import { deleteOrderAction } from '../actions';
 import { toast } from 'sonner';
+import { env } from '@/env';
 
 interface OrdersDashboardProps {
     orders: OrderData[];
@@ -78,7 +79,7 @@ export function OrdersDashboard({
         if (socketConnected && orders.length > 0) {
             const syncOrders = async () => {
                 try {
-                    const socketUrl = process.env.NEXT_PUBLIC_SOCKET_IO_URL || 'http://localhost:3001';
+                    const socketUrl = env.NEXT_PUBLIC_SOCKET_IO_URL;
                     const response = await fetch(`${socketUrl}/sync-orders`, {
                         method: 'POST',
                         headers: {

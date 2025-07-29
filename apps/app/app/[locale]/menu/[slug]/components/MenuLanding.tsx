@@ -6,6 +6,7 @@ import { RestaurantConfigData } from '@repo/data-services/src/services/restauran
 import { TableData } from '@repo/data-services/src/services/tableService';
 import { useSocket } from '@/hooks/useSocket';
 import { createOrderFromMenuAction } from '../actions';
+import { env } from '@/env';
 
 // Componentes modulares
 import {
@@ -153,7 +154,7 @@ export default function MenuLanding({
             if (result.success && result.order) {
                 // Sincronizar con WebSocket server
                 try {
-                    const response = await fetch(`${process.env.NEXT_PUBLIC_SOCKET_IO_URL || 'http://localhost:3001'}/sync-orders`, {
+                    const response = await fetch(`${env.NEXT_PUBLIC_SOCKET_IO_URL}/sync-orders`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

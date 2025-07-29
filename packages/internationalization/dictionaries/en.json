@@ -604,6 +604,9 @@
         "placeholder": "Enter the code",
         "codeRequired": "Code required"
       }
+    },
+    "header": {
+      "upgradeToPro": "Upgrade to Pro"
     }
   },
   "web": {

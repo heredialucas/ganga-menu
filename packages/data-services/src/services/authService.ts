@@ -164,9 +164,9 @@ export async function upgradeUserToPremium(userId: string) {
                         permissionId: permission.id
                     }
                 });
-                console.log(`✅ Permiso premium asignado al principal: ${permission.name}`);
+
             } else {
-                console.log(`⏭️ Principal ya tiene el permiso: ${permission.name}`);
+
             }
         }
 
@@ -179,10 +179,8 @@ export async function upgradeUserToPremium(userId: string) {
                 data: { role: 'premium' }
             });
 
-            console.log(`✅ ${subordinates.length} subordinados actualizados a rol premium`);
-        }
 
-        console.log(`🎉 Usuario ${userId} actualizado a premium. ${subordinates.length} subordinados heredaron rol premium.`);
+        }
 
         return { success: true };
     } catch (error) {
@@ -241,7 +239,7 @@ export async function downgradeUserFromPremium(userId: string) {
                     permissionId: permission.id
                 }
             });
-            console.log(`❌ Permiso premium removido del principal: ${permission.name}`);
+
         }
 
         // 5. Asegurar que el usuario principal tenga permisos básicos
@@ -277,7 +275,7 @@ export async function downgradeUserFromPremium(userId: string) {
                         permissionId: permission.id
                     }
                 });
-                console.log(`✅ Permiso básico asignado al principal: ${permission.name}`);
+
             }
         }
 
@@ -302,11 +300,9 @@ export async function downgradeUserFromPremium(userId: string) {
                         permissionId: permission.id
                     }
                 });
-                console.log(`❌ Permiso premium removido de ${subordinate.email}: ${permission.name}`);
+
             }
         }
-
-        console.log(`🎉 Usuario ${userId} degradado a user. Subordinados mantienen permisos asignados por el gestor.`);
 
         return { success: true };
     } catch (error) {
@@ -325,6 +321,17 @@ export async function signUp(data: {
     password: string;
 }) {
     try {
+        // Verificar si el usuario tiene una suscripción de MercadoPago (autorizada o pendiente)
+        const mercadopagoSubscription = await database.mercadoPagoSubscription.findFirst({
+            where: {
+                email: data.email,
+                status: {
+                    in: ['authorized', 'pending']
+                }
+            },
+            orderBy: { createdAt: 'desc' }
+        });
+
         // Obtener permisos básicos para usuarios nuevos
         const basicPermissions = await database.permission.findMany({
             where: {
@@ -343,13 +350,15 @@ export async function signUp(data: {
             select: { id: true }
         });
 
-        const result = await database.user.create({
+        // Crear usuario con rol básico inicialmente
+        const user = await database.user.create({
             data: {
                 name: data.name,
                 lastName: data.lastName,
                 email: data.email,
                 password: await bcrypt.hash(data.password, 12),
-                role: 'user',
+                role: 'user', // Siempre crear como user primero
+                createdById: null, // Usuario raíz - no tiene creador
                 permissions: {
                     create: basicPermissions.map(p => ({ permissionId: p.id }))
                 }
@@ -357,13 +366,45 @@ export async function signUp(data: {
             include: { permissions: { include: { permission: true } } }
         });
 
-        // Set the user as their own creator
-        const user = await database.user.update({
-            where: { id: result.id },
-            data: { createdById: result.id },
-            include: { permissions: { include: { permission: true } } }
-        });
+        // Si tiene suscripción (autorizada o pendiente), usar la función upgradeUserToPremium
+        if (mercadopagoSubscription) {
+            await upgradeUserToPremium(user.id);
 
+            // Obtener el usuario actualizado con los nuevos permisos
+            const updatedUser = await database.user.findUnique({
+                where: { id: user.id },
+                include: { permissions: { include: { permission: true } } }
+            });
+
+            if (updatedUser) {
+                const permissionsList = updatedUser.permissions.map(p => p.permission.name);
+
+                const token = JSON.stringify({
+                    id: updatedUser.id,
+                    email: updatedUser.email,
+                    role: updatedUser.role.toLowerCase(),
+                    permissions: permissionsList,
+                    app: 'ganga-menu',
+                    version: '1.0.0',
+                    createdAt: new Date().toISOString(),
+                    sessionId: `${updatedUser.id}-${Date.now()}`
+                });
+
+                await setCookie(COOKIE_NAMES.AUTH_TOKEN, token);
+
+                return {
+                    success: true,
+                    user: {
+                        id: updatedUser.id,
+                        name: updatedUser.name,
+                        email: updatedUser.email,
+                        role: updatedUser.role,
+                    }
+                };
+            }
+        }
+
+        // Si no tiene suscripción, usar el usuario básico
         const permissionsList = user.permissions.map(p => p.permission.name);
 
         const token = JSON.stringify({

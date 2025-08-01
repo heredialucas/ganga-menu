@@ -1090,23 +1090,23 @@
           "description": "Perfecto para empezar. Incluye todo lo esencial para digitalizar tu restaurante desde el primer día",
           "price": "0",
           "features": [
-            "Menú digital ilimitado",
-            "Hasta 3 mozos simultáneos",
-            "Panel de cocina básico",
-            "Hasta 10 mesas",
+            "Menú general disponible",
+            "Consulta por WhatsApp",
+            "Múltiples temas para elegir",
+            "QR para acceso al menú",
             "Soporte por email"
           ]
         },
         {
           "name": "Profesional",
           "description": "Para restaurantes que buscan optimizar completamente su operación con análisis y funciones avanzadas",
-          "price": "15",
+          "price": "39.99",
           "features": [
             "Todo lo del plan Gratis",
-            "Mozos ilimitados",
-            "Mesas ilimitadas",
+            "Gestión de mesas y mozos",
+            "Panel de cocina completo",
+            "QR por mesa para pedidos",
             "Analytics avanzado",
-            "Personalización completa",
             "Soporte prioritario 24/7"
           ]
         },

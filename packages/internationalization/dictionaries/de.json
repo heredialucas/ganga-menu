@@ -1085,23 +1085,23 @@
           "description": "Perfekt zum Starten. Enthält alles Wesentliche, um Ihr Restaurant ab dem ersten Tag zu digitalisieren",
           "price": "0",
           "features": [
-            "Unbegrenztes digitales Menü",
-            "Bis zu 3 Kellner gleichzeitig",
-            "Grundlegendes Küchen-Panel",
-            "Bis zu 10 Tische",
+            "Allgemeines Menü verfügbar",
+            "WhatsApp-Beratung",
+            "Mehrere Themen zur Auswahl",
+            "QR für Menüzugang",
             "E-Mail-Support"
           ]
         },
         {
           "name": "Professionell",
           "description": "Für Restaurants, die ihren Betrieb vollständig mit Analysen und erweiterten Funktionen optimieren möchten",
-          "price": "15",
+          "price": "39.99",
           "features": [
             "Alles vom kostenlosen Plan",
-            "Unbegrenzte Kellner",
-            "Unbegrenzte Tische",
+            "Tisch- und Kellnerverwaltung",
+            "Vollständiges Küchen-Panel",
+            "QR pro Tisch für Bestellungen",
             "Erweiterte Analysen",
-            "Vollständige Anpassung",
             "Prioritäts-Support 24/7"
           ]
         },

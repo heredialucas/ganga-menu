@@ -1059,23 +1059,23 @@
           "description": "Perfect to get started. Includes everything essential to digitalize your restaurant from day one",
           "price": "0",
           "features": [
-            "Unlimited digital menu",
-            "Up to 3 simultaneous waiters",
-            "Basic kitchen panel",
-            "Up to 10 tables",
+            "General menu available",
+            "WhatsApp consultation",
+            "Multiple themes to choose from",
+            "QR for menu access",
             "Email support"
           ]
         },
         {
           "name": "Professional",
           "description": "For restaurants looking to completely optimize their operation with analytics and advanced features",
-          "price": "15",
+          "price": "39.99",
           "features": [
             "Everything from Free plan",
-            "Unlimited waiters",
-            "Unlimited tables",
+            "Table and waiter management",
+            "Complete kitchen panel",
+            "QR per table for orders",
             "Advanced analytics",
-            "Complete customization",
             "24/7 priority support"
           ]
         },

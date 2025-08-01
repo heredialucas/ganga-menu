@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Dictionary } from '@repo/internationalization';
 import { OrderData } from '@repo/data-services';
-import { deleteOrderAction } from '../actions';
+import { deleteOrderAction } from '../../actions';
 import {
     Table,
     TableBody,
@@ -29,19 +29,17 @@ import {
 } from '@repo/design-system/components/ui/select';
 import {
     Clock,
-    ChefHat,
     CheckCircle,
-    Truck,
     XCircle,
     Trash2,
     Loader2
 } from 'lucide-react';
-import { DeleteOrderDialog } from './DeleteOrderDialog';
+import { DeleteOrderDialogClient } from '../dialog/DeleteOrderDialogClient';
 import { toast } from 'sonner';
 
 type OrderStatus = 'ACTIVE' | 'READY' | 'CANCELLED' | 'PAID';
 
-interface OrdersTableProps {
+interface OrdersTableClientProps {
     orders: OrderData[];
     onStatusUpdate: (orderId: string, status: OrderStatus) => void;
     onDeleteOrder?: (orderId: string) => void;
@@ -75,7 +73,7 @@ const statusConfig = (dictionary: Dictionary) => ({
     },
 });
 
-export function OrdersTable({ orders, onStatusUpdate, onDeleteOrder, dictionary, updatingOrderId, deletingOrderId, canView = true, canEdit = true }: OrdersTableProps) {
+export function OrdersTableClient({ orders, onStatusUpdate, onDeleteOrder, dictionary, updatingOrderId, deletingOrderId, canView = true, canEdit = true }: OrdersTableClientProps) {
     const [deleteDialog, setDeleteDialog] = useState<{
         isOpen: boolean;
         orderId: string;
@@ -155,7 +153,7 @@ export function OrdersTable({ orders, onStatusUpdate, onDeleteOrder, dictionary,
                 </Card>
 
                 {/* Diálogo de confirmación de eliminación */}
-                <DeleteOrderDialog
+                <DeleteOrderDialogClient
                     isOpen={deleteDialog.isOpen}
                     onClose={() => setDeleteDialog({ isOpen: false, orderId: '', orderInfo: '' })}
                     onConfirm={handleDeleteConfirm}
@@ -309,7 +307,7 @@ export function OrdersTable({ orders, onStatusUpdate, onDeleteOrder, dictionary,
             </Card>
 
             {/* Diálogo de confirmación de eliminación */}
-            <DeleteOrderDialog
+            <DeleteOrderDialogClient
                 isOpen={deleteDialog.isOpen}
                 onClose={() => setDeleteDialog({ isOpen: false, orderId: '', orderInfo: '' })}
                 onConfirm={handleDeleteConfirm}

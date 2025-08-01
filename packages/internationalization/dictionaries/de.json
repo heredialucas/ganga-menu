@@ -1289,6 +1289,26 @@
       },
       "setup": {
         "notFound": "Restaurant-Konfiguration nicht gefunden"
+      },
+      "errors": {
+        "dashboard": {
+          "title": "Fehler beim Laden der Bestellungen",
+          "description": "Beim Laden der Bestellungsinformationen ist ein unerwarteter Fehler aufgetreten."
+        },
+        "stats": {
+          "title": "Fehler beim Laden der Statistiken",
+          "description": "Bestellungsstatistiken konnten nicht geladen werden."
+        },
+        "table": {
+          "title": "Fehler beim Laden der Bestellungen",
+          "description": "Bestellungen konnten nicht geladen werden."
+        },
+        "errorLabel": "Fehler",
+        "unknownError": "Unbekannter Fehler",
+        "retry": "Erneut versuchen"
+      },
+      "permissions": {
+        "noAccess": "Sie haben keine Berechtigung, Bestellungen anzuzeigen"
       }
     },
     "waiter": {

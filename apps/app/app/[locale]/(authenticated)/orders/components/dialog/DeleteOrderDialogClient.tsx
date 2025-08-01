@@ -13,7 +13,7 @@ import {
 } from '@repo/design-system/components/ui/alert-dialog';
 import { Trash2, AlertTriangle } from 'lucide-react';
 
-interface DeleteOrderDialogProps {
+interface DeleteOrderDialogClientProps {
     isOpen: boolean;
     onClose: () => void;
     onConfirm: () => void;
@@ -23,7 +23,7 @@ interface DeleteOrderDialogProps {
     dictionary?: any;
 }
 
-export function DeleteOrderDialog({
+export function DeleteOrderDialogClient({
     isOpen,
     onClose,
     onConfirm,
@@ -31,7 +31,7 @@ export function DeleteOrderDialog({
     orderInfo,
     isLoading = false,
     dictionary
-}: DeleteOrderDialogProps) {
+}: DeleteOrderDialogClientProps) {
     return (
         <AlertDialog open={isOpen} onOpenChange={onClose}>
             <AlertDialogContent>

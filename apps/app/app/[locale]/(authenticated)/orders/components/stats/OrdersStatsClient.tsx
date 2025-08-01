@@ -3,14 +3,12 @@ import { Dictionary } from '@repo/internationalization';
 import { Card, CardContent, CardHeader, CardTitle } from '@repo/design-system/components/ui/card';
 import {
     Clock,
-    ChefHat,
     CheckCircle,
-    Truck,
     XCircle,
     ShoppingCart
 } from 'lucide-react';
 
-interface OrdersStatsProps {
+interface OrdersStatsClientProps {
     stats: {
         total: number;
         active: number;
@@ -20,7 +18,7 @@ interface OrdersStatsProps {
     dictionary: Dictionary;
 }
 
-export function OrdersStats({ stats, dictionary }: OrdersStatsProps) {
+export function OrdersStatsClient({ stats, dictionary }: OrdersStatsClientProps) {
     const statCards = [
         {
             title: dictionary.web?.orders?.stats?.total || 'Total',

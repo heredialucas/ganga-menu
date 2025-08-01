@@ -1,18 +1,12 @@
-import { requirePermission, hasPermission } from '@repo/auth/server-permissions';
+import { requirePermission } from '@repo/auth/server-permissions';
 import { getDictionary } from '@repo/internationalization';
 import { getRestaurantConfig } from '@repo/data-services/src/services/restaurantConfigService';
 import { getOrdersByRestaurant } from '@repo/data-services';
-import { OrdersDashboard } from './components/OrdersDashboard';
+import { OrdersDashboardServer } from './components/dashboard/OrdersDashboardServer';
 
 export default async function OrdersPage({ params }: { params: Promise<{ locale: string }> }) {
     const { locale } = await params;
     await requirePermission('orders:view');
-
-    // Verificar permisos específicos
-    const [canViewOrders, canEditOrders] = await Promise.all([
-        hasPermission('orders:view'),
-        hasPermission('orders:edit')
-    ]);
 
     const [dictionary, restaurantConfig, orders] = await Promise.all([
         getDictionary(locale),
@@ -36,12 +30,11 @@ export default async function OrdersPage({ params }: { params: Promise<{ locale:
 
     return (
         <div className="space-y-3 sm:space-y-4 md:space-y-6 p-1 sm:p-2 md:p-6">
-            <OrdersDashboard
+            <OrdersDashboardServer
                 orders={orders}
                 restaurantConfig={restaurantConfig}
                 dictionary={dictionary}
-                canView={canViewOrders}
-                canEdit={canEditOrders}
+                locale={locale}
             />
         </div>
     );

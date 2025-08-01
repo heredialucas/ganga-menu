@@ -1,25 +1,22 @@
 import React from 'react';
 import { Dictionary } from '@repo/internationalization';
 import { Button } from '@repo/design-system/components/ui/button';
-import { Badge } from '@repo/design-system/components/ui/badge';
 import {
     Clock,
-    ChefHat,
     CheckCircle,
-    Truck,
     XCircle,
     Filter
 } from 'lucide-react';
 
 type OrderStatus = 'ACTIVE' | 'READY' | 'CANCELLED' | 'PAID';
 
-interface OrdersFiltersProps {
+interface OrdersFiltersClientProps {
     selectedStatus: OrderStatus | 'ALL';
     onStatusChange: (status: OrderStatus | 'ALL') => void;
     dictionary: Dictionary;
 }
 
-export function OrdersFilters({ selectedStatus, onStatusChange, dictionary }: OrdersFiltersProps) {
+export function OrdersFiltersClient({ selectedStatus, onStatusChange, dictionary }: OrdersFiltersClientProps) {
     const statusFilters = [
         {
             value: 'ALL' as const,

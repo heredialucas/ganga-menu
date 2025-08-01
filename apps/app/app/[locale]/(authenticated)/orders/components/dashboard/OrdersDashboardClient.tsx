@@ -5,37 +5,39 @@ import { Dictionary } from '@repo/internationalization';
 import { RestaurantConfigData } from '@repo/data-services/src/services/restaurantConfigService';
 import { OrderData } from '@repo/data-services';
 import { useSocket } from '@/hooks/useSocket';
-import { OrdersTable } from './OrdersTable';
-import { OrdersStats } from './OrdersStats';
-import { OrdersFilters } from './OrdersFilters';
+import { OrdersTableClient } from '../table/OrdersTableClient';
+import { OrdersStatsClient } from '../stats/OrdersStatsClient';
+import { OrdersFiltersClient } from '../filters/OrdersFiltersClient';
 import { Badge } from '@repo/design-system/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/design-system/components/ui/tabs';
 import {
     Wifi,
     WifiOff
 } from 'lucide-react';
-import { updateOrderStatusAction } from '../../../waiter/[slug]/actions';
-import { deleteOrderAction } from '../actions';
+import { deleteOrderAction } from '../../actions';
 import { toast } from 'sonner';
 import { env } from '@/env';
+import { updateOrderStatusAction } from '@/app/[locale]/waiter/[slug]/actions';
 
-interface OrdersDashboardProps {
+interface OrdersDashboardClientProps {
     orders: OrderData[];
     restaurantConfig: RestaurantConfigData;
     dictionary: Dictionary;
-    canView?: boolean;
-    canEdit?: boolean;
+    locale: string;
+    canView: boolean;
+    canEdit: boolean;
 }
 
 type OrderStatus = 'ACTIVE' | 'READY' | 'CANCELLED' | 'PAID';
 
-export function OrdersDashboard({
+export function OrdersDashboardClient({
     orders: initialOrders,
     restaurantConfig,
     dictionary,
-    canView = true,
-    canEdit = true
-}: OrdersDashboardProps) {
+    locale,
+    canView,
+    canEdit
+}: OrdersDashboardClientProps) {
     const [orders, setOrders] = useState<OrderData[]>(initialOrders);
     const [selectedStatus, setSelectedStatus] = useState<OrderStatus | 'ALL'>('ALL');
     const [isConnected, setIsConnected] = useState(false);
@@ -103,7 +105,7 @@ export function OrdersDashboard({
 
             syncOrders();
         }
-    }, [socketConnected, restaurantConfig.slug, orders.length]); // Agregado orders.length para sincronizar cuando cambien las órdenes
+    }, [socketConnected, restaurantConfig.slug, orders.length]);
 
     // Filtrar órdenes por estado
     const filteredOrders = selectedStatus === 'ALL'
@@ -237,10 +239,10 @@ export function OrdersDashboard({
             </div>
 
             {/* Estadísticas */}
-            <OrdersStats stats={stats} dictionary={dictionary} />
+            <OrdersStatsClient stats={stats} dictionary={dictionary} />
 
             {/* Filtros */}
-            <OrdersFilters
+            <OrdersFiltersClient
                 selectedStatus={selectedStatus}
                 onStatusChange={setSelectedStatus}
                 dictionary={dictionary}
@@ -264,7 +266,7 @@ export function OrdersDashboard({
                 </TabsList>
 
                 <TabsContent value="all" className="space-y-3 sm:space-y-4">
-                    <OrdersTable
+                    <OrdersTableClient
                         orders={filteredOrders}
                         onStatusUpdate={handleStatusUpdate}
                         onDeleteOrder={handleDeleteOrder}
@@ -277,7 +279,7 @@ export function OrdersDashboard({
                 </TabsContent>
 
                 <TabsContent value="active" className="space-y-3 sm:space-y-4">
-                    <OrdersTable
+                    <OrdersTableClient
                         orders={orders.filter(o => o.status === 'ACTIVE')}
                         onStatusUpdate={handleStatusUpdate}
                         onDeleteOrder={handleDeleteOrder}
@@ -290,7 +292,7 @@ export function OrdersDashboard({
                 </TabsContent>
 
                 <TabsContent value="completed" className="space-y-3 sm:space-y-4">
-                    <OrdersTable
+                    <OrdersTableClient
                         orders={orders.filter(o => o.status === 'READY' || o.status === 'CANCELLED')}
                         onStatusUpdate={handleStatusUpdate}
                         onDeleteOrder={handleDeleteOrder}

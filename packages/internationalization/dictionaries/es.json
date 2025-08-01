@@ -1291,6 +1291,26 @@
       },
       "setup": {
         "notFound": "Configuración de restaurante no encontrada"
+      },
+      "errors": {
+        "dashboard": {
+          "title": "Error al cargar las órdenes",
+          "description": "Ha ocurrido un error inesperado al cargar la información de las órdenes."
+        },
+        "stats": {
+          "title": "Error al cargar estadísticas",
+          "description": "No se pudieron cargar las estadísticas de las órdenes."
+        },
+        "table": {
+          "title": "Error al cargar órdenes",
+          "description": "No se pudieron cargar las órdenes."
+        },
+        "errorLabel": "Error",
+        "unknownError": "Error desconocido",
+        "retry": "Intentar de nuevo"
+      },
+      "permissions": {
+        "noAccess": "No tienes permisos para ver las órdenes"
       }
     },
     "waiter": {

@@ -1299,6 +1299,26 @@
       },
       "setup": {
         "notFound": "Restaurant configuration not found"
+      },
+      "errors": {
+        "dashboard": {
+          "title": "Error loading orders",
+          "description": "An unexpected error occurred while loading order information."
+        },
+        "stats": {
+          "title": "Error loading statistics",
+          "description": "Could not load order statistics."
+        },
+        "table": {
+          "title": "Error loading orders",
+          "description": "Could not load orders."
+        },
+        "errorLabel": "Error",
+        "unknownError": "Unknown error",
+        "retry": "Try again"
+      },
+      "permissions": {
+        "noAccess": "You don't have permission to view orders"
       }
     },
     "waiter": {

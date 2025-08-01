@@ -55,6 +55,110 @@ export const AVAILABLE_TEMPLATES: TemplateConfig[] = [
     }
 ];
 
+// Función para obtener templates según el idioma
+export const getTemplatesByLanguage = (locale: string) => {
+    const templates = {
+        'es': [
+            {
+                id: 'neomorphic' as TemplateType,
+                name: 'Neomórfico',
+                description: 'Diseño moderno con efectos de sombras suaves y profundidad'
+            },
+            {
+                id: 'retro-vintage' as TemplateType,
+                name: 'Retro Vintage',
+                description: 'Estilo clásico con colores cálidos y elementos vintage'
+            },
+            {
+                id: 'luxury-premium' as TemplateType,
+                name: 'Luxury Premium',
+                description: 'Diseño exclusivo con elementos dorados y premium'
+            },
+            {
+                id: 'playful-fun' as TemplateType,
+                name: 'Playful Fun',
+                description: 'Diseño divertido y colorido con elementos lúdicos'
+            },
+            {
+                id: 'zen-minimal' as TemplateType,
+                name: 'Zen Minimal',
+                description: 'Diseño minimalista zen con elementos japoneses'
+            },
+            {
+                id: 'artistic-creative' as TemplateType,
+                name: 'Artistic Creative',
+                description: 'Diseño artístico y creativo con elementos visuales únicos'
+            }
+        ],
+        'en': [
+            {
+                id: 'neomorphic' as TemplateType,
+                name: 'Neomorphic',
+                description: 'Modern design with soft shadows and depth effects'
+            },
+            {
+                id: 'retro-vintage' as TemplateType,
+                name: 'Retro Vintage',
+                description: 'Classic style with warm colors and vintage elements'
+            },
+            {
+                id: 'luxury-premium' as TemplateType,
+                name: 'Luxury Premium',
+                description: 'Exclusive design with golden and premium elements'
+            },
+            {
+                id: 'playful-fun' as TemplateType,
+                name: 'Playful Fun',
+                description: 'Fun and colorful design with playful elements'
+            },
+            {
+                id: 'zen-minimal' as TemplateType,
+                name: 'Zen Minimal',
+                description: 'Minimalist zen design with Japanese elements'
+            },
+            {
+                id: 'artistic-creative' as TemplateType,
+                name: 'Artistic Creative',
+                description: 'Artistic and creative design with unique visual elements'
+            }
+        ],
+        'de': [
+            {
+                id: 'neomorphic' as TemplateType,
+                name: 'Neomorphisch',
+                description: 'Modernes Design mit weichen Schatten und Tiefeneffekten'
+            },
+            {
+                id: 'retro-vintage' as TemplateType,
+                name: 'Retro Vintage',
+                description: 'Klassischer Stil mit warmen Farben und Vintage-Elementen'
+            },
+            {
+                id: 'luxury-premium' as TemplateType,
+                name: 'Luxus Premium',
+                description: 'Exklusives Design mit goldenen und Premium-Elementen'
+            },
+            {
+                id: 'playful-fun' as TemplateType,
+                name: 'Verspielter Spaß',
+                description: 'Spaßiges und farbenfrohes Design mit verspielten Elementen'
+            },
+            {
+                id: 'zen-minimal' as TemplateType,
+                name: 'Zen Minimal',
+                description: 'Minimalistisches Zen-Design mit japanischen Elementen'
+            },
+            {
+                id: 'artistic-creative' as TemplateType,
+                name: 'Künstlerisch Kreativ',
+                description: 'Künstlerisches und kreatives Design mit einzigartigen visuellen Elementen'
+            }
+        ]
+    };
+
+    return templates[locale as keyof typeof templates] || templates['en'];
+};
+
 // Estilos de templates
 export interface TemplateStyles {
     container: string;

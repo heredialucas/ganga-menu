@@ -22,14 +22,14 @@ const restaurantConfigSchema = z.object({
     logoUrl: z.string().url('URL de logo inválida').optional().or(z.literal('')),
 });
 
-export async function saveRestaurantConfig(prevState: any, formData: FormData) {
+export async function saveRestaurantConfig(prevState: any, formData: FormData, dictionary?: any) {
     try {
         // Verificar permisos antes de proceder
         await requirePermission('restaurant:edit');
 
         const user = await getCurrentUser();
         if (!user) {
-            throw new Error('Usuario no autenticado');
+            throw new Error(dictionary?.app?.restaurant?.config?.toast?.notAuthenticated || 'Usuario no autenticado');
         }
 
         const data = Object.fromEntries(formData.entries());
@@ -70,7 +70,7 @@ export async function saveRestaurantConfig(prevState: any, formData: FormData) {
             console.error('Validation errors:', JSON.stringify(validatedData.error.flatten(), null, 2));
             return {
                 success: false,
-                message: 'Error de validación. Revisa los campos marcados.',
+                message: dictionary?.app?.restaurant?.config?.toast?.validationError || 'Error de validación. Revisa los campos marcados.',
                 errors: validatedData.error.flatten().fieldErrors,
             };
         }
@@ -82,14 +82,14 @@ export async function saveRestaurantConfig(prevState: any, formData: FormData) {
 
         return {
             success: true,
-            message: 'Configuración guardada con éxito',
+            message: dictionary?.app?.restaurant?.config?.toast?.success || 'Configuración guardada con éxito',
         };
 
     } catch (error: any) {
         console.error('Error al guardar la configuración:', error.message);
         return {
             success: false,
-            message: error.message || 'Error al guardar la configuración',
+            message: error.message || (dictionary?.app?.restaurant?.config?.toast?.error || 'Error al guardar la configuración'),
             errors: undefined,
         };
     }
@@ -104,33 +104,33 @@ export async function saveRestaurantDesign(prevState: any, formData: FormData) {
     return saveDesign(prevState, formData);
 }
 
-export async function getRestaurantTables() {
+export async function getRestaurantTables(dictionary?: any) {
     try {
         await requirePermission('restaurant:view');
         const user = await getCurrentUser();
 
         if (!user) {
-            throw new Error('Usuario no autenticado');
+            throw new Error(dictionary?.app?.restaurant?.config?.toast?.notAuthenticated || 'Usuario no autenticado');
         }
 
         const restaurantConfig = await getRestaurantConfig(user.id);
 
         if (!restaurantConfig) {
-            return { success: false, message: 'Restaurante no configurado', tables: [] };
+            return { success: false, message: dictionary?.app?.restaurant?.config?.toast?.notConfigured || 'Restaurante no configurado', tables: [] };
         }
 
         const tables = await getTablesByRestaurant(restaurantConfig.id);
 
         return {
             success: true,
-            message: 'Mesas obtenidas correctamente',
+            message: dictionary?.app?.restaurant?.config?.toast?.tablesRetrieved || 'Mesas obtenidas correctamente',
             tables
         };
     } catch (error) {
         console.error('Error obteniendo mesas:', error);
         return {
             success: false,
-            message: 'Error al obtener las mesas',
+            message: dictionary?.app?.restaurant?.config?.toast?.tablesError || 'Error al obtener las mesas',
             tables: []
         };
     }

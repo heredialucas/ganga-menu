@@ -7,7 +7,7 @@ import { Label } from '@repo/design-system/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@repo/design-system/components/ui/dialog';
 import { MoveRight } from 'lucide-react';
 import type { Dictionary } from '@repo/internationalization';
-import { env } from '@/env';
+import { getAppUrl } from '@/lib/utils';
 
 
 interface MercadoPagoEmailFormProps {
@@ -36,10 +36,10 @@ export function MercadoPagoEmailForm({
         setIsLoading(true);
 
         try {
-            console.log('🔍 Llamando al endpoint:', env.NEXT_PUBLIC_APP_URL + '/api/mercadopago');
+            console.log('🔍 Llamando al endpoint:', getAppUrl() + '/api/mercadopago');
             console.log('🔍 Email enviado:', email);
 
-            const response = await fetch(env.NEXT_PUBLIC_APP_URL + '/api/mercadopago', {
+            const response = await fetch(getAppUrl() + '/api/mercadopago', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email }),

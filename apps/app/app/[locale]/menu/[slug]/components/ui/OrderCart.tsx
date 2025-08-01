@@ -93,7 +93,7 @@ export default function OrderCart({
                     <div className="bg-white rounded-xl w-full max-w-md max-h-[80vh] flex flex-col">
                         {/* Header */}
                         <div className="flex items-center justify-between p-4 border-b">
-                            <h3 className="text-lg font-semibold">Tu Pedido</h3>
+                            <h3 className="text-lg font-semibold">{dictionary?.app?.menu?.cart?.title || 'Tu Pedido'}</h3>
                             <button
                                 onClick={() => setIsOpen(false)}
                                 className="p-2 hover:bg-gray-100 rounded-full"
@@ -107,7 +107,7 @@ export default function OrderCart({
                             {items.map((item) => (
                                 <div key={item.dish.id} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                                     <div className="flex-1">
-                                        <h4 className="font-medium">{item.dish?.name || 'Plato no disponible'}</h4>
+                                        <h4 className="font-medium">{item.dish?.name || dictionary?.app?.menu?.cart?.dishNotAvailable || 'Plato no disponible'}</h4>
                                         <p className="text-sm text-gray-600">
                                             ${getCorrectPrice(item.dish).toFixed(2)} x {item.quantity}
                                         </p>
@@ -145,7 +145,7 @@ export default function OrderCart({
                             {table && (
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Mesa
+                                        {dictionary?.app?.menu?.cart?.table || 'Mesa'}
                                     </label>
                                     <div className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-700">
                                         {table.label}
@@ -155,12 +155,12 @@ export default function OrderCart({
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Notas (opcional)
+                                    {dictionary?.app?.menu?.cart?.notes || 'Notas (opcional)'}
                                 </label>
                                 <textarea
                                     value={notes}
                                     onChange={(e) => setNotes(e.target.value)}
-                                    placeholder="Instrucciones especiales..."
+                                    placeholder={dictionary?.app?.menu?.cart?.notesPlaceholder || "Instrucciones especiales..."}
                                     rows={2}
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                                 />
@@ -168,7 +168,7 @@ export default function OrderCart({
 
                             {/* Total */}
                             <div className="flex justify-between items-center py-2 border-t">
-                                <span className="text-lg font-semibold">Total:</span>
+                                <span className="text-lg font-semibold">{dictionary?.app?.menu?.cart?.total || 'Total'}:</span>
                                 <span className="text-lg font-bold text-green-600">
                                     ${totalPrice.toFixed(2)}
                                 </span>
@@ -181,7 +181,7 @@ export default function OrderCart({
                                 className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white py-3 px-4 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
                             >
                                 <Send className="w-4 h-4" />
-                                Enviar Pedido
+                                {dictionary?.app?.menu?.cart?.sendOrder || 'Enviar Pedido'}
                             </button>
                         </div>
                     </div>

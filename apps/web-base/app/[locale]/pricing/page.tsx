@@ -1,4 +1,5 @@
 import { env } from '@/env';
+import { getAppUrl } from '@/lib/utils';
 import { Button } from '@repo/design-system/components/ui/button';
 import { Check, MoveRight, PhoneCall, Crown, Zap } from 'lucide-react';
 import Link from 'next/link';
@@ -83,11 +84,9 @@ const Pricing = async ({ params }: PricingProps) => {
 
               <div className="p-6 sm:p-8 pt-0">
                 <Button variant="outline" className="w-full gap-2 sm:gap-4 var(--font-nunito) font-bold border-green-600 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 text-sm sm:text-base" asChild>
-                  {env.NEXT_PUBLIC_APP_URL && (
-                    <Link href={`${env.NEXT_PUBLIC_APP_URL}/${locale}/sign-in`}>
-                      {dictionary.web.pricing.tryIt} <MoveRight className="h-3 w-3 sm:h-4 sm:w-4" />
-                    </Link>
-                  )}
+                  <Link href={`${getAppUrl()}/${locale}/sign-in`}>
+                    {dictionary.web.pricing.tryIt} <MoveRight className="h-3 w-3 sm:h-4 sm:w-4" />
+                  </Link>
                 </Button>
               </div>
             </div>

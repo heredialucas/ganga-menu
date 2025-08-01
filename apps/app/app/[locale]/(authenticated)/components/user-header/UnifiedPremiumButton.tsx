@@ -1,9 +1,8 @@
 'use client';
-
-import { useState } from 'react';
 import { Button } from '@repo/design-system/components/ui/button';
 import Link from 'next/link';
 import { env } from '@/env';
+import { getWebBaseUrl } from '@/lib/utils';
 
 interface UnifiedPremiumButtonProps {
     userId: string;
@@ -29,7 +28,7 @@ export function UnifiedPremiumButton({
     if (useMercadoPago) {
         return (
             <Button asChild className="bg-gradient-to-r from-blue-500 to-green-500 text-white font-bold hover:from-blue-600 hover:to-green-600">
-                <Link href={env.NEXT_PUBLIC_WEB_BASE_URL + '/es/pricing'} rel="noopener noreferrer">
+                <Link href={getWebBaseUrl() + '/es/pricing'} rel="noopener noreferrer">
                     {dictionary?.app?.header?.upgradeToPro || "Pasar a Profesional"}
                 </Link>
             </Button>

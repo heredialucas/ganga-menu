@@ -1,8 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
-import { MessageCircle, Coffee, Crown, Sparkles, Star, Minus, Palette } from 'lucide-react';
-import { RestaurantConfigData } from '@repo/data-services/src/services/restaurantConfigService';
-import { Dictionary } from '@repo/internationalization';
+import { Coffee, Crown, Palette } from 'lucide-react';
+import { LanguageSwitcher } from '@/app/[locale]/(authenticated)/components/language-switcher';
 import { generateWhatsAppLink } from './utils';
 import { getTemplateStyles } from './templateStyles';
 import { MenuHeaderProps, getDefaultTemplate } from '../../types/templates';
@@ -82,17 +81,20 @@ export default function MenuHeader({ restaurantConfig, dictionary, isTableSpecif
                             </div>
                         )}
                     </div>
-                    {/* Botón de WhatsApp - solo en vista general */}
-                    {whatsappLink && !isTableSpecificView && (
-                        <a
-                            href={whatsappLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={styles.button}
-                        >
-                            💬 WhatsApp
-                        </a>
-                    )}
+                    <div className="flex items-center gap-2">
+                        <LanguageSwitcher />
+                        {/* Botón de WhatsApp - solo en vista general */}
+                        {whatsappLink && !isTableSpecificView && (
+                            <a
+                                href={whatsappLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={styles.button}
+                            >
+                                💬 WhatsApp
+                            </a>
+                        )}
+                    </div>
                 </div>
             </div>
         </header>

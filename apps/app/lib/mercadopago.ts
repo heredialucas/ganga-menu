@@ -1,6 +1,6 @@
 import { MercadoPagoConfig, PreApproval } from 'mercadopago';
 import { database } from '@repo/database';
-import { env } from '@/env';
+import { getAppUrl } from './utils';
 
 export const mercadopago = new MercadoPagoConfig({
     accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN!,
@@ -44,7 +44,7 @@ export const mercadopagoService = {
 
             const subscription = await new PreApproval(mercadopago).create({
                 body: {
-                    back_url: `${env.NEXT_PUBLIC_APP_URL}/es`,
+                    back_url: `${getAppUrl()}/es`,
                     reason: "Suscripción Premium Ganga-Menú",
                     auto_recurring: {
                         frequency: 1,

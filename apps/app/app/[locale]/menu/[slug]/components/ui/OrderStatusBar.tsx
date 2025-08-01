@@ -8,17 +8,20 @@ import { OrderData } from '@repo/data-services';
 import { getTableOrdersAction } from '../../actions';
 import { Card, CardContent, CardHeader } from '@repo/design-system/components/ui/card';
 import { Badge } from '@repo/design-system/components/ui/badge';
+import { Dictionary } from '@repo/internationalization';
 
 interface OrderStatusBarProps {
     table: TableData;
     restaurantSlug: string;
     restaurantConfigId: string;
+    dictionary: Dictionary;
 }
 
 export default function OrderStatusBar({
     table,
     restaurantSlug,
-    restaurantConfigId
+    restaurantConfigId,
+    dictionary
 }: OrderStatusBarProps) {
     const [orders, setOrders] = useState<OrderData[]>([]);
     const [isVisible, setIsVisible] = useState(false);
@@ -175,7 +178,7 @@ export default function OrderStatusBar({
                         <div className="flex items-center gap-2">
                             <ChefHat className="w-4 h-4 sm:w-5 sm:h-5 text-orange-500 flex-shrink-0" />
                             <span className="font-medium text-gray-900 text-sm sm:text-base truncate">
-                                Estado de tu pedido
+                                {dictionary?.app?.menu?.orderStatus?.title || 'Estado de tu pedido'}
                             </span>
                         </div>
 
@@ -184,7 +187,7 @@ export default function OrderStatusBar({
                                 <div className="flex items-center gap-1">
                                     <ChefHat className="w-3 h-3 sm:w-4 sm:h-4 text-orange-500 flex-shrink-0" />
                                     <span className="text-orange-600 font-medium">
-                                        {activeOrders.length} prep.
+                                        {activeOrders.length} {dictionary?.app?.menu?.orderStatus?.preparing || 'prep.'}
                                     </span>
                                 </div>
                             )}
@@ -193,13 +196,13 @@ export default function OrderStatusBar({
                                 <div className="flex items-center gap-1">
                                     <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-500 flex-shrink-0" />
                                     <span className="text-green-600 font-medium">
-                                        {readyOrders.length} listo
+                                        {readyOrders.length} {dictionary?.app?.menu?.orderStatus?.ready || 'listo'}
                                     </span>
                                 </div>
                             )}
 
                             <div className="text-gray-500">
-                                {totalItems} items
+                                {totalItems} {dictionary?.app?.menu?.orderStatus?.items || 'items'}
                             </div>
                         </div>
                     </div>
@@ -226,9 +229,9 @@ export default function OrderStatusBar({
                                         <div className="flex items-center gap-2">
                                             {statusConfig.icon}
                                             <span className={`font-medium ${statusConfig.text} text-sm sm:text-base`}>
-                                                {order.status === 'ACTIVE' ? 'En preparación' :
-                                                    order.status === 'READY' ? 'Listo para recoger' :
-                                                        order.status === 'PAID' ? 'Pagado' : 'Completado'}
+                                                {order.status === 'ACTIVE' ? (dictionary?.app?.menu?.orderStatus?.inPreparation || 'En preparación') :
+                                                    order.status === 'READY' ? (dictionary?.app?.menu?.orderStatus?.readyToPickup || 'Listo para recoger') :
+                                                        order.status === 'PAID' ? (dictionary?.app?.menu?.orderStatus?.paid || 'Pagado') : (dictionary?.app?.menu?.orderStatus?.completed || 'Completado')}
                                             </span>
                                         </div>
                                         <div className="flex items-center gap-2">
@@ -236,7 +239,7 @@ export default function OrderStatusBar({
                                                 #{order.id.substring(0, 6)}
                                             </Badge>
                                             <span className="text-xs text-gray-500">
-                                                hace {timeElapsed}
+                                                {dictionary?.app?.menu?.orderStatus?.ago || 'hace'} {timeElapsed}
                                             </span>
                                         </div>
                                     </div>
@@ -261,7 +264,7 @@ export default function OrderStatusBar({
 
                                     <div className="mt-2 sm:mt-3 pt-2 sm:pt-3 border-t border-gray-200">
                                         <div className="flex items-center justify-between">
-                                            <span className="font-medium text-gray-900 text-sm sm:text-base">Total:</span>
+                                            <span className="font-medium text-gray-900 text-sm sm:text-base">{dictionary?.app?.menu?.orderStatus?.total || 'Total'}:</span>
                                             <span className="font-bold text-base sm:text-lg text-gray-900">
                                                 ${order.total.toFixed(2)}
                                             </span>
@@ -278,7 +281,7 @@ export default function OrderStatusBar({
             {!isConnected && (
                 <div className="px-4 pb-3">
                     <div className="p-2 bg-yellow-50 border border-yellow-200 rounded text-xs text-yellow-800">
-                        Sin conexión - Actualizando estado...
+                        {dictionary?.app?.menu?.orderStatus?.noConnection || 'Sin conexión - Actualizando estado...'}
                     </div>
                 </div>
             )}

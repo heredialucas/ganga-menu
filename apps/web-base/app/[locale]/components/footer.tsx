@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import type { Dictionary } from '@repo/internationalization';
 import { env } from '@/env';
+import { getWebBaseUrl } from '@/lib/utils';
 
 // Simple data structure for saved food
 const defaultFoodData = {
@@ -193,15 +194,15 @@ export const Footer = ({ dictionary }: FooterProps) => {
             <ul className="space-y-2 sm:space-y-3 text-center lg:text-left">
               <li className="flex items-center gap-2 sm:gap-3 justify-center lg:justify-start text-gray-600 dark:text-gray-300">
                 <Mail className="w-4 h-4 text-[#0d4b3d]" />
-                <span className="text-sm sm:text-base">heredialucasfac22@gmail.com</span>
+                <span className="text-sm sm:text-base">info@ganga-menu.com</span>
               </li>
             </ul>
             <div className="mt-4 sm:mt-6">
               <Link
-                href={`/${locale}/contact`}
+                href={`${getWebBaseUrl()}/${locale}/contact`}
                 className="inline-flex items-center gap-2 bg-[#0d4b3d] text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium hover:bg-[#0d4b3d]/90 transition-all shadow-lg text-sm sm:text-base"
               >
-                {dictionary?.web?.home?.footer?.getStarted || "Get Started"}
+                {dictionary?.web?.home?.footer?.getStarted || "Contact Us"}
               </Link>
             </div>
           </div>

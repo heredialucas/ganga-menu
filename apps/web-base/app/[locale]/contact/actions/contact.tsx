@@ -1,7 +1,7 @@
 'use server';
 
 import { env } from '@/env';
-// import { resend } from '@repo/email';
+import resend from '@repo/email';
 import { ContactTemplate } from '@repo/email/templates/contact';
 import { parseError } from '@repo/observability/error';
 import { createRateLimiter, slidingWindow } from '@repo/rate-limit';
@@ -35,13 +35,13 @@ export const contact = async (
       throw new Error('RESEND_FROM is not set');
     }
 
-    // await resend.emails.send({
-    //   from: 'Gangañam Contacto <onboarding@resend.dev>',
-    //   to: env.RESEND_FROM,
-    //   subject: 'Contact form submission',
-    //   replyTo: email,
-    //   react: <ContactTemplate name={name} email={email} message={message} />,
-    // });
+    await resend?.emails.send({
+      from: 'Ganga-Menu Contacto <onboarding@resend.dev>',
+      to: env.RESEND_FROM,
+      subject: 'Contact form submission',
+      replyTo: email,
+      react: <ContactTemplate name={name} email={email} message={message} />,
+    });
 
     return {};
   } catch (error) {

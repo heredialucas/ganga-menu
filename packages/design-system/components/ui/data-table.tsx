@@ -32,6 +32,7 @@ interface DataTableProps<TData, TValue> {
     toolbar?: (table: TanstackTable<TData>) => React.ReactNode;
     className?: string;
     containerClassName?: string;
+    dictionary?: any;
 }
 
 export function DataTable<TData, TValue>({
@@ -40,6 +41,7 @@ export function DataTable<TData, TValue>({
     toolbar,
     className,
     containerClassName,
+    dictionary,
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -107,7 +109,7 @@ export function DataTable<TData, TValue>({
                                     colSpan={columns.length}
                                     className="h-24 text-center"
                                 >
-                                    No hay resultados.
+                                    {dictionary?.app?.menu?.dailySpecials?.noResultsFound || 'No results found.'}
                                 </TableCell>
                             </TableRow>
                         )}

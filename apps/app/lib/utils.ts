@@ -13,8 +13,12 @@ export function formatCurrency(amount: number): string {
 
 /**
  * Obtiene la URL base de la aplicación
+ * En desarrollo usa localhost:4000, en producción usa la variable de entorno
  */
 export function getAppUrl() {
+    if (process.env.NODE_ENV === 'development') {
+        return 'http://localhost:4000';
+    }
     return env.NEXT_PUBLIC_APP_URL;
 }
 
@@ -27,8 +31,12 @@ export function getSocketUrl() {
 
 /**
  * Obtiene la URL base de web-base
+ * En desarrollo usa localhost:4001, en producción usa la variable de entorno
  */
 export function getWebBaseUrl() {
+    if (process.env.NODE_ENV === 'development') {
+        return 'http://localhost:4001';
+    }
     return env.NEXT_PUBLIC_WEB_BASE_URL;
 }
 

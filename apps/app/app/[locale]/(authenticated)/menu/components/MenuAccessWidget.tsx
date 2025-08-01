@@ -11,23 +11,25 @@ import { toast } from 'sonner';
 import { saveMenuConfig } from '../actions';
 import type { RestaurantConfigData } from '@repo/data-services/src/services/restaurantConfigService';
 import type { Dictionary } from '@repo/internationalization';
-import { AVAILABLE_TEMPLATES, TemplateType } from '../../../menu/[slug]/types/templates';
+import { TemplateType, getTemplatesByLanguage } from '../../../menu/[slug]/types/templates';
+
 
 interface MenuAccessWidgetProps {
     config: RestaurantConfigData | null;
     appUrl: string;
     dictionary: Dictionary;
+    locale?: string;
     canEdit: boolean;
     canView: boolean;
 }
 
-export function MenuAccessWidget({ config, appUrl, dictionary, canEdit, canView }: MenuAccessWidgetProps) {
+export function MenuAccessWidget({ config, appUrl, dictionary, locale = 'es', canEdit, canView }: MenuAccessWidgetProps) {
     const [slug, setSlug] = useState(config?.slug || '');
     const [themeColor, setThemeColor] = useState(config?.themeColor || '#16a34a');
     const [template, setTemplate] = useState<TemplateType>(config?.template as TemplateType || 'neomorphic');
     const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string | null>(null);
     const [isPending, startTransition] = useTransition();
-    const menuUrl = `${appUrl}/es/menu/${slug || 'tu-restaurante'}`;
+    const menuUrl = `${appUrl}/${locale}/menu/${slug || 'tu-restaurante'}`;
 
     useEffect(() => {
         toDataURL(menuUrl, { errorCorrectionLevel: 'H', width: 256, margin: 2 }, (err, dataUrl) => {
@@ -104,7 +106,7 @@ export function MenuAccessWidget({ config, appUrl, dictionary, canEdit, canView 
                     {!canEdit && (
                         <div className="lg:col-span-3 mb-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-md">
                             <p className="text-sm text-yellow-800 dark:text-yellow-200">
-                                Modo solo lectura: Puedes ver la configuración pero no modificarla.
+                                {dictionary.app?.menu?.access?.readOnlyMode || 'Modo solo lectura'}: {dictionary.app?.menu?.access?.readOnlyDescription || 'Puedes ver la configuración pero no modificarla.'}
                             </p>
                         </div>
                     )}
@@ -113,7 +115,7 @@ export function MenuAccessWidget({ config, appUrl, dictionary, canEdit, canView 
                             <Label htmlFor="slug">{dictionary.app?.menu?.access?.customLink || 'Enlace Personalizado (URL)'}</Label>
                             <div className="flex flex-col sm:flex-row items-stretch sm:items-center">
                                 <span className="flex-shrink-0 text-xs sm:text-sm text-muted-foreground p-2 bg-muted rounded-t-md sm:rounded-l-md sm:rounded-t-none border border-b-0 sm:border-b sm:border-r-0">
-                                    {`${appUrl}/es/menu/`}
+                                    {`${appUrl}/${locale}/menu/`}
                                 </span>
                                 <Input
                                     id="slug"
@@ -174,9 +176,9 @@ export function MenuAccessWidget({ config, appUrl, dictionary, canEdit, canView 
                             <p className="text-xs text-muted-foreground">{dictionary.app?.menu?.access?.themeColorNote || 'Este será el color predominante en la página que ven tus clientes.'}</p>
                         </div>
                         <div className="space-y-2">
-                            <Label>Template del Menú</Label>
+                            <Label>{dictionary.app?.menu?.access?.templateLabel || 'Template del Menú'}</Label>
                             <div className="grid grid-cols-2 gap-2">
-                                {AVAILABLE_TEMPLATES.map((templateOption) => (
+                                {getTemplatesByLanguage(locale).map((templateOption) => (
                                     <button
                                         key={templateOption.id}
                                         type="button"
@@ -202,7 +204,7 @@ export function MenuAccessWidget({ config, appUrl, dictionary, canEdit, canView 
                                     </button>
                                 ))}
                             </div>
-                            <p className="text-xs text-muted-foreground">Elige el diseño visual de tu menú digital.</p>
+                            <p className="text-xs text-muted-foreground">{dictionary.app?.menu?.access?.templateDescription || 'Elige el diseño visual de tu menú digital.'}</p>
                         </div>
                         {canEdit && (
                             <Button type="submit" disabled={isPending} className="w-full">

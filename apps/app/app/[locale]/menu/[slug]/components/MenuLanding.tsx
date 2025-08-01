@@ -313,6 +313,7 @@ export default function MenuLanding({
                             table={table}
                             restaurantSlug={slug}
                             restaurantConfigId={restaurantConfig.id}
+                            dictionary={dictionary}
                         />
                     )}
 
@@ -374,26 +375,26 @@ export default function MenuLanding({
                         {/* Indicador de estado de conexión */}
                         {!isConnected && (
                             <div className="fixed bottom-4 right-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-50">
-                                Sin conexión
+                                {dictionary?.app?.menu?.connectionStatus?.noConnection || 'Sin conexión'}
                             </div>
                         )}
 
                         {/* Indicador de estado de orden */}
                         {orderStatus === 'loading' && (
                             <div className="fixed bottom-4 left-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg z-50">
-                                Enviando pedido...
+                                {dictionary?.app?.menu?.orderStatus?.sendingOrder || 'Enviando pedido...'}
                             </div>
                         )}
 
                         {orderStatus === 'success' && (
                             <div className="fixed bottom-4 left-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50">
-                                ¡Pedido enviado con éxito!
+                                {dictionary?.app?.menu?.orderStatus?.orderSentSuccess || '¡Pedido enviado con éxito!'}
                             </div>
                         )}
 
                         {orderStatus === 'error' && (
                             <div className="fixed bottom-4 left-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-50">
-                                Error al enviar pedido
+                                {dictionary?.app?.menu?.orderStatus?.orderSendError || 'Error al enviar pedido'}
                             </div>
                         )}
                     </>

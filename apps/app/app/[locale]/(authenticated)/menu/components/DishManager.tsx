@@ -143,7 +143,7 @@ export function DishManager({ dishes, categories, dictionary, canEdit, canView }
                             <CardDescription className="text-sm sm:text-base">
                                 {canEdit
                                     ? (dictionary.app?.menu?.dishes?.description || 'Crea y gestiona los platos de tu menú.')
-                                    : (dictionary.app?.menu?.dishes?.description || 'Crea y gestiona los platos de tu menú.') + ' (Modo solo lectura)'
+                                    : (dictionary.app?.menu?.dishes?.description || 'Crea y gestiona los platos de tu menú.') + ` (${dictionary.app?.menu?.dishes?.readOnlyMode || 'Modo solo lectura'})`
                                 }
                             </CardDescription>
                         </div>
@@ -248,8 +248,8 @@ export function DishManager({ dishes, categories, dictionary, canEdit, canView }
                                         {canEdit && (
                                             <Button variant="outline" size="sm" className="w-full mt-2 sm:mt-3" onClick={() => handleOpenDialog(dish)}>
                                                 <Edit className="h-4 w-4 mr-2" />
-                                                <span className="hidden sm:inline">Editar</span>
-                                                <span className="sm:hidden">Editar</span>
+                                                <span className="hidden sm:inline">{dictionary.app?.menu?.dishes?.edit?.desktop || 'Editar'}</span>
+                                                <span className="sm:hidden">{dictionary.app?.menu?.dishes?.edit?.mobile || 'Editar'}</span>
                                             </Button>
                                         )}
                                     </CardContent>

@@ -81,17 +81,11 @@ export function CategoryManager({ categories, dictionary, canEdit = true, canVie
                     <div className="border rounded-md overflow-hidden">
                         <div className="overflow-x-auto">
                             <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead className="text-sm sm:text-base">{dictionary.app?.menu?.categories?.name || 'Nombre'}</TableHead>
-                                        <TableHead className="text-right text-sm sm:text-base">{dictionary.app?.menu?.categories?.action || 'Acción'}</TableHead>
-                                    </TableRow>
-                                </TableHeader>
                                 <TableBody>
                                     {categories.map(cat => (
-                                        <TableRow key={cat.id}>
-                                            <TableCell className="font-medium text-sm sm:text-base">{cat.name}</TableCell>
-                                            <TableCell className="text-right">
+                                        <TableRow key={cat.id} className="hover:bg-muted/50">
+                                            <TableCell className="font-medium text-sm sm:text-base flex items-center justify-between">
+                                                <span>{cat.name}</span>
                                                 {canEdit && (
                                                     <Button variant="ghost" size="icon" onClick={() => setDeleteDialog({ open: true, category: cat })}>
                                                         <Trash2 className="h-4 w-4 text-red-500" />

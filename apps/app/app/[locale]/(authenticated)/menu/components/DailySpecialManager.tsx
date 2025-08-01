@@ -37,20 +37,50 @@ interface DailySpecialManagerProps {
     upsertDailySpecial: (data: any) => Promise<any>;
     deleteDailySpecials: (ids: string[]) => Promise<any>;
     dictionary: Dictionary;
+    locale?: string;
     canEdit?: boolean;
     canView?: boolean;
 }
 
 // Helper para formatear fechas sin dependencias externas
-const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('es-ES', {
+const formatDate = (date: Date, locale: string = 'es') => {
+    const locales = {
+        'es': 'es-ES',
+        'en': 'en-US',
+        'de': 'de-DE'
+    };
+
+    return new Intl.DateTimeFormat(locales[locale as keyof typeof locales] || 'es-ES', {
         year: 'numeric', month: 'long', day: 'numeric'
     }).format(new Date(date));
 }
 
+// Helper para obtener formatters del calendario según el locale
+const getCalendarFormatters = (locale: string) => {
+    const locales = {
+        'es': 'es-ES',
+        'en': 'en-US',
+        'de': 'de-DE'
+    };
+
+    const currentLocale = locales[locale as keyof typeof locales] || 'es-ES';
+
+    return {
+        formatMonthDropdown: (date: Date) =>
+            date.toLocaleString(currentLocale, { month: "short" }),
+        formatYearDropdown: (date: Date) =>
+            date.toLocaleString(currentLocale, { year: "numeric" }),
+        formatCaption: (date: Date) =>
+            date.toLocaleString(currentLocale, { month: "long", year: "numeric" }),
+        formatWeekdayName: (date: Date) =>
+            date.toLocaleString(currentLocale, { weekday: "short" }),
+    };
+};
+
 const getColumns = (
     onDelete: (specialId: string) => Promise<void>,
     dictionary: Dictionary,
+    locale: string = 'es',
     canEdit: boolean = true
 ): ColumnDef<DailySpecialWithDish>[] => [
         {
@@ -86,7 +116,7 @@ const getColumns = (
         {
             accessorKey: "date",
             header: ({ column }: HeaderContext<DailySpecialWithDish, unknown>) => <DataTableColumnHeader column={column} title={dictionary.app?.menu?.dailySpecials?.date || "Fecha"} />,
-            cell: ({ row }: CellContext<DailySpecialWithDish, unknown>) => <span>{formatDate(row.original.date)}</span>,
+            cell: ({ row }: CellContext<DailySpecialWithDish, unknown>) => <span>{formatDate(row.original.date, locale)}</span>,
         },
         {
             id: "actions",
@@ -146,7 +176,7 @@ function TableToolbar({ table, onDeleteSelected, isDeleting, dictionary, canEdit
     );
 }
 
-export function DailySpecialManager({ dailySpecials, dishes, upsertDailySpecial, deleteDailySpecials, dictionary, canEdit = true, canView = true }: DailySpecialManagerProps) {
+export function DailySpecialManager({ dailySpecials, dishes, upsertDailySpecial, deleteDailySpecials, dictionary, locale = 'es', canEdit = true, canView = true }: DailySpecialManagerProps) {
     const [date, setDate] = useState<Date | undefined>(new Date());
     const [selectedDishId, setSelectedDishId] = useState<string>('');
     const [isPending, startTransition] = useTransition();
@@ -176,7 +206,7 @@ export function DailySpecialManager({ dailySpecials, dishes, upsertDailySpecial,
     const columns = useMemo(() => getColumns(async (specialId: string) => {
         // ✅ CORREGIDO: Usar deleteDailySpecial en lugar de upsertDailySpecial
         await deleteDailySpecials([specialId]);
-    }, dictionary, canEdit), [deleteDailySpecials, dictionary, canEdit]);
+    }, dictionary, locale, canEdit), [deleteDailySpecials, dictionary, locale, canEdit]);
 
     const handleAddSpecial = () => {
         if (!canEdit) return; // Solo permitir agregar si puede editar
@@ -251,10 +281,18 @@ export function DailySpecialManager({ dailySpecials, dishes, upsertDailySpecial,
                             <PopoverTrigger asChild>
                                 <Button variant="outline" className={cn("w-full justify-start text-left font-normal", !date && "text-muted-foreground")}>
                                     <CalendarIcon className="mr-2 h-4 w-4" />
-                                    {date ? formatDate(date) : <span>{dictionary.app?.menu?.dailySpecials?.datePlaceholder || 'Selecciona una fecha'}</span>}
+                                    {date ? formatDate(date, locale) : <span>{dictionary.app?.menu?.dailySpecials?.datePlaceholder || 'Selecciona una fecha'}</span>}
                                 </Button>
                             </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0"><Calendar mode="single" selected={date} onSelect={setDate} initialFocus /></PopoverContent>
+                            <PopoverContent className="w-auto p-0">
+                                <Calendar
+                                    mode="single"
+                                    selected={date}
+                                    onSelect={setDate}
+                                    initialFocus
+                                    formatters={getCalendarFormatters(locale)}
+                                />
+                            </PopoverContent>
                         </Popover>
                     </div>
 
@@ -281,7 +319,14 @@ export function DailySpecialManager({ dailySpecials, dishes, upsertDailySpecial,
                                     <Label className="text-sm">{dictionary.app?.menu?.dailySpecials?.weekDays || 'Días de la Semana'}</Label>
                                     <ToggleGroup type="multiple" value={recurrenceDays} onValueChange={setRecurrenceDays} className="flex-wrap justify-start">
                                         {weekDays.map(day => (
-                                            <ToggleGroupItem key={day.value} value={day.value} aria-label={day.label} className="text-xs sm:text-sm">{day.label}</ToggleGroupItem>
+                                            <ToggleGroupItem
+                                                key={day.value}
+                                                value={day.value}
+                                                aria-label={day.label}
+                                                className="text-xs sm:text-sm data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:shadow-md data-[state=on]:border-2 data-[state=on]:border-primary/20 hover:bg-accent hover:text-accent-foreground transition-colors"
+                                            >
+                                                {day.label}
+                                            </ToggleGroupItem>
                                         ))}
                                     </ToggleGroup>
                                 </div>
@@ -293,11 +338,17 @@ export function DailySpecialManager({ dailySpecials, dishes, upsertDailySpecial,
                                     <PopoverTrigger asChild>
                                         <Button variant="outline" className={cn("w-full justify-start text-left font-normal", !recurrenceEndDate && "text-muted-foreground")}>
                                             <CalendarIcon className="mr-2 h-4 w-4" />
-                                            {recurrenceEndDate ? formatDate(recurrenceEndDate) : <span>{dictionary.app?.menu?.dailySpecials?.datePlaceholder || 'Selecciona una fecha'}</span>}
+                                            {recurrenceEndDate ? formatDate(recurrenceEndDate, locale) : <span>{dictionary.app?.menu?.dailySpecials?.datePlaceholder || 'Selecciona una fecha'}</span>}
                                         </Button>
                                     </PopoverTrigger>
                                     <PopoverContent className="w-auto p-0">
-                                        <Calendar mode="single" selected={recurrenceEndDate} onSelect={setRecurrenceEndDate} initialFocus />
+                                        <Calendar
+                                            mode="single"
+                                            selected={recurrenceEndDate}
+                                            onSelect={setRecurrenceEndDate}
+                                            initialFocus
+                                            formatters={getCalendarFormatters(locale)}
+                                        />
                                     </PopoverContent>
                                 </Popover>
                             </div>
@@ -350,6 +401,7 @@ export function DailySpecialManager({ dailySpecials, dishes, upsertDailySpecial,
                         containerClassName="max-h-[50vh] sm:max-h-[65vh] overflow-y-auto"
                         columns={columns}
                         data={dailySpecials}
+                        dictionary={dictionary}
                         toolbar={(table) => (
                             <TableToolbar
                                 table={table}

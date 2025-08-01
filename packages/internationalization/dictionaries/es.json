@@ -268,6 +268,8 @@
           "desktop": "Editar",
           "mobile": "Editar"
         },
+        "readOnlyMode": "Modo solo lectura",
+        "readOnlyDescription": "Puedes ver la información pero no modificarla.",
         "cancel": "Cancelar",
         "save": "Guardar",
         "saving": "Guardando...",
@@ -292,6 +294,9 @@
         "date": "Fecha",
         "startDate": "Fecha de Inicio",
         "datePlaceholder": "Selecciona una fecha",
+        "noResults": "No se encontraron platos con los filtros aplicados.",
+        "clearFilters": "Limpiar filtros",
+        "noResultsFound": "No hay resultados.",
         "repeatPromotion": "Repetir Promoción",
         "recurrenceType": "Tipo de Repetición",
         "weekly": "Semanal",
@@ -345,6 +350,10 @@
           "mobile": "Descargar"
         },
         "qrNote": "Tus clientes pueden escanear este código para ver el menú.",
+        "readOnlyMode": "Modo solo lectura",
+        "readOnlyDescription": "Puedes ver la configuración pero no modificarla.",
+        "templateLabel": "Template del Menú",
+        "templateDescription": "Elige el diseño visual de tu menú digital.",
         "save": "Guardar Configuración",
         "saveMobile": "Guardar",
         "saving": "Guardando...",
@@ -352,6 +361,37 @@
           "linkCopied": "Enlace del menú copiado al portapapeles.",
           "qrDownloaded": "QR descargado correctamente"
         }
+      },
+      "orderStatus": {
+        "title": "Estado de tu pedido",
+        "preparing": "prep.",
+        "ready": "listo",
+        "items": "items",
+        "inPreparation": "En preparación",
+        "readyToPickup": "Listo para recoger",
+        "paid": "Pagado",
+        "completed": "Completado",
+        "ago": "hace",
+        "total": "Total",
+        "noConnection": "Sin conexión - Actualizando estado...",
+        "sendingOrder": "Enviando pedido...",
+        "orderSentSuccess": "¡Pedido enviado con éxito!",
+        "orderSendError": "Error al enviar pedido"
+      },
+      "connectionStatus": {
+        "noConnection": "Sin conexión"
+      },
+      "cart": {
+        "title": "Tu Pedido",
+        "dishNotAvailable": "Plato no disponible",
+        "table": "Mesa",
+        "notes": "Notas (opcional)",
+        "notesPlaceholder": "Instrucciones especiales...",
+        "total": "Total",
+        "sendOrder": "Enviar Pedido"
+      },
+      "header": {
+        "whatsapp": "WhatsApp"
       }
     },
     "restaurant": {
@@ -380,8 +420,12 @@
         "uploadImage": "Subir imagen",
         "uploadImageMobile": "Subir",
         "noLogo": "No hay logo",
+        "removeImage": "Eliminar",
+        "removeImageMobile": "Eliminar",
         "save": "Guardar Configuración",
         "saving": "Guardando...",
+        "saveMobile": "Guardar",
+        "savingMobile": "Guardando...",
         "cancel": "Cancelar",
         "contactInfo": {
           "title": "Información de Contacto",
@@ -391,9 +435,15 @@
           "saving": "Guardando configuración...",
           "success": "Configuración guardada exitosamente.",
           "error": "Error al guardar la configuración.",
+          "validationError": "Error de validación. Revisa los campos marcados.",
           "unexpectedError": "Ocurrió un error inesperado.",
-          "notAuthenticated": "Usuario no autenticado"
-        }
+          "notAuthenticated": "Usuario no autenticado",
+          "notConfigured": "Restaurante no configurado",
+          "tablesRetrieved": "Mesas obtenidas correctamente",
+          "tablesError": "Error al obtener las mesas"
+        },
+        "readOnlyMode": "Modo solo lectura",
+        "readOnlyDescription": "Puedes ver la configuración pero no modificarla."
       },
       "openingHours": {
         "title": "Horarios de Apertura",
@@ -645,7 +695,7 @@
       "home": "Inicio",
       "features": "Plataforma",
       "pricing": "Precios", 
-      "about": "Acerca de",
+      "about": "Preguntas Frecuentes",
       "contact": "Contacto",
       "logIn": "Iniciar Sesión",
       "getStarted": "¡Prueba Gratis Ahora!",
@@ -855,7 +905,7 @@
         "orderManagement": "Gestión de Pedidos", 
         "kitchenControl": "Panel de Cocina",
         "contact": "Contacto",
-        "getStarted": "Comenzar",
+        "getStarted": "Contactanos",
         "rights": "Todos los derechos reservados",
         "privacy": "Política de Privacidad",
         "terms": "Términos y Condiciones"

@@ -9,6 +9,7 @@ import { useState, useEffect } from 'react';
 import { ChefHat, Users, MenuIcon, ArrowRight, Smartphone, Clock } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { env } from '@/env';
+import { getAppUrl } from '@/lib/utils';
 import logo from '@/public/logo.png';
 import gangaMenu from '@/public/ganga-menu.png';
 import gangaMozos from '@/public/ganga-mozos.png';
@@ -116,7 +117,7 @@ export const Hero = ({ dictionary }: HeroProps) => {
             </motion.div>
 
             <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-3 sm:gap-4">
-              <Link href={`${env.NEXT_PUBLIC_APP_URL}/${locale}/sign-in`}>
+              <Link href={`${getAppUrl()}/${locale}/sign-in`}>
                 <motion.button
                   className="bg-[#0d4b3d] text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-medium hover:bg-[#0d4b3d]/90 transition-all shadow-lg flex items-center gap-2 w-full sm:w-auto justify-center text-sm sm:text-base"
                   whileHover={{ scale: 1.05 }}

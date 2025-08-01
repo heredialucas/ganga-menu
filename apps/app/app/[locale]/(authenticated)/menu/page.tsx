@@ -70,6 +70,7 @@ export default async function MenuPage({ params }: { params: Promise<{ locale: s
                 config={restaurantConfig}
                 appUrl={getAppUrl()}
                 dictionary={dictionary}
+                locale={locale}
                 canEdit={canEditMenu}
                 canView={canViewMenu}
             />
@@ -100,6 +101,7 @@ export default async function MenuPage({ params }: { params: Promise<{ locale: s
                             upsertDailySpecial={upsertDailySpecial}
                             deleteDailySpecials={deleteDailySpecials}
                             dictionary={dictionary}
+                            locale={locale}
                             canEdit={canEditMenu}
                             canView={canViewMenu}
                         />

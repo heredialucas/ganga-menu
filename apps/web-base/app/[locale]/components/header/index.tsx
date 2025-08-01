@@ -1,6 +1,7 @@
 'use client';
 
 import { env } from '@/env';
+import { getAppUrl } from '@/lib/utils';
 import { ModeToggle } from '@repo/design-system/components/mode-toggle';
 import { Button } from '@repo/design-system/components/ui/button';
 import {
@@ -105,7 +106,7 @@ export const Header = ({ dictionary, locale }: HeaderProps) => {
           <LanguageSwitcher />
 
           {/* Single CTA Button - Hidden on mobile */}
-          <Link href={`${env.NEXT_PUBLIC_APP_URL}/${locale}/sign-in`} className="hidden sm:inline-flex">
+          <Link href={`${getAppUrl()}/${locale}/sign-in`} className="hidden sm:inline-flex">
             <Button className="bg-[#0d4b3d] hover:bg-[#0d4b3d]/90 text-white font-nunito font-bold px-3 sm:px-4 py-1 h-8 sm:h-9 text-xs sm:text-sm">
               {(dictionary.web.header as any)?.tryFree || 'Comenzar Gratis'}
             </Button>
@@ -141,16 +142,14 @@ export const Header = ({ dictionary, locale }: HeaderProps) => {
               </div>
 
               {/* Mobile CTA Button */}
-              {env.NEXT_PUBLIC_APP_URL && (
-                <Link
-                  href={`${env.NEXT_PUBLIC_APP_URL}/${locale}/sign-in`}
-                  className="flex items-center justify-between font-nunito font-bold bg-[#0d4b3d] text-white rounded-lg px-4 py-3 text-base sm:text-lg hover:bg-[#0d4b3d]/90 transition-colors"
-                  onClick={() => setOpen(false)}
-                >
-                  <span>{(dictionary.web.header as any)?.tryFree || 'Comenzar Gratis'}</span>
-                  <MoveRight className="h-4 w-4 stroke-1 text-white" />
-                </Link>
-              )}
+              <Link
+                href={`${getAppUrl()}/${locale}/sign-in`}
+                className="flex items-center justify-between font-nunito font-bold bg-[#0d4b3d] text-white rounded-lg px-4 py-3 text-base sm:text-lg hover:bg-[#0d4b3d]/90 transition-colors"
+                onClick={() => setOpen(false)}
+              >
+                <span>{(dictionary.web.header as any)?.tryFree || 'Comenzar Gratis'}</span>
+                <MoveRight className="h-4 w-4 stroke-1 text-white" />
+              </Link>
             </div>
           </div>
         )}

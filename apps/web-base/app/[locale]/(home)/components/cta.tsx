@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { fadeIn } from '../lib/animations';
 import { ShoppingBag, ArrowRight, Smartphone, ChefHat, Users, Clock } from 'lucide-react';
 import Link from 'next/link';
-import { env } from '@/env';
+import { getWebBaseUrl } from '@/lib/utils';
 
 type CTAProps = {
   dictionary: Dictionary;
@@ -65,7 +65,7 @@ export const CTA = ({ dictionary, locale = 'es' }: CTAProps) => {
                   </p>
 
                   <Link
-                    href={`${env.NEXT_PUBLIC_APP_URL}/${locale}/sign-in`}
+                    href={`${getWebBaseUrl()}/${locale}/contact`}
                     className="w-full sm:w-auto bg-[#0d4b3d] hover:bg-[#0d4b3d]/90 text-white flex items-center justify-center gap-2 py-3 sm:py-4 px-6 sm:px-8 rounded-lg font-medium transition-all shadow-lg text-center inline-flex text-sm sm:text-base"
                   >
                     <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5" />

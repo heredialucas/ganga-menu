@@ -71,7 +71,7 @@ export function RestaurantConfigForm({
         const formData = new FormData(formRef.current);
 
         startTransition(() => {
-            toast.promise(saveRestaurantConfig(state, formData), {
+            toast.promise(saveRestaurantConfig(state, formData, dictionary), {
                 loading: (dictionary as any).app?.restaurant?.config?.toast?.saving || 'Guardando configuración...',
                 success: (result) => {
                     setState(result);
@@ -110,7 +110,7 @@ export function RestaurantConfigForm({
                 {!canEdit && (
                     <div className="p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-md">
                         <p className="text-sm text-yellow-800 dark:text-yellow-200">
-                            Modo solo lectura: Puedes ver la configuración pero no modificarla.
+                            {dictionary.app?.restaurant?.config?.readOnlyMode || 'Modo solo lectura'}: {dictionary.app?.restaurant?.config?.readOnlyDescription || 'Puedes ver la configuración pero no modificarla.'}
                         </p>
                     </div>
                 )}

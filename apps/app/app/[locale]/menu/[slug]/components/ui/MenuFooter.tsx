@@ -1,10 +1,9 @@
 import React from 'react';
-import { RestaurantConfigData } from '@repo/data-services/src/services/restaurantConfigService';
 import { Dictionary } from '@repo/internationalization';
 import { getTemplateStyles } from './templateStyles';
 import { MenuFooterProps, getDefaultTemplate } from '../../types/templates';
-import { Coffee, Crown, Star, Heart, Minus, Palette } from 'lucide-react';
-import { env } from '@/env';
+import { Coffee, Crown, Star, Minus, Palette } from 'lucide-react';
+import { getWebBaseUrl } from '@/lib/utils';
 
 // Función para formatear horarios con soporte a múltiples rangos
 function formatHoursAsJSX(hours: string, dictionary: Dictionary, styles: any, template?: string): React.ReactElement {
@@ -184,7 +183,7 @@ export default function MenuFooter({ restaurantConfig, dictionary, themeColor = 
                     <p className={`text-sm md:text-base transition-colors duration-300 ${template === 'artistic-creative' ? 'text-pink-200 hover:text-pink-300 font-akaya-kanadaka' : 'text-gray-500 hover:text-gray-700'}`}>
                         {dictionary.web?.menu?.footer?.poweredBy || 'Menú digital creado con'}
                         <a
-                            href={env.NEXT_PUBLIC_WEB_BASE_URL}
+                            href={getWebBaseUrl()}
                             target="_blank"
                             rel="noopener noreferrer"
                             className={`font-bold ml-2 text-lg md:text-xl hover:scale-110 inline-block transition-all duration-300 ${template === 'artistic-creative' ? 'text-white hover:text-pink-300 font-akaya-kanadaka' : 'text-gray-800 hover:text-gray-900'}`}

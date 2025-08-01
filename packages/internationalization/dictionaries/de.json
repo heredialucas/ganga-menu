@@ -266,6 +266,8 @@
           "desktop": "Bearbeiten",
           "mobile": "Bearbeiten"
         },
+        "readOnlyMode": "Nur-Lese-Modus",
+        "readOnlyDescription": "Sie können die Informationen anzeigen, aber nicht ändern.",
         "cancel": "Abbrechen",
         "save": "Speichern",
         "saving": "Wird gespeichert...",
@@ -290,6 +292,9 @@
         "date": "Datum",
         "startDate": "Startdatum",
         "datePlaceholder": "Wählen Sie ein Datum",
+        "noResults": "Keine Gerichte mit den angewendeten Filtern gefunden.",
+        "clearFilters": "Filter löschen",
+        "noResultsFound": "Keine Ergebnisse gefunden.",
         "repeatPromotion": "Aktion wiederholen",
         "recurrenceType": "Wiederholungstyp",
         "weekly": "Wöchentlich",
@@ -343,6 +348,10 @@
           "mobile": "Herunterladen"
         },
         "qrNote": "Ihre Kunden können diesen Code scannen, um das Menü zu sehen.",
+        "readOnlyMode": "Nur-Lese-Modus",
+        "readOnlyDescription": "Sie können die Konfiguration anzeigen, aber nicht ändern.",
+        "templateLabel": "Menü-Template",
+        "templateDescription": "Wählen Sie das visuelle Design Ihres digitalen Menüs.",
         "save": "Einstellungen speichern",
         "saveMobile": "Speichern",
         "saving": "Wird gespeichert...",
@@ -350,6 +359,37 @@
           "linkCopied": "Menülink in die Zwischenablage kopiert.",
           "qrDownloaded": "QR erfolgreich heruntergeladen"
         }
+      },
+      "orderStatus": {
+        "title": "Status Ihrer Bestellung",
+        "preparing": "zubereit.",
+        "ready": "bereit",
+        "items": "Artikel",
+        "inPreparation": "In Zubereitung",
+        "readyToPickup": "Bereit zum Abholen",
+        "paid": "Bezahlt",
+        "completed": "Abgeschlossen",
+        "ago": "vor",
+        "total": "Gesamt",
+        "noConnection": "Keine Verbindung - Status wird aktualisiert...",
+        "sendingOrder": "Bestellung wird gesendet...",
+        "orderSentSuccess": "Bestellung erfolgreich gesendet!",
+        "orderSendError": "Fehler beim Senden der Bestellung"
+      },
+      "connectionStatus": {
+        "noConnection": "Keine Verbindung"
+      },
+      "cart": {
+        "title": "Ihre Bestellung",
+        "dishNotAvailable": "Gericht nicht verfügbar",
+        "table": "Tisch",
+        "notes": "Notizen (optional)",
+        "notesPlaceholder": "Besondere Anweisungen...",
+        "total": "Gesamt",
+        "sendOrder": "Bestellung senden"
+      },
+      "header": {
+        "whatsapp": "WhatsApp"
       }
     },
     "restaurant": {
@@ -378,8 +418,12 @@
         "uploadImage": "Bild hochladen",
         "uploadImageMobile": "Hochladen",
         "noLogo": "Kein Logo vorhanden",
+        "removeImage": "Entfernen",
+        "removeImageMobile": "Entfernen",
         "save": "Einstellungen speichern",
         "saving": "Wird gespeichert...",
+        "saveMobile": "Speichern",
+        "savingMobile": "Wird gespeichert...",
         "cancel": "Abbrechen",
         "contactInfo": {
           "title": "Kontaktinformationen",
@@ -389,9 +433,15 @@
           "saving": "Einstellungen werden gespeichert...",
           "success": "Einstellungen erfolgreich gespeichert.",
           "error": "Fehler beim Speichern der Einstellungen.",
+          "validationError": "Validierungsfehler. Überprüfen Sie die markierten Felder.",
           "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten.",
-          "notAuthenticated": "Benutzer nicht authentifiziert"
-        }
+          "notAuthenticated": "Benutzer nicht authentifiziert",
+          "notConfigured": "Restaurant nicht konfiguriert",
+          "tablesRetrieved": "Tische erfolgreich abgerufen",
+          "tablesError": "Fehler beim Abrufen der Tische"
+        },
+        "readOnlyMode": "Nur-Lese-Modus",
+        "readOnlyDescription": "Sie können die Konfiguration anzeigen, aber nicht ändern."
       },
       "openingHours": {
         "title": "Öffnungszeiten",
@@ -643,7 +693,7 @@
       "home": "Startseite",
       "features": "Plattform",
       "pricing": "Preise",
-      "about": "Über uns",
+      "about": "FAQ",
       "contact": "Kontakt",
       "logIn": "Anmelden",
       "getStarted": "Jetzt kostenlos testen!",
@@ -853,7 +903,7 @@
         "orderManagement": "Bestellverwaltung",
         "kitchenControl": "Küchen-Panel",
         "contact": "Kontakt",
-        "getStarted": "Starten",
+        "getStarted": "Kontaktiere uns",
         "rights": "Alle Rechte vorbehalten",
         "privacy": "Datenschutzrichtlinie",
         "terms": "Allgemeine Geschäftsbedingungen"
@@ -1208,6 +1258,37 @@
       "footer": {
         "poweredBy": "Digitale Menüs erstellt mit",
         "businessInfo": "Geschäftsinformationen"
+      },
+      "orderStatus": {
+        "title": "Status Ihrer Bestellung",
+        "preparing": "zubereit.",
+        "ready": "bereit",
+        "items": "Artikel",
+        "inPreparation": "In Zubereitung",
+        "readyToPickup": "Bereit zum Abholen",
+        "paid": "Bezahlt",
+        "completed": "Abgeschlossen",
+        "ago": "vor",
+        "total": "Gesamt",
+        "noConnection": "Keine Verbindung - Status wird aktualisiert...",
+        "sendingOrder": "Bestellung wird gesendet...",
+        "orderSentSuccess": "Bestellung erfolgreich gesendet!",
+        "orderSendError": "Fehler beim Senden der Bestellung"
+      },
+      "connectionStatus": {
+        "noConnection": "Keine Verbindung"
+      },
+      "cart": {
+        "title": "Ihre Bestellung",
+        "dishNotAvailable": "Gericht nicht verfügbar",
+        "table": "Tisch",
+        "notes": "Notizen (optional)",
+        "notesPlaceholder": "Besondere Anweisungen...",
+        "total": "Gesamt",
+        "sendOrder": "Bestellung senden"
+      },
+      "header": {
+        "whatsapp": "WhatsApp"
       }
     },
     "legal": {

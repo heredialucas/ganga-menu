@@ -96,7 +96,9 @@
       },
       "profile": {
         "title": "Personal Information",
+        "titleReadOnly": "Personal Information (Read Only)",
         "description": "Update your personal information and account settings",
+        "descriptionReadOnly": "Personal account information (read-only mode)",
         "name": "Name",
         "lastName": "Last Name",
         "email": "Email",
@@ -215,6 +217,53 @@
           "updated": "User updated successfully.",
           "created": "User created successfully.",
           "deleted": "User deleted successfully."
+        },
+        "actions": {
+          "noPermissionCreate": "You don't have permission to create users.",
+          "noPermissionUpdate": "You don't have permission to update users.",
+          "noPermissionDelete": "You don't have permission to delete users.",
+          "creatorNotFound": "Could not identify the user creator.",
+          "currentUserNotFound": "Could not identify the current user.",
+          "canOnlyUpdateOwn": "You can only update users you have created.",
+          "canOnlyDeleteOwn": "You can only delete users you have created.",
+          "passwordRequired": "Password is required for new users.",
+          "userCreationError": "Error creating user",
+          "userUpdateError": "Error updating user",
+          "userDeleteError": "Error deleting user"
+        },
+        "error": {
+          "title": "Error loading user management",
+          "description": "An error occurred while loading the user list",
+          "retry": "Try again",
+          "details": "Unknown error loading user management"
+        },
+        "loading": {
+          "title": "Loading user management...",
+          "description": "Loading user information"
+        }
+      },
+      "profile": {
+        "error": {
+          "title": "Error loading profile",
+          "description": "An error occurred while loading profile information",
+          "retry": "Try again",
+          "details": "Unknown error loading profile"
+        },
+        "loading": {
+          "title": "Loading profile...",
+          "description": "Loading profile information"
+        }
+      },
+      "password": {
+        "error": {
+          "title": "Error loading security settings",
+          "description": "An error occurred while loading password settings",
+          "retry": "Try again",
+          "details": "Unknown error loading security settings"
+        },
+        "loading": {
+          "title": "Loading security settings...",
+          "description": "Loading security information"
         }
       }
     },

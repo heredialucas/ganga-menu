@@ -7,29 +7,28 @@ import { Input } from '@repo/design-system/components/ui/input';
 import { Label } from '@repo/design-system/components/ui/label';
 import { Badge } from '@repo/design-system/components/ui/badge';
 import { toast } from 'sonner';
-import { User, Eye, Edit } from 'lucide-react';
-import type { Dictionary } from '@repo/internationalization';
+import { Eye, Edit } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { updateProfile } from '../actions';
+import { updateProfile } from '../../actions';
 
 const profileSchema = z.object({
-    name: z.string().min(1, 'El nombre es requerido'),
-    lastName: z.string().min(1, 'El apellido es requerido'),
-    email: z.string().email('Email inválido'),
+    name: z.string().min(1),
+    lastName: z.string().min(1),
+    email: z.string().email(),
 });
 
 type ProfileFormValues = z.infer<typeof profileSchema>;
 
-interface ProfileSectionProps {
+interface ProfileManagerClientProps {
     currentUser: any;
-    dictionary: Dictionary;
+    dictionary: any;
     canEdit: boolean;
     canView: boolean;
 }
 
-export function ProfileSection({ currentUser, dictionary, canEdit, canView }: ProfileSectionProps) {
+export function ProfileManagerClient({ currentUser, dictionary, canEdit, canView }: ProfileManagerClientProps) {
     const [isPending, startTransition] = useTransition();
 
     const form = useForm<ProfileFormValues>({
@@ -77,13 +76,13 @@ export function ProfileSection({ currentUser, dictionary, canEdit, canView }: Pr
                     )}
                     {canEdit
                         ? (dictionary.app?.account?.profile?.title || 'Información Personal')
-                        : 'Información Personal (Solo Lectura)'
+                        : (dictionary.app?.account?.profile?.titleReadOnly || 'Información Personal (Solo Lectura)')
                     }
                 </CardTitle>
                 <CardDescription className="text-sm sm:text-base">
                     {canEdit
                         ? (dictionary.app?.account?.profile?.description || 'Actualiza tu información personal y configuración de cuenta')
-                        : 'Información personal de la cuenta (modo solo lectura)'
+                        : (dictionary.app?.account?.profile?.descriptionReadOnly || 'Información personal de la cuenta (modo solo lectura)')
                     }
                 </CardDescription>
             </CardHeader>

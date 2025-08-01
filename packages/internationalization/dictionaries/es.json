@@ -96,7 +96,9 @@
       },
       "profile": {
         "title": "Información Personal",
+        "titleReadOnly": "Información Personal (Solo Lectura)",
         "description": "Actualiza tu información personal y configuración de cuenta",
+        "descriptionReadOnly": "Información personal de la cuenta (modo solo lectura)",
         "name": "Nombre",
         "lastName": "Apellido",
         "email": "Email",
@@ -215,6 +217,53 @@
           "updated": "Usuario actualizado correctamente.",
           "created": "Usuario creado correctamente.",
           "deleted": "Usuario eliminado correctamente."
+        },
+        "actions": {
+          "noPermissionCreate": "No tienes permisos para crear usuarios.",
+          "noPermissionUpdate": "No tienes permisos para actualizar usuarios.",
+          "noPermissionDelete": "No tienes permisos para eliminar usuarios.",
+          "creatorNotFound": "No se pudo identificar al creador del usuario.",
+          "currentUserNotFound": "No se pudo identificar al usuario actual.",
+          "canOnlyUpdateOwn": "Solo puedes actualizar usuarios que hayas creado.",
+          "canOnlyDeleteOwn": "Solo puedes eliminar usuarios que hayas creado.",
+          "passwordRequired": "La contraseña es requerida para nuevos usuarios.",
+          "userCreationError": "Error al crear el usuario",
+          "userUpdateError": "Error al actualizar el usuario",
+          "userDeleteError": "Error al eliminar el usuario"
+        },
+        "error": {
+          "title": "Error al cargar la gestión de usuarios",
+          "description": "Ocurrió un error al cargar la lista de usuarios",
+          "retry": "Intentar de nuevo",
+          "details": "Error desconocido al cargar la gestión de usuarios"
+        },
+        "loading": {
+          "title": "Cargando gestión de usuarios...",
+          "description": "Cargando información de usuarios"
+        }
+      },
+      "profile": {
+        "error": {
+          "title": "Error al cargar el perfil",
+          "description": "Ocurrió un error al cargar la información del perfil",
+          "retry": "Intentar de nuevo",
+          "details": "Error desconocido al cargar el perfil"
+        },
+        "loading": {
+          "title": "Cargando perfil...",
+          "description": "Cargando información del perfil"
+        }
+      },
+      "password": {
+        "error": {
+          "title": "Error al cargar la configuración de seguridad",
+          "description": "Ocurrió un error al cargar la configuración de contraseñas",
+          "retry": "Intentar de nuevo",
+          "details": "Error desconocido al cargar la configuración de seguridad"
+        },
+        "loading": {
+          "title": "Cargando configuración de seguridad...",
+          "description": "Cargando información de seguridad"
         }
       }
     },

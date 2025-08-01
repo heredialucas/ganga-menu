@@ -7,15 +7,14 @@ import { Input } from '@repo/design-system/components/ui/input';
 import { Label } from '@repo/design-system/components/ui/label';
 import { toast } from 'sonner';
 import { Shield } from 'lucide-react';
-import type { Dictionary } from '@repo/internationalization';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { changePassword } from '../actions';
+import { changePassword } from '../../actions';
 
 const passwordSchema = z.object({
-    currentPassword: z.string().min(1, 'La contraseña actual es requerida'),
-    newPassword: z.string().min(6, 'La nueva contraseña debe tener al menos 6 caracteres'),
+    currentPassword: z.string().min(1),
+    newPassword: z.string().min(6),
     confirmPassword: z.string(),
 }).refine(data => data.newPassword === data.confirmPassword, {
     message: "Las contraseñas no coinciden",
@@ -24,13 +23,13 @@ const passwordSchema = z.object({
 
 type PasswordFormValues = z.infer<typeof passwordSchema>;
 
-interface PasswordSectionProps {
+interface PasswordManagerClientProps {
     currentUser: any;
-    dictionary: Dictionary;
+    dictionary: any;
     canChange: boolean;
 }
 
-export function PasswordSection({ currentUser, dictionary, canChange }: PasswordSectionProps) {
+export function PasswordManagerClient({ currentUser, dictionary, canChange }: PasswordManagerClientProps) {
     const [isPending, startTransition] = useTransition();
 
     const form = useForm<PasswordFormValues>({

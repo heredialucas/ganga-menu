@@ -17,6 +17,7 @@ import type { UserRole } from '@repo/database';
 import { hasPermission } from '@repo/auth/server-permissions';
 import { getCurrentUserId } from '@repo/data-services/src/services/authService';
 import { database } from '@repo/database';
+import type { Dictionary } from '@repo/internationalization';
 
 // Esquema para la actualización del perfil
 const profileSchema = z.object({
@@ -98,15 +99,15 @@ export async function changePassword(userId: string, formData: FormData) {
     }
 }
 
-export async function createUser(formData: FormData) {
+export async function createUser(formData: FormData, dictionary?: Dictionary) {
     try {
         if (!await hasPermission('admin:manage_users')) {
-            return { success: false, message: 'No tienes permisos para crear usuarios.' };
+            return { success: false, message: dictionary?.app?.account?.users?.actions?.noPermissionCreate || 'No tienes permisos para crear usuarios.' };
         }
 
         const creatorId = await getCurrentUserId();
         if (!creatorId) {
-            return { success: false, message: 'No se pudo identificar al creador del usuario.' };
+            return { success: false, message: dictionary?.app?.account?.users?.actions?.creatorNotFound || 'No se pudo identificar al creador del usuario.' };
         }
 
         const data = {
@@ -123,7 +124,7 @@ export async function createUser(formData: FormData) {
             return { success: false, message: validated.error.errors[0].message };
         }
         if (!validated.data.password) {
-            return { success: false, message: "La contraseña es requerida para nuevos usuarios." };
+            return { success: false, message: dictionary?.app?.account?.users?.actions?.passwordRequired || "La contraseña es requerida para nuevos usuarios." };
         }
 
         const { permissions, ...userData } = validated.data;
@@ -136,26 +137,26 @@ export async function createUser(formData: FormData) {
         });
 
         if (!result.success) {
-            return { success: false, message: result.error || 'Error al crear el usuario' };
+            return { success: false, message: result.error || (dictionary?.app?.account?.users?.actions?.userCreationError || 'Error al crear el usuario') };
         }
 
         revalidatePath('/account');
         return { success: true, message: 'Usuario creado exitosamente' };
 
     } catch (error) {
-        return { success: false, message: 'Error al crear el usuario' };
+        return { success: false, message: dictionary?.app?.account?.users?.actions?.userCreationError || 'Error al crear el usuario' };
     }
 }
 
-export async function updateUser(userId: string, formData: FormData) {
+export async function updateUser(userId: string, formData: FormData, dictionary?: Dictionary) {
     try {
         if (!await hasPermission('admin:manage_users')) {
-            return { success: false, message: 'No tienes permisos para actualizar usuarios.' };
+            return { success: false, message: dictionary?.app?.account?.users?.actions?.noPermissionUpdate || 'No tienes permisos para actualizar usuarios.' };
         }
 
         const currentUserId = await getCurrentUserId();
         if (!currentUserId) {
-            return { success: false, message: 'No se pudo identificar al usuario actual.' };
+            return { success: false, message: dictionary?.app?.account?.users?.actions?.currentUserNotFound || 'No se pudo identificar al usuario actual.' };
         }
 
         // Verificar que el usuario a actualizar es subordinado del usuario actual
@@ -165,7 +166,7 @@ export async function updateUser(userId: string, formData: FormData) {
         });
 
         if (!userToUpdate || userToUpdate.createdById !== currentUserId) {
-            return { success: false, message: 'Solo puedes actualizar usuarios que hayas creado.' };
+            return { success: false, message: dictionary?.app?.account?.users?.actions?.canOnlyUpdateOwn || 'Solo puedes actualizar usuarios que hayas creado.' };
         }
 
         const data = {
@@ -191,26 +192,26 @@ export async function updateUser(userId: string, formData: FormData) {
         });
 
         if (!result.success) {
-            return { success: false, message: result.error || 'Error al actualizar el usuario' };
+            return { success: false, message: result.error || (dictionary?.app?.account?.users?.actions?.userUpdateError || 'Error al actualizar el usuario') };
         }
 
         revalidatePath('/account');
         return { success: true, message: 'Usuario actualizado exitosamente' };
 
     } catch (error) {
-        return { success: false, message: 'Error al actualizar el usuario' };
+        return { success: false, message: dictionary?.app?.account?.users?.actions?.userUpdateError || 'Error al actualizar el usuario' };
     }
 }
 
-export async function deleteUser(userId: string) {
+export async function deleteUser(userId: string, dictionary?: Dictionary) {
     try {
         if (!await hasPermission('admin:manage_users')) {
-            return { success: false, message: 'No tienes permisos para eliminar usuarios.' };
+            return { success: false, message: dictionary?.app?.account?.users?.actions?.noPermissionDelete || 'No tienes permisos para eliminar usuarios.' };
         }
 
         const currentUserId = await getCurrentUserId();
         if (!currentUserId) {
-            return { success: false, message: 'No se pudo identificar al usuario actual.' };
+            return { success: false, message: dictionary?.app?.account?.users?.actions?.currentUserNotFound || 'No se pudo identificar al usuario actual.' };
         }
 
         // Verificar que el usuario a eliminar es subordinado del usuario actual
@@ -220,19 +221,19 @@ export async function deleteUser(userId: string) {
         });
 
         if (!userToDelete || userToDelete.createdById !== currentUserId) {
-            return { success: false, message: 'Solo puedes eliminar usuarios que hayas creado.' };
+            return { success: false, message: dictionary?.app?.account?.users?.actions?.canOnlyDeleteOwn || 'Solo puedes eliminar usuarios que hayas creado.' };
         }
 
         const result = await deleteUserWithInheritance(userId);
 
         if (!result.success) {
-            return { success: false, message: result.error || 'Error al eliminar el usuario' };
+            return { success: false, message: result.error || (dictionary?.app?.account?.users?.actions?.userDeleteError || 'Error al eliminar el usuario') };
         }
 
         revalidatePath('/account');
         return { success: true, message: 'Usuario eliminado exitosamente' };
 
     } catch (error) {
-        return { success: false, message: 'Error al eliminar el usuario' };
+        return { success: false, message: dictionary?.app?.account?.users?.actions?.userDeleteError || 'Error al eliminar el usuario' };
     }
 } 

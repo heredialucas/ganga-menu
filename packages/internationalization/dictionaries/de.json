@@ -96,7 +96,9 @@
       },
       "profile": {
         "title": "Persönliche Informationen",
+        "titleReadOnly": "Persönliche Informationen (Nur Lesen)",
         "description": "Aktualisieren Sie Ihre persönlichen Informationen und Kontoeinstellungen",
+        "descriptionReadOnly": "Persönliche Kontoinformationen (Nur-Lesen-Modus)",
         "name": "Vorname",
         "lastName": "Nachname",
         "email": "E-Mail",
@@ -213,6 +215,53 @@
           "updated": "Benutzer erfolgreich aktualisiert.",
           "created": "Benutzer erfolgreich erstellt.",
           "deleted": "Benutzer erfolgreich gelöscht."
+        },
+        "actions": {
+          "noPermissionCreate": "Sie haben keine Berechtigung, Benutzer zu erstellen.",
+          "noPermissionUpdate": "Sie haben keine Berechtigung, Benutzer zu aktualisieren.",
+          "noPermissionDelete": "Sie haben keine Berechtigung, Benutzer zu löschen.",
+          "creatorNotFound": "Der Benutzerersteller konnte nicht identifiziert werden.",
+          "currentUserNotFound": "Der aktuelle Benutzer konnte nicht identifiziert werden.",
+          "canOnlyUpdateOwn": "Sie können nur Benutzer aktualisieren, die Sie erstellt haben.",
+          "canOnlyDeleteOwn": "Sie können nur Benutzer löschen, die Sie erstellt haben.",
+          "passwordRequired": "Passwort ist für neue Benutzer erforderlich.",
+          "userCreationError": "Fehler beim Erstellen des Benutzers",
+          "userUpdateError": "Fehler beim Aktualisieren des Benutzers",
+          "userDeleteError": "Fehler beim Löschen des Benutzers"
+        },
+        "error": {
+          "title": "Fehler beim Laden der Benutzerverwaltung",
+          "description": "Beim Laden der Benutzerliste ist ein Fehler aufgetreten",
+          "retry": "Erneut versuchen",
+          "details": "Unbekannter Fehler beim Laden der Benutzerverwaltung"
+        },
+        "loading": {
+          "title": "Benutzerverwaltung wird geladen...",
+          "description": "Benutzerinformationen werden geladen"
+        }
+      },
+      "profile": {
+        "error": {
+          "title": "Fehler beim Laden des Profils",
+          "description": "Beim Laden der Profilinformationen ist ein Fehler aufgetreten",
+          "retry": "Erneut versuchen",
+          "details": "Unbekannter Fehler beim Laden des Profils"
+        },
+        "loading": {
+          "title": "Profil wird geladen...",
+          "description": "Profilinformationen werden geladen"
+        }
+      },
+      "password": {
+        "error": {
+          "title": "Fehler beim Laden der Sicherheitseinstellungen",
+          "description": "Beim Laden der Passwort-Einstellungen ist ein Fehler aufgetreten",
+          "retry": "Erneut versuchen",
+          "details": "Unbekannter Fehler beim Laden der Sicherheitseinstellungen"
+        },
+        "loading": {
+          "title": "Sicherheitseinstellungen werden geladen...",
+          "description": "Sicherheitsinformationen werden geladen"
         }
       }
     },

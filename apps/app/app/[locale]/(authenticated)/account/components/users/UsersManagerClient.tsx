@@ -6,7 +6,6 @@ import { Button } from '@repo/design-system/components/ui/button';
 import { Input } from '@repo/design-system/components/ui/input';
 import { Label } from '@repo/design-system/components/ui/label';
 import { Badge } from '@repo/design-system/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@repo/design-system/components/ui/select';
 import { Switch } from '@repo/design-system/components/ui/switch';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@repo/design-system/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@repo/design-system/components/ui/alert-dialog';
@@ -15,14 +14,14 @@ import { User, Mail, Plus, Edit, Trash2, Eye } from 'lucide-react';
 import type { UserData } from '@repo/data-services/src/types/user';
 import { UserRole } from '@repo/database/generated/client';
 import type { Dictionary } from '@repo/internationalization';
-import { createUser, updateUser, deleteUser } from '../actions';
+import { createUser, updateUser, deleteUser } from '../../actions';
 import { ScrollArea } from '@repo/design-system/components/ui/scroll-area';
 import { Permission } from '@repo/auth/server-permissions';
 
-interface UsersSectionProps {
+interface UsersManagerClientProps {
     users: UserData[];
     currentUser: any;
-    dictionary: Dictionary;
+    dictionary: any;
     allPermissions: Permission[];
     canCreateUsers?: boolean;
     canEditUsers?: boolean;
@@ -88,7 +87,7 @@ const translatePermission = (permission: string, dictionary: Dictionary): string
     return permissionTranslations[permission] || permission.split(':')[1]?.replace(/_/g, ' ') || permission;
 };
 
-export function UsersSection({
+export function UsersManagerClient({
     users,
     currentUser,
     dictionary,
@@ -97,7 +96,7 @@ export function UsersSection({
     canEditUsers = false,
     canDeleteUsers = false,
     canManageUsers = false
-}: UsersSectionProps) {
+}: UsersManagerClientProps) {
     const [isUserDialogOpen, setIsUserDialogOpen] = useState(false);
     const [editingUser, setEditingUser] = useState<UserData | null>(null);
     const [deleteUserDialog, setDeleteUserDialog] = useState<{ open: boolean; user: UserData | null }>({ open: false, user: null });
@@ -147,11 +146,6 @@ export function UsersSection({
         });
     };
 
-    const handleRoleChange = (role: UserRole) => {
-        // Los usuarios premium siempre crean/gestionan usuarios premium
-        setUserForm(prev => ({ ...prev, role: 'premium' }));
-    };
-
     const handleUserSubmit = () => {
         if (!userForm.name || !userForm.lastName || !userForm.email) {
             toast.error(dictionary.app?.account?.users?.validation?.nameRequired || "Nombre, apellido y email son requeridos");
@@ -176,8 +170,8 @@ export function UsersSection({
             formData.append('permissions', JSON.stringify(userForm.permissions));
 
             const result = editingUser
-                ? await updateUser(editingUser.id, formData)
-                : await createUser(formData);
+                ? await updateUser(editingUser.id, formData, dictionary)
+                : await createUser(formData, dictionary);
 
             if (!result.success) {
                 throw new Error(result.message);
@@ -199,7 +193,7 @@ export function UsersSection({
 
     const handleDeleteUser = (user: UserData) => {
         const promise = async () => {
-            const result = await deleteUser(user.id);
+            const result = await deleteUser(user.id, dictionary);
             if (!result.success) {
                 throw new Error(result.message);
             }
@@ -358,4 +352,4 @@ export function UsersSection({
             </AlertDialog>
         </>
     );
-}
+} 

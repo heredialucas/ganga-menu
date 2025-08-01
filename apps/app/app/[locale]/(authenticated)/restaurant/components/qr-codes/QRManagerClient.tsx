@@ -9,10 +9,10 @@ import { Badge } from '@repo/design-system/components/ui/badge';
 import { Download, QrCode, Printer, Copy, Info } from 'lucide-react';
 import { toDataURL } from 'qrcode';
 import { toast } from 'sonner';
-import { getRestaurantTables } from '../actions';
+import { getRestaurantTables } from '../../actions';
 import type { Dictionary } from '@repo/internationalization';
 
-interface TableQRGeneratorProps {
+interface QRManagerClientProps {
     config: RestaurantConfigData | null;
     appUrl: string;
     dictionary: Dictionary;
@@ -20,7 +20,7 @@ interface TableQRGeneratorProps {
     canView?: boolean;
 }
 
-export function TableQRGenerator({ config, appUrl, dictionary, canEdit = true, canView = true }: TableQRGeneratorProps) {
+export function QRManagerClient({ config, appUrl, dictionary, canEdit = true, canView = true }: QRManagerClientProps) {
     const [tables, setTables] = useState<TableData[]>([]);
     const [selectedTable, setSelectedTable] = useState<TableData | null>(null);
     const [qrCodeUrl, setQrCodeUrl] = useState<string>('');
@@ -46,7 +46,7 @@ export function TableQRGenerator({ config, appUrl, dictionary, canEdit = true, c
             }
         } catch (error) {
             console.error('Error cargando mesas:', error);
-            toast.error((dictionary as any).app?.restaurant?.qr?.toast?.downloadError || 'Error al cargar las mesas');
+            toast.error(dictionary.app.restaurant.qr.toast.downloadError);
         } finally {
             setLoading(false);
         }
@@ -72,7 +72,7 @@ export function TableQRGenerator({ config, appUrl, dictionary, canEdit = true, c
             setSelectedTable(table);
         } catch (error) {
             console.error('Error generando QR:', error);
-            toast.error((dictionary as any).app?.restaurant?.qr?.toast?.downloadError || 'Error al generar el código QR');
+            toast.error(dictionary.app.restaurant.qr.toast.downloadError);
         }
     };
 
@@ -85,7 +85,7 @@ export function TableQRGenerator({ config, appUrl, dictionary, canEdit = true, c
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        toast.success((dictionary as any).app?.restaurant?.qr?.toast?.downloaded || 'QR descargado correctamente');
+        toast.success(dictionary.app.restaurant.qr.toast.downloaded);
     };
 
     const copyMenuUrl = () => {
@@ -93,7 +93,7 @@ export function TableQRGenerator({ config, appUrl, dictionary, canEdit = true, c
 
         const menuUrl = `${appUrl}/es/menu/${config.slug}/table/${selectedTable.id}`;
         navigator.clipboard.writeText(menuUrl);
-        toast.success((dictionary as any).app?.menu?.access?.toast?.linkCopied || 'URL copiada al portapapeles');
+        toast.success('URL copiada al portapapeles');
     };
 
     const printQR = () => {
@@ -104,7 +104,7 @@ export function TableQRGenerator({ config, appUrl, dictionary, canEdit = true, c
             printWindow.document.write(`
                 <html>
                     <head>
-                        <title>${(dictionary as any).app?.restaurant?.qr?.table || 'Mesa'} ${selectedTable.label}</title>
+                        <title>${dictionary.app.restaurant.qr.table} ${selectedTable.label}</title>
                         <style>
                             body { 
                                 font-family: Arial, sans-serif; 
@@ -142,11 +142,11 @@ export function TableQRGenerator({ config, appUrl, dictionary, canEdit = true, c
                     </head>
                     <body>
                         <div class="qr-container">
-                            <img src="${qrCodeUrl}" alt="QR Code" style="width: 300px; height: 300px;" />
-                            <div class="table-info">${(dictionary as any).app?.restaurant?.qr?.table || 'Mesa'} ${selectedTable.label}</div>
+                            <img src="${qrCodeUrl}" alt="QR Code" style="width: 200px; height: 200px;" />
+                            <div class="table-info">${dictionary.app.restaurant.qr.table} ${selectedTable.label}</div>
                             <div class="restaurant-info">${config.name}</div>
                             <div class="instructions">
-                                ${(dictionary as any).app?.restaurant?.qr?.printInstructions || 'Escanea este código QR para ver el menú y hacer tu pedido'}
+                                ${dictionary.app.restaurant.qr.printInstructions}
                             </div>
                         </div>
                     </body>
@@ -157,13 +157,21 @@ export function TableQRGenerator({ config, appUrl, dictionary, canEdit = true, c
         }
     };
 
+    if (!canView) {
+        return (
+            <div className="text-center py-8">
+                <p className="text-red-600">{dictionary.app.restaurant.qr.toast.downloadError}</p>
+            </div>
+        );
+    }
+
     if (!config) {
         return (
             <Card>
                 <CardContent className="p-1 sm:p-2 md:p-6">
                     <div className="text-center text-gray-500">
                         <QrCode className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-                        <p>{(dictionary as any).app?.restaurant?.view?.noConfig || 'Primero configura tu restaurante'}</p>
+                        <p>{dictionary.app.restaurant.view.noConfig}</p>
                     </div>
                 </CardContent>
             </Card>
@@ -177,10 +185,10 @@ export function TableQRGenerator({ config, appUrl, dictionary, canEdit = true, c
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
                         <QrCode className="w-4 h-4 sm:w-5 sm:h-5" />
-                        {(dictionary as any).app?.restaurant?.qr?.title || 'Códigos QR por Mesa'}
+                        {dictionary.app.restaurant.qr.title}
                     </CardTitle>
                     <CardDescription className="text-sm sm:text-base">
-                        {(dictionary as any).app?.restaurant?.qr?.description || 'Genera códigos QR específicos para cada mesa de tu restaurante. Cada QR llevará a los clientes directamente al menú de esa mesa específica.'}
+                        {dictionary.app.restaurant.qr.description}
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="p-1 sm:p-2 md:p-6">
@@ -188,12 +196,12 @@ export function TableQRGenerator({ config, appUrl, dictionary, canEdit = true, c
                         <div className="flex items-start gap-2 sm:gap-3">
                             <Info className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 mt-0.5 flex-shrink-0" />
                             <div className="text-xs sm:text-sm text-blue-800">
-                                <p className="font-medium mb-2">{(dictionary as any).app?.restaurant?.qr?.howItWorks?.title || '¿Cómo funciona?'}</p>
+                                <p className="font-medium mb-2">{dictionary.app.restaurant.qr.howItWorks.title}</p>
                                 <ul className="space-y-1">
-                                    <li>• <strong>{(dictionary as any).app?.restaurant?.qr?.howItWorks?.security || 'Seguridad: Cada mesa tiene su propio QR único'}</strong></li>
-                                    <li>• <strong>{(dictionary as any).app?.restaurant?.qr?.howItWorks?.simplicity || 'Simplicidad: Los clientes no necesitan seleccionar mesa'}</strong></li>
-                                    <li>• <strong>{(dictionary as any).app?.restaurant?.qr?.howItWorks?.organization || 'Organización: Los pedidos se asocian automáticamente a la mesa correcta'}</strong></li>
-                                    <li>• <strong>{(dictionary as any).app?.restaurant?.qr?.howItWorks?.experience || 'Experiencia: Proceso más rápido y sin errores'}</strong></li>
+                                    <li>• <strong>{dictionary.app.restaurant.qr.howItWorks.security}</strong></li>
+                                    <li>• <strong>{dictionary.app.restaurant.qr.howItWorks.simplicity}</strong></li>
+                                    <li>• <strong>{dictionary.app.restaurant.qr.howItWorks.organization}</strong></li>
+                                    <li>• <strong>{dictionary.app.restaurant.qr.howItWorks.experience}</strong></li>
                                 </ul>
                             </div>
                         </div>
@@ -205,22 +213,22 @@ export function TableQRGenerator({ config, appUrl, dictionary, canEdit = true, c
                 {/* Lista de mesas */}
                 <Card>
                     <CardHeader>
-                        <CardTitle className="text-base sm:text-lg">{(dictionary as any).app?.restaurant?.qr?.tablesAvailable || 'Mesas Disponibles'}</CardTitle>
+                        <CardTitle className="text-base sm:text-lg">{dictionary.app.restaurant.qr.tablesAvailable}</CardTitle>
                         <CardDescription className="text-sm sm:text-base">
-                            {(dictionary as any).app?.restaurant?.qr?.selectTableForQR || 'Selecciona una mesa para generar su código QR único'}
+                            {dictionary.app.restaurant.qr.selectTableForQR}
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="p-1 sm:p-2 md:p-6">
                         {loading ? (
                             <div className="text-center py-6 sm:py-8">
                                 <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-gray-900 mx-auto"></div>
-                                <p className="text-xs sm:text-sm text-gray-500 mt-2">{(dictionary as any).app?.restaurant?.qr?.loadingTables || 'Cargando mesas...'}</p>
+                                <p className="text-xs sm:text-sm text-gray-500 mt-2">{dictionary.app.restaurant.qr.loadingTables}</p>
                             </div>
                         ) : tables.length === 0 ? (
                             <div className="text-center py-6 sm:py-8 text-gray-500">
                                 <QrCode className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-4 text-gray-300" />
-                                <p className="text-sm sm:text-base">{(dictionary as any).app?.restaurant?.qr?.noTablesConfigured || 'No hay mesas configuradas'}</p>
-                                <p className="text-xs sm:text-sm">{(dictionary as any).app?.restaurant?.qr?.configureTablesInDesign || 'Configura las mesas en la pestaña "Diseño"'}</p>
+                                <p className="text-sm sm:text-base">{dictionary.app.restaurant.qr.noTablesConfigured}</p>
+                                <p className="text-xs sm:text-sm">{dictionary.app.restaurant.qr.configureTablesInDesign}</p>
                             </div>
                         ) : (
                             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
@@ -240,7 +248,7 @@ export function TableQRGenerator({ config, appUrl, dictionary, canEdit = true, c
                                                 </span>
                                             </div>
                                             <p className="text-xs sm:text-sm font-medium text-gray-700">
-                                                {(dictionary as any).app?.restaurant?.qr?.table || 'Mesa'} {table.label}
+                                                {dictionary.app.restaurant.qr.table} {table.label}
                                             </p>
                                         </div>
                                     </button>
@@ -253,11 +261,11 @@ export function TableQRGenerator({ config, appUrl, dictionary, canEdit = true, c
                 {/* Preview del QR */}
                 <Card>
                     <CardHeader>
-                        <CardTitle className="text-base sm:text-lg">{(dictionary as any).app?.restaurant?.qr?.tableQR || 'Código QR'}</CardTitle>
+                        <CardTitle className="text-base sm:text-lg">{dictionary.app.restaurant.qr.tableQR}</CardTitle>
                         <CardDescription className="text-sm sm:text-base">
                             {selectedTable
-                                ? `${(dictionary as any).app?.restaurant?.qr?.tableForQR || 'QR para Mesa'} ${selectedTable.label}`
-                                : (dictionary as any).app?.restaurant?.qr?.selectTable || 'Selecciona una mesa para ver el QR'
+                                ? `${dictionary.app.restaurant.qr.tableForQR} ${selectedTable.label}`
+                                : dictionary.app.restaurant.qr.selectTable
                             }
                         </CardDescription>
                     </CardHeader>
@@ -278,7 +286,7 @@ export function TableQRGenerator({ config, appUrl, dictionary, canEdit = true, c
                                 {/* Información de la mesa */}
                                 <div className="text-center space-y-2">
                                     <Badge variant="secondary" className="text-sm sm:text-lg px-3 sm:px-4 py-1 sm:py-2">
-                                        {(dictionary as any).app?.restaurant?.qr?.table || 'Mesa'} {selectedTable.label}
+                                        {dictionary.app.restaurant.qr.table} {selectedTable.label}
                                     </Badge>
                                     <p className="text-xs sm:text-sm text-gray-600">
                                         {config.name}
@@ -297,8 +305,8 @@ export function TableQRGenerator({ config, appUrl, dictionary, canEdit = true, c
                                         className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
                                     >
                                         <Download className="w-3 h-3 sm:w-4 sm:h-4" />
-                                        <span className="hidden sm:inline">{(dictionary as any).app?.restaurant?.qr?.downloadQR || 'Descargar'}</span>
-                                        <span className="sm:hidden">{(dictionary as any).app?.restaurant?.qr?.downloadQR || 'Desc'}</span>
+                                        <span className="hidden sm:inline">{dictionary.app.restaurant.qr.downloadQR}</span>
+                                        <span className="sm:hidden">{dictionary.app.restaurant.qr.downloadQR}</span>
                                     </Button>
                                     <Button
                                         onClick={printQR}
@@ -307,8 +315,8 @@ export function TableQRGenerator({ config, appUrl, dictionary, canEdit = true, c
                                         className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
                                     >
                                         <Printer className="w-3 h-3 sm:w-4 sm:h-4" />
-                                        <span className="hidden sm:inline">{(dictionary as any).app?.restaurant?.qr?.print?.desktop || 'Imprimir'}</span>
-                                        <span className="sm:hidden">{(dictionary as any).app?.restaurant?.qr?.print?.mobile || 'Impr'}</span>
+                                        <span className="hidden sm:inline">{dictionary.app.restaurant.qr.print.desktop}</span>
+                                        <span className="sm:hidden">{dictionary.app.restaurant.qr.print.mobile}</span>
                                     </Button>
                                     <Button
                                         onClick={copyMenuUrl}
@@ -317,15 +325,15 @@ export function TableQRGenerator({ config, appUrl, dictionary, canEdit = true, c
                                         className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
                                     >
                                         <Copy className="w-3 h-3 sm:w-4 sm:h-4" />
-                                        <span className="hidden sm:inline">{(dictionary as any).app?.restaurant?.qr?.copyURL?.desktop || 'Copiar URL'}</span>
-                                        <span className="sm:hidden">{(dictionary as any).app?.restaurant?.qr?.copyURL?.mobile || 'Copiar'}</span>
+                                        <span className="hidden sm:inline">{dictionary.app.restaurant.qr.copyURL.desktop}</span>
+                                        <span className="sm:hidden">{dictionary.app.restaurant.qr.copyURL.mobile}</span>
                                     </Button>
                                 </div>
                             </div>
                         ) : (
                             <div className="text-center py-8 sm:py-12 text-gray-500">
                                 <QrCode className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 text-gray-300" />
-                                <p className="text-sm sm:text-base">{(dictionary as any).app?.restaurant?.qr?.selectTableToGenerate || 'Selecciona una mesa para generar el código QR'}</p>
+                                <p className="text-sm sm:text-base">{dictionary.app.restaurant.qr.selectTableToGenerate}</p>
                             </div>
                         )}
                     </CardContent>

@@ -1,6 +1,4 @@
-import { getCurrentUser, requirePermission, hasPermission } from '@repo/auth/server';
-import { getRestaurantConfig } from '@repo/data-services/src/services/restaurantConfigService';
-import { getRestaurantDesignByConfigId } from '@repo/data-services/src/services/restaurantDesignService';
+import { requirePermission, hasPermission } from '@repo/auth/server-permissions';
 import { getDictionary } from '@repo/internationalization';
 import { RestaurantViewManager } from './components/RestaurantViewManager';
 import { getAppUrl } from '@/lib/utils';
@@ -13,13 +11,8 @@ export default async function RestaurantPage({
     params: Promise<{ locale: string }>;
 }) {
     await requirePermission('restaurant:view');
-    const user = await getCurrentUser();
     const paramsData = await params;
     const dictionary = await getDictionary(paramsData.locale);
-    const restaurantConfig = await getRestaurantConfig(user?.id);
-    const restaurantDesign = restaurantConfig
-        ? await getRestaurantDesignByConfigId(restaurantConfig.id)
-        : null;
 
     // Verificar permisos en el servidor
     const [canViewRestaurant, canEditRestaurant, hasDesignPermission, hasQRPermission] = await Promise.all([
@@ -34,10 +27,10 @@ export default async function RestaurantPage({
             <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
                 <div className="text-center sm:text-left flex-1">
                     <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">
-                        {(dictionary as any).app?.restaurant?.title || 'Gestión del Restaurante'}
+                        {dictionary.app.restaurant.title}
                     </h1>
                     <p className="text-sm sm:text-base text-muted-foreground mt-2">
-                        {(dictionary as any).app?.restaurant?.subtitle || 'Define la configuración de tu restaurante y diseña la distribución de las mesas.'}
+                        {dictionary.app.restaurant.subtitle}
                     </p>
                 </div>
                 <div className="flex flex-row items-center gap-2">
@@ -47,8 +40,6 @@ export default async function RestaurantPage({
             </div>
 
             <RestaurantViewManager
-                config={restaurantConfig}
-                design={restaurantDesign}
                 dictionary={dictionary}
                 appUrl={getAppUrl()}
                 showDesignTab={hasDesignPermission}

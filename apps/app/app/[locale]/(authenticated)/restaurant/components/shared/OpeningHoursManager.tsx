@@ -153,7 +153,7 @@ export function OpeningHoursManager({ initialHours, dictionary, canEdit = true }
             <input type="hidden" name="hours" value={JSON.stringify(hours)} />
 
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-2 sm:p-3 border rounded-lg gap-2 sm:gap-0">
-                <Label className="text-sm sm:text-base">{(dictionary as any).app?.restaurant?.openingHours?.applyToAll || 'Aplicar a todos los días'}</Label>
+                <Label className="text-sm sm:text-base">{dictionary.app.restaurant.openingHours.applyToAll}</Label>
                 <div className="flex items-center gap-2 w-full sm:w-auto">
                     <Switch
                         checked={areAllOpen}
@@ -161,7 +161,7 @@ export function OpeningHoursManager({ initialHours, dictionary, canEdit = true }
                         aria-label="Toggle all days"
                         disabled={!canEdit}
                     />
-                    <Label className="text-xs sm:text-sm">{areAllOpen ? ((dictionary as any).app?.restaurant?.openingHours?.allOpen || 'Todos abiertos') : ((dictionary as any).app?.restaurant?.openingHours?.markAllOpen || 'Marcar todos como abiertos')}</Label>
+                    <Label className="text-xs sm:text-sm">{areAllOpen ? dictionary.app.restaurant.openingHours.allOpen : dictionary.app.restaurant.openingHours.markAllOpen}</Label>
                 </div>
             </div>
 
@@ -172,7 +172,7 @@ export function OpeningHoursManager({ initialHours, dictionary, canEdit = true }
                         <div key={day} className="p-2 sm:p-3 md:p-4 border rounded-lg space-y-2 sm:space-y-3 md:space-y-4">
                             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
                                 <Label className="capitalize text-base sm:text-lg font-medium">
-                                    {(dictionary as any).app?.restaurant?.openingHours?.days?.[day] || day}
+                                    {dictionary.app.restaurant.openingHours.days[day as keyof typeof dictionary.app.restaurant.openingHours.days]}
                                 </Label>
                                 <div className="flex items-center gap-2 w-full sm:w-auto">
                                     <Switch
@@ -180,7 +180,7 @@ export function OpeningHoursManager({ initialHours, dictionary, canEdit = true }
                                         onCheckedChange={(checked) => handleToggleDay(day, checked)}
                                         disabled={!canEdit}
                                     />
-                                    <Label className="text-xs sm:text-sm">{dayHours.isOpen ? ((dictionary as any).app?.restaurant?.openingHours?.open || 'Abierto') : ((dictionary as any).app?.restaurant?.openingHours?.closed || 'Cerrado')}</Label>
+                                    <Label className="text-xs sm:text-sm">{dayHours.isOpen ? dictionary.app.restaurant.openingHours.open : dictionary.app.restaurant.openingHours.closed}</Label>
                                 </div>
                             </div>
 
@@ -222,7 +222,7 @@ export function OpeningHoursManager({ initialHours, dictionary, canEdit = true }
                                             onClick={() => handleAddSlot(day)}
                                         >
                                             <PlusCircle className="mr-2 h-4 w-4" />
-                                            {(dictionary as any).app?.restaurant?.openingHours?.addShift || 'Añadir turno'}
+                                            {dictionary.app.restaurant.openingHours.addShift}
                                         </Button>
                                     )}
                                 </div>

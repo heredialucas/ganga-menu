@@ -52,6 +52,16 @@ export function AdminSidebar({ dictionary, menuItems }: AdminSidebarProps) {
         return currentPath === path;
     };
 
+    const getLocaleFromPathname = () => {
+        const localeMatch = pathname.match(/^\/([a-z]{2})/);
+        return localeMatch ? localeMatch[1] : 'es';
+    };
+
+    const buildLocalizedUrl = (href: string) => {
+        const locale = getLocaleFromPathname();
+        return `/${locale}${href}`;
+    };
+
     const getTranslatedLabel = (label: string, isMobile: boolean = false) => {
         const keys = label.split('.');
         let current: any = dictionary.app;
@@ -65,16 +75,40 @@ export function AdminSidebar({ dictionary, menuItems }: AdminSidebarProps) {
 
         const fullText = typeof current === 'string' ? current : label;
 
-        // Para móvil, usar versiones más cortas
+        // Para móvil, usar versiones más cortas basadas en el locale actual
         if (isMobile) {
-            const mobileTexts: { [key: string]: string } = {
-                'Cuenta': 'Cuenta',
-                'Menú': 'Menú',
-                'Órdenes': 'Pedidos',
-                'Servicios': 'Serv',
-                'Restaurante': 'Rest'
+            const currentLocale = getLocaleFromPathname();
+
+            // Definir versiones móviles por locale
+            const mobileTexts: { [locale: string]: { [key: string]: string } } = {
+                'es': {
+                    'Cuenta': 'Cuenta',
+                    'Menú': 'Menú',
+                    'Órdenes': 'Pedidos',
+                    'Servicios': 'Serv',
+                    'Restaurante': 'Rest'
+                },
+                'en': {
+                    'Account': 'Account',
+                    'Menu': 'Menu',
+                    'Orders': 'Orders',
+                    'Services': 'Serv',
+                    'Restaurant': 'Rest'
+                },
+                'de': {
+                    'Konto': 'Konto',
+                    'Menü': 'Menü',
+                    'Bestellungen': 'Best',
+                    'Dienste': 'Dien',
+                    'Restaurant': 'Rest'
+                }
             };
-            return mobileTexts[fullText] || fullText;
+
+            const localeTexts = mobileTexts[currentLocale] || mobileTexts['es'];
+            const mobileText = localeTexts[fullText];
+
+            // Si no hay versión móvil específica, usar el texto completo
+            return mobileText || fullText;
         }
 
         return fullText;
@@ -97,7 +131,7 @@ export function AdminSidebar({ dictionary, menuItems }: AdminSidebarProps) {
                                         !isActivePath(item.href) && "text-gray-600 dark:text-zinc-400"
                                     )}
                                 >
-                                    <Link href={item.href} className="flex items-center gap-3 px-3 py-2 rounded-lg w-full hover:bg-gray-100 dark:hover:bg-zinc-800">
+                                    <Link href={buildLocalizedUrl(item.href)} className="flex items-center gap-3 px-3 py-2 rounded-lg w-full hover:bg-gray-100 dark:hover:bg-zinc-800">
                                         {Icon && <Icon className="h-5 w-5" />}
                                         <span>{title}</span>
                                     </Link>
@@ -118,7 +152,7 @@ export function AdminSidebar({ dictionary, menuItems }: AdminSidebarProps) {
                         return (
                             <Link
                                 key={item.href}
-                                href={item.href}
+                                href={buildLocalizedUrl(item.href)}
                                 className={cn(
                                     "flex flex-col items-center gap-0.5 px-1 py-1 rounded-lg min-w-0 flex-1 transition-colors",
                                     isActive

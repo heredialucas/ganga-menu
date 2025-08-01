@@ -1071,7 +1071,20 @@
         "saving": "Saving...",
         "savingShort": "...",
         "saveShort": "OK",
-        "footer": "Remember to save the code changes before sharing the link."
+        "footer": "Remember to save the code changes before sharing the link.",
+        "readOnly": {
+          "title": "Waiter Management (Read Only)",
+          "description": "Modify the access code and share the link. (Read only mode)",
+          "mode": "Read Only",
+          "modeDescription": "Read only mode"
+        },
+        "error": {
+          "title": "Error loading waiter management",
+          "description": "There was a problem loading waiter information.",
+          "details": "Error details:",
+          "retry": "Retry",
+          "help": "If the problem persists, contact technical support."
+        }
       },
       "kitchen": {
         "title": "Kitchen Management",
@@ -1085,6 +1098,19 @@
         "savingShort": "...",
         "saveShort": "OK",
         "footer": "Kitchen access is direct and does not require a code.",
+        "readOnly": {
+          "title": "Kitchen Management (Read Only)",
+          "description": "Modify the access code and share the link. (Read only mode)",
+          "mode": "Read Only",
+          "modeDescription": "Read only mode"
+        },
+        "error": {
+          "title": "Error loading kitchen management",
+          "description": "There was a problem loading kitchen information.",
+          "details": "Error details:",
+          "retry": "Retry",
+          "help": "If the problem persists, contact technical support."
+        },
         "auth": {
           "title": "Kitchen Access",
           "code": "Access Code",

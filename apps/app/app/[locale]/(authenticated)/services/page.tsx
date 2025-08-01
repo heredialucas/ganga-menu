@@ -1,7 +1,7 @@
 import { hasPermission } from '@repo/auth/server-permissions';
 import { getDictionary } from '@repo/internationalization';
 import { getRestaurantConfig } from '@repo/data-services/src/services/restaurantConfigService';
-import { ServicesCards } from './components/ServicesCards';
+import { ServicesManager } from './components/ServicesManager';
 import Link from 'next/link';
 import { ShareLinksWidget } from '@/components/ShareLinksWidget';
 import { FeedbackWidget } from '@/components/FeedbackWidget';
@@ -79,12 +79,10 @@ export default async function ServicesPage({
                     <FeedbackWidget dictionary={dictionary} />
                 </div>
             </div>
-            <ServicesCards
+            <ServicesManager
                 restaurantConfig={restaurantConfig}
                 dictionary={dictionary}
                 locale={locale}
-                canView={canViewServices}
-                canEdit={canEditServices}
             />
         </div>
     );

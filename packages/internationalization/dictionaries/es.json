@@ -1098,7 +1098,20 @@
         "saving": "Guardando...",
         "savingShort": "...",
         "saveShort": "OK",
-        "footer": "Recuerda guardar los cambios del código antes de compartir el enlace."
+        "footer": "Recuerda guardar los cambios del código antes de compartir el enlace.",
+        "readOnly": {
+          "title": "Gestión de Mozos (Solo Lectura)",
+          "description": "Modifica el código de acceso y comparte el enlace. (Modo solo lectura)",
+          "mode": "Solo Lectura",
+          "modeDescription": "Modo solo lectura"
+        },
+        "error": {
+          "title": "Error al cargar gestión de mozos",
+          "description": "Hubo un problema al cargar la información de mozos.",
+          "details": "Detalles del error:",
+          "retry": "Reintentar",
+          "help": "Si el problema persiste, contacta al soporte técnico."
+        }
       },
       "kitchen": {
         "title": "Gestión de Cocina",
@@ -1111,7 +1124,20 @@
         "saving": "Guardando...",
         "savingShort": "...",
         "saveShort": "OK",
-        "footer": "El acceso a la cocina es directo y no requiere código."
+        "footer": "El acceso a la cocina es directo y no requiere código.",
+        "readOnly": {
+          "title": "Gestión de Cocina (Solo Lectura)",
+          "description": "Modifica el código de acceso y comparte el enlace. (Modo solo lectura)",
+          "mode": "Solo Lectura",
+          "modeDescription": "Modo solo lectura"
+        },
+        "error": {
+          "title": "Error al cargar gestión de cocina",
+          "description": "Hubo un problema al cargar la información de cocina.",
+          "details": "Detalles del error:",
+          "retry": "Reintentar",
+          "help": "Si el problema persiste, contacta al soporte técnico."
+        }
       },
       "shared": {
         "downloadQR": "Descargar QR",

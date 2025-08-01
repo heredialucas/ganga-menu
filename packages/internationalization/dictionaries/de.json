@@ -1096,7 +1096,20 @@
         "saving": "Speichern...",
         "savingShort": "...",
         "saveShort": "OK",
-        "footer": "Denken Sie daran, die Änderungen des Codes vor dem Teilen des Links zu speichern."
+        "footer": "Denken Sie daran, die Änderungen des Codes vor dem Teilen des Links zu speichern.",
+        "readOnly": {
+          "title": "Kellner-Verwaltung (Nur Lesen)",
+          "description": "Ändern Sie den Zugangscode und teilen Sie den Link. (Nur-Lesen-Modus)",
+          "mode": "Nur Lesen",
+          "modeDescription": "Nur-Lesen-Modus"
+        },
+        "error": {
+          "title": "Fehler beim Laden der Kellner-Verwaltung",
+          "description": "Beim Laden der Kellner-Informationen ist ein Problem aufgetreten.",
+          "details": "Fehlerdetails:",
+          "retry": "Wiederholen",
+          "help": "Wenn das Problem weiterhin besteht, kontaktieren Sie den technischen Support."
+        }
       },
       "kitchen": {
         "title": "Küchen-Verwaltung",
@@ -1109,7 +1122,20 @@
         "saving": "Speichern...",
         "savingShort": "...",
         "saveShort": "OK",
-        "footer": "Der Zugang zur Küche ist direkt und erfordert keinen Code."
+        "footer": "Der Zugang zur Küche ist direkt und erfordert keinen Code.",
+        "readOnly": {
+          "title": "Küchen-Verwaltung (Nur Lesen)",
+          "description": "Ändern Sie den Zugangscode und teilen Sie den Link. (Nur-Lesen-Modus)",
+          "mode": "Nur Lesen",
+          "modeDescription": "Nur-Lesen-Modus"
+        },
+        "error": {
+          "title": "Fehler beim Laden der Küchen-Verwaltung",
+          "description": "Beim Laden der Küchen-Informationen ist ein Problem aufgetreten.",
+          "details": "Fehlerdetails:",
+          "retry": "Wiederholen",
+          "help": "Wenn das Problem weiterhin besteht, kontaktieren Sie den technischen Support."
+        }
       },
       "shared": {
         "downloadQR": "QR herunterladen",

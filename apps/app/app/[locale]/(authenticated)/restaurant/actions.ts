@@ -7,6 +7,7 @@ import { uploadR2Image, deleteR2Image } from '@repo/data-services/src/services/u
 import { getTablesByRestaurant } from '@repo/data-services/src/services/tableService';
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
+import type { Dictionary } from '@repo/internationalization';
 
 const restaurantConfigSchema = z.object({
     name: z.string().min(1, 'El nombre es requerido'),
@@ -22,7 +23,7 @@ const restaurantConfigSchema = z.object({
     logoUrl: z.string().url('URL de logo inválida').optional().or(z.literal('')),
 });
 
-export async function saveRestaurantConfig(prevState: any, formData: FormData, dictionary?: any) {
+export async function saveRestaurantConfig(prevState: any, formData: FormData, dictionary?: Dictionary) {
     try {
         // Verificar permisos antes de proceder
         await requirePermission('restaurant:edit');
@@ -95,7 +96,7 @@ export async function saveRestaurantConfig(prevState: any, formData: FormData, d
     }
 }
 
-export async function saveRestaurantDesign(prevState: any, formData: FormData) {
+export async function saveRestaurantDesign(prevState: any, formData: FormData, dictionary?: Dictionary) {
     // Verificar permisos antes de proceder
     await requirePermission('restaurant:edit');
 
@@ -104,7 +105,7 @@ export async function saveRestaurantDesign(prevState: any, formData: FormData) {
     return saveDesign(prevState, formData);
 }
 
-export async function getRestaurantTables(dictionary?: any) {
+export async function getRestaurantTables(dictionary?: Dictionary) {
     try {
         await requirePermission('restaurant:view');
         const user = await getCurrentUser();

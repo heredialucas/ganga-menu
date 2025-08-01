@@ -9,13 +9,17 @@ interface OrdersDashboardServerProps {
     restaurantConfig: RestaurantConfigData;
     dictionary: Dictionary;
     locale: string;
+    canEdit?: boolean;
+    canView?: boolean;
 }
 
 export async function OrdersDashboardServer({
     orders,
     restaurantConfig,
     dictionary,
-    locale
+    locale,
+    canEdit: parentCanEdit,
+    canView: parentCanView
 }: OrdersDashboardServerProps) {
     // Verificar permisos específicos
     const [canViewOrders, canEditOrders] = await Promise.all([
@@ -23,8 +27,12 @@ export async function OrdersDashboardServer({
         hasPermission('orders:edit')
     ]);
 
+    // Usar los permisos del padre si están disponibles, sino usar los verificados
+    const finalCanView = parentCanView !== undefined ? parentCanView : canViewOrders;
+    const finalCanEdit = parentCanEdit !== undefined ? parentCanEdit : canEditOrders;
+
     // Validar que el usuario tenga al menos permisos de lectura
-    if (!canViewOrders) {
+    if (!finalCanView) {
         return (
             <div className="space-y-3 sm:space-y-4 md:space-y-6">
                 <div className="flex items-center justify-center min-h-[50vh]">
@@ -44,8 +52,8 @@ export async function OrdersDashboardServer({
             restaurantConfig={restaurantConfig}
             dictionary={dictionary}
             locale={locale}
-            canView={canViewOrders}
-            canEdit={canEditOrders}
+            canView={finalCanView}
+            canEdit={finalCanEdit}
         />
     );
 } 

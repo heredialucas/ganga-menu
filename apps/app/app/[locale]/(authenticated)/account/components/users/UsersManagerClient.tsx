@@ -112,6 +112,11 @@ export function UsersManagerClient({
     });
 
     const handleCreateUser = () => {
+        if (!canCreateUsers) {
+            toast.error(dictionary.app?.account?.users?.noCreatePermission || 'No tienes permisos para crear usuarios');
+            return;
+        }
+
         setEditingUser(null);
         setUserForm({
             name: '',
@@ -125,6 +130,11 @@ export function UsersManagerClient({
     };
 
     const handleEditUser = (user: UserData) => {
+        if (!canEditUsers) {
+            toast.error(dictionary.app?.account?.users?.noEditPermission || 'No tienes permisos para editar usuarios');
+            return;
+        }
+
         setEditingUser(user);
         setUserForm({
             name: user.name,
@@ -138,6 +148,11 @@ export function UsersManagerClient({
     };
 
     const handlePermissionChange = (permission: Permission, checked: boolean) => {
+        if (!canEditUsers) {
+            toast.error(dictionary.app?.account?.users?.noEditPermission || 'No tienes permisos para editar usuarios');
+            return;
+        }
+
         setUserForm(prev => {
             const newPermissions = checked
                 ? [...prev.permissions, permission]
@@ -147,6 +162,11 @@ export function UsersManagerClient({
     };
 
     const handleUserSubmit = () => {
+        if (!canEditUsers && !canCreateUsers) {
+            toast.error(dictionary.app?.account?.users?.noEditPermission || 'No tienes permisos para gestionar usuarios');
+            return;
+        }
+
         if (!userForm.name || !userForm.lastName || !userForm.email) {
             toast.error(dictionary.app?.account?.users?.validation?.nameRequired || "Nombre, apellido y email son requeridos");
             return;
@@ -192,6 +212,11 @@ export function UsersManagerClient({
     };
 
     const handleDeleteUser = (user: UserData) => {
+        if (!canDeleteUsers) {
+            toast.error(dictionary.app?.account?.users?.noDeletePermission || 'No tienes permisos para eliminar usuarios');
+            return;
+        }
+
         const promise = async () => {
             const result = await deleteUser(user.id, dictionary);
             if (!result.success) {
@@ -231,6 +256,15 @@ export function UsersManagerClient({
                         {canCreateUsers && (
                             <div className="flex shrink-0 gap-2">
                                 <Button className="w-full sm:w-auto text-sm sm:text-base" onClick={handleCreateUser}>
+                                    <Plus className="h-4 w-4 mr-2" />
+                                    <span className="hidden sm:inline">{dictionary.app?.account?.users?.newUser?.desktop || 'Nuevo Usuario'}</span>
+                                    <span className="sm:hidden">{dictionary.app?.account?.users?.newUser?.mobile || 'Nuevo'}</span>
+                                </Button>
+                            </div>
+                        )}
+                        {!canCreateUsers && canManageUsers && (
+                            <div className="flex shrink-0">
+                                <Button className="w-full sm:w-auto text-sm sm:text-base" disabled>
                                     <Plus className="h-4 w-4 mr-2" />
                                     <span className="hidden sm:inline">{dictionary.app?.account?.users?.newUser?.desktop || 'Nuevo Usuario'}</span>
                                     <span className="sm:hidden">{dictionary.app?.account?.users?.newUser?.mobile || 'Nuevo'}</span>

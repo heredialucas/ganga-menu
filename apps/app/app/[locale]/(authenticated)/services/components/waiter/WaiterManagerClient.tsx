@@ -32,7 +32,10 @@ export function WaiterManagerClient({
     const [waiterCode, setWaiterCode] = useState(restaurantConfig.waiterCode);
 
     const handleUpdateWaiterCode = () => {
-        if (!canEdit) return;
+        if (!canEdit) {
+            toast.error(dictionary.web.services.shared.codeError || 'No tienes permisos para editar el código de mozos');
+            return;
+        }
 
         startTransition(async () => {
             const promise = async () => {

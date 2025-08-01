@@ -25,12 +25,23 @@ export async function UsersManagerServer({ dictionary, locale }: UsersManagerSer
         );
     }
 
-    // Verificar permisos para gestionar usuarios
-    const canManageUsers = await hasPermission('admin:manage_users');
+    // Verificar permisos granulares para gestión de usuarios
+    const [canManageUsers, canViewUsers] = await Promise.all([
+        hasPermission('admin:manage_users'),
+        hasPermission('admin:manage_users') // Por ahora usamos el mismo permiso para todo
+    ]);
 
-    // Si no tiene permisos para gestionar usuarios, no mostrar nada
+    // Si no tiene permisos para gestionar usuarios, mostrar mensaje de acceso denegado
     if (!canManageUsers) {
-        return null;
+        return (
+            <div className="flex items-center justify-center min-h-[50vh]">
+                <div className="text-center">
+                    <p className="text-sm sm:text-base text-muted-foreground">
+                        {dictionary.app?.account?.userNotFound || 'Acceso denegado'}
+                    </p>
+                </div>
+            </div>
+        );
     }
 
     // Obtener usuarios subordinados

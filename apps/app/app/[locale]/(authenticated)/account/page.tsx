@@ -1,5 +1,5 @@
 import { getDictionary } from '@repo/internationalization';
-import { requirePermission } from '@repo/auth';
+import { requirePermission, hasPermission } from '@repo/auth';
 import { TabsContent } from '@repo/design-system/components/ui/tabs';
 import { ProfileManagerServer } from './components/profile/ProfileManagerServer';
 import { PasswordManagerServer } from './components/password/PasswordManagerServer';
@@ -25,6 +25,11 @@ export default async function AccountPage({ params }: AccountPageProps) {
     // Obtener diccionario
     const dictionary = await getDictionary(locale);
 
+
+
+    // Verificar permisos para gestionar usuarios
+    const canManageUsers = await hasPermission('admin:manage_users');
+
     return (
         <div className="space-y-3 sm:space-y-4 md:space-y-6 p-1 sm:p-2 md:p-6">
             <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
@@ -42,7 +47,7 @@ export default async function AccountPage({ params }: AccountPageProps) {
                 </div>
             </div>
 
-            <AccountTabs dictionary={dictionary}>
+            <AccountTabs dictionary={dictionary} showUsersTab={canManageUsers}>
                 <TabsContent value="profile" className="space-y-3 sm:space-y-4">
                     <Suspense fallback={<ProfileLoading />}>
                         <ProfileManagerServer dictionary={dictionary} locale={locale} />
@@ -52,11 +57,13 @@ export default async function AccountPage({ params }: AccountPageProps) {
                     </Suspense>
                 </TabsContent>
 
-                <TabsContent value="users" className="space-y-3 sm:space-y-4">
-                    <Suspense fallback={<UsersLoading />}>
-                        <UsersManagerServer dictionary={dictionary} locale={locale} />
-                    </Suspense>
-                </TabsContent>
+                {canManageUsers && (
+                    <TabsContent value="users" className="space-y-3 sm:space-y-4">
+                        <Suspense fallback={<UsersLoading />}>
+                            <UsersManagerServer dictionary={dictionary} locale={locale} />
+                        </Suspense>
+                    </TabsContent>
+                )}
             </AccountTabs>
         </div>
     );

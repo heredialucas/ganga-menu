@@ -41,13 +41,20 @@ export function DishManagerClient({ dishes, categories, dictionary, canEdit, can
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleOpenDialog = (dish: DishWithCategory | null) => {
-        if (!canEdit) return;
+        if (!canEdit) {
+            toast.error(dictionary.app?.menu?.dishes?.noPermission || 'No tienes permisos para editar platos');
+            return;
+        }
         setEditingDish(dish);
         setPreviewImage(dish?.imageUrl || null);
         setIsDialogOpen(true);
     };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!canEdit) {
+            toast.error(dictionary.app?.menu?.dishes?.noPermission || 'No tienes permisos para editar platos');
+            return;
+        }
         const file = e.target.files?.[0];
         if (file) {
             const reader = new FileReader();
@@ -60,7 +67,10 @@ export function DishManagerClient({ dishes, categories, dictionary, canEdit, can
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (!canEdit) return;
+        if (!canEdit) {
+            toast.error(dictionary.app?.menu?.dishes?.noPermission || 'No tienes permisos para editar platos');
+            return;
+        }
 
         const form = e.currentTarget;
         const formData = new FormData(form);
@@ -110,7 +120,10 @@ export function DishManagerClient({ dishes, categories, dictionary, canEdit, can
     };
 
     const handleDelete = (dish: DishWithCategory) => {
-        if (!canEdit) return;
+        if (!canEdit) {
+            toast.error(dictionary.app?.menu?.dishes?.noPermission || 'No tienes permisos para eliminar platos');
+            return;
+        }
 
         startTransition(async () => {
             toast.promise(deleteDish(dish.id), {
@@ -135,7 +148,7 @@ export function DishManagerClient({ dishes, categories, dictionary, canEdit, can
                                 <span className="text-lg sm:text-xl">
                                     {canEdit
                                         ? (dictionary.app?.menu?.dishes?.title || 'Platos')
-                                        : (dictionary.app?.menu?.dishes?.title || 'Platos') + ' (Solo Lectura)'
+                                        : (dictionary.app?.menu?.dishes?.title || 'Platos') + ' (' + (dictionary.app?.menu?.dishes?.readOnlyTitle || 'Solo Lectura') + ')'
                                     }
                                 </span>
                             </CardTitle>

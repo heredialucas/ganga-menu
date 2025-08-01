@@ -35,21 +35,51 @@ export function RestaurantViewManager({
             <TabsList className={`grid w-full ${gridCols} h-auto sm:h-10`}>
                 <TabsTrigger value="config" className="gap-1 sm:gap-2 text-xs sm:text-sm py-2 sm:py-0">
                     <Settings className="h-3 w-3 sm:h-4 sm:w-4" />
-                    <span className="hidden sm:inline">{dictionary.app.restaurant.view.configTab}</span>
-                    <span className="sm:hidden">{dictionary.app.restaurant.view.configTab}</span>
+                    <span className="hidden sm:inline">
+                        {canEdit
+                            ? dictionary.app.restaurant.view.configTab
+                            : dictionary.app.restaurant.view.configTab + ' (' + (dictionary.app.restaurant.config.readOnlyTitle || 'Solo Lectura') + ')'
+                        }
+                    </span>
+                    <span className="sm:hidden">
+                        {canEdit
+                            ? dictionary.app.restaurant.view.configTab
+                            : dictionary.app.restaurant.view.configTab + ' (' + (dictionary.app.restaurant.config.readOnlyTitle || 'Solo Lectura') + ')'
+                        }
+                    </span>
                 </TabsTrigger>
                 {showDesignTab && (
                     <TabsTrigger value="design" className="gap-1 sm:gap-2 text-xs sm:text-sm py-2 sm:py-0">
                         <LayoutDashboard className="h-3 w-3 sm:h-4 sm:w-4" />
-                        <span className="hidden sm:inline">{dictionary.app.restaurant.view.designTab}</span>
-                        <span className="sm:hidden">{dictionary.app.restaurant.view.designTab}</span>
+                        <span className="hidden sm:inline">
+                            {canEdit
+                                ? dictionary.app.restaurant.view.designTab
+                                : dictionary.app.restaurant.view.designTab + ' (' + (dictionary.app.restaurant.design.readOnlyTitle || 'Solo Lectura') + ')'
+                            }
+                        </span>
+                        <span className="sm:hidden">
+                            {canEdit
+                                ? dictionary.app.restaurant.view.designTab
+                                : dictionary.app.restaurant.view.designTab + ' (' + (dictionary.app.restaurant.design.readOnlyTitle || 'Solo Lectura') + ')'
+                            }
+                        </span>
                     </TabsTrigger>
                 )}
                 {showQRTab && (
                     <TabsTrigger value="qr" className="gap-1 sm:gap-2 text-xs sm:text-sm py-2 sm:py-0">
                         <QrCode className="h-3 w-3 sm:h-4 sm:w-4" />
-                        <span className="hidden sm:inline">{dictionary.app.restaurant.view.qrTab}</span>
-                        <span className="sm:hidden">{dictionary.app.restaurant.view.qrTab}</span>
+                        <span className="hidden sm:inline">
+                            {canEdit
+                                ? dictionary.app.restaurant.view.qrTab
+                                : dictionary.app.restaurant.view.qrTab + ' (' + (dictionary.app.restaurant.config.readOnlyTitle || 'Solo Lectura') + ')'
+                            }
+                        </span>
+                        <span className="sm:hidden">
+                            {canEdit
+                                ? dictionary.app.restaurant.view.qrTab
+                                : dictionary.app.restaurant.view.qrTab + ' (' + (dictionary.app.restaurant.config.readOnlyTitle || 'Solo Lectura') + ')'
+                            }
+                        </span>
                     </TabsTrigger>
                 )}
             </TabsList>

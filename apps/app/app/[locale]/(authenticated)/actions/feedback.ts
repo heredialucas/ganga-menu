@@ -4,6 +4,7 @@ import { env } from '@/env';
 import resend from '@repo/email';
 import { ContactTemplate } from '@repo/email/templates/contact';
 import { z } from 'zod';
+import type { Dictionary } from '@repo/internationalization';
 
 const feedbackSchema = z.object({
     name: z.string().min(1, 'El nombre es requerido'),
@@ -13,17 +14,18 @@ const feedbackSchema = z.object({
 
 export async function sendFeedback(
     name: string,
-    message: string
+    message: string,
+    dictionary?: Dictionary
 ): Promise<{ success: boolean; error?: string }> {
     try {
         const validatedData = feedbackSchema.parse({ name, email: 'feedback@ganga-menu.com', message });
 
         if (!resend) {
-            return { success: false, error: 'Servicio de email no disponible' };
+            return { success: false, error: dictionary?.app?.feedback?.serviceUnavailable || 'Servicio de email no disponible' };
         }
 
         if (!env.RESEND_FROM) {
-            return { success: false, error: 'Configuración de email incompleta' };
+            return { success: false, error: dictionary?.app?.feedback?.configError || 'Configuración de email incompleta' };
         }
 
         await resend.emails.send({
@@ -41,9 +43,9 @@ export async function sendFeedback(
         return { success: true };
     } catch (error) {
         if (error instanceof z.ZodError) {
-            return { success: false, error: 'Datos inválidos' };
+            return { success: false, error: dictionary?.app?.feedback?.validationError || 'Datos inválidos' };
         }
 
-        return { success: false, error: 'Error interno del servidor' };
+        return { success: false, error: dictionary?.app?.feedback?.serverError || 'Error interno del servidor' };
     }
 } 

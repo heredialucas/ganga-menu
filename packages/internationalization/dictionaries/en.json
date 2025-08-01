@@ -55,12 +55,13 @@
     },
     "share": {
       "title": "Share Links",
-      "description": "Share these links to provide access to the different views of your restaurant.",
+      "description": "Share these links to provide access to different views of your restaurant.",
       "open": "Open share dialog",
       "links_button": "Links",
-      "menu": "Link to Public Menu",
-      "kitchen": "Link to Kitchen View",
-      "waiter": "Link to Waiter View"
+      "menu": "Public Menu Link",
+      "kitchen": "Kitchen View Link",
+      "waiter": "Waiter View Link",
+      "premiumRequired": "This feature requires a premium account"
     },
     "feedback": {
       "buttonDesktop": "Give feedback",
@@ -78,7 +79,11 @@
       "send": "Send",
       "sending": "Sending...",
       "success": "Thank you for your feedback!",
-      "error": "Error sending feedback. Please try again."
+      "error": "Error sending feedback. Please try again.",
+      "serviceUnavailable": "Email service not available",
+      "configError": "Incomplete email configuration",
+      "validationError": "Invalid data",
+      "serverError": "Internal server error"
     },
     "account": {
       "title": "Account Management",
@@ -113,12 +118,15 @@
         "validation": {
           "nameRequired": "Name is required",
           "lastNameRequired": "Last name is required",
-          "emailInvalid": "Invalid email"
+          "emailInvalid": "Invalid email",
+          "passwordRequired": "Password is required for new users",
+          "passwordMin": "Password must have at least 6 characters"
         },
         "toast": {
           "updating": "Updating profile...",
           "success": "Profile updated successfully.",
-          "error": "Error updating profile"
+          "error": "Error updating profile",
+          "noPermission": "You don't have permission to edit the profile."
         }
       },
       "password": {
@@ -140,7 +148,8 @@
         "toast": {
           "updating": "Updating password...",
           "success": "Password updated successfully.",
-          "error": "Error updating password"
+          "error": "Error updating password",
+          "noPermission": "You don't have permission to change the password."
         }
       },
       "users": {
@@ -241,39 +250,27 @@
           "title": "Loading user management...",
           "description": "Loading user information"
         }
-      },
-      "profile": {
-        "error": {
-          "title": "Error loading profile",
-          "description": "An error occurred while loading profile information",
-          "retry": "Try again",
-          "details": "Unknown error loading profile"
-        },
-        "loading": {
-          "title": "Loading profile...",
-          "description": "Loading profile information"
-        }
-      },
-      "password": {
-        "error": {
-          "title": "Error loading security settings",
-          "description": "An error occurred while loading password settings",
-          "retry": "Try again",
-          "details": "Unknown error loading security settings"
-        },
-        "loading": {
-          "title": "Loading security settings...",
-          "description": "Loading security information"
-        }
       }
     },
     "menu": {
       "title": "Menu Management",
       "subtitle": "Create and edit your dishes. Use the dropdowns for advanced configurations.",
       "userNotAuthenticated": "User not authenticated.",
+      "readOnlyTitle": "Read-only",
+      "readOnlySubtitle": "Read-only mode",
+      "order": {
+        "error": "Error processing order"
+      },
+      "toast": {
+        "validationError": "Validation error. Check the marked fields.",
+        "success": "Menu configuration saved successfully",
+        "error": "Error saving menu configuration"
+      },
       "categories": {
         "title": "Category Manager",
         "newCategory": "New Category",
+        "readOnlyTitle": "Read-only",
+        "readOnlySubtitle": "Read-only mode",
         "existingCategories": "Existing Categories",
         "name": "Name",
         "action": "Action",
@@ -331,6 +328,8 @@
         },
         "readOnlyMode": "Read-only mode",
         "readOnlyDescription": "You can view the information but cannot modify it.",
+        "readOnlyTitle": "Read-only",
+        "readOnlySubtitle": "Read-only mode",
         "cancel": "Cancel",
         "save": "Save",
         "saving": "Saving...",
@@ -361,6 +360,8 @@
       },
       "dailySpecials": {
         "title": "Daily Specials Scheduler",
+        "readOnlyTitle": "Read-only",
+        "readOnlySubtitle": "Read-only mode",
         "schedulePromotion": "Schedule Promotion",
         "dish": "Dish",
         "dishPlaceholder": "Select a dish",
@@ -549,7 +550,9 @@
           "tablesError": "Error retrieving tables"
         },
         "readOnlyMode": "Read-only mode",
-        "readOnlyDescription": "You can view the configuration but cannot modify it."
+        "readOnlyDescription": "You can view the configuration but cannot modify it.",
+        "readOnlyTitle": "Read-only",
+        "readOnlySubtitle": "Read-only mode"
       },
       "openingHours": {
         "title": "Opening Hours",
@@ -643,7 +646,12 @@
           "reset": "Design reset successfully.",
           "resetError": "Error resetting design.",
           "notAuthenticated": "User not authenticated"
-        }
+        },
+        "readOnlyMode": "Read-only mode",
+        "readOnlyDescription": "You can view the design but cannot modify it.",
+        "readOnlyTitle": "Read-only",
+        "readOnlySubtitle": "Read-only mode",
+        "noEditPermission": "You don't have permission to edit the design."
       },
       "qr": {
         "title": "QR Code Generator",
@@ -703,7 +711,8 @@
         "code": "Access Code",
         "enter": "Enter",
         "invalidCode": "Incorrect code",
-        "placeholder": "Enter the code"
+        "placeholder": "Enter the code",
+        "codeRequired": "Code required"
       },
       "order": {
         "title": "Take Order",
@@ -747,7 +756,8 @@
         "releaseTable": "Release Table",
         "releaseTableMobile": "Release",
         "releasingTable": "Releasing...",
-        "releasingTableMobile": "..."
+        "releasingTableMobile": "...",
+        "tableReleased": "Table released successfully"
       }
     },
     "kitchen": {
@@ -759,6 +769,36 @@
         "invalidCode": "Incorrect code",
         "placeholder": "Enter the code",
         "codeRequired": "Code required"
+      }
+    },
+    "orders": {
+      "readOnlyTitle": "Read-only",
+      "readOnlySubtitle": "Read-only mode",
+      "readOnlyDescription": "You can view the orders but cannot modify them.",
+      "toast": {
+        "orderDeleted": "Order deleted successfully",
+        "deleteError": "Error deleting order"
+      }
+    },
+    "services": {
+      "readOnlyTitle": "Read-only",
+      "readOnlySubtitle": "Read-only mode",
+      "readOnlyDescription": "You can view the services but cannot modify them.",
+      "shared": {
+        "codeSaved": "Code updated successfully",
+        "codeError": "Error updating code"
+      },
+      "setup": {
+        "notFound": "Restaurant configuration not found"
+      }
+    },
+    "kitchen": {
+      "interface": {
+        "error": "Error updating status"
+      },
+      "auth": {
+        "codeRequired": "Code required",
+        "invalidCode": "Incorrect code"
       }
     },
     "header": {
@@ -1188,12 +1228,13 @@
             "inProgress": "In Progress",
             "ready": "Ready"
           },
-          "status": {
-            "active": "Active",
-            "ready": "Ready/Delivered",
-            "cancelled": "Cancelled",
-            "completed": "Completed"
-          }
+                  "status": {
+          "active": "Active",
+          "ready": "Ready/Delivered",
+          "cancelled": "Cancelled",
+          "completed": "Completed"
+        },
+        "error": "Error updating status"
         }
       },
       "shared": {
@@ -1215,6 +1256,11 @@
     "orders": {
       "title": "Order Management",
       "subtitle": "Monitor and manage your restaurant orders in real time",
+      "toast": {
+        "orderDeleted": "Order deleted successfully",
+        "deleteError": "Error deleting order"
+      },
+
       "connection": {
         "connected": "Connected",
         "connectedShort": "OK",

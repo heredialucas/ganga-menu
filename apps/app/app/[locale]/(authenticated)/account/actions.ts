@@ -46,10 +46,10 @@ const userSchema = z.object({
     permissions: z.array(z.string()),
 });
 
-export async function updateProfile(userId: string, formData: FormData) {
+export async function updateProfile(userId: string, formData: FormData, dictionary?: Dictionary) {
     try {
         if (!await hasPermission('account:edit_own')) {
-            return { success: false, message: 'No tienes permisos para editar el perfil.' };
+            return { success: false, message: dictionary?.app?.account?.profile?.toast?.noPermission || 'No tienes permisos para editar el perfil.' };
         }
 
         const data = Object.fromEntries(formData.entries());
@@ -62,16 +62,16 @@ export async function updateProfile(userId: string, formData: FormData) {
         await updateUserService(userId, { ...validated.data, password: '' });
 
         revalidatePath('/account');
-        return { success: true, message: 'Perfil actualizado exitosamente' };
+        return { success: true, message: dictionary?.app?.account?.profile?.toast?.success || 'Perfil actualizado exitosamente' };
     } catch (error) {
-        return { success: false, message: 'Error al actualizar el perfil' };
+        return { success: false, message: dictionary?.app?.account?.profile?.toast?.error || 'Error al actualizar el perfil' };
     }
 }
 
-export async function changePassword(userId: string, formData: FormData) {
+export async function changePassword(userId: string, formData: FormData, dictionary?: Dictionary) {
     try {
         if (!await hasPermission('account:change_password')) {
-            return { success: false, message: 'No tienes permisos para cambiar la contraseña.' };
+            return { success: false, message: dictionary?.app?.account?.password?.toast?.noPermission || 'No tienes permisos para cambiar la contraseña.' };
         }
 
         const data = Object.fromEntries(formData.entries());
@@ -88,14 +88,14 @@ export async function changePassword(userId: string, formData: FormData) {
         );
 
         if (!result.success) {
-            return { success: false, message: result.message || 'Error al cambiar la contraseña' };
+            return { success: false, message: result.message || (dictionary?.app?.account?.password?.toast?.error || 'Error al cambiar la contraseña') };
         }
 
         revalidatePath('/account');
-        return { success: true, message: 'Contraseña actualizada exitosamente' };
+        return { success: true, message: dictionary?.app?.account?.password?.toast?.success || 'Contraseña actualizada exitosamente' };
 
     } catch (error) {
-        return { success: false, message: 'Error al cambiar la contraseña' };
+        return { success: false, message: dictionary?.app?.account?.password?.toast?.error || 'Error al cambiar la contraseña' };
     }
 }
 
@@ -141,7 +141,7 @@ export async function createUser(formData: FormData, dictionary?: Dictionary) {
         }
 
         revalidatePath('/account');
-        return { success: true, message: 'Usuario creado exitosamente' };
+        return { success: true, message: dictionary?.app?.account?.users?.toast?.created || 'Usuario creado exitosamente' };
 
     } catch (error) {
         return { success: false, message: dictionary?.app?.account?.users?.actions?.userCreationError || 'Error al crear el usuario' };
@@ -196,7 +196,7 @@ export async function updateUser(userId: string, formData: FormData, dictionary?
         }
 
         revalidatePath('/account');
-        return { success: true, message: 'Usuario actualizado exitosamente' };
+        return { success: true, message: dictionary?.app?.account?.users?.toast?.updated || 'Usuario actualizado exitosamente' };
 
     } catch (error) {
         return { success: false, message: dictionary?.app?.account?.users?.actions?.userUpdateError || 'Error al actualizar el usuario' };
@@ -231,7 +231,7 @@ export async function deleteUser(userId: string, dictionary?: Dictionary) {
         }
 
         revalidatePath('/account');
-        return { success: true, message: 'Usuario eliminado exitosamente' };
+        return { success: true, message: dictionary?.app?.account?.users?.toast?.deleted || 'Usuario eliminado exitosamente' };
 
     } catch (error) {
         return { success: false, message: dictionary?.app?.account?.users?.actions?.userDeleteError || 'Error al eliminar el usuario' };

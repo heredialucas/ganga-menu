@@ -1,4 +1,4 @@
-import { hasPermission } from '@repo/auth/server-permissions';
+import { requirePermission, hasPermission } from '@repo/auth/server-permissions';
 import { getDictionary } from '@repo/internationalization';
 import { getRestaurantConfig } from '@repo/data-services/src/services/restaurantConfigService';
 import { ServicesManager } from './components/ServicesManager';
@@ -12,6 +12,9 @@ export default async function ServicesPage({
     params: Promise<{ locale: string }>;
 }) {
     const { locale } = await params;
+
+    // Verificar permisos básicos
+    await requirePermission('services:view', locale);
 
     const [dictionary, restaurantConfig, canViewServices, canEditServices] = await Promise.all([
         getDictionary(locale),
@@ -57,19 +60,19 @@ export default async function ServicesPage({
                     <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">
                         {canEditServices
                             ? (dictionary.web?.services?.title || 'Servicios')
-                            : (dictionary.web?.services?.title || 'Servicios') + ' (Solo Lectura)'
+                            : (dictionary.web?.services?.title || 'Servicios') + ' (' + (dictionary.app?.services?.readOnlyTitle || 'Solo Lectura') + ')'
                         }
                     </h1>
                     <p className="text-sm sm:text-base text-muted-foreground mt-2">
                         {canEditServices
                             ? (dictionary.web?.services?.subtitle || 'Accesos directos para el personal de tu restaurante.')
-                            : (dictionary.web?.services?.subtitle || 'Accesos directos para el personal de tu restaurante.') + ' (Modo solo lectura)'
+                            : (dictionary.web?.services?.subtitle || 'Accesos directos para el personal de tu restaurante.') + ' (' + (dictionary.app?.services?.readOnlySubtitle || 'Modo solo lectura') + ')'
                         }
                     </p>
                     {!canEditServices && (
                         <div className="mt-2 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-md">
                             <p className="text-sm text-yellow-800 dark:text-yellow-200">
-                                Modo solo lectura: Puedes ver los servicios pero no modificarlos.
+                                {dictionary.app?.services?.readOnlyDescription || 'Modo solo lectura: Puedes ver los servicios pero no modificarlos.'}
                             </p>
                         </div>
                     )}
@@ -83,6 +86,8 @@ export default async function ServicesPage({
                 restaurantConfig={restaurantConfig}
                 dictionary={dictionary}
                 locale={locale}
+                canEdit={canEditServices}
+                canView={canViewServices}
             />
         </div>
     );

@@ -28,11 +28,19 @@ export function ShareableLinkClient({ link, linkName, dictionary, canView }: Sha
     }, [link]);
 
     const handleCopyToClipboard = () => {
+        if (!canView) {
+            toast.error(dictionary.web?.services?.shared?.codeError || 'No tienes permisos para copiar enlaces');
+            return;
+        }
         navigator.clipboard.writeText(link);
         toast.success(dictionary.web?.services?.shared?.copySuccess?.replace('{name}', linkName) || `Enlace para ${linkName} copiado al portapapeles.`);
     };
 
     const handleDownloadQR = () => {
+        if (!canView) {
+            toast.error(dictionary.web?.services?.shared?.codeError || 'No tienes permisos para descargar códigos QR');
+            return;
+        }
         if (!qrCodeDataUrl) return;
         const a = document.createElement('a');
         a.href = qrCodeDataUrl;
@@ -59,22 +67,24 @@ export function ShareableLinkClient({ link, linkName, dictionary, canView }: Sha
                     <img src={qrCodeDataUrl} alt={`QR Code for ${linkName}`} className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48" />
                 </div>
             )}
-            <div className="flex flex-col sm:flex-row w-full items-stretch sm:items-center gap-2">
-                {qrCodeDataUrl && (
-                    <Button variant="outline" onClick={handleDownloadQR} className="flex-1">
-                        <Download className="mr-2 h-4 w-4" />
-                        <span className="hidden sm:inline">{dictionary.web?.services?.shared?.downloadQR || 'Descargar QR'}</span>
-                        <span className="sm:hidden">{dictionary.web?.services?.shared?.downloadQRShort || 'Descargar'}</span>
-                    </Button>
-                )}
-                <a href={link} target="_blank" rel="noopener noreferrer" className="flex-1">
-                    <Button variant="secondary" className="w-full">
-                        <span className="hidden sm:inline">{dictionary.web?.services?.shared?.open || 'Abrir'}</span>
-                        <span className="sm:hidden">{dictionary.web?.services?.shared?.openShort || 'Abrir'}</span>
-                        <ExternalLink className="ml-2 h-4 w-4" />
-                    </Button>
-                </a>
-            </div>
+            {canView && (
+                <div className="flex flex-col sm:flex-row w-full items-stretch sm:items-center gap-2">
+                    {qrCodeDataUrl && (
+                        <Button variant="outline" onClick={handleDownloadQR} className="flex-1">
+                            <Download className="mr-2 h-4 w-4" />
+                            <span className="hidden sm:inline">{dictionary.web?.services?.shared?.downloadQR || 'Descargar QR'}</span>
+                            <span className="sm:hidden">{dictionary.web?.services?.shared?.downloadQRShort || 'Descargar'}</span>
+                        </Button>
+                    )}
+                    <a href={link} target="_blank" rel="noopener noreferrer" className="flex-1">
+                        <Button variant="secondary" className="w-full">
+                            <span className="hidden sm:inline">{dictionary.web?.services?.shared?.open || 'Abrir'}</span>
+                            <span className="sm:hidden">{dictionary.web?.services?.shared?.openShort || 'Abrir'}</span>
+                            <ExternalLink className="ml-2 h-4 w-4" />
+                        </Button>
+                    </a>
+                </div>
+            )}
         </div>
     );
 } 

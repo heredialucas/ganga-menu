@@ -399,7 +399,10 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
     };
 
     const addElement = (type: 'table' | 'bar' | 'staircase', shape: 'rectangle' | 'circle' | null) => {
-        if (!canEdit) return; // No permitir agregar elementos si no puede editar
+        if (!canEdit) {
+            toast.error(dictionary.app.restaurant.design.noEditPermission || 'No tienes permisos para editar el diseño del restaurante');
+            return;
+        }
         const common = { id: `el_${Date.now()}_${Math.random()}`, x: 50, y: 50, rotation: 0 };
 
         if (type === 'table') {
@@ -432,19 +435,29 @@ function DesignCanvas({ config, design, tables, setTables, elements, setElements
     };
 
     const deleteSelected = () => {
-        if (!canEdit || !selectedId) return; // No permitir eliminar si no puede editar
+        if (!canEdit) {
+            toast.error(dictionary.app.restaurant.design.noEditPermission || 'No tienes permisos para editar el diseño del restaurante');
+            return;
+        }
+        if (!selectedId) return;
         setTables(prev => prev.filter(t => t.id !== selectedId));
         setElements(prev => prev.filter(e => e.id !== selectedId));
         setSelectedId(null);
     };
 
     const updateLabel = (id: string, newLabel: string) => {
-        if (!canEdit) return; // No permitir actualizar etiquetas si no puede editar
+        if (!canEdit) {
+            toast.error(dictionary.app.restaurant.design.noEditPermission || 'No tienes permisos para editar el diseño del restaurante');
+            return;
+        }
         setTables(prev => prev.map(t => t.id === id ? { ...t, label: newLabel } : t));
     };
 
     const updateColor = (id: string, newColor: string) => {
-        if (!canEdit) return; // No permitir actualizar colores si no puede editar
+        if (!canEdit) {
+            toast.error(dictionary.app.restaurant.design.noEditPermission || 'No tienes permisos para editar el diseño del restaurante');
+            return;
+        }
         const allItems = [...tables, ...elements];
         const item = allItems.find(item => item.id === id);
         if (!item) return;
@@ -698,7 +711,7 @@ export function DesignManagerClient({ config, design, dictionary, canEdit = true
                     {!canEdit && (
                         <div className="p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-md mb-4">
                             <p className="text-sm text-yellow-800 dark:text-yellow-200">
-                                Modo solo lectura: Puedes ver el diseño pero no modificarlo.
+                                {dictionary.app.restaurant.design.readOnlyDescription || 'Modo solo lectura: Puedes ver el diseño pero no modificarlo.'}
                             </p>
                         </div>
                     )}

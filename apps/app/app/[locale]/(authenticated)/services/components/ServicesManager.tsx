@@ -10,9 +10,17 @@ interface ServicesManagerProps {
     restaurantConfig: RestaurantConfigData;
     dictionary: Dictionary;
     locale: string;
+    canEdit?: boolean;
+    canView?: boolean;
 }
 
-export async function ServicesManager({ restaurantConfig, dictionary, locale }: ServicesManagerProps) {
+export async function ServicesManager({
+    restaurantConfig,
+    dictionary,
+    locale,
+    canEdit = true,
+    canView = true
+}: ServicesManagerProps) {
     return (
         <div className="grid gap-3 sm:gap-4 md:gap-6 lg:gap-8 grid-cols-1 md:grid-cols-2">
             <Suspense fallback={<WaiterManagerLoading />}>
@@ -20,6 +28,8 @@ export async function ServicesManager({ restaurantConfig, dictionary, locale }: 
                     restaurantConfig={restaurantConfig}
                     dictionary={dictionary}
                     locale={locale}
+                    canEdit={canEdit}
+                    canView={canView}
                 />
             </Suspense>
 
@@ -28,6 +38,8 @@ export async function ServicesManager({ restaurantConfig, dictionary, locale }: 
                     restaurantConfig={restaurantConfig}
                     dictionary={dictionary}
                     locale={locale}
+                    canEdit={canEdit}
+                    canView={canView}
                 />
             </Suspense>
         </div>

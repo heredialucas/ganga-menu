@@ -12,16 +12,16 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { changePassword } from '../../actions';
 
-const passwordSchema = z.object({
+const createPasswordSchema = (dictionary: any) => z.object({
     currentPassword: z.string().min(1),
     newPassword: z.string().min(6),
     confirmPassword: z.string(),
 }).refine(data => data.newPassword === data.confirmPassword, {
-    message: "Las contraseñas no coinciden",
+    message: dictionary.app?.account?.password?.validation?.passwordsDoNotMatch || "Las contraseñas no coinciden",
     path: ["confirmPassword"],
 });
 
-type PasswordFormValues = z.infer<typeof passwordSchema>;
+type PasswordFormValues = z.infer<ReturnType<typeof createPasswordSchema>>;
 
 interface PasswordManagerClientProps {
     currentUser: any;
@@ -31,6 +31,10 @@ interface PasswordManagerClientProps {
 
 export function PasswordManagerClient({ currentUser, dictionary, canChange }: PasswordManagerClientProps) {
     const [isPending, startTransition] = useTransition();
+
+
+
+    const passwordSchema = createPasswordSchema(dictionary);
 
     const form = useForm<PasswordFormValues>({
         resolver: zodResolver(passwordSchema),
@@ -42,6 +46,11 @@ export function PasswordManagerClient({ currentUser, dictionary, canChange }: Pa
     });
 
     const onSubmit = (data: PasswordFormValues) => {
+        if (!canChange) {
+            toast.error(dictionary.app?.account?.password?.noChangePermission || 'No tienes permisos para cambiar la contraseña');
+            return;
+        }
+
         const promise = async () => {
             const formData = new FormData();
             formData.append('currentPassword', data.currentPassword);

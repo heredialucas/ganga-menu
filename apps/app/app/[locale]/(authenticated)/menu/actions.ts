@@ -5,6 +5,7 @@ import { updateMenuConfig } from '@repo/data-services/src/services/restaurantCon
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { TemplateType, AVAILABLE_TEMPLATES } from '../../menu/[slug]/types/templates';
+import type { Dictionary } from '@repo/internationalization';
 
 // Crear el enum dinámicamente desde los templates disponibles
 const templateEnum = z.enum(AVAILABLE_TEMPLATES.map(t => t.id) as [TemplateType, ...TemplateType[]]);
@@ -15,14 +16,14 @@ const menuConfigSchema = z.object({
     template: templateEnum,
 });
 
-export async function saveMenuConfig(prevState: any, formData: FormData) {
+export async function saveMenuConfig(prevState: any, formData: FormData, dictionary?: Dictionary) {
     try {
         // Verificar permisos antes de proceder
         await requirePermission('menu:edit');
 
         const user = await getCurrentUser();
         if (!user) {
-            throw new Error('Usuario no autenticado');
+            throw new Error(dictionary?.app?.menu?.userNotAuthenticated || 'Usuario no autenticado');
         }
 
         const data = Object.fromEntries(formData.entries());
@@ -33,7 +34,7 @@ export async function saveMenuConfig(prevState: any, formData: FormData) {
             console.error('Validation errors:', JSON.stringify(validatedData.error.flatten(), null, 2));
             return {
                 success: false,
-                message: 'Error de validación. Revisa los campos marcados.',
+                message: dictionary?.app?.menu?.toast?.validationError || 'Error de validación. Revisa los campos marcados.',
                 errors: validatedData.error.flatten().fieldErrors,
             };
         }
@@ -45,14 +46,14 @@ export async function saveMenuConfig(prevState: any, formData: FormData) {
 
         return {
             success: true,
-            message: 'Configuración del menú guardada con éxito',
+            message: dictionary?.app?.menu?.toast?.success || 'Configuración del menú guardada con éxito',
         };
 
     } catch (error: any) {
         console.error('Error al guardar la configuración del menú:', error.message);
         return {
             success: false,
-            message: error.message || 'Error al guardar la configuración del menú',
+            message: error.message || (dictionary?.app?.menu?.toast?.error || 'Error al guardar la configuración del menú'),
             errors: undefined,
         };
     }

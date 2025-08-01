@@ -109,7 +109,10 @@ export function OrdersTableClient({ orders, onStatusUpdate, onDeleteOrder, dicti
     };
 
     const handleDeleteClick = (order: OrderData) => {
-        if (!canEdit) return; // No permitir eliminar si no puede editar
+        if (!canEdit) {
+            toast.error(dictionary.web?.orders?.toast?.deleteError || 'No tienes permisos para eliminar órdenes');
+            return;
+        }
         const orderInfo = `${order.items.length} items - ${formatPrice(order.total)}`;
         setDeleteDialog({
             isOpen: true,
@@ -119,7 +122,10 @@ export function OrdersTableClient({ orders, onStatusUpdate, onDeleteOrder, dicti
     };
 
     const handleDeleteConfirm = async () => {
-        if (!canEdit) return; // No permitir eliminar si no puede editar
+        if (!canEdit) {
+            toast.error(dictionary.web?.orders?.toast?.deleteError || 'No tienes permisos para eliminar órdenes');
+            return;
+        }
         setIsDeleting(true);
         try {
             // Primero eliminar de la base de datos
@@ -173,12 +179,12 @@ export function OrdersTableClient({ orders, onStatusUpdate, onDeleteOrder, dicti
                     <CardTitle className="text-lg sm:text-xl">
                         {canEdit
                             ? (dictionary.web?.orders?.table?.title || 'Órdenes')
-                            : (dictionary.web?.orders?.table?.title || 'Órdenes') + ' (Solo Lectura)'
+                            : (dictionary.web?.orders?.table?.title || 'Órdenes') + ' (' + (dictionary.app?.orders?.readOnlyTitle || 'Solo Lectura') + ')'
                         } ({orders.length})
                     </CardTitle>
                     {!canEdit && (
                         <p className="text-sm text-muted-foreground">
-                            Modo solo lectura: Puedes ver las órdenes pero no modificarlas.
+                            {dictionary.app?.orders?.readOnlyDescription || 'Modo solo lectura: Puedes ver las órdenes pero no modificarlas.'}
                         </p>
                     )}
                 </CardHeader>
@@ -251,35 +257,37 @@ export function OrdersTableClient({ orders, onStatusUpdate, onDeleteOrder, dicti
                                         </TableCell>
                                         <TableCell>
                                             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-1 sm:gap-2">
-                                                <Select
-                                                    value={order.status}
-                                                    onValueChange={(value: OrderStatus) =>
-                                                        onStatusUpdate(order.id, value)
-                                                    }
-                                                    disabled={!canEdit || updatingOrderId === order.id}
-                                                >
-                                                    <SelectTrigger className="w-20 sm:w-32 text-xs sm:text-sm">
-                                                        {updatingOrderId === order.id ? (
-                                                            <div className="flex items-center gap-1 sm:gap-2">
-                                                                <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
-                                                                <span className="hidden sm:inline">{dictionary.web?.orders?.table?.updating || 'Actualizando...'}</span>
-                                                                <span className="sm:hidden">{dictionary.web?.orders?.table?.updatingShort || '...'}</span>
-                                                            </div>
-                                                        ) : (
-                                                            <SelectValue />
-                                                        )}
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        {Object.entries(statusConfig(dictionary)).map(([status, config]) => (
-                                                            <SelectItem key={status} value={status}>
-                                                                <div className="flex items-center gap-2">
-                                                                    {getStatusIcon(status as OrderStatus)}
-                                                                    {config.label}
+                                                {canEdit && (
+                                                    <Select
+                                                        value={order.status}
+                                                        onValueChange={(value: OrderStatus) =>
+                                                            onStatusUpdate(order.id, value)
+                                                        }
+                                                        disabled={updatingOrderId === order.id}
+                                                    >
+                                                        <SelectTrigger className="w-20 sm:w-32 text-xs sm:text-sm">
+                                                            {updatingOrderId === order.id ? (
+                                                                <div className="flex items-center gap-1 sm:gap-2">
+                                                                    <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
+                                                                    <span className="hidden sm:inline">{dictionary.web?.orders?.table?.updating || 'Actualizando...'}</span>
+                                                                    <span className="sm:hidden">{dictionary.web?.orders?.table?.updatingShort || '...'}</span>
                                                                 </div>
-                                                            </SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
+                                                            ) : (
+                                                                <SelectValue />
+                                                            )}
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            {Object.entries(statusConfig(dictionary)).map(([status, config]) => (
+                                                                <SelectItem key={status} value={status}>
+                                                                    <div className="flex items-center gap-2">
+                                                                        {getStatusIcon(status as OrderStatus)}
+                                                                        {config.label}
+                                                                    </div>
+                                                                </SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
+                                                )}
 
                                                 {canEdit && (
                                                     <Button

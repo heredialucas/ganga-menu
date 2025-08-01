@@ -10,9 +10,12 @@ export default async function RestaurantPage({
 }: {
     params: Promise<{ locale: string }>;
 }) {
-    await requirePermission('restaurant:view');
-    const paramsData = await params;
-    const dictionary = await getDictionary(paramsData.locale);
+    const { locale } = await params;
+
+    // Verificar permisos básicos
+    await requirePermission('restaurant:view', locale);
+
+    const dictionary = await getDictionary(locale);
 
     // Verificar permisos en el servidor
     const [canViewRestaurant, canEditRestaurant, hasDesignPermission, hasQRPermission] = await Promise.all([
@@ -27,10 +30,16 @@ export default async function RestaurantPage({
             <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
                 <div className="text-center sm:text-left flex-1">
                     <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">
-                        {dictionary.app.restaurant.title}
+                        {canEditRestaurant
+                            ? dictionary.app.restaurant.title
+                            : dictionary.app.restaurant.title + ' (' + (dictionary.app.restaurant.config.readOnlyTitle || 'Solo Lectura') + ')'
+                        }
                     </h1>
                     <p className="text-sm sm:text-base text-muted-foreground mt-2">
-                        {dictionary.app.restaurant.subtitle}
+                        {canEditRestaurant
+                            ? dictionary.app.restaurant.subtitle
+                            : dictionary.app.restaurant.subtitle + ' (' + (dictionary.app.restaurant.config.readOnlySubtitle || 'Modo solo lectura') + ')'
+                        }
                     </p>
                 </div>
                 <div className="flex flex-row items-center gap-2">

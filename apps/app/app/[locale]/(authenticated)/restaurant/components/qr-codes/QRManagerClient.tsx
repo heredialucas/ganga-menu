@@ -53,6 +53,11 @@ export function QRManagerClient({ config, appUrl, dictionary, canEdit = true, ca
     };
 
     const generateQRForTable = async (table: TableData) => {
+        if (!canEdit) {
+            toast.error(dictionary.app.restaurant.qr.toast.downloadError || 'No tienes permisos para generar códigos QR');
+            return;
+        }
+
         try {
             // URL específica para esta mesa
             const menuUrl = `${appUrl}/es/menu/${config?.slug}/table/${table.id}`;
@@ -77,6 +82,10 @@ export function QRManagerClient({ config, appUrl, dictionary, canEdit = true, ca
     };
 
     const downloadQR = () => {
+        if (!canEdit) {
+            toast.error(dictionary.app.restaurant.qr.toast.downloadError || 'No tienes permisos para descargar códigos QR');
+            return;
+        }
         if (!qrCodeUrl) return;
 
         const link = document.createElement('a');
@@ -89,6 +98,10 @@ export function QRManagerClient({ config, appUrl, dictionary, canEdit = true, ca
     };
 
     const copyMenuUrl = () => {
+        if (!canEdit) {
+            toast.error(dictionary.app.restaurant.qr.toast.downloadError || 'No tienes permisos para copiar URLs');
+            return;
+        }
         if (!selectedTable || !config) return;
 
         const menuUrl = `${appUrl}/es/menu/${config.slug}/table/${selectedTable.id}`;
@@ -97,6 +110,10 @@ export function QRManagerClient({ config, appUrl, dictionary, canEdit = true, ca
     };
 
     const printQR = () => {
+        if (!canEdit) {
+            toast.error(dictionary.app.restaurant.qr.toast.downloadError || 'No tienes permisos para imprimir códigos QR');
+            return;
+        }
         if (!qrCodeUrl || !selectedTable || !config) return;
 
         const printWindow = window.open('', '_blank');
@@ -297,38 +314,40 @@ export function QRManagerClient({ config, appUrl, dictionary, canEdit = true, ca
                                 </div>
 
                                 {/* Acciones */}
-                                <div className="flex flex-wrap gap-2 justify-center">
-                                    <Button
-                                        onClick={downloadQR}
-                                        variant="outline"
-                                        size="sm"
-                                        className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
-                                    >
-                                        <Download className="w-3 h-3 sm:w-4 sm:h-4" />
-                                        <span className="hidden sm:inline">{dictionary.app.restaurant.qr.downloadQR}</span>
-                                        <span className="sm:hidden">{dictionary.app.restaurant.qr.downloadQR}</span>
-                                    </Button>
-                                    <Button
-                                        onClick={printQR}
-                                        variant="outline"
-                                        size="sm"
-                                        className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
-                                    >
-                                        <Printer className="w-3 h-3 sm:w-4 sm:h-4" />
-                                        <span className="hidden sm:inline">{dictionary.app.restaurant.qr.print.desktop}</span>
-                                        <span className="sm:hidden">{dictionary.app.restaurant.qr.print.mobile}</span>
-                                    </Button>
-                                    <Button
-                                        onClick={copyMenuUrl}
-                                        variant="outline"
-                                        size="sm"
-                                        className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
-                                    >
-                                        <Copy className="w-3 h-3 sm:w-4 sm:h-4" />
-                                        <span className="hidden sm:inline">{dictionary.app.restaurant.qr.copyURL.desktop}</span>
-                                        <span className="sm:hidden">{dictionary.app.restaurant.qr.copyURL.mobile}</span>
-                                    </Button>
-                                </div>
+                                {canEdit && (
+                                    <div className="flex flex-wrap gap-2 justify-center">
+                                        <Button
+                                            onClick={downloadQR}
+                                            variant="outline"
+                                            size="sm"
+                                            className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
+                                        >
+                                            <Download className="w-3 h-3 sm:w-4 sm:h-4" />
+                                            <span className="hidden sm:inline">{dictionary.app.restaurant.qr.downloadQR}</span>
+                                            <span className="sm:hidden">{dictionary.app.restaurant.qr.downloadQR}</span>
+                                        </Button>
+                                        <Button
+                                            onClick={printQR}
+                                            variant="outline"
+                                            size="sm"
+                                            className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
+                                        >
+                                            <Printer className="w-3 h-3 sm:w-4 sm:h-4" />
+                                            <span className="hidden sm:inline">{dictionary.app.restaurant.qr.print.desktop}</span>
+                                            <span className="sm:hidden">{dictionary.app.restaurant.qr.print.mobile}</span>
+                                        </Button>
+                                        <Button
+                                            onClick={copyMenuUrl}
+                                            variant="outline"
+                                            size="sm"
+                                            className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm"
+                                        >
+                                            <Copy className="w-3 h-3 sm:w-4 sm:h-4" />
+                                            <span className="hidden sm:inline">{dictionary.app.restaurant.qr.copyURL.desktop}</span>
+                                            <span className="sm:hidden">{dictionary.app.restaurant.qr.copyURL.mobile}</span>
+                                        </Button>
+                                    </div>
+                                )}
                             </div>
                         ) : (
                             <div className="text-center py-8 sm:py-12 text-gray-500">

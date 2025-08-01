@@ -31,6 +31,8 @@ interface ProfileManagerClientProps {
 export function ProfileManagerClient({ currentUser, dictionary, canEdit, canView }: ProfileManagerClientProps) {
     const [isPending, startTransition] = useTransition();
 
+
+
     const form = useForm<ProfileFormValues>({
         resolver: zodResolver(profileSchema),
         defaultValues: {
@@ -41,7 +43,10 @@ export function ProfileManagerClient({ currentUser, dictionary, canEdit, canView
     });
 
     const onSubmit = (data: ProfileFormValues) => {
-        if (!canEdit) return;
+        if (!canEdit) {
+            toast.error(dictionary.app?.account?.profile?.noEditPermission || 'No tienes permisos para editar el perfil');
+            return;
+        }
 
         const promise = async () => {
             const formData = new FormData();

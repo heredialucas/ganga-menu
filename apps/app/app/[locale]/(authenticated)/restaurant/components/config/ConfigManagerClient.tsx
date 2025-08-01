@@ -69,7 +69,12 @@ export function ConfigManagerClient({
     const formRef = useRef<HTMLFormElement>(null);
 
     const handleSubmit = async () => {
-        if (!formRef.current || !canEdit) return; // Solo permitir submit si puede editar
+        if (!formRef.current || !canEdit) {
+            if (!canEdit) {
+                toast.error(dictionary.app.restaurant.config.toast.error || 'No tienes permisos para editar la configuración del restaurante');
+            }
+            return;
+        }
         const formData = new FormData(formRef.current);
 
         startTransition(() => {
@@ -130,13 +135,13 @@ export function ConfigManagerClient({
                         <CardTitle className="text-lg sm:text-xl">
                             {canEdit
                                 ? dictionary.app.restaurant.config.title
-                                : dictionary.app.restaurant.config.title + ' (Solo Lectura)'
+                                : dictionary.app.restaurant.config.title + ' (' + (dictionary.app.restaurant.config.readOnlyTitle || 'Solo Lectura') + ')'
                             }
                         </CardTitle>
                         <CardDescription className="text-sm sm:text-base">
                             {canEdit
                                 ? dictionary.app.restaurant.config.description
-                                : dictionary.app.restaurant.config.description + ' (Modo solo lectura)'
+                                : dictionary.app.restaurant.config.description + ' (' + (dictionary.app.restaurant.config.readOnlySubtitle || 'Modo solo lectura') + ')'
                             }
                         </CardDescription>
                     </CardHeader>

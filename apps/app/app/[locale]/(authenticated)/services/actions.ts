@@ -5,6 +5,7 @@ import { database } from '@repo/database';
 import { getRestaurantConfig } from '@repo/data-services/src/services/restaurantConfigService';
 import { requirePermission } from '@repo/auth/server-permissions';
 import { z } from 'zod';
+import type { Dictionary } from '@repo/internationalization';
 
 const updateWaiterCodeSchema = z.object({
     code: z.string().min(4, 'El código debe tener al menos 4 caracteres.'),
@@ -14,14 +15,14 @@ const updateKitchenCodeSchema = z.object({
     code: z.string().min(4, 'El código debe tener al menos 4 caracteres.'),
 });
 
-export async function updateWaiterCode(formData: FormData) {
+export async function updateWaiterCode(formData: FormData, dictionary?: Dictionary) {
     try {
         // Verificar permisos antes de proceder
         await requirePermission('services:edit');
 
         const config = await getRestaurantConfig();
         if (!config) {
-            throw new Error('Configuración de restaurante no encontrada.');
+            throw new Error(dictionary?.app?.services?.setup?.notFound || 'Configuración de restaurante no encontrada.');
         }
 
         const code = formData.get('code') as string;
@@ -43,24 +44,24 @@ export async function updateWaiterCode(formData: FormData) {
 
         return {
             success: true,
-            message: 'Código de mozo actualizado con éxito.',
+            message: dictionary?.app?.services?.shared?.codeSaved || 'Código de mozo actualizado con éxito.',
         };
     } catch (error) {
         return {
             success: false,
-            message: error instanceof Error ? error.message : 'Ocurrió un error inesperado.',
+            message: error instanceof Error ? error.message : (dictionary?.app?.services?.shared?.codeError || 'Ocurrió un error inesperado.'),
         };
     }
 }
 
-export async function updateKitchenCode(formData: FormData) {
+export async function updateKitchenCode(formData: FormData, dictionary?: Dictionary) {
     try {
         // Verificar permisos antes de proceder
         await requirePermission('services:edit');
 
         const config = await getRestaurantConfig();
         if (!config) {
-            throw new Error('Configuración de restaurante no encontrada.');
+            throw new Error(dictionary?.app?.services?.setup?.notFound || 'Configuración de restaurante no encontrada.');
         }
 
         const code = formData.get('code') as string;
@@ -82,12 +83,12 @@ export async function updateKitchenCode(formData: FormData) {
 
         return {
             success: true,
-            message: 'Código de cocina actualizado con éxito.',
+            message: dictionary?.app?.services?.shared?.codeSaved || 'Código de cocina actualizado con éxito.',
         };
     } catch (error) {
         return {
             success: false,
-            message: error instanceof Error ? error.message : 'Ocurrió un error inesperado.',
+            message: error instanceof Error ? error.message : (dictionary?.app?.services?.shared?.codeError || 'Ocurrió un error inesperado.'),
         };
     }
 } 

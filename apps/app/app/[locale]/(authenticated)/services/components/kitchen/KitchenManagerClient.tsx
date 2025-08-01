@@ -32,7 +32,10 @@ export function KitchenManagerClient({
     const [kitchenCode, setKitchenCode] = useState(restaurantConfig.kitchenCode || '5678');
 
     const handleUpdateKitchenCode = () => {
-        if (!canEdit) return;
+        if (!canEdit) {
+            toast.error(dictionary.web.services.shared.codeError || 'No tienes permisos para editar el código de cocina');
+            return;
+        }
 
         startTransition(async () => {
             const promise = async () => {

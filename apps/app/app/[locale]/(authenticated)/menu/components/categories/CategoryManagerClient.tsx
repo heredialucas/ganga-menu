@@ -25,7 +25,10 @@ export function CategoryManagerClient({ categories, dictionary, canEdit = true, 
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (!canEdit) return;
+        if (!canEdit) {
+            toast.error(dictionary.app?.menu?.categories?.noPermission || 'No tienes permisos para crear categorías');
+            return;
+        }
 
         const form = e.currentTarget;
         const formData = new FormData(form);
@@ -48,7 +51,10 @@ export function CategoryManagerClient({ categories, dictionary, canEdit = true, 
     };
 
     const handleDelete = (category: Category) => {
-        if (!canEdit) return;
+        if (!canEdit) {
+            toast.error(dictionary.app?.menu?.categories?.noPermission || 'No tienes permisos para eliminar categorías');
+            return;
+        }
 
         startTransition(async () => {
             try {

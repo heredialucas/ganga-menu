@@ -32,7 +32,15 @@ export async function ProfileManagerServer({ dictionary, locale }: ProfileManage
 
     // Si no tiene permisos para ver, no mostrar nada
     if (!canView) {
-        return null;
+        return (
+            <div className="flex items-center justify-center min-h-[50vh]">
+                <div className="text-center">
+                    <p className="text-sm sm:text-base text-muted-foreground">
+                        {dictionary.app?.account?.userNotFound || 'Acceso denegado'}
+                    </p>
+                </div>
+            </div>
+        );
     }
 
     return (

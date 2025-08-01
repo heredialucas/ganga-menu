@@ -55,12 +55,13 @@
     },
     "share": {
       "title": "Links teilen",
-      "description": "Teilen Sie diese Links, um Zugang zu den verschiedenen Ansichten Ihres Restaurants zu gewähren.",
-      "open": "Dialog zum Teilen öffnen",
+      "description": "Teilen Sie diese Links, um Zugang zu verschiedenen Ansichten Ihres Restaurants zu gewähren.",
+      "open": "Teilen-Dialog öffnen",
       "links_button": "Links",
-      "menu": "Link zum öffentlichen Menü",
-      "kitchen": "Link zur Küchenansicht",
-      "waiter": "Link zur Kellneransicht"
+      "menu": "Öffentlicher Menü-Link",
+      "kitchen": "Küchen-Ansicht-Link",
+      "waiter": "Kellner-Ansicht-Link",
+      "premiumRequired": "Diese Funktion erfordert ein Premium-Konto"
     },
     "feedback": {
       "buttonDesktop": "Feedback geben",
@@ -78,7 +79,11 @@
       "send": "Senden",
       "sending": "Wird gesendet...",
       "success": "Vielen Dank für Ihr Feedback!",
-      "error": "Fehler beim Senden des Feedbacks. Versuchen Sie es erneut."
+      "error": "Fehler beim Senden des Feedbacks. Versuchen Sie es erneut.",
+      "serviceUnavailable": "E-Mail-Service nicht verfügbar",
+      "configError": "Unvollständige E-Mail-Konfiguration",
+      "validationError": "Ungültige Daten",
+      "serverError": "Interner Serverfehler"
     },
     "account": {
       "title": "Kontoverwaltung",
@@ -113,12 +118,15 @@
         "validation": {
           "nameRequired": "Vorname ist erforderlich",
           "lastNameRequired": "Nachname ist erforderlich",
-          "emailInvalid": "Ungültige E-Mail"
+          "emailInvalid": "Ungültige E-Mail",
+          "passwordRequired": "Passwort ist für neue Benutzer erforderlich",
+          "passwordMin": "Passwort muss mindestens 6 Zeichen haben"
         },
         "toast": {
           "updating": "Profil wird aktualisiert...",
           "success": "Profil erfolgreich aktualisiert.",
-          "error": "Fehler beim Aktualisieren des Profils"
+          "error": "Fehler beim Aktualisieren des Profils",
+          "noPermission": "Sie haben keine Berechtigung, das Profil zu bearbeiten."
         }
       },
       "password": {
@@ -140,7 +148,8 @@
         "toast": {
           "updating": "Passwort wird aktualisiert...",
           "success": "Passwort erfolgreich aktualisiert.",
-          "error": "Fehler beim Aktualisieren des Passworts"
+          "error": "Fehler beim Aktualisieren des Passworts",
+          "noPermission": "Sie haben keine Berechtigung, das Passwort zu ändern."
         }
       },
       "users": {
@@ -239,39 +248,27 @@
           "title": "Benutzerverwaltung wird geladen...",
           "description": "Benutzerinformationen werden geladen"
         }
-      },
-      "profile": {
-        "error": {
-          "title": "Fehler beim Laden des Profils",
-          "description": "Beim Laden der Profilinformationen ist ein Fehler aufgetreten",
-          "retry": "Erneut versuchen",
-          "details": "Unbekannter Fehler beim Laden des Profils"
-        },
-        "loading": {
-          "title": "Profil wird geladen...",
-          "description": "Profilinformationen werden geladen"
-        }
-      },
-      "password": {
-        "error": {
-          "title": "Fehler beim Laden der Sicherheitseinstellungen",
-          "description": "Beim Laden der Passwort-Einstellungen ist ein Fehler aufgetreten",
-          "retry": "Erneut versuchen",
-          "details": "Unbekannter Fehler beim Laden der Sicherheitseinstellungen"
-        },
-        "loading": {
-          "title": "Sicherheitseinstellungen werden geladen...",
-          "description": "Sicherheitsinformationen werden geladen"
-        }
       }
     },
     "menu": {
       "title": "Menüverwaltung",
       "subtitle": "Erstellen und bearbeiten Sie Ihre Gerichte. Verwenden Sie die Dropdown-Menüs für erweiterte Einstellungen.",
       "userNotAuthenticated": "Benutzer nicht authentifiziert.",
+      "readOnlyTitle": "Nur Lesen",
+      "readOnlySubtitle": "Nur-Lese-Modus",
+      "order": {
+        "error": "Fehler beim Verarbeiten der Bestellung"
+      },
+      "toast": {
+        "validationError": "Validierungsfehler. Überprüfen Sie die markierten Felder.",
+        "success": "Menü-Konfiguration erfolgreich gespeichert",
+        "error": "Fehler beim Speichern der Menü-Konfiguration"
+      },
       "categories": {
         "title": "Kategorie-Manager",
         "newCategory": "Neue Kategorie",
+        "readOnlyTitle": "Nur Lesen",
+        "readOnlySubtitle": "Nur-Lese-Modus",
         "existingCategories": "Vorhandene Kategorien",
         "name": "Name",
         "action": "Aktion",
@@ -329,6 +326,8 @@
         },
         "readOnlyMode": "Nur-Lese-Modus",
         "readOnlyDescription": "Sie können die Informationen anzeigen, aber nicht ändern.",
+        "readOnlyTitle": "Nur Lesen",
+        "readOnlySubtitle": "Nur-Lese-Modus",
         "cancel": "Abbrechen",
         "save": "Speichern",
         "saving": "Wird gespeichert...",
@@ -359,6 +358,8 @@
       },
       "dailySpecials": {
         "title": "Tagesangebote-Planer",
+        "readOnlyTitle": "Nur Lesen",
+        "readOnlySubtitle": "Nur-Lese-Modus",
         "schedulePromotion": "Aktion planen",
         "dish": "Gericht",
         "dishPlaceholder": "Wählen Sie ein Gericht",
@@ -547,7 +548,9 @@
           "tablesError": "Fehler beim Abrufen der Tische"
         },
         "readOnlyMode": "Nur-Lese-Modus",
-        "readOnlyDescription": "Sie können die Konfiguration anzeigen, aber nicht ändern."
+        "readOnlyDescription": "Sie können die Konfiguration anzeigen, aber nicht ändern.",
+        "readOnlyTitle": "Nur Lesen",
+        "readOnlySubtitle": "Nur-Lese-Modus"
       },
       "openingHours": {
         "title": "Öffnungszeiten",
@@ -641,7 +644,12 @@
           "reset": "Design erfolgreich zurückgesetzt.",
           "resetError": "Fehler beim Zurücksetzen des Designs.",
           "notAuthenticated": "Benutzer nicht authentifiziert"
-        }
+        },
+        "readOnlyMode": "Nur-Lese-Modus",
+        "readOnlyDescription": "Sie können das Design anzeigen, aber nicht ändern.",
+        "readOnlyTitle": "Nur Lesen",
+        "readOnlySubtitle": "Nur-Lese-Modus",
+        "noEditPermission": "Sie haben keine Berechtigung, das Design zu bearbeiten."
       },
       "qr": {
         "title": "QR-Code-Generator",
@@ -701,7 +709,8 @@
         "code": "Zugangscode",
         "enter": "Eingeben",
         "invalidCode": "Falscher Code",
-        "placeholder": "Code eingeben"
+        "placeholder": "Code eingeben",
+        "codeRequired": "Code erforderlich"
       },
       "order": {
         "title": "Bestellung aufnehmen",
@@ -745,7 +754,8 @@
         "releaseTable": "Tisch freigeben",
         "releaseTableMobile": "Freigeben",
         "releasingTable": "Wird freigegeben...",
-        "releasingTableMobile": "..."
+        "releasingTableMobile": "...",
+        "tableReleased": "Tisch erfolgreich freigegeben"
       }
     },
     "kitchen": {
@@ -783,7 +793,38 @@
           "ready": "Fertig/Geliefert",
           "cancelled": "Storniert",
           "completed": "Abgeschlossen"
-        }
+        },
+        "error": "Fehler beim Aktualisieren des Status"
+      }
+    },
+    "orders": {
+      "readOnlyTitle": "Nur Lesen",
+      "readOnlySubtitle": "Nur-Lese-Modus",
+      "readOnlyDescription": "Sie können die Bestellungen anzeigen, aber nicht ändern.",
+      "toast": {
+        "orderDeleted": "Bestellung erfolgreich gelöscht",
+        "deleteError": "Fehler beim Löschen der Bestellung"
+      }
+    },
+    "services": {
+      "readOnlyTitle": "Nur Lesen",
+      "readOnlySubtitle": "Nur-Lese-Modus",
+      "readOnlyDescription": "Sie können die Dienste anzeigen, aber nicht ändern.",
+      "shared": {
+        "codeSaved": "Code erfolgreich aktualisiert",
+        "codeError": "Fehler beim Aktualisieren des Codes"
+      },
+      "setup": {
+        "notFound": "Restaurant-Konfiguration nicht gefunden"
+      }
+    },
+    "kitchen": {
+      "interface": {
+        "error": "Fehler beim Aktualisieren des Status"
+      },
+      "auth": {
+        "codeRequired": "Code erforderlich",
+        "invalidCode": "Falscher Code"
       }
     },
     "header": {

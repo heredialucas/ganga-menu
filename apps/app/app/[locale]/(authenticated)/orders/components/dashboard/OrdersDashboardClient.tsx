@@ -8,12 +8,7 @@ import { useSocket } from '@/hooks/useSocket';
 import { OrdersTableClient } from '../table/OrdersTableClient';
 import { OrdersStatsClient } from '../stats/OrdersStatsClient';
 import { OrdersFiltersClient } from '../filters/OrdersFiltersClient';
-import { Badge } from '@repo/design-system/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/design-system/components/ui/tabs';
-import {
-    Wifi,
-    WifiOff
-} from 'lucide-react';
 import { deleteOrderAction } from '../../actions';
 import { toast } from 'sonner';
 import { env } from '@/env';
@@ -40,12 +35,11 @@ export function OrdersDashboardClient({
 }: OrdersDashboardClientProps) {
     const [orders, setOrders] = useState<OrderData[]>(initialOrders);
     const [selectedStatus, setSelectedStatus] = useState<OrderStatus | 'ALL'>('ALL');
-    const [isConnected, setIsConnected] = useState(false);
     const [updatingOrderId, setUpdatingOrderId] = useState<string | null>(null);
     const [deletingOrderId, setDeletingOrderId] = useState<string | null>(null);
 
     // WebSocket connection
-    const { isConnected: socketConnected, updateOrderStatus, deleteOrder } = useSocket({
+    const { updateOrderStatus, deleteOrder } = useSocket({
         restaurantSlug: restaurantConfig.slug,
         roomType: 'menu', // El admin ve todas las órdenes
         onOrderEvent: (event) => {
@@ -71,14 +65,9 @@ export function OrdersDashboardClient({
         }
     });
 
-    // Actualizar estado de conexión
-    useEffect(() => {
-        setIsConnected(socketConnected);
-    }, [socketConnected]);
-
     // Sincronizar órdenes con el servidor WebSocket cuando se conecte (solo una vez)
     useEffect(() => {
-        if (socketConnected && orders.length > 0) {
+        if (orders.length > 0) {
             const syncOrders = async () => {
                 try {
                     const socketUrl = env.NEXT_PUBLIC_SOCKET_IO_URL;
@@ -105,7 +94,7 @@ export function OrdersDashboardClient({
 
             syncOrders();
         }
-    }, [socketConnected, restaurantConfig.slug, orders.length]);
+    }, [restaurantConfig.slug, orders.length]);
 
     // Filtrar órdenes por estado
     const filteredOrders = selectedStatus === 'ALL'
@@ -121,7 +110,10 @@ export function OrdersDashboardClient({
     };
 
     const handleStatusUpdate = async (orderId: string, newStatus: OrderStatus) => {
-        if (!canEdit) return; // No permitir actualizar si no puede editar
+        if (!canEdit) {
+            toast.error(dictionary.web?.orders?.toast?.statusError || 'No tienes permisos para actualizar el estado de las órdenes');
+            return;
+        }
         setUpdatingOrderId(orderId);
 
         try {
@@ -159,7 +151,10 @@ export function OrdersDashboardClient({
     };
 
     const handleDeleteOrder = async (orderId: string) => {
-        if (!canEdit) return; // No permitir eliminar si no puede editar
+        if (!canEdit) {
+            toast.error(dictionary.web?.orders?.toast?.deleteError || 'No tienes permisos para eliminar órdenes');
+            return;
+        }
         setDeletingOrderId(orderId);
 
         try {
@@ -196,48 +191,6 @@ export function OrdersDashboardClient({
 
     return (
         <div className="space-y-3 sm:space-y-4 md:space-y-6">
-            {/* Header */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <div className="text-center sm:text-left flex-1">
-                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">
-                        {canEdit
-                            ? (dictionary.web?.orders?.title || 'Gestión de Órdenes')
-                            : (dictionary.web?.orders?.title || 'Gestión de Órdenes') + ' (Solo Lectura)'
-                        }
-                    </h1>
-                    <p className="text-sm sm:text-base text-muted-foreground mt-2">
-                        {canEdit
-                            ? (dictionary.web?.orders?.subtitle || 'Monitorea y gestiona las órdenes de tu restaurante en tiempo real')
-                            : (dictionary.web?.orders?.subtitle || 'Monitorea y gestiona las órdenes de tu restaurante en tiempo real') + ' (Modo solo lectura)'
-                        }
-                    </p>
-                    {!canEdit && (
-                        <div className="mt-2 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-md">
-                            <p className="text-sm text-yellow-800 dark:text-yellow-200">
-                                Modo solo lectura: Puedes ver las órdenes pero no modificarlas.
-                            </p>
-                        </div>
-                    )}
-                </div>
-
-                {/* Estado de conexión */}
-                <div className="flex items-center gap-2">
-                    {isConnected ? (
-                        <Badge variant="default" className="bg-green-500 text-xs sm:text-sm">
-                            <Wifi className="w-3 h-3 mr-1" />
-                            <span className="hidden sm:inline">{dictionary.web?.orders?.connection?.connected || 'Conectado'}</span>
-                            <span className="sm:hidden">{dictionary.web?.orders?.connection?.connectedShort || 'OK'}</span>
-                        </Badge>
-                    ) : (
-                        <Badge variant="destructive" className="text-xs sm:text-sm">
-                            <WifiOff className="w-3 h-3 mr-1" />
-                            <span className="hidden sm:inline">{dictionary.web?.orders?.connection?.disconnected || 'Desconectado'}</span>
-                            <span className="sm:hidden">{dictionary.web?.orders?.connection?.disconnectedShort || 'Off'}</span>
-                        </Badge>
-                    )}
-                </div>
-            </div>
-
             {/* Estadísticas */}
             <OrdersStatsClient stats={stats} dictionary={dictionary} />
 

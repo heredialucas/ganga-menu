@@ -60,7 +60,8 @@
       "links_button": "Enlaces",
       "menu": "Enlace al Menú Público",
       "kitchen": "Enlace a la Vista de Cocina",
-      "waiter": "Enlace a la Vista de Mozos"
+      "waiter": "Enlace a la Vista de Mozos",
+      "premiumRequired": "Esta función requiere una cuenta premium"
     },
     "feedback": {
       "buttonDesktop": "Dar feedback",
@@ -78,7 +79,11 @@
       "send": "Enviar",
       "sending": "Enviando...",
       "success": "¡Gracias por tu feedback!",
-      "error": "Error al enviar feedback. Inténtalo de nuevo."
+      "error": "Error al enviar feedback. Inténtalo de nuevo.",
+      "serviceUnavailable": "Servicio de email no disponible",
+      "configError": "Configuración de email incompleta",
+      "validationError": "Datos inválidos",
+      "serverError": "Error interno del servidor"
     },
     "account": {
       "title": "Gestión de Cuenta",
@@ -113,12 +118,15 @@
         "validation": {
           "nameRequired": "El nombre es requerido",
           "lastNameRequired": "El apellido es requerido",
-          "emailInvalid": "Email inválido"
+          "emailInvalid": "Email inválido",
+          "passwordRequired": "La contraseña es requerida para nuevos usuarios",
+          "passwordMin": "La contraseña debe tener al menos 6 caracteres"
         },
         "toast": {
           "updating": "Actualizando perfil...",
           "success": "Perfil actualizado exitosamente.",
-          "error": "Error al actualizar perfil"
+          "error": "Error al actualizar perfil",
+          "noPermission": "No tienes permisos para editar el perfil."
         }
       },
       "password": {
@@ -140,7 +148,8 @@
         "toast": {
           "updating": "Actualizando contraseña...",
           "success": "Contraseña actualizada exitosamente.",
-          "error": "Error al actualizar contraseña"
+          "error": "Error al actualizar contraseña",
+          "noPermission": "No tienes permisos para cambiar la contraseña."
         }
       },
       "users": {
@@ -241,39 +250,27 @@
           "title": "Cargando gestión de usuarios...",
           "description": "Cargando información de usuarios"
         }
-      },
-      "profile": {
-        "error": {
-          "title": "Error al cargar el perfil",
-          "description": "Ocurrió un error al cargar la información del perfil",
-          "retry": "Intentar de nuevo",
-          "details": "Error desconocido al cargar el perfil"
-        },
-        "loading": {
-          "title": "Cargando perfil...",
-          "description": "Cargando información del perfil"
-        }
-      },
-      "password": {
-        "error": {
-          "title": "Error al cargar la configuración de seguridad",
-          "description": "Ocurrió un error al cargar la configuración de contraseñas",
-          "retry": "Intentar de nuevo",
-          "details": "Error desconocido al cargar la configuración de seguridad"
-        },
-        "loading": {
-          "title": "Cargando configuración de seguridad...",
-          "description": "Cargando información de seguridad"
-        }
       }
     },
     "menu": {
       "title": "Gestión del Menú",
       "subtitle": "Crea y edita tus platos. Usa los desplegables para configuraciones avanzadas.",
       "userNotAuthenticated": "Usuario no autenticado.",
+      "readOnlyTitle": "Solo Lectura",
+      "readOnlySubtitle": "Modo solo lectura",
+      "order": {
+        "error": "Error al procesar la orden"
+      },
+      "toast": {
+        "validationError": "Error de validación. Revisa los campos marcados.",
+        "success": "Configuración del menú guardada con éxito",
+        "error": "Error al guardar la configuración del menú"
+      },
       "categories": {
         "title": "Gestor de Categorías",
         "newCategory": "Nueva Categoría",
+        "readOnlyTitle": "Solo Lectura",
+        "readOnlySubtitle": "Modo solo lectura",
         "existingCategories": "Categorías Existentes",
         "name": "Nombre",
         "action": "Acción",
@@ -292,7 +289,10 @@
           "error": "Error al crear categoría",
           "deleteSuccess": "Categoría eliminada.",
           "deleteError": "Error al eliminar categoría",
-          "notAuthenticated": "Usuario no autenticado."
+          "notAuthenticated": "Usuario no autenticado.",
+          "validationError": "Error de validación. Revisa los campos marcados.",
+          "success": "Configuración del menú guardada con éxito",
+          "error": "Error al guardar la configuración del menú"
         },
         "userNotAuthenticated": "Usuario no autenticado.",
         "noPermission": "No tienes permisos para ver las categorías.",
@@ -331,6 +331,8 @@
         },
         "readOnlyMode": "Modo solo lectura",
         "readOnlyDescription": "Puedes ver la información pero no modificarla.",
+        "readOnlyTitle": "Solo Lectura",
+        "readOnlySubtitle": "Modo solo lectura",
         "cancel": "Cancelar",
         "save": "Guardar",
         "saving": "Guardando...",
@@ -361,6 +363,8 @@
       },
       "dailySpecials": {
         "title": "Programador de Especiales del Día",
+        "readOnlyTitle": "Solo Lectura",
+        "readOnlySubtitle": "Modo solo lectura",
         "schedulePromotion": "Programar Promoción",
         "dish": "Plato",
         "dishPlaceholder": "Selecciona un plato",
@@ -549,7 +553,9 @@
           "tablesError": "Error al obtener las mesas"
         },
         "readOnlyMode": "Modo solo lectura",
-        "readOnlyDescription": "Puedes ver la configuración pero no modificarla."
+        "readOnlyDescription": "Puedes ver la configuración pero no modificarla.",
+        "readOnlyTitle": "Solo Lectura",
+        "readOnlySubtitle": "Modo solo lectura"
       },
       "openingHours": {
         "title": "Horarios de Apertura",
@@ -643,7 +649,12 @@
           "reset": "Diseño restablecido exitosamente.",
           "resetError": "Error al restablecer el diseño.",
           "notAuthenticated": "Usuario no autenticado"
-        }
+        },
+        "readOnlyMode": "Modo solo lectura",
+        "readOnlyDescription": "Puedes ver el diseño pero no modificarlo.",
+        "readOnlyTitle": "Solo Lectura",
+        "readOnlySubtitle": "Modo solo lectura",
+        "noEditPermission": "No tienes permisos para editar el diseño."
       },
       "qr": {
         "title": "Generador de Códigos QR",
@@ -703,7 +714,8 @@
         "code": "Código de Acceso",
         "enter": "Ingresar",
         "invalidCode": "Código incorrecto",
-        "placeholder": "Ingresa el código"
+        "placeholder": "Ingresa el código",
+        "codeRequired": "Código requerido"
       },
       "order": {
         "title": "Tomar Orden",
@@ -747,7 +759,8 @@
         "releaseTable": "Liberar Mesa",
         "releaseTableMobile": "Liberar",
         "releasingTable": "Liberando...",
-        "releasingTableMobile": "..."
+        "releasingTableMobile": "...",
+        "tableReleased": "Mesa liberada exitosamente"
       }
     },
     "kitchen": {
@@ -785,7 +798,38 @@
           "ready": "Lista/Entregada",
           "cancelled": "Cancelada",
           "completed": "Completado"
-        }
+        },
+        "error": "Error al actualizar estado"
+      }
+    },
+    "orders": {
+      "readOnlyTitle": "Solo Lectura",
+      "readOnlySubtitle": "Modo solo lectura",
+      "readOnlyDescription": "Puedes ver las órdenes pero no modificarlas.",
+      "toast": {
+        "orderDeleted": "Orden eliminada correctamente",
+        "deleteError": "Error al eliminar la orden"
+      }
+    },
+    "services": {
+      "readOnlyTitle": "Solo Lectura",
+      "readOnlySubtitle": "Modo solo lectura",
+      "readOnlyDescription": "Puedes ver los servicios pero no modificarlos.",
+      "shared": {
+        "codeSaved": "Código actualizado exitosamente",
+        "codeError": "Error al actualizar el código"
+      },
+      "setup": {
+        "notFound": "Configuración de restaurante no encontrada"
+      }
+    },
+    "kitchen": {
+      "interface": {
+        "error": "Error al actualizar estado"
+      },
+      "auth": {
+        "codeRequired": "Código requerido",
+        "invalidCode": "Código incorrecto"
       }
     },
     "header": {
@@ -1207,6 +1251,11 @@
     "orders": {
       "title": "Gestión de Órdenes",
       "subtitle": "Monitorea y gestiona las órdenes de tu restaurante en tiempo real",
+      "toast": {
+        "orderDeleted": "Orden eliminada correctamente",
+        "deleteError": "Error al eliminar la orden"
+      },
+
       "connection": {
         "connected": "Conectado",
         "connectedShort": "OK",

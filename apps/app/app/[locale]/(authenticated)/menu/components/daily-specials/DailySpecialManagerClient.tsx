@@ -83,32 +83,28 @@ const getColumns = (
     locale: string = 'es',
     canEdit: boolean = true
 ): ColumnDef<DailySpecialWithDish>[] => [
-        {
+        ...(canEdit ? [{
             id: "select",
             header: ({ table }: HeaderContext<DailySpecialWithDish, unknown>) => (
-                canEdit ? (
-                    <Checkbox
-                        checked={
-                            table.getIsAllPageRowsSelected() ||
-                            (table.getIsSomePageRowsSelected() && "indeterminate")
-                        }
-                        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-                        aria-label="Select all"
-                    />
-                ) : null
+                <Checkbox
+                    checked={
+                        table.getIsAllPageRowsSelected() ||
+                        (table.getIsSomePageRowsSelected() && "indeterminate")
+                    }
+                    onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+                    aria-label="Select all"
+                />
             ),
             cell: ({ row }: CellContext<DailySpecialWithDish, unknown>) => (
-                canEdit ? (
-                    <Checkbox
-                        checked={row.getIsSelected()}
-                        onCheckedChange={(value) => row.toggleSelected(!!value)}
-                        aria-label="Select row"
-                    />
-                ) : null
+                <Checkbox
+                    checked={row.getIsSelected()}
+                    onCheckedChange={(value) => row.toggleSelected(!!value)}
+                    aria-label="Select row"
+                />
             ),
             enableSorting: false,
             enableHiding: false,
-        },
+        }] : []),
         {
             accessorKey: "dish.name",
             header: ({ column }: HeaderContext<DailySpecialWithDish, unknown>) => <DataTableColumnHeader column={column} title={dictionary.app?.menu?.dailySpecials?.dish || "Plato"} />,
@@ -118,13 +114,16 @@ const getColumns = (
             header: ({ column }: HeaderContext<DailySpecialWithDish, unknown>) => <DataTableColumnHeader column={column} title={dictionary.app?.menu?.dailySpecials?.date || "Fecha"} />,
             cell: ({ row }: CellContext<DailySpecialWithDish, unknown>) => <span>{formatDate(row.original.date, locale)}</span>,
         },
-        {
+        ...(canEdit ? [{
             id: "actions",
             cell: ({ row }: CellContext<DailySpecialWithDish, unknown>) => {
                 const [isPending, startTransition] = useTransition();
 
                 const handleDelete = () => {
-                    if (!canEdit) return;
+                    if (!canEdit) {
+                        toast.error(dictionary.app?.menu?.dailySpecials?.noPermission || 'No tienes permisos para eliminar promociones');
+                        return;
+                    }
 
                     startTransition(async () => {
                         toast.promise(onDelete(row.original.id), {
@@ -135,10 +134,6 @@ const getColumns = (
                     });
                 };
 
-                if (!canEdit) {
-                    return null;
-                }
-
                 return (
                     <div className="text-right">
                         <Button variant="ghost" size="icon" onClick={handleDelete} disabled={isPending}>
@@ -147,7 +142,7 @@ const getColumns = (
                     </div>
                 )
             },
-        },
+        }] : []),
     ];
 
 function TableToolbar({ table, onDeleteSelected, isDeleting, dictionary, canEdit }: {
@@ -186,7 +181,10 @@ export function DailySpecialManagerClient({ dailySpecials, dishes, upsertDailySp
     const [recurrenceEndDate, setRecurrenceEndDate] = useState<Date | undefined>();
 
     const handleDeleteSelected = (table: TanstackTable<DailySpecialWithDish>) => {
-        if (!canEdit) return;
+        if (!canEdit) {
+            toast.error(dictionary.app?.menu?.dailySpecials?.noPermission || 'No tienes permisos para eliminar promociones');
+            return;
+        }
 
         const selectedIds = table.getFilteredSelectedRowModel().rows.map(row => row.original.id);
         startTransition(async () => {
@@ -206,7 +204,10 @@ export function DailySpecialManagerClient({ dailySpecials, dishes, upsertDailySp
     }, dictionary, locale, canEdit), [deleteDailySpecials, dictionary, locale, canEdit]);
 
     const handleAddSpecial = () => {
-        if (!canEdit) return;
+        if (!canEdit) {
+            toast.error(dictionary.app?.menu?.dailySpecials?.noPermission || 'No tienes permisos para crear promociones');
+            return;
+        }
 
         if (!selectedDishId || !date) {
             toast.error(dictionary.app?.menu?.dailySpecials?.validation?.selectDishAndDate || "Por favor, selecciona un plato y una fecha de inicio.");
@@ -390,7 +391,7 @@ export function DailySpecialManagerClient({ dailySpecials, dishes, upsertDailySp
                 </div>
             )}
 
-            <div className="xl:col-span-3 space-y-4">
+            <div className={`space-y-4 ${canEdit ? 'xl:col-span-3' : 'xl:col-span-5'}`}>
                 <h4 className="font-semibold text-base sm:text-lg">{dictionary.app?.menu?.dailySpecials?.activePromotions || 'Promociones Activas'}</h4>
                 <div className="overflow-x-auto">
                     <DataTable

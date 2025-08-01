@@ -127,6 +127,12 @@
           "success": "Profile updated successfully.",
           "error": "Error updating profile",
           "noPermission": "You don't have permission to edit the profile."
+        },
+        "error": {
+          "title": "Error loading profile",
+          "description": "An error occurred while loading the profile information",
+          "details": "Unknown error loading profile",
+          "retry": "Try again"
         }
       },
       "password": {
@@ -150,6 +156,12 @@
           "success": "Password updated successfully.",
           "error": "Error updating password",
           "noPermission": "You don't have permission to change the password."
+        },
+        "error": {
+          "title": "Error loading security configuration",
+          "description": "An error occurred while loading the password configuration",
+          "details": "Unknown error loading security configuration",
+          "retry": "Try again"
         }
       },
       "users": {

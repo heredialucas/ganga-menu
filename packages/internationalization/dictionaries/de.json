@@ -127,6 +127,12 @@
           "success": "Profil erfolgreich aktualisiert.",
           "error": "Fehler beim Aktualisieren des Profils",
           "noPermission": "Sie haben keine Berechtigung, das Profil zu bearbeiten."
+        },
+        "error": {
+          "title": "Fehler beim Laden des Profils",
+          "description": "Beim Laden der Profilinformationen ist ein Fehler aufgetreten",
+          "details": "Unbekannter Fehler beim Laden des Profils",
+          "retry": "Erneut versuchen"
         }
       },
       "password": {
@@ -150,6 +156,12 @@
           "success": "Passwort erfolgreich aktualisiert.",
           "error": "Fehler beim Aktualisieren des Passworts",
           "noPermission": "Sie haben keine Berechtigung, das Passwort zu ändern."
+        },
+        "error": {
+          "title": "Fehler beim Laden der Sicherheitskonfiguration",
+          "description": "Beim Laden der Passwort-Konfiguration ist ein Fehler aufgetreten",
+          "details": "Unbekannter Fehler beim Laden der Sicherheitskonfiguration",
+          "retry": "Erneut versuchen"
         }
       },
       "users": {

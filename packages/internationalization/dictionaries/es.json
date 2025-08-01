@@ -127,6 +127,12 @@
           "success": "Perfil actualizado exitosamente.",
           "error": "Error al actualizar perfil",
           "noPermission": "No tienes permisos para editar el perfil."
+        },
+        "error": {
+          "title": "Error al cargar el perfil",
+          "description": "Ocurrió un error al cargar la información del perfil",
+          "details": "Error desconocido al cargar el perfil",
+          "retry": "Intentar de nuevo"
         }
       },
       "password": {
@@ -150,6 +156,12 @@
           "success": "Contraseña actualizada exitosamente.",
           "error": "Error al actualizar contraseña",
           "noPermission": "No tienes permisos para cambiar la contraseña."
+        },
+        "error": {
+          "title": "Error al cargar la configuración de seguridad",
+          "description": "Ocurrió un error al cargar la configuración de contraseñas",
+          "details": "Error desconocido al cargar la configuración de seguridad",
+          "retry": "Intentar de nuevo"
         }
       },
       "users": {

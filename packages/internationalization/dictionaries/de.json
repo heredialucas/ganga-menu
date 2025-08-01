@@ -242,6 +242,18 @@
           "deleteSuccess": "Kategorie gelöscht.",
           "deleteError": "Fehler beim Löschen der Kategorie",
           "notAuthenticated": "Benutzer nicht authentifiziert."
+        },
+        "userNotAuthenticated": "Benutzer nicht authentifiziert.",
+        "noPermission": "Sie haben keine Berechtigung, Kategorien anzuzeigen.",
+        "error": {
+          "title": "Fehler beim Laden der Kategorien",
+          "description": "Beim Laden der Kategorien ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+          "retry": "Wiederholen",
+          "details": "Fehlerdetails (nur Entwicklung)"
+        },
+        "loading": {
+          "title": "Kategorien werden geladen...",
+          "description": "Kategorien-Informationen werden geladen"
         }
       },
       "dishes": {
@@ -282,6 +294,18 @@
           "deleting": "Gericht wird gelöscht...",
           "deleted": "Gericht erfolgreich gelöscht.",
           "notAuthenticated": "Benutzer nicht authentifiziert"
+        },
+        "userNotAuthenticated": "Benutzer nicht authentifiziert.",
+        "noPermission": "Sie haben keine Berechtigung, Gerichte anzuzeigen.",
+        "error": {
+          "title": "Fehler beim Laden der Gerichte",
+          "description": "Beim Laden der Gerichte ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+          "retry": "Wiederholen",
+          "details": "Fehlerdetails (nur Entwicklung)"
+        },
+        "loading": {
+          "title": "Gerichte werden geladen...",
+          "description": "Gerichte-Informationen werden geladen"
         }
       },
       "dailySpecials": {
@@ -324,6 +348,27 @@
           "error": "Aktion konnte nicht hinzugefügt werden.",
           "deleting": "Aktionen werden gelöscht...",
           "deleteError": "Aktionen konnten nicht gelöscht werden."
+        },
+        "userNotAuthenticated": "Benutzer nicht authentifiziert.",
+        "noPermission": "Sie haben keine Berechtigung, Tagesangebote anzuzeigen.",
+        "deletingPromotion": "Aktion wird gelöscht...",
+        "promotionDeleted": "Aktion erfolgreich gelöscht.",
+        "deletingPromotions": "Wird gelöscht",
+        "deletePromotions": "Löschen",
+        "promotionsDeleted": "Aktionen erfolgreich gelöscht.",
+        "validation": {
+          "selectDishAndDate": "Bitte wählen Sie ein Gericht und ein Startdatum.",
+          "completeRecurrenceFields": "Für wiederkehrende Aktionen füllen Sie bitte alle Wiederholungsfelder aus."
+        },
+        "error": {
+          "title": "Fehler beim Laden der Tagesangebote",
+          "description": "Beim Laden der Tagesangebote ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+          "retry": "Wiederholen",
+          "details": "Fehlerdetails (nur Entwicklung)"
+        },
+        "loading": {
+          "title": "Tagesangebote werden geladen...",
+          "description": "Tagesangebote-Informationen werden geladen"
         }
       },
       "access": {
@@ -358,6 +403,18 @@
         "toast": {
           "linkCopied": "Menülink in die Zwischenablage kopiert.",
           "qrDownloaded": "QR erfolgreich heruntergeladen"
+        },
+        "userNotAuthenticated": "Benutzer nicht authentifiziert.",
+        "noPermission": "Sie haben keine Berechtigung, Zugangskonfiguration anzuzeigen.",
+        "error": {
+          "title": "Fehler beim Laden der Zugangskonfiguration",
+          "description": "Beim Laden der Zugangskonfiguration ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+          "retry": "Wiederholen",
+          "details": "Fehlerdetails (nur Entwicklung)"
+        },
+        "loading": {
+          "title": "Zugangskonfiguration wird geladen...",
+          "description": "Zugangskonfigurations-Informationen werden geladen"
         }
       },
       "orderStatus": {

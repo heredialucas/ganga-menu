@@ -31,7 +31,7 @@ interface DailySpecialWithDish extends DailySpecial {
     dish: Dish;
 }
 
-interface DailySpecialManagerProps {
+interface DailySpecialManagerClientProps {
     dailySpecials: DailySpecialWithDish[];
     dishes: Dish[];
     upsertDailySpecial: (data: any) => Promise<any>;
@@ -124,7 +124,7 @@ const getColumns = (
                 const [isPending, startTransition] = useTransition();
 
                 const handleDelete = () => {
-                    if (!canEdit) return; // ✅ Verificar permiso antes de eliminar
+                    if (!canEdit) return;
 
                     startTransition(async () => {
                         toast.promise(onDelete(row.original.id), {
@@ -135,7 +135,6 @@ const getColumns = (
                     });
                 };
 
-                // ✅ Solo mostrar botón de eliminar si tiene permisos de edición
                 if (!canEdit) {
                     return null;
                 }
@@ -165,7 +164,6 @@ function TableToolbar({ table, onDeleteSelected, isDeleting, dictionary, canEdit
             <div className="flex flex-1 items-center space-x-2">
                 {/* Aquí iría el filtro de fecha si se implementa */}
             </div>
-            {/* ✅ Solo mostrar botón de eliminación múltiple si tiene permisos de edición */}
             {canEdit && selectedRowCount > 0 && (
                 <Button variant="destructive" onClick={onDeleteSelected} disabled={isDeleting}>
                     <Trash2 className="mr-2 h-4 w-4" />
@@ -176,7 +174,7 @@ function TableToolbar({ table, onDeleteSelected, isDeleting, dictionary, canEdit
     );
 }
 
-export function DailySpecialManager({ dailySpecials, dishes, upsertDailySpecial, deleteDailySpecials, dictionary, locale = 'es', canEdit = true, canView = true }: DailySpecialManagerProps) {
+export function DailySpecialManagerClient({ dailySpecials, dishes, upsertDailySpecial, deleteDailySpecials, dictionary, locale = 'es', canEdit = true, canView = true }: DailySpecialManagerClientProps) {
     const [date, setDate] = useState<Date | undefined>(new Date());
     const [selectedDishId, setSelectedDishId] = useState<string>('');
     const [isPending, startTransition] = useTransition();
@@ -188,7 +186,7 @@ export function DailySpecialManager({ dailySpecials, dishes, upsertDailySpecial,
     const [recurrenceEndDate, setRecurrenceEndDate] = useState<Date | undefined>();
 
     const handleDeleteSelected = (table: TanstackTable<DailySpecialWithDish>) => {
-        if (!canEdit) return; // Solo permitir eliminar si puede editar
+        if (!canEdit) return;
 
         const selectedIds = table.getFilteredSelectedRowModel().rows.map(row => row.original.id);
         startTransition(async () => {
@@ -204,12 +202,11 @@ export function DailySpecialManager({ dailySpecials, dishes, upsertDailySpecial,
     };
 
     const columns = useMemo(() => getColumns(async (specialId: string) => {
-        // ✅ CORREGIDO: Usar deleteDailySpecial en lugar de upsertDailySpecial
         await deleteDailySpecials([specialId]);
     }, dictionary, locale, canEdit), [deleteDailySpecials, dictionary, locale, canEdit]);
 
     const handleAddSpecial = () => {
-        if (!canEdit) return; // Solo permitir agregar si puede editar
+        if (!canEdit) return;
 
         if (!selectedDishId || !date) {
             toast.error(dictionary.app?.menu?.dailySpecials?.validation?.selectDishAndDate || "Por favor, selecciona un plato y una fecha de inicio.");

@@ -244,6 +244,18 @@
           "deleteSuccess": "Category deleted.",
           "deleteError": "Error deleting category",
           "notAuthenticated": "User not authenticated."
+        },
+        "userNotAuthenticated": "User not authenticated.",
+        "noPermission": "You don't have permission to view categories.",
+        "error": {
+          "title": "Error loading categories",
+          "description": "An error occurred while loading categories. Please try again.",
+          "retry": "Retry",
+          "details": "Error details (development only)"
+        },
+        "loading": {
+          "title": "Loading categories...",
+          "description": "Loading category information"
         }
       },
       "dishes": {
@@ -284,6 +296,18 @@
           "deleting": "Deleting dish...",
           "deleted": "Dish deleted successfully.",
           "notAuthenticated": "User not authenticated"
+        },
+        "userNotAuthenticated": "User not authenticated.",
+        "noPermission": "You don't have permission to view dishes.",
+        "error": {
+          "title": "Error loading dishes",
+          "description": "An error occurred while loading dishes. Please try again.",
+          "retry": "Retry",
+          "details": "Error details (development only)"
+        },
+        "loading": {
+          "title": "Loading dishes...",
+          "description": "Loading dish information"
         }
       },
       "dailySpecials": {
@@ -326,6 +350,27 @@
           "error": "Could not add promotion.",
           "deleting": "Deleting promotions...",
           "deleteError": "Could not delete promotions."
+        },
+        "userNotAuthenticated": "User not authenticated.",
+        "noPermission": "You don't have permission to view daily specials.",
+        "deletingPromotion": "Deleting promotion...",
+        "promotionDeleted": "Promotion deleted successfully.",
+        "deletingPromotions": "Deleting",
+        "deletePromotions": "Delete",
+        "promotionsDeleted": "promotions deleted successfully.",
+        "validation": {
+          "selectDishAndDate": "Please select a dish and start date.",
+          "completeRecurrenceFields": "For recurring promotions, complete all recurrence fields."
+        },
+        "error": {
+          "title": "Error loading daily specials",
+          "description": "An error occurred while loading daily specials. Please try again.",
+          "retry": "Retry",
+          "details": "Error details (development only)"
+        },
+        "loading": {
+          "title": "Loading daily specials...",
+          "description": "Loading daily specials information"
         }
       },
       "access": {
@@ -360,6 +405,18 @@
         "toast": {
           "linkCopied": "Menu link copied to clipboard.",
           "qrDownloaded": "QR downloaded successfully"
+        },
+        "userNotAuthenticated": "User not authenticated.",
+        "noPermission": "You don't have permission to view access configuration.",
+        "error": {
+          "title": "Error loading access configuration",
+          "description": "An error occurred while loading access configuration. Please try again.",
+          "retry": "Retry",
+          "details": "Error details (development only)"
+        },
+        "loading": {
+          "title": "Loading access configuration...",
+          "description": "Loading access configuration information"
         }
       },
       "orderStatus": {

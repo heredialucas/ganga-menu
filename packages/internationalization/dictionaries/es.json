@@ -244,6 +244,18 @@
           "deleteSuccess": "Categoría eliminada.",
           "deleteError": "Error al eliminar categoría",
           "notAuthenticated": "Usuario no autenticado."
+        },
+        "userNotAuthenticated": "Usuario no autenticado.",
+        "noPermission": "No tienes permisos para ver las categorías.",
+        "error": {
+          "title": "Error al cargar categorías",
+          "description": "Ocurrió un error al cargar las categorías. Por favor, intenta de nuevo.",
+          "retry": "Reintentar",
+          "details": "Detalles del error (solo desarrollo)"
+        },
+        "loading": {
+          "title": "Cargando categorías...",
+          "description": "Cargando información de categorías"
         }
       },
       "dishes": {
@@ -284,6 +296,18 @@
           "deleting": "Eliminando plato...",
           "deleted": "Plato eliminado correctamente.",
           "notAuthenticated": "Usuario no autenticado"
+        },
+        "userNotAuthenticated": "Usuario no autenticado.",
+        "noPermission": "No tienes permisos para ver los platos.",
+        "error": {
+          "title": "Error al cargar platos",
+          "description": "Ocurrió un error al cargar los platos. Por favor, intenta de nuevo.",
+          "retry": "Reintentar",
+          "details": "Detalles del error (solo desarrollo)"
+        },
+        "loading": {
+          "title": "Cargando platos...",
+          "description": "Cargando información de platos"
         }
       },
       "dailySpecials": {
@@ -326,6 +350,27 @@
           "error": "No se pudo añadir la promoción.",
           "deleting": "Eliminando promociones...",
           "deleteError": "No se pudieron eliminar las promociones."
+        },
+        "userNotAuthenticated": "Usuario no autenticado.",
+        "noPermission": "No tienes permisos para ver los especiales del día.",
+        "deletingPromotion": "Eliminando promoción...",
+        "promotionDeleted": "Promoción eliminada con éxito.",
+        "deletingPromotions": "Eliminando",
+        "deletePromotions": "Eliminar",
+        "promotionsDeleted": "promociones eliminadas con éxito.",
+        "validation": {
+          "selectDishAndDate": "Por favor, selecciona un plato y una fecha de inicio.",
+          "completeRecurrenceFields": "Para promociones recurrentes, completa todos los campos de repetición."
+        },
+        "error": {
+          "title": "Error al cargar especiales del día",
+          "description": "Ocurrió un error al cargar los especiales del día. Por favor, intenta de nuevo.",
+          "retry": "Reintentar",
+          "details": "Detalles del error (solo desarrollo)"
+        },
+        "loading": {
+          "title": "Cargando especiales del día...",
+          "description": "Cargando información de especiales del día"
         }
       },
       "access": {
@@ -360,6 +405,18 @@
         "toast": {
           "linkCopied": "Enlace del menú copiado al portapapeles.",
           "qrDownloaded": "QR descargado correctamente"
+        },
+        "userNotAuthenticated": "Usuario no autenticado.",
+        "noPermission": "No tienes permisos para ver la configuración de acceso.",
+        "error": {
+          "title": "Error al cargar configuración de acceso",
+          "description": "Ocurrió un error al cargar la configuración de acceso. Por favor, intenta de nuevo.",
+          "retry": "Reintentar",
+          "details": "Detalles del error (solo desarrollo)"
+        },
+        "loading": {
+          "title": "Cargando configuración de acceso...",
+          "description": "Cargando información de configuración de acceso"
         }
       },
       "orderStatus": {

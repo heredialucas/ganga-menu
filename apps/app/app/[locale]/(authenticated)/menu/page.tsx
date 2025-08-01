@@ -1,46 +1,23 @@
-import { getCurrentUser } from '@repo/data-services/src/services/authService';
 import { getDictionary } from '@repo/internationalization';
-import { requirePermission, hasPermission } from '@repo/auth/server-permissions';
-import { getRestaurantConfig } from '@repo/data-services/src/services/restaurantConfigService';
-import { getAllDishesWithFullData } from '@repo/data-services/src/services/dishService';
-import { getAllCategoriesWithFullData } from '@repo/data-services/src/services/categoryService';
-import { getAllDailySpecialsWithFullData, upsertDailySpecial, deleteDailySpecials } from '@repo/data-services/src/services/dailySpecialService';
-import { getAppUrl } from '@/lib/utils';
-import { DishManager } from './components/DishManager';
-import { CategoryManager } from './components/CategoryManager';
-import { DailySpecialManager } from './components/DailySpecialManager';
-import { MenuAccessWidget } from './components/MenuAccessWidget';
+import { requirePermission } from '@repo/auth/server-permissions';
+import { Suspense } from 'react';
 import { ShareLinksWidget } from '@/components/ShareLinksWidget';
 import { FeedbackWidget } from '@/components/FeedbackWidget';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@repo/design-system/components/ui/accordion';
+import { DishManagerServer } from './components/dishes/DishManagerServer';
+import { CategoryManagerServer } from './components/categories/CategoryManagerServer';
+import { DailySpecialManagerServer } from './components/daily-specials/DailySpecialManagerServer';
+import { MenuAccessWidgetServer } from './components/menu-access/MenuAccessWidgetServer';
+import DishLoading from './components/dishes/loading';
+import CategoryLoading from './components/categories/loading';
+import DailySpecialLoading from './components/daily-specials/loading';
+import MenuAccessLoading from './components/menu-access/loading';
 
 export default async function MenuPage({ params }: { params: Promise<{ locale: string }> }) {
     const { locale } = await params;
     await requirePermission('menu:view');
 
-    const [user, dictionary] = await Promise.all([
-        getCurrentUser(),
-        getDictionary(locale),
-    ]);
-
-    const restaurantConfig = await getRestaurantConfig(user?.id);
-
-    if (!user) {
-        return <p className="p-4 text-center">{dictionary.app?.menu?.userNotAuthenticated || 'Usuario no autenticado.'}</p>;
-    }
-
-    // Verificar permisos específicos del menú
-    const [canViewMenu, canEditMenu] = await Promise.all([
-        hasPermission('menu:view'),
-        hasPermission('menu:edit')
-    ]);
-
-    // ✅ CORREGIDO: Usar los servicios que manejan correctamente la lógica de restaurante padre
-    const [dishes, categories, dailySpecials] = await Promise.all([
-        getAllDishesWithFullData(user.id), // Este servicio ya usa getRestaurantOwner internamente
-        getAllCategoriesWithFullData(user.id), // Este servicio ya usa getRestaurantOwner internamente
-        getAllDailySpecialsWithFullData(user.id), // Este servicio ya usa getRestaurantOwner internamente
-    ]);
+    const dictionary = await getDictionary(locale);
 
     return (
         <div className="space-y-3 sm:space-y-4 md:space-y-6 p-1 sm:p-2 md:p-6">
@@ -59,55 +36,44 @@ export default async function MenuPage({ params }: { params: Promise<{ locale: s
                 </div>
             </div>
 
-            <DishManager
-                dishes={dishes}
-                categories={categories}
-                dictionary={dictionary}
-                canEdit={canEditMenu}
-                canView={canViewMenu}
-            />
-            <MenuAccessWidget
-                config={restaurantConfig}
-                appUrl={getAppUrl()}
-                dictionary={dictionary}
-                locale={locale}
-                canEdit={canEditMenu}
-                canView={canViewMenu}
-            />
+            {/* Sección de Platos */}
+            <Suspense fallback={<DishLoading />}>
+                <DishManagerServer dictionary={dictionary} locale={locale} />
+            </Suspense>
+
+            {/* Widget de Acceso al Menú */}
+            <Suspense fallback={<MenuAccessLoading />}>
+                <MenuAccessWidgetServer dictionary={dictionary} locale={locale} />
+            </Suspense>
 
             <Accordion type="multiple" className="w-full space-y-3 sm:space-y-4">
+                {/* Sección de Categorías */}
                 <AccordionItem value="categories" className="border rounded-lg px-3 sm:px-4">
                     <AccordionTrigger className="text-left">
                         <h3 className="font-semibold text-base sm:text-lg">{dictionary.app?.menu?.categories?.title || 'Gestor de Categorías'}</h3>
                     </AccordionTrigger>
                     <AccordionContent>
-                        <CategoryManager
-                            categories={categories}
-                            dictionary={dictionary}
-                            canEdit={canEditMenu}
-                            canView={canViewMenu}
-                        />
+                        <Suspense fallback={<CategoryLoading />}>
+                            <CategoryManagerServer dictionary={dictionary} locale={locale} />
+                        </Suspense>
                     </AccordionContent>
                 </AccordionItem>
 
+                {/* Sección de Especiales del Día */}
                 <AccordionItem value="specials" className="border rounded-lg px-3 sm:px-4">
                     <AccordionTrigger className="text-left">
                         <h3 className="font-semibold text-base sm:text-lg">{dictionary.app?.menu?.dailySpecials?.title || 'Programador de Especiales del Día'}</h3>
                     </AccordionTrigger>
                     <AccordionContent>
-                        <DailySpecialManager
-                            dailySpecials={dailySpecials}
-                            dishes={dishes}
-                            upsertDailySpecial={upsertDailySpecial}
-                            deleteDailySpecials={deleteDailySpecials}
-                            dictionary={dictionary}
-                            locale={locale}
-                            canEdit={canEditMenu}
-                            canView={canViewMenu}
-                        />
+                        <Suspense fallback={<DailySpecialLoading />}>
+                            <DailySpecialManagerServer dictionary={dictionary} locale={locale} />
+                        </Suspense>
                     </AccordionContent>
                 </AccordionItem>
             </Accordion>
         </div>
     );
-} 
+}
+
+
+

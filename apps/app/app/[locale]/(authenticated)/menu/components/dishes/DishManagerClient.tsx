@@ -24,7 +24,7 @@ interface DishWithCategory extends Dish {
     category: Category | null;
 }
 
-interface DishManagerProps {
+interface DishManagerClientProps {
     dishes: DishWithCategory[];
     categories: Category[];
     dictionary: Dictionary;
@@ -32,7 +32,7 @@ interface DishManagerProps {
     canView: boolean;
 }
 
-export function DishManager({ dishes, categories, dictionary, canEdit, canView }: DishManagerProps) {
+export function DishManagerClient({ dishes, categories, dictionary, canEdit, canView }: DishManagerClientProps) {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [editingDish, setEditingDish] = useState<DishWithCategory | null>(null);
     const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; dish: DishWithCategory | null }>({ open: false, dish: null });
@@ -41,7 +41,7 @@ export function DishManager({ dishes, categories, dictionary, canEdit, canView }
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleOpenDialog = (dish: DishWithCategory | null) => {
-        if (!canEdit) return; // Solo permitir abrir el diálogo si puede editar
+        if (!canEdit) return;
         setEditingDish(dish);
         setPreviewImage(dish?.imageUrl || null);
         setIsDialogOpen(true);
@@ -60,7 +60,7 @@ export function DishManager({ dishes, categories, dictionary, canEdit, canView }
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (!canEdit) return; // Solo permitir submit si puede editar
+        if (!canEdit) return;
 
         const form = e.currentTarget;
         const formData = new FormData(form);
@@ -88,7 +88,6 @@ export function DishManager({ dishes, categories, dictionary, canEdit, canView }
                 const user = await getCurrentUser();
                 if (!user) throw new Error(dictionary.app?.menu?.dishes?.toast?.notAuthenticated || "Usuario no autenticado");
 
-                // Obtener el ID del dueño del restaurante
                 const restaurantOwnerId = await getRestaurantOwner(user.id);
                 if (!restaurantOwnerId) {
                     throw new Error("No se pudo determinar el dueño del restaurante");
@@ -111,7 +110,7 @@ export function DishManager({ dishes, categories, dictionary, canEdit, canView }
     };
 
     const handleDelete = (dish: DishWithCategory) => {
-        if (!canEdit) return; // Solo permitir eliminar si puede editar
+        if (!canEdit) return;
 
         startTransition(async () => {
             toast.promise(deleteDish(dish.id), {

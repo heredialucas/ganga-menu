@@ -8,13 +8,12 @@ import { Label } from '@repo/design-system/components/ui/label';
 import { QrCode, Download, Copy, ExternalLink, Save, Loader2 } from 'lucide-react';
 import { toDataURL } from 'qrcode';
 import { toast } from 'sonner';
-import { saveMenuConfig } from '../actions';
+import { saveMenuConfig } from '../../actions';
 import type { RestaurantConfigData } from '@repo/data-services/src/services/restaurantConfigService';
 import type { Dictionary } from '@repo/internationalization';
-import { TemplateType, getTemplatesByLanguage } from '../../../menu/[slug]/types/templates';
+import { TemplateType, getTemplatesByLanguage } from '@/app/[locale]/menu/[slug]/types/templates';
 
-
-interface MenuAccessWidgetProps {
+interface MenuAccessWidgetClientProps {
     config: RestaurantConfigData | null;
     appUrl: string;
     dictionary: Dictionary;
@@ -23,7 +22,7 @@ interface MenuAccessWidgetProps {
     canView: boolean;
 }
 
-export function MenuAccessWidget({ config, appUrl, dictionary, locale = 'es', canEdit, canView }: MenuAccessWidgetProps) {
+export function MenuAccessWidgetClient({ config, appUrl, dictionary, locale = 'es', canEdit, canView }: MenuAccessWidgetClientProps) {
     const [slug, setSlug] = useState(config?.slug || '');
     const [themeColor, setThemeColor] = useState(config?.themeColor || '#16a34a');
     const [template, setTemplate] = useState<TemplateType>(config?.template as TemplateType || 'neomorphic');
@@ -43,7 +42,7 @@ export function MenuAccessWidget({ config, appUrl, dictionary, locale = 'es', ca
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (!canEdit) return; // Solo permitir submit si puede editar
+        if (!canEdit) return;
 
         const formData = new FormData();
         formData.append('slug', slug);

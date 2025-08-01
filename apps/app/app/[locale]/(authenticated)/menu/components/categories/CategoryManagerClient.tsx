@@ -12,20 +12,20 @@ import { getCurrentUser } from '@repo/data-services/src/services/authService';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@repo/design-system/components/ui/table';
 import type { Dictionary } from '@repo/internationalization';
 
-interface CategoryManagerProps {
+interface CategoryManagerClientProps {
     categories: Category[];
     dictionary: Dictionary;
     canEdit?: boolean;
     canView?: boolean;
 }
 
-export function CategoryManager({ categories, dictionary, canEdit = true, canView = true }: CategoryManagerProps) {
+export function CategoryManagerClient({ categories, dictionary, canEdit = true, canView = true }: CategoryManagerClientProps) {
     const [isPending, startTransition] = useTransition();
     const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; category: Category | null }>({ open: false, category: null });
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (!canEdit) return; // Solo permitir submit si puede editar
+        if (!canEdit) return;
 
         const form = e.currentTarget;
         const formData = new FormData(form);
@@ -48,7 +48,7 @@ export function CategoryManager({ categories, dictionary, canEdit = true, canVie
     };
 
     const handleDelete = (category: Category) => {
-        if (!canEdit) return; // Solo permitir eliminar si puede editar
+        if (!canEdit) return;
 
         startTransition(async () => {
             try {

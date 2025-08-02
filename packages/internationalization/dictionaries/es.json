@@ -551,7 +551,10 @@
         "cancel": "Cancelar",
         "contactInfo": {
           "title": "Información de Contacto",
-          "description": "Información de contacto para que tus clientes puedan ubicarte y comunicarse contigo."
+          "description": "Información de contacto para que tus clientes puedan ubicarte y comunicarse contigo.",
+          "phone": "Teléfono",
+          "email": "Email",
+          "address": "Dirección"
         },
         "toast": {
           "saving": "Guardando configuración...",
@@ -1186,6 +1189,12 @@
         "send_button": "Enviar mensaje",
         "success_message": "¡Tu mensaje ha sido enviado con éxito!",
         "error_message": "Error al enviar el mensaje. Por favor, inténtalo de nuevo más tarde."
+      },
+      "company": {
+        "title": "Información de Contacto",
+        "phone": "+49 152 24980784",
+        "email": "advenature.concepts@gmail.com",
+        "address": "Alemania"
       }
     },
     "services": {

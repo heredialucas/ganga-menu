@@ -1,7 +1,7 @@
 'use client';
 
 import type { Dictionary } from '@repo/internationalization';
-import { Check, FileSpreadsheet, Mail } from 'lucide-react';
+import { Check, FileSpreadsheet, Mail, Phone, MapPin } from 'lucide-react';
 import { useState, FormEvent, ChangeEvent } from 'react';
 import { motion } from 'framer-motion';
 import { contact } from '../actions/contact';
@@ -108,6 +108,27 @@ export const ContactForm = ({ dictionary }: ContactFormProps) => {
               <div>
                 <h3 className="text-xl font-black var(--font-nunito) text-foreground">Ganga-Menú</h3>
                 <p className="text-sm text-muted-foreground var(--font-nunito)">{dictionary.web.contact.form.subtitleInfo}</p>
+              </div>
+            </div>
+
+            {/* Company Contact Information */}
+            <div className="bg-card rounded-xl border border-border p-6 shadow-md mt-6">
+              <h4 className="font-bold text-lg mb-4 text-foreground var(--font-nunito)">
+                {dictionary.web.contact.company.title}
+              </h4>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3 text-muted-foreground">
+                  <Phone className="h-4 w-4 text-primary" />
+                  <span className="text-sm var(--font-nunito)">{dictionary.web.contact.company.phone}</span>
+                </div>
+                <div className="flex items-center gap-3 text-muted-foreground">
+                  <Mail className="h-4 w-4 text-primary" />
+                  <span className="text-sm var(--font-nunito)">{dictionary.web.contact.company.email}</span>
+                </div>
+                <div className="flex items-center gap-3 text-muted-foreground">
+                  <MapPin className="h-4 w-4 text-primary" />
+                  <span className="text-sm var(--font-nunito)">{dictionary.web.contact.company.address}</span>
+                </div>
               </div>
             </div>
           </div>

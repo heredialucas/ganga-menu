@@ -548,7 +548,10 @@
         "cancel": "Cancel",
         "contactInfo": {
           "title": "Contact Information",
-          "description": "Contact information so your customers can locate and communicate with you."
+          "description": "Contact information so your customers can locate and communicate with you.",
+          "phone": "Phone",
+          "email": "Email",
+          "address": "Address"
         },
         "toast": {
           "saving": "Saving configuration...",
@@ -1155,6 +1158,12 @@
         "send_button": "Send message",
         "success_message": "Your message has been sent successfully!",
         "error_message": "Error sending message. Please try again later."
+      },
+      "company": {
+        "title": "Contact Information",
+        "phone": "+49 152 24980784",
+        "email": "advenature.concepts@gmail.com",
+        "address": "Germany"
       }
     },
     "services": {

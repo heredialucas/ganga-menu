@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
         console.log('📤 Enviando email...');
         await resend.emails.send({
             from: 'Ganga-Menú Feedback <onboarding@resend.dev>',
-            to: 'heredialucasfac22@gmail.com',
+            to: 'advenature.concepts@gmail.com',
             subject: `Nuevo feedback de ${validatedData.name}`,
             replyTo: validatedData.email,
             react: ContactTemplate({

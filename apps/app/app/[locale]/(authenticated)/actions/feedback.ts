@@ -30,12 +30,12 @@ export async function sendFeedback(
 
         await resend.emails.send({
             from: 'Ganga-Menú Feedback <onboarding@resend.dev>',
-            to: 'heredialucasfac22@gmail.com',
+            to: 'advenature.concepts@gmail.com',
             subject: `Nuevo feedback de ${validatedData.name}`,
-            replyTo: 'feedback@ganga-menu.com',
+            replyTo: 'advenature.concepts@gmail.com',
             react: ContactTemplate({
                 name: validatedData.name,
-                email: 'feedback@ganga-menu.com',
+                email: 'advenature.concepts@gmail.com',
                 message: validatedData.message,
             }),
         });

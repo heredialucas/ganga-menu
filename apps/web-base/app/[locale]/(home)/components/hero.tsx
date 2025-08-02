@@ -4,11 +4,9 @@ import type { Dictionary } from '@repo/internationalization';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
 import { ChefHat, Users, MenuIcon, ArrowRight, Smartphone, Clock } from 'lucide-react';
 import { useParams } from 'next/navigation';
-import { env } from '@/env';
 import { getAppUrl } from '@/lib/utils';
 import logo from '@/public/logo.png';
 import gangaMenu from '@/public/ganga-menu.png';
@@ -16,8 +14,6 @@ import gangaMozos from '@/public/ganga-mozos.png';
 import gangaCocina from '@/public/ganga-cocina.png';
 import background from '@/public/background.png';
 import { staggerContainer, fadeIn, slideIn } from '../lib/animations';
-
-const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 
 type HeroProps = {
   dictionary: Dictionary;
@@ -127,7 +123,7 @@ export const Hero = ({ dictionary }: HeroProps) => {
                   <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
                 </motion.button>
               </Link>
-              <Link href="#features">
+              {/* <Link href="#features">
                 <motion.button
                   className="border-2 border-[#0d4b3d] text-[#0d4b3d] px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-medium hover:bg-[#0d4b3d] hover:text-white transition-all shadow-lg flex items-center gap-2 w-full sm:w-auto justify-center text-sm sm:text-base"
                   whileHover={{ scale: 1.05 }}
@@ -136,7 +132,7 @@ export const Hero = ({ dictionary }: HeroProps) => {
                   {dictionary.web.home.hero.tryFree}
                   <Smartphone className="w-4 h-4 sm:w-5 sm:h-5" />
                 </motion.button>
-              </Link>
+              </Link> */}
             </div>
           </motion.div>
 
@@ -165,7 +161,7 @@ export const Hero = ({ dictionary }: HeroProps) => {
                 y: { repeat: Infinity, duration: 4, ease: "easeInOut" },
                 rotate: { repeat: Infinity, duration: 6, ease: "easeInOut" }
               }}
-              className="absolute z-10 left-0 top-4 sm:top-8 w-48 sm:w-64 lg:w-80 xl:w-[30rem] h-36 sm:h-44 lg:h-56 xl:h-[22rem] rounded-xl sm:rounded-2xl overflow-hidden shadow-xl sm:shadow-2xl border-2 sm:border-4 border-white dark:border-gray-800 transform hover:scale-105 transition-transform cursor-pointer"
+              className="absolute z-10 left-0 top-4 sm:top-8 w-48 sm:w-64 lg:w-80 xl:w-[30rem] h-36 sm:h-44 lg:h-56 xl:h-[22rem] rounded-xl sm:rounded-2xl overflow-hidden shadow-xl sm:shadow-2xl border-2 sm:border-4 border-white dark:border-gray-800 transform hover:scale-105 transition-transform"
             >
               <Image
                 src={gangaMenu}
@@ -202,7 +198,7 @@ export const Hero = ({ dictionary }: HeroProps) => {
                 y: { repeat: Infinity, duration: 5, ease: "easeInOut" },
                 rotate: { repeat: Infinity, duration: 7, ease: "easeInOut" }
               }}
-              className="absolute z-20 right-2 sm:right-4 top-2 sm:top-4 w-32 sm:w-48 lg:w-64 h-24 sm:h-32 lg:h-44 rounded-lg sm:rounded-xl overflow-hidden shadow-lg sm:shadow-xl border-2 sm:border-3 border-white dark:border-gray-800 transform hover:scale-105 transition-transform cursor-pointer"
+              className="absolute z-20 right-2 sm:right-4 top-2 sm:top-4 w-32 sm:w-48 lg:w-64 h-24 sm:h-32 lg:h-44 rounded-lg sm:rounded-xl overflow-hidden shadow-lg sm:shadow-xl border-2 sm:border-3 border-white dark:border-gray-800 transform hover:scale-105 transition-transform"
             >
               <Image
                 src={gangaMozos}
@@ -239,7 +235,7 @@ export const Hero = ({ dictionary }: HeroProps) => {
                 y: { repeat: Infinity, duration: 4.5, ease: "easeInOut" },
                 rotate: { repeat: Infinity, duration: 8, ease: "easeInOut" }
               }}
-              className="absolute z-30 bottom-4 sm:bottom-8 left-1/2 transform -translate-x-1/2 w-40 sm:w-56 lg:w-68 xl:w-68 h-28 sm:h-36 lg:h-46 xl:h-46 rounded-lg sm:rounded-xl overflow-hidden shadow-lg sm:shadow-xl border-2 sm:border-3 border-white dark:border-gray-800 hover:scale-105 transition-transform cursor-pointer"
+              className="absolute z-30 bottom-4 sm:bottom-8 left-1/2 transform -translate-x-1/2 w-40 sm:w-56 lg:w-68 xl:w-68 h-28 sm:h-36 lg:h-46 xl:h-46 rounded-lg sm:rounded-xl overflow-hidden shadow-lg sm:shadow-xl border-2 sm:border-3 border-white dark:border-gray-800 hover:scale-105 transition-transform"
             >
               <Image
                 src={gangaCocina}

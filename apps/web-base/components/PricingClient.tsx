@@ -153,7 +153,7 @@ export const PricingClient = ({ dictionary, locale, stripeProLink }: PricingClie
                                 ) : (
                                     <Button className="w-full gap-2 sm:gap-4 bg-gradient-to-r from-[#0d4b3d] to-[#7dd3c8] hover:from-[#0d4b3d]/90 hover:to-[#7dd3c8]/90 text-white var(--font-nunito) font-black text-sm sm:text-base" asChild>
                                         <Link href={paymentLink} target="_blank" rel="noopener noreferrer">
-                                            {dictionary.web.pricing.buyNow} <MoveRight className="h-3 w-3 sm:h-4 sm:w-4" />
+                                            {dictionary.web.pricing.startFreeTrial} <MoveRight className="h-3 w-3 sm:h-4 sm:w-4" />
                                         </Link>
                                     </Button>
                                 )}

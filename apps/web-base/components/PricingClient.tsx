@@ -10,7 +10,7 @@ import type { Dictionary } from '@repo/internationalization';
 interface PricingClientProps {
     dictionary: Dictionary;
     locale: string;
-    stripeProLink: string;
+    stripeProLink: string; // Mantener por compatibilidad, pero usar el dinámico
 }
 
 export const PricingClient = ({ dictionary, locale, stripeProLink }: PricingClientProps) => {
@@ -33,6 +33,7 @@ export const PricingClient = ({ dictionary, locale, stripeProLink }: PricingClie
     // Usar la ubicación detectada o fallback al locale
     const currencySymbol = isLoading ? getCurrencySymbol(locale) : locationData.symbol;
     const price = isLoading ? '39.99' : locationData.price;
+    const paymentLink = isLoading ? stripeProLink : locationData.paymentLink;
 
     if (isLoading) {
         return (
@@ -151,7 +152,7 @@ export const PricingClient = ({ dictionary, locale, stripeProLink }: PricingClie
                                     />
                                 ) : (
                                     <Button className="w-full gap-2 sm:gap-4 bg-gradient-to-r from-[#0d4b3d] to-[#7dd3c8] hover:from-[#0d4b3d]/90 hover:to-[#7dd3c8]/90 text-white var(--font-nunito) font-black text-sm sm:text-base" asChild>
-                                        <Link href={stripeProLink} target="_blank" rel="noopener noreferrer">
+                                        <Link href={paymentLink} target="_blank" rel="noopener noreferrer">
                                             {dictionary.web.pricing.buyNow} <MoveRight className="h-3 w-3 sm:h-4 sm:w-4" />
                                         </Link>
                                     </Button>

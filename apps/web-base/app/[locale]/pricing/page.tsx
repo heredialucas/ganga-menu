@@ -1,4 +1,3 @@
-import { env } from '@/env';
 import { getDictionary } from '@repo/internationalization';
 import { createMetadata } from '@repo/seo/metadata';
 import type { Metadata } from 'next';
@@ -26,15 +25,11 @@ const Pricing = async ({ params }: PricingProps) => {
   const { locale } = await params;
   const dictionary = await getDictionary(locale);
 
-  const stripeProLink = process.env.NODE_ENV === 'development'
-    ? env.NEXT_PUBLIC_STRIPE_PRO_LINK_TEST
-    : env.NEXT_PUBLIC_STRIPE_PRO_LINK_LIVE;
-
   return (
-    <PricingClient 
-      dictionary={dictionary} 
-      locale={locale} 
-      stripeProLink={stripeProLink}
+    <PricingClient
+      dictionary={dictionary}
+      locale={locale}
+      stripeProLink="" // Ya no se usa, pero mantener por compatibilidad
     />
   );
 };

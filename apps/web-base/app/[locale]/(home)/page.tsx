@@ -3,6 +3,7 @@ import { getDictionary } from '@repo/internationalization';
 import { createMetadata } from '@repo/seo/metadata';
 import type { Metadata } from 'next';
 import { Hero } from './components/hero';
+import { ThemesShowcase } from './components/themesShowcase';
 import { CTA } from './components/cta';
 import { FAQ } from './components/faq';
 import { Features } from './components/features';
@@ -31,12 +32,8 @@ const Home = async ({ params }: HomeProps) => {
 
   return (
     <>
-      {betaFeature && (
-        <div className="w-full bg-[#0d4b3d] py-2 text-center text-white">
-          ¡SALVA BUENA COMIDA DEL DESPERDICIO!
-        </div>
-      )}
       <Hero dictionary={dictionary} />
+      <ThemesShowcase dictionary={dictionary} />
       <Features dictionary={dictionary} />
       <Stats dictionary={dictionary} />
       <Testimonials dictionary={dictionary} />

@@ -846,6 +846,18 @@
         "title": "Ganga-Menú - Digital menus for restaurants",
         "description": "The platform that helps restaurants create and manage their digital menus easily and professionally."
       },
+      "themesShowcase": {
+        "title": "Custom themes",
+        "description": "Explore our unique styles for your digital menu",
+        "themes": {
+          "artist": "Artist",
+          "luxury": "Luxury",
+          "neo": "Neo",
+          "playfulFan": "Playful Fan",
+          "retro": "Retro",
+          "zen": "Zen"
+        }
+      },
       "hero": {
         "title": "Complete Management for Your Restaurant",
         "subtitle": "From interactive digital menus to complete order management. Waiters take orders easily and the kitchen controls each preparation in real time. Everything in one integrated platform.",

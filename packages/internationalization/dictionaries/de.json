@@ -868,6 +868,18 @@
       "navigation": "Navigation"
     },
     "home": {
+      "themesShowcase": {
+        "title": "Individuelle Themes",
+        "description": "Entdecken Sie unsere einzigartigen Stile für Ihr digitales Menü",
+        "themes": {
+          "artist": "Künstler",
+          "luxury": "Luxus",
+          "neo": "Neo",
+          "playfulFan": "Verspielter Fan",
+          "retro": "Retro",
+          "zen": "Zen"
+        }
+      },
       "meta": {
         "title": "Ganga-Menü - Digitale Menüs für Restaurants",
         "description": "Die Plattform, die Restaurants dabei hilft, ihre digitalen Menüs einfach und professionell zu erstellen und zu verwalten."

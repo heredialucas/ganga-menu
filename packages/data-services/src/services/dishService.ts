@@ -5,6 +5,7 @@ import { database } from '@repo/database';
 import { deleteR2Image, uploadR2Image } from './uploadR2Image';
 import { getCurrentUserId } from './authService';
 import { requirePermission } from '@repo/auth/server-permissions';
+import { extractR2KeyFromUrl } from '../util/util';
 
 export interface DishData {
     id: string;
@@ -256,7 +257,8 @@ export async function updateDish(dishId: string, data: DishFormData) {
         if (data.imageFile) {
             // Eliminar imagen anterior si existe
             if (existingDish.imageUrl) {
-                await deleteR2Image(existingDish.imageUrl);
+                const oldKey = extractR2KeyFromUrl(existingDish.imageUrl);
+                if (oldKey) await deleteR2Image(oldKey);
             }
 
             const { url } = await uploadR2Image({
@@ -337,7 +339,8 @@ export async function deleteDish(dishId: string) {
 
         // Eliminar imagen si existe
         if (dishToDelete.imageUrl) {
-            await deleteR2Image(dishToDelete.imageUrl);
+            const oldKey = extractR2KeyFromUrl(dishToDelete.imageUrl);
+            if (oldKey) await deleteR2Image(oldKey);
         }
 
         // Eliminar plato de la base de datos

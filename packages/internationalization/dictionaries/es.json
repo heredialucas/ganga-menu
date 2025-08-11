@@ -8,6 +8,7 @@
         "button": "Iniciar sesión",
         "signing": "Iniciando sesión...",
         "goToSignUp": "¿No tienes cuenta? Crear cuenta",
+        "passwordHint": "Ingresa tu contraseña para acceder a tu cuenta",
         "errors": {
           "emptyFields": "Por favor complete todos los campos",
           "invalidCredentials": "Error al iniciar sesión",
@@ -36,7 +37,11 @@
         "description": "Herramientas internas para Ganga-Menú que te ayudarán a gestionar tus menús digitales."
       },
       "logout": "Cerrar sesión",
-      "loggingOut": "Cerrando sesión..."
+      "loggingOut": "Cerrando sesión...",
+      "passwordStrength": "Fortaleza de la contraseña",
+      "passwordRequirements": "Requisitos de la contraseña",
+      "showPassword": "Mostrar contraseña",
+      "hidePassword": "Ocultar contraseña"
     },
     "accessDenied": {
       "title": "Acceso Denegado",

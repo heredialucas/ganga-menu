@@ -14,8 +14,10 @@ import { Input } from '@repo/design-system/components/ui/input';
 import { Dictionary } from '@repo/internationalization';
 import { signUpSchema, type SignUpSchema } from '../lib/schemas';
 import { SignUpButton } from './SignUpButton';
+import { PasswordInput } from './PasswordInput';
+import { PasswordStrengthIndicator } from './PasswordStrengthIndicator';
 import { useActionState, useTransition } from 'react';
-import { useRef, useEffect } from 'react';
+import { useRef, useState } from 'react';
 
 interface SignUpFormProps {
     dictionary?: Dictionary;
@@ -31,6 +33,7 @@ export const SignUpForm = ({ dictionary, handleSignUp, error: initialError }: Si
     });
     const [isPendingTransition, startTransition] = useTransition();
     const formRef = useRef<HTMLFormElement>(null);
+    const [password, setPassword] = useState('');
 
     const form = useForm<SignUpSchema>({
         resolver: zodResolver(signUpSchema),
@@ -43,13 +46,8 @@ export const SignUpForm = ({ dictionary, handleSignUp, error: initialError }: Si
         },
     });
 
-    const { handleSubmit, reset, formState: { isSubmitSuccessful } } = form;
-
-    useEffect(() => {
-        if (isSubmitSuccessful && formState.success) {
-            reset();
-        }
-    }, [reset, isSubmitSuccessful, formState.success]);
+    const { handleSubmit, watch } = form;
+    const watchedPassword = watch('password');
 
     const isFormPending = isPending || isPendingTransition;
 
@@ -149,15 +147,18 @@ export const SignUpForm = ({ dictionary, handleSignUp, error: initialError }: Si
                                 {dictionary?.app?.auth?.signUp?.password || 'Contraseña'}
                             </FormLabel>
                             <FormControl>
-                                <Input
-                                    type="password"
+                                <PasswordInput
                                     placeholder="••••••••"
                                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                                    defaultValue={formState?.fields?.password}
+                                    dictionary={dictionary}
                                     {...field}
                                 />
                             </FormControl>
                             <FormMessage />
+                            <PasswordStrengthIndicator
+                                password={watchedPassword || ''}
+                                dictionary={dictionary}
+                            />
                         </FormItem>
                     )}
                 />
@@ -171,11 +172,10 @@ export const SignUpForm = ({ dictionary, handleSignUp, error: initialError }: Si
                                 {dictionary?.app?.auth?.signUp?.confirmPassword || 'Confirmar Contraseña'}
                             </FormLabel>
                             <FormControl>
-                                <Input
-                                    type="password"
+                                <PasswordInput
                                     placeholder="••••••••"
                                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                                    defaultValue={formState?.fields?.confirmPassword}
+                                    dictionary={dictionary}
                                     {...field}
                                 />
                             </FormControl>

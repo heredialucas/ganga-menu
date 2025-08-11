@@ -8,6 +8,7 @@
         "button": "Anmelden",
         "signing": "Anmeldung läuft...",
         "goToSignUp": "Kein Konto? Konto erstellen",
+        "passwordHint": "Geben Sie Ihr Passwort ein, um auf Ihr Konto zuzugreifen",
         "errors": {
           "emptyFields": "Bitte füllen Sie alle Felder aus",
           "invalidCredentials": "Anmeldefehler",
@@ -36,7 +37,11 @@
         "description": "Interne Tools für Ganga-Menü, die Ihnen bei der Verwaltung Ihrer digitalen Menüs helfen."
       },
       "logout": "Abmelden",
-      "loggingOut": "Abmeldung läuft..."
+      "loggingOut": "Abmeldung läuft...",
+      "passwordStrength": "Passwortstärke",
+      "passwordRequirements": "Passwortanforderungen",
+      "showPassword": "Passwort anzeigen",
+      "hidePassword": "Passwort ausblenden"
     },
     "accessDenied": {
       "title": "Zugriff verweigert",

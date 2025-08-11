@@ -14,8 +14,9 @@ import { Input } from '@repo/design-system/components/ui/input';
 import { Dictionary } from '@repo/internationalization';
 import { signInSchema, type SignInSchema } from '../lib/schemas';
 import { SignInButton } from './SignInButton';
+import { PasswordInput } from './PasswordInput';
 import { useActionState, useTransition } from 'react';
-import { useRef, useEffect } from 'react';
+import { useRef } from 'react';
 
 interface SignInFormProps {
     dictionary?: Dictionary;
@@ -39,13 +40,7 @@ export const SignInForm = ({ dictionary, handleSignIn }: SignInFormProps) => {
         },
     });
 
-    const { handleSubmit, reset, formState: { isSubmitSuccessful } } = form;
-
-    useEffect(() => {
-        if (isSubmitSuccessful && formState.success) {
-            reset();
-        }
-    }, [reset, isSubmitSuccessful, formState.success]);
+    const { handleSubmit } = form;
 
     const isFormPending = isPending || isPendingTransition;
 
@@ -99,15 +94,18 @@ export const SignInForm = ({ dictionary, handleSignIn }: SignInFormProps) => {
                                 {dictionary?.app?.auth?.signIn?.password || 'Contraseña'}
                             </FormLabel>
                             <FormControl>
-                                <Input
-                                    type="password"
+                                <PasswordInput
                                     placeholder="••••••••"
                                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                                    defaultValue={formState?.fields?.password}
+                                    dictionary={dictionary}
                                     {...field}
                                 />
                             </FormControl>
                             <FormMessage />
+                            {/* Información adicional para el sign in */}
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                {dictionary?.app?.auth?.signIn?.passwordHint || 'Ingresa tu contraseña para acceder a tu cuenta'}
+                            </p>
                         </FormItem>
                     )}
                 />

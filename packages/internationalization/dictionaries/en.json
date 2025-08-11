@@ -8,6 +8,7 @@
         "button": "Sign in",
         "signing": "Signing in...",
         "goToSignUp": "Don't have an account? Sign up",
+        "passwordHint": "Enter your password to access your account",
         "errors": {
           "emptyFields": "Please complete all fields",
           "invalidCredentials": "Error signing in",
@@ -36,7 +37,11 @@
         "description": "Internal tools for Ganga-Menú to help you manage your digital menus."
       },
       "logout": "Sign out",
-      "loggingOut": "Signing out..."
+      "loggingOut": "Signing out...",
+      "passwordStrength": "Password strength",
+      "passwordRequirements": "Password requirements",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password"
     },
     "accessDenied": {
       "title": "Access Denied",

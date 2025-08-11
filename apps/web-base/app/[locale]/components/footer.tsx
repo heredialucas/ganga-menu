@@ -194,11 +194,11 @@ export const Footer = ({ dictionary }: FooterProps) => {
             <ul className="space-y-2 sm:space-y-3 text-center lg:text-left">
               <li className="flex items-center gap-2 sm:gap-3 justify-center lg:justify-start text-gray-600 dark:text-gray-300">
                 <Mail className="w-4 h-4 text-[#0d4b3d]" />
-                <span className="text-sm sm:text-base">info@ganga-menu.com</span>
+                <span className="text-sm sm:text-base">heredialucasfac22@gmail.com</span>
               </li>
               <li className="flex items-center gap-2 sm:gap-3 justify-center lg:justify-start text-gray-600 dark:text-gray-300">
                 <Phone className="w-4 h-4 text-[#0d4b3d]" />
-                <span className="text-sm sm:text-base">+49 152 24980784</span>
+                {/* <span className="text-sm sm:text-base">+49 152 24980784</span> */}
               </li>
             </ul>
             <div className="mt-4 sm:mt-6">

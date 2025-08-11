@@ -5,7 +5,6 @@ import { database } from '@repo/database';
 import { deleteR2Image, uploadR2Image } from './uploadR2Image';
 import { getCurrentUserId } from './authService';
 import { requirePermission } from '@repo/auth/server-permissions';
-import { extractR2KeyFromUrl } from '../util/util';
 
 export interface DishData {
     id: string;
@@ -257,8 +256,7 @@ export async function updateDish(dishId: string, data: DishFormData) {
         if (data.imageFile) {
             // Eliminar imagen anterior si existe
             if (existingDish.imageUrl) {
-                const oldKey = extractR2KeyFromUrl(existingDish.imageUrl);
-                if (oldKey) await deleteR2Image(oldKey);
+                await deleteR2Image(existingDish.imageUrl);
             }
 
             const { url } = await uploadR2Image({
@@ -337,10 +335,12 @@ export async function deleteDish(dishId: string) {
             throw new Error("Plato no encontrado o no tienes permiso para eliminarlo.");
         }
 
+        console.log('\n\n\n')
+        console.log('dishToDelete', dishToDelete);
+        console.log('\n\n\n')
         // Eliminar imagen si existe
         if (dishToDelete.imageUrl) {
-            const oldKey = extractR2KeyFromUrl(dishToDelete.imageUrl);
-            if (oldKey) await deleteR2Image(oldKey);
+            await deleteR2Image(dishToDelete.imageUrl);
         }
 
         // Eliminar plato de la base de datos

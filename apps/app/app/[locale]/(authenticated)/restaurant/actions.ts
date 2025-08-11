@@ -4,7 +4,6 @@ import { getCurrentUser, requirePermission } from '@repo/auth/server';
 import { saveRestaurantDesign as saveDesign } from '@repo/data-services/src/services/restaurantDesignService';
 import { getRestaurantConfig, upsertRestaurantConfig } from '@repo/data-services/src/services/restaurantConfigService';
 import { uploadR2Image, deleteR2Image } from '@repo/data-services/src/services/uploadR2Image';
-import { extractR2KeyFromUrl } from '@repo/data-services/src/util/util';
 import { getTablesByRestaurant } from '@repo/data-services/src/services/tableService';
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
@@ -43,7 +42,7 @@ export async function saveRestaurantConfig(prevState: any, formData: FormData, d
         if (logoFile && logoFile.size > 0) {
             if (existingConfig?.logoUrl && process.env.CLOUDFLARE_R2_PUBLIC_DOMAIN) {
                 try {
-                    const oldKey = extractR2KeyFromUrl(existingConfig.logoUrl);
+                    const oldKey = existingConfig.logoUrl.split(process.env.CLOUDFLARE_R2_PUBLIC_DOMAIN)[1]?.substring(1);
                     if (oldKey) await deleteR2Image(oldKey);
                 } catch (e) { console.error("No se pudo borrar el logo antiguo:", e); }
             }
@@ -58,7 +57,7 @@ export async function saveRestaurantConfig(prevState: any, formData: FormData, d
             finalLogoUrl = url;
         } else if (!finalLogoUrl && existingConfig?.logoUrl) {
             try {
-                const oldKey = extractR2KeyFromUrl(existingConfig.logoUrl);
+                const oldKey = existingConfig.logoUrl.split(process.env.CLOUDFLARE_R2_PUBLIC_DOMAIN!)[1]?.substring(1);
                 if (oldKey) await deleteR2Image(oldKey);
             } catch (e) { console.error("No se pudo borrar el logo antiguo:", e); }
         }

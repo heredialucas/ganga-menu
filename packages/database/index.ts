@@ -1,4 +1,7 @@
-import 'server-only';
+// Solo importar 'server-only' si estamos en Next.js (no en scripts directos)
+if (process.env.NEXT_RUNTIME || process.env.NEXT_PUBLIC_VERCEL_ENV) {
+  require('server-only');
+}
 import { PrismaClient } from './generated/client';
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient };

@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { MercadoPagoEmailForm } from './MercadoPagoEmailForm';
 import { useLocation } from '../hooks/useLocation';
 import type { Dictionary } from '@repo/internationalization';
+import { getAppUrl } from '@/lib/utils';
+
 
 interface PricingClientProps {
     dictionary: Dictionary;
@@ -106,7 +108,7 @@ export const PricingClient = ({ dictionary, locale, stripeProLink }: PricingClie
 
                             <div className="p-6 sm:p-8 pt-0">
                                 <Button variant="outline" className="w-full gap-2 sm:gap-4 var(--font-nunito) font-bold border-green-600 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 text-sm sm:text-base" asChild>
-                                    <Link href={`/sign-in`}>
+                                    <Link href={`${getAppUrl()}/${locale}/sign-in`}>
                                         {dictionary.web.pricing.tryIt} <MoveRight className="h-3 w-3 sm:h-4 sm:w-4" />
                                     </Link>
                                 </Button>

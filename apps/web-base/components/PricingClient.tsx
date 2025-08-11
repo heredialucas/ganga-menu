@@ -62,9 +62,14 @@ export const PricingClient = ({ dictionary, locale, stripeProLink }: PricingClie
                         <p className="max-w-2xl text-center text-sm sm:text-base lg:text-lg text-muted-foreground leading-relaxed tracking-tight var(--font-nunito) mx-auto px-4">
                             {dictionary.web.pricing.description}
                         </p>
+                        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mt-4 max-w-2xl mx-auto">
+                            <p className="text-sm sm:text-base text-blue-800 dark:text-blue-200 var(--font-nunito) font-medium">
+                                🚀 <strong>{dictionary.web.pricing.beta.title}</strong> {dictionary.web.pricing.beta.description}
+                            </p>
+                        </div>
                     </div>
 
-                    <div className="grid w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 pt-6 sm:pt-10 max-w-7xl">
+                    <div className="grid w-full grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 pt-6 sm:pt-10 max-w-5xl mx-auto">
                         {/* Plan Gratis */}
                         <div className="flex flex-col justify-between bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-lg border-2 border-gray-200 dark:border-gray-700 overflow-hidden transform transition-all hover:scale-105 hover:shadow-xl">
                             <div className="p-6 sm:p-8">
@@ -108,11 +113,11 @@ export const PricingClient = ({ dictionary, locale, stripeProLink }: PricingClie
                             </div>
                         </div>
 
-                        {/* Plan Profesional - Featured */}
+                        {/* Plan Premium - Featured */}
                         <div className="flex flex-col justify-between bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-2xl border-2 border-[#0d4b3d] overflow-hidden transform transition-all hover:scale-105 relative">
                             <div className="absolute top-0 right-0 bg-gradient-to-r from-[#0d4b3d] to-[#7dd3c8] text-white px-4 sm:px-6 py-1 sm:py-2 rounded-bl-xl sm:rounded-bl-2xl var(--font-nunito) font-bold text-xs sm:text-sm flex items-center gap-1 sm:gap-2">
                                 <Crown className="w-3 h-3 sm:w-4 sm:h-4" />
-                                {dictionary.web.pricing.popular}
+                                {dictionary.web.pricing.beta.badge}
                             </div>
 
                             <div className="p-6 sm:p-8">
@@ -129,9 +134,9 @@ export const PricingClient = ({ dictionary, locale, stripeProLink }: PricingClie
 
                                 <div className="mb-6 sm:mb-8 flex items-baseline gap-2">
                                     <span className="text-3xl sm:text-4xl lg:text-5xl font-black var(--font-nunito) bg-gradient-to-r from-[#0d4b3d] to-[#7dd3c8] inline-block text-transparent bg-clip-text">
-                                        {currencySymbol}{price}
+                                        {currencySymbol}0
                                     </span>
-                                    <span className="text-muted-foreground text-xs sm:text-sm var(--font-nunito)">/ {dictionary.web.pricing.monthly}</span>
+                                    <span className="text-muted-foreground text-xs sm:text-sm var(--font-nunito)">/ Beta</span>
                                 </div>
 
                                 <div className="space-y-3 sm:space-y-4">
@@ -145,55 +150,9 @@ export const PricingClient = ({ dictionary, locale, stripeProLink }: PricingClie
                             </div>
 
                             <div className="p-6 sm:p-8 pt-0">
-                                {locale === 'es' && locationData.country === 'AR' ? (
-                                    <MercadoPagoEmailForm
-                                        dictionary={dictionary}
-                                        className="w-full gap-2 sm:gap-4 var(--font-nunito) font-black text-sm sm:text-base"
-                                    />
-                                ) : (
-                                    <Button className="w-full gap-2 sm:gap-4 bg-gradient-to-r from-[#0d4b3d] to-[#7dd3c8] hover:from-[#0d4b3d]/90 hover:to-[#7dd3c8]/90 text-white var(--font-nunito) font-black text-sm sm:text-base" asChild>
-                                        <Link href={paymentLink} target="_blank" rel="noopener noreferrer">
-                                            {dictionary.web.pricing.startFreeTrial} <MoveRight className="h-3 w-3 sm:h-4 sm:w-4" />
-                                        </Link>
-                                    </Button>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Plan Empresarial */}
-                        <div className="flex flex-col justify-between bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-lg border-2 border-gray-200 dark:border-gray-700 overflow-hidden transform transition-all hover:scale-105 hover:shadow-xl sm:col-span-2 lg:col-span-1">
-                            <div className="p-6 sm:p-8">
-                                <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-                                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center">
-                                        <Crown className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 dark:text-purple-400" />
-                                    </div>
-                                    <p className="text-xl sm:text-2xl font-black var(--font-nunito) text-[#0d4b3d] dark:text-white">{dictionary.web.pricing.plans[2].name}</p>
-                                </div>
-
-                                <p className="text-muted-foreground text-xs sm:text-sm mb-4 sm:mb-6 var(--font-nunito) leading-relaxed">
-                                    {dictionary.web.pricing.plans[2].description}
-                                </p>
-
-                                <div className="mb-6 sm:mb-8 flex items-baseline gap-2">
-                                    <span className="text-2xl sm:text-3xl lg:text-4xl font-black var(--font-nunito) bg-gradient-to-r from-purple-600 to-purple-400 inline-block text-transparent bg-clip-text">
-                                        {dictionary.web.pricing.contactForPrice}
-                                    </span>
-                                </div>
-
-                                <div className="space-y-3 sm:space-y-4">
-                                    {dictionary.web.pricing.plans[2].features.map((feature: string, index: number) => (
-                                        <div key={index} className="flex items-start gap-2 sm:gap-3">
-                                            <Check className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600 dark:text-purple-400 flex-shrink-0 mt-0.5" />
-                                            <span className="var(--font-nunito) text-xs sm:text-sm">{feature}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div className="p-6 sm:p-8 pt-0">
-                                <Button variant="outline" className="w-full gap-2 sm:gap-4 var(--font-nunito) font-bold border-purple-600 text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-900/20 text-sm sm:text-base" asChild>
+                                <Button className="w-full gap-2 sm:gap-4 bg-gradient-to-r from-[#0d4b3d] to-[#7dd3c8] hover:from-[#0d4b3d]/90 hover:to-[#7dd3c8]/90 text-white var(--font-nunito) font-black text-sm sm:text-base" asChild>
                                     <Link href={`/${locale}/contact`}>
-                                        {dictionary.web.pricing.contactUs} <PhoneCall className="h-3 w-3 sm:h-4 sm:w-4" />
+                                        {dictionary.web.pricing.beta.requestAccess} <MoveRight className="h-3 w-3 sm:h-4 sm:w-4" />
                                     </Link>
                                 </Button>
                             </div>

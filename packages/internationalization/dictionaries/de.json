@@ -1074,6 +1074,12 @@
     "pricing": {
       "title": "Starten Sie kostenlos und skalieren Sie Ihr Restaurant!",
       "description": "Beginnen Sie ohne Kosten und schalten Sie Premium-Funktionen frei, während Sie wachsen. Alles Wesentliche ist ab Tag eins enthalten.",
+      "beta": {
+        "title": "Wir sind in der Beta!",
+        "description": "Während dieser Phase bieten wir kostenlosen Zugang zu allen Premium-Funktionen. Kontaktieren Sie uns, um Ihr Konto zu aktivieren.",
+        "badge": "Kostenlose Beta",
+        "requestAccess": "Zugang anfordern"
+      },
       "monthly": "Monat",
       "popular": "BELIEBTESTE",
       "tryIt": "Kostenlos starten",

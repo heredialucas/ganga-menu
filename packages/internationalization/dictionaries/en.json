@@ -1048,6 +1048,12 @@
     "pricing": {
       "title": "Start Free and Scale Your Restaurant!",
       "description": "Start at no cost and unlock premium features as you grow. Everything essential included from day one.",
+      "beta": {
+        "title": "We're in Beta!",
+        "description": "During this phase, we offer free access to all premium features. Contact us to activate your account.",
+        "badge": "Free Beta",
+        "requestAccess": "Request Access"
+      },
       "monthly": "month",
       "popular": "MOST POPULAR",
       "tryIt": "Start Free",
